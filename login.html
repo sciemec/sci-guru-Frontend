@@ -1,35 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teacher Login</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru | Teacher Login</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-    <div class="card" style="max-width:400px; margin:80px auto;">
-        <h2>Teacher Login</h2>
 
-        <input id="username" placeholder="Username">
-        <br><br>
-        <input id="password" type="password" placeholder="Password">
-        <br><br>
-
-        <button onclick="teacherLogin()">Login</button>
-        <p id="login-status"></p>
+  <!-- Global header with LEC logo -->
+  <header class="site-header">
+    <div class="site-header-left">
+      <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
+      <div class="site-title-block">
+        <h1 class="site-title">Sci-Guru</h1>
+        <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
+      </div>
     </div>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="tutor.html">AI Tutor</a>
+      <a href="sim-density.html">Density Lab</a>
+      <a href="sim-mixtures.html">Mixtures Lab</a>
+      <a href="sim-electricity.html">Electricity Lab</a>
+      <a href="login.html" class="nav-active">Teacher Login</a>
+    </nav>
+  </header>
 
-<script>
-function teacherLogin() {
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
+  <main class="page-main center-page">
+    <div class="card login-card">
+      <h2>Teacher Login</h2>
+      <p class="muted">
+        Demo login for now – just to protect the dashboard on this device.
+      </p>
 
-    if (user === "teacher" && pass === "lecbiotec2025") {
-        window.location.href = "dashboard.html";
-    } else {
-        document.getElementById("login-status").innerHTML = "Incorrect details";
-    }
-}
-</script>
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <input id="username" type="text" required />
 
+        <label for="password">Password</label>
+        <input id="password" type="password" required />
+
+        <button type="submit" class="primary-btn">Login</button>
+      </form>
+
+      <p id="loginError" class="error-text" style="display:none;">
+        Incorrect username or password. Try again.
+      </p>
+
+      <div class="demo-creds">
+        <strong>Demo credentials</strong><br />
+        Username: <code>teacher</code><br />
+        Password: <code>lecbiotec2025</code>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sci-Guru © LEC Biotec (Pvt) Ltd
+  </footer>
+
+  <script>
+    // Simple front-end-only login
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('loginError');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // DEMO credentials – change later if you want
+      const correctUser = 'teacher';
+      const correctPass = 'lecbiotec2025';
+
+      if (username === correctUser && password === correctPass) {
+        // mark teacher logged in
+        localStorage.setItem('sciGuruTeacherLoggedIn', 'true');
+        window.location.href = 'dashboard.html';
+      } else {
+        errorBox.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
