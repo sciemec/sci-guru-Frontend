@@ -24,6 +24,21 @@
     <a href="login.html">Teacher Login</a>
   </nav>
 </header>
+        <script>
+  (function () {
+    const btn = document.getElementById("mark-density-complete");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+      try {
+        localStorage.setItem("sciGuru-lab-density-lab", "done");
+      } catch (e) {
+        console.warn("Could not save density lab status", e);
+      }
+      alert("Nice work! Density lab is now marked as completed.");
+    });
+  })();
+</script>
         body {
             margin: 0;
             font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -371,3 +386,4 @@ Sci-Guru will explain your circuit here…
 </body>
 
 </html>
+
