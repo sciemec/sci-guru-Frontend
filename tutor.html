@@ -1,351 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sci-Guru AI Science Tutor</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Extra layout helpers for tutor page only */
-        .tutor-container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        }
-        .tutor-header {
-            margin-bottom: 20px;
-        }
-        .tutor-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
-            gap: 20px;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-top: 10px;
-            margin-bottom: 4px;
-        }
-        select, textarea, input[type="text"] {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        textarea {
-            min-height: 90px;
-        }
-        .btn-row {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .result-box {
-            background: #0c1633;
-            color: #f5f7fb;
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-            min-height: 80px;
-            font-size: 14px;
-            white-space: pre-wrap;
-        }
-        .tag {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        .student-tag {
-            font-size: 13px;
-            margin-top: 6px;
-            color: #555;
-        }
-        @media (max-width: 768px) {
-            .tutor-grid {
-                grid-template-columns: 1fr;
-            }
-            .tutor-container {
-                margin: 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru AI Science Tutor</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* --- Simple layout tweaks (doesn't fight your existing CSS) --- */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-shell {
+      max-width: 1100px;
+      margin: 0 auto 40px auto;
+      padding: 16px;
+    }
+
+    header.site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    header.site-header img.logo {
+      height: 40px;
+      object-fit: contain;
+    }
+
+    header.site-header h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    .tutor-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(260px, 0.9fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      padding: 16px 18px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    select,
+    textarea,
+    input[type="number"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccd1e6;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #0d87ff;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #00b894;
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: #0d87ff;
+      border: 1px solid #0d87ff;
+    }
+
+    .results-block {
+      margin-bottom: 10px;
+    }
+
+    .results-block h3 {
+      margin: 0 0 4px 0;
+      font-size: 0.95rem;
+    }
+
+    .results-box {
+      background: #101322;
+      color: #f5f6ff;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 60px;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+
+    /* --- Progress panel --- */
+
+    .progress-panel h2 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+
+    .progress-section-title {
+      font-size: 0.9rem;
+      margin: 10px 0 4px 0;
+      font-weight: 600;
+    }
+
+    .progress-topic-list,
+    .progress-lab-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.85rem;
+    }
+
+    .progress-topic-list li,
+    .progress-lab-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px dashed #e1e4f0;
+    }
+
+    .progress-topic-list li:last-child,
+    .progress-lab-list li:last-child {
+      border-bottom: none;
+    }
+
+    .topic-name {
+      max-width: 60%;
+    }
+
+    .topic-score,
+    .lab-status {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .lab-status.done {
+      color: #00b894;
+    }
+
+    .lab-status.todo {
+      color: #b2bec3;
+    }
+
+    .score-input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .score-input-row input[type="number"] {
+      max-width: 90px;
+      padding-right: 0;
+    }
+
+    .helper-text {
+      font-size: 0.75rem;
+      color: #7f8c8d;
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #e5f1ff;
+      color: #1565c0;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+
+    @media (max-width: 960px) {
+      .tutor-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header class="site-header">
-  <div class="site-header-left">
-    <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
-    <div class="site-title-block">
-      <h1 class="site-title">Sci-Guru</h1>
-      <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
+  <div class="page-shell">
+    <!-- Top header with logo -->
+    <header class="site-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="lec-logo.jpg" alt="LEC Biotec logo" class="logo" />
+        <div>
+          <h1 style="margin:0;font-size:1.2rem;">Sci-Guru AI Science Tutor</h1>
+          <div style="font-size:0.8rem;color:#555;">
+            Zimbabwe’s AI-powered tutor for the ZIMSEC / Heritage-Based curriculum
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-outline" onclick="window.location.href='index.html'">
+        ⬅ Back to Home
+      </button>
+    </header>
+
+    <div class="tutor-layout">
+      <!-- LEFT: Ask Sci-Guru -->
+      <section class="card">
+        <h2>Ask Sci-Guru</h2>
+
+        <div class="field-group">
+          <label for="form">Form / Level</label>
+          <select id="form">
+            <option value="Form 1">Form 1</option>
+            <option value="Form 2">Form 2</option>
+            <option value="Form 3">Form 3</option>
+            <option value="Form 4">Form 4</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="topic">Topic (Form-1 topics grouped + general)</label>
+
+          <!-- 🔁 FORM 1 TOPIC LIST (includes all chapters we’re tracking) -->
+          <select id="topic">
+            <option value="">-- Optional: choose a topic --</option>
+
+            <optgroup label="General">
+              <option value="General Science">General Science</option>
+            </optgroup>
+
+            <optgroup label="Form 1 — Biology">
+              <option value="Living things and characteristics of life">
+                Living things &amp; characteristics of life
+              </option>
+              <option value="Cells and simple microscopes">
+                Cells and simple microscopes
+              </option>
+              <option value="Human body systems and hygiene">
+                Human body systems &amp; hygiene
+              </option>
+              <option value="Ecosystems and environment">
+                Ecosystems &amp; environment
+              </option>
+            </optgroup>
+
+            <optgroup label="Form 1 — Chemistry">
+              <option value="States of matter">
+                States of matter (solid, liquid, gas)
+              </option>
+              <option value="Mixtures and separation methods">
+                Mixtures &amp; separation methods
+              </option>
+            </optgroup>
+
+            <optgroup label="Form 1 — Physics">
+              <option value="Density and flotation">
+                Density &amp; flotation
+              </option>
+              <option value="Electricity and magnetism">
+                Electricity &amp; magnetism
+              </option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="question">Your question</label>
+          <textarea id="question" placeholder="Explain density using Zimbabwean examples…"></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" id="btn-ask">Ask Sci-Guru</button>
+          <button class="btn-secondary" id="btn-quiz">Generate quiz</button>
+          <button class="btn-outline" id="btn-practical">Generate practical</button>
+        </div>
+
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn-outline" onclick="openVirtualLabHub()">Open virtual lab hub</button>
+        </div>
+
+        <!-- Save quiz score UI -->
+        <div style="margin-top:14px;">
+          <div class="score-input-row">
+            <span>✅ I scored</span>
+            <input type="number" id="score-input" min="0" max="100" placeholder="e.g. 75" />
+            <span>%</span>
+            <button class="btn-primary" id="btn-save-score" style="padding-inline:10px;">
+              Save topic score
+            </button>
+          </div>
+          <div class="helper-text">
+            Choose the correct Form &amp; Topic above, then enter your quiz result.
+            Sci-Guru will remember your best score for that topic.
+          </div>
+        </div>
+      </section>
+
+      <!-- MIDDLE: Results -->
+      <section class="card">
+        <h2>Results</h2>
+
+        <div class="results-block">
+          <h3>Explanation</h3>
+          <div id="explanation" class="results-box">
+            Sci-Guru will answer here…
+          </div>
+        </div>
+
+        <div class="results-block">
+          <h3>Quiz</h3>
+          <div id="quiz" class="results-box">
+            Quiz will appear here…
+          </div>
+        </div>
+
+        <div class="results-block">
+          <h3>Practical</h3>
+          <div id="practical" class="results-box">
+            Practical experiment will appear here…
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Progress panel -->
+      <aside class="card progress-panel" id="progress-panel">
+        <h2>
+          Form 1 Progress
+          <span class="pill">Saved on this device</span>
+        </h2>
+
+        <div class="progress-section-title">Topics (best quiz score)</div>
+        <ul class="progress-topic-list" id="topic-progress-list">
+          <li data-topic="Living things and characteristics of life">
+            <span class="topic-name">Living things &amp; characteristics of life</span>
+            <span class="topic-score" id="score-living">Best: --%</span>
+          </li>
+          <li data-topic="Cells and simple microscopes">
+            <span class="topic-name">Cells and simple microscopes</span>
+            <span class="topic-score" id="score-cells">Best: --%</span>
+          </li>
+          <li data-topic="Human body systems and hygiene">
+            <span class="topic-name">Human body systems &amp; hygiene</span>
+            <span class="topic-score" id="score-body">Best: --%</span>
+          </li>
+          <li data-topic="Ecosystems and environment">
+            <span class="topic-name">Ecosystems &amp; environment</span>
+            <span class="topic-score" id="score-ecosystems">Best: --%</span>
+          </li>
+          <li data-topic="States of matter">
+            <span class="topic-name">States of matter</span>
+            <span class="topic-score" id="score-states">Best: --%</span>
+          </li>
+          <li data-topic="Mixtures and separation methods">
+            <span class="topic-name">Mixtures &amp; separation methods</span>
+            <span class="topic-score" id="score-mixtures">Best: --%</span>
+          </li>
+          <li data-topic="Density and flotation">
+            <span class="topic-name">Density &amp; flotation</span>
+            <span class="topic-score" id="score-density">Best: --%</span>
+          </li>
+          <li data-topic="Electricity and magnetism">
+            <span class="topic-name">Electricity &amp; magnetism</span>
+            <span class="topic-score" id="score-electricity">Best: --%</span>
+          </li>
+        </ul>
+
+        <div class="progress-section-title" style="margin-top:14px;">
+          Virtual labs (completion)
+        </div>
+        <ul class="progress-lab-list">
+          <li>
+            <span>Density Lab</span>
+            <span id="lab-density-lab" class="lab-status todo">⬜ Not done</span>
+          </li>
+          <li>
+            <span>Mixtures Lab</span>
+            <span id="lab-mixtures-lab" class="lab-status todo">⬜ Not done</span>
+          </li>
+          <li>
+            <span>Electricity Lab</span>
+            <span id="lab-electricity-lab" class="lab-status todo">⬜ Not done</span>
+          </li>
+        </ul>
+
+        <div class="helper-text" style="margin-top:8px;">
+          ✔ Labs are marked complete from the virtual-lab pages (Density / Mixtures / Electricity).
+        </div>
+      </aside>
     </div>
   </div>
-  <nav class="site-nav">
-    <a href="index.html">Home</a>
-    <a href="tutor.html">AI Tutor</a>
-    <a href="sim-density.html">Density Lab</a>
-    <a href="sim-mixtures.html">Mixtures Lab</a>
-    <a href="sim-electricity.html">Electricity Lab</a>
-    <a href="login.html">Teacher Login</a>
-  </nav>
-</header>
-    <div class="tutor-container">
-        <div class="tutor-header">
-            <h1>Sci-Guru AI Science Tutor</h1>
-            <p>Ask questions from the ZIMSEC / Heritage-Based curriculum. Sci-Guru will answer with Zimbabwean examples, a simple practical, and quizzes.</p>
-        </div>
 
-        <div class="tutor-grid">
-            <!-- LEFT: INPUTS -->
-            <div>
-                <!-- STUDENT INFO (used for progress) -->
-                <label for="studentName">Student name</label>
-                <input type="text" id="studentName" placeholder="e.g. Tafadzwa M.">
+  <!-- ============ SCRIPT ============ -->
+  <script>
+    const API_BASE = "https://sci-guru-backend.onrender.com";
 
-                <label for="formLevel">Form / Level</label>
-                <select id="formLevel">
-                    <option value="Form 1">Form 1</option>
-                    <option value="Form 2">Form 2</option>
-                    <option value="Form 3">Form 3</option>
-                    <option value="Form 4">Form 4</option>
-                </select>
+    const formSelect = document.getElementById("form");
+    const topicSelect = document.getElementById("topic");
+    const questionInput = document.getElementById("question");
+    const explanationBox = document.getElementById("explanation");
+    const quizBox = document.getElementById("quiz");
+    const practicalBox = document.getElementById("practical");
 
-                <label for="topic">Topic (optional)</label>
-                <select id="topic">
-                    <option value="">General Science</option>
-                    <option value="Density">Density</option>
-                    <option value="Mixtures & Separation">Mixtures & Separation</option>
-                    <option value="Electricity">Electricity</option>
-                    <option value="Heat">Heat</option>
-                    <option value="Acids & Bases">Acids & Bases</option>
-                </select>
+    const scoreInput = document.getElementById("score-input");
+    const btnSaveScore = document.getElementById("btn-save-score");
 
-                <label for="question">Your question</label>
-                <textarea id="question" placeholder="Explain density using Zimbabwean village examples..."></textarea>
+    const topicProgressList = document.getElementById("topic-progress-list");
 
-                <div class="student-tag" id="currentStudentTag">
-                    Current student: <strong>Not set</strong>
-                </div>
+    // ------- GENERAL HELPER TO CALL BACKEND -------
+    async function callBackend(endpoint, body) {
+      try {
+        const res = await fetch(API_BASE + endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
 
-                <div class="btn-row">
-                    <button class="primary-btn" onclick="askSciGuru()">Ask Sci-Guru</button>
-                    <button onclick="generateQuiz()">Generate quiz</button>
-                    <button onclick="generatePractical()">Generate practical</button>
-                    <button onclick="openVirtualLabHub()">Open virtual lab</button>
-                </div>
-            </div>
-
-            <!-- RIGHT: RESULTS -->
-            <div>
-                <div>
-                    <div class="tag">Explanation</div>
-                    <div id="explanationBox" class="result-box">
-                        Sci-Guru will answer here…
-                    </div>
-                </div>
-                <div>
-                    <div class="tag">Quiz</div>
-                    <div id="quizBox" class="result-box">
-                        Quiz will appear here…
-                    </div>
-                </div>
-                <div>
-                    <div class="tag">Practical</div>
-                    <div id="practicalBox" class="result-box">
-                        Practical experiment will appear here…
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<script>
-    const API_BASE = "https://sci-guru-backend.onrender.com/api";
-    const PROGRESS_KEY = "sciGuruProgress";
-
-    // ------------- STUDENT PROGRESS HELPERS -----------------
-
-    function loadProgress() {
-        try {
-            const raw = localStorage.getItem(PROGRESS_KEY);
-            return raw ? JSON.parse(raw) : {};
-        } catch (e) {
-            console.error("Could not read progress", e);
-            return {};
-        }
-    }
-
-    function saveProgress(data) {
-        localStorage.setItem(PROGRESS_KEY, JSON.stringify(data));
-    }
-
-    function getStudentId(name, form) {
-        return `${name || "Unknown"} (${form || "Unknown form"})`;
-    }
-
-    function ensureStudentRecord() {
-        const name = document.getElementById("studentName").value.trim() || "Guest";
-        const form = document.getElementById("formLevel").value;
-        const topic = document.getElementById("topic").value || "General Science";
-
-        const id = getStudentId(name, form);
-
-        const progress = loadProgress();
-        if (!progress[id]) {
-            progress[id] = {
-                name,
-                form,
-                totalExplanations: 0,
-                totalQuizzes: 0,
-                totalPracticals: 0,
-                labsOpened: {},
-                lastTopic: topic,
-                lastUpdated: new Date().toISOString()
-            };
-        }
-        // update last topic & timestamp
-        progress[id].lastTopic = topic;
-        progress[id].lastUpdated = new Date().toISOString();
-        saveProgress(progress);
-
-        // update label on screen
-        document.getElementById("currentStudentTag").innerHTML =
-            `Current student: <strong>${name}</strong> • ${form}`;
-
-        return id;
-    }
-
-    function recordEvent(type, extra = {}) {
-        const form = document.getElementById("formLevel").value;
-        const name = document.getElementById("studentName").value.trim() || "Guest";
-        const topic = document.getElementById("topic").value || "General Science";
-
-        const id = getStudentId(name, form);
-        const progress = loadProgress();
-        if (!progress[id]) {
-            // Make sure record exists
-            progress[id] = {
-                name,
-                form,
-                totalExplanations: 0,
-                totalQuizzes: 0,
-                totalPracticals: 0,
-                labsOpened: {},
-                lastTopic: topic,
-                lastUpdated: new Date().toISOString()
-            };
+        if (!res.ok) {
+          console.error("Backend error", res.status, res.statusText);
+          return { error: "Server error. Please try again." };
         }
 
-        if (type === "explanation") {
-            progress[id].totalExplanations += 1;
-        } else if (type === "quiz") {
-            progress[id].totalQuizzes += 1;
-        } else if (type === "practical") {
-            progress[id].totalPracticals += 1;
-        } else if (type === "lab") {
-            const labName = extra.labName || "Unknown lab";
-            if (!progress[id].labsOpened[labName]) {
-                progress[id].labsOpened[labName] = 0;
-            }
-            progress[id].labsOpened[labName] += 1;
-        }
-
-        progress[id].lastTopic = topic;
-        progress[id].lastUpdated = new Date().toISOString();
-
-        saveProgress(progress);
+        return await res.json();
+      } catch (err) {
+        console.error(err);
+        return { error: "Network error. Check your internet connection." };
+      }
     }
 
-    // Initialise tag on load
-    window.addEventListener("load", () => {
-        ensureStudentRecord();
+    // ------- MAIN BUTTON HANDLERS -------
+
+    document.getElementById("btn-ask").addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value;
+      const question = questionInput.value.trim();
+
+      if (!question) {
+        alert("Please type a question first.");
+        return;
+      }
+
+      explanationBox.textContent = "Thinking…";
+      const data = await callBackend("/api/explain", { form, topic, question });
+
+      if (data.error) {
+        explanationBox.textContent = data.error;
+      } else {
+        explanationBox.textContent = data.answer || "No answer received.";
+      }
     });
 
-    // ------------- API CALLS -----------------
+    document.getElementById("btn-quiz").addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value || "General Science";
+      const question = questionInput.value.trim() || "Give me a quiz for this topic.";
 
-    async function askSciGuru() {
-        const form = document.getElementById("formLevel").value;
-        const topic = document.getElementById("topic").value;
-        const question = document.getElementById("question").value;
+      quizBox.textContent = "Generating quiz…";
+      const data = await callBackend("/api/quiz", { form, topic, question });
 
-        ensureStudentRecord();       // make sure student is set
-        recordEvent("explanation");  // save progress
+      if (data.error) {
+        quizBox.textContent = data.error;
+      } else {
+        quizBox.textContent = data.quiz || "No quiz received.";
+      }
+    });
 
-        document.getElementById("explanationBox").textContent = "Thinking...";
+    document.getElementById("btn-practical").addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value || "General Science";
+      const question = questionInput.value.trim() || "Give me a practical for this topic.";
 
-        try {
-            const res = await fetch(`${API_BASE}/explain`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ form, topic, question })
-            });
-            const data = await res.json();
-            document.getElementById("explanationBox").textContent = data.answer || "No answer received.";
-        } catch (err) {
-            console.error(err);
-            document.getElementById("explanationBox").textContent = "Error: Could not contact Sci-Guru.";
-        }
-    }
+      practicalBox.textContent = "Preparing practical activity…";
+      const data = await callBackend("/api/practical", { form, topic, question });
 
-    async function generateQuiz() {
-        const form = document.getElementById("formLevel").value;
-        const topic = document.getElementById("topic").value;
-        const question = document.getElementById("question").value;
+      if (data.error) {
+        practicalBox.textContent = data.error;
+      } else {
+        practicalBox.textContent = data.practical || "No practical received.";
+      }
+    });
 
-        ensureStudentRecord();
-        recordEvent("quiz");
-
-        document.getElementById("quizBox").textContent = "Generating quiz...";
-
-        try {
-            const res = await fetch(`${API_BASE}/quiz`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ form, topic, question })
-            });
-            const data = await res.json();
-            document.getElementById("quizBox").textContent = data.quiz || "No quiz received.";
-        } catch (err) {
-            console.error(err);
-            document.getElementById("quizBox").textContent = "Error: Could not generate quiz.";
-        }
-    }
-
-    async function generatePractical() {
-        const form = document.getElementById("formLevel").value;
-        const topic = document.getElementById("topic").value;
-        const question = document.getElementById("question").value;
-
-        ensureStudentRecord();
-        recordEvent("practical");
-
-        document.getElementById("practicalBox").textContent = "Generating practical...";
-
-        try {
-            const res = await fetch(`${API_BASE}/practical`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ form, topic, question })
-            });
-            const data = await res.json();
-            document.getElementById("practicalBox").textContent = data.practical || "No practical received.";
-        } catch (err) {
-            console.error(err);
-            document.getElementById("practicalBox").textContent = "Error: Could not generate practical.";
-        }
-    }
-
+    // ------- VIRTUAL LAB HUB NAVIGATION -------
     function openVirtualLabHub() {
-        ensureStudentRecord();
-        // We just log that they opened labs (no specific lab name here)
-        recordEvent("lab", { labName: "Virtual Lab Hub" });
-        // Go back to homepage labs section
-        window.location.href = "index.html#lab-section";
+      // You can change this to a separate hub page if you create one.
+      window.location.href = "index.html#virtual-labs";
     }
-</script>
+
+    window.openVirtualLabHub = openVirtualLabHub;
+
+    // ------- LOCALSTORAGE KEYS & HELPERS -------
+
+    function topicKey(form, topic) {
+      return `sciGuru-topicScore-${form}-${topic}`;
+    }
+
+    function saveTopicScore(form, topic, score) {
+      try {
+        const currentRaw = localStorage.getItem(topicKey(form, topic));
+        const current = currentRaw ? Number(currentRaw) : NaN;
+        const best = isNaN(current) ? score : Math.max(current, score);
+        localStorage.setItem(topicKey(form, topic), String(best));
+      } catch (e) {
+        console.warn("Could not save score", e);
+      }
+    }
+
+    function getTopicScore(form, topic) {
+      try {
+        const raw = localStorage.getItem(topicKey(form, topic));
+        if (!raw) return null;
+        const n = Number(raw);
+        return isNaN(n) ? null : n;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function labKey(labId) {
+      return `sciGuru-lab-${labId}`;
+    }
+
+    function isLabCompleted(labId) {
+      try {
+        return localStorage.getItem(labKey(labId)) === "done";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // ------- SAVE SCORE BUTTON -------
+    btnSaveScore.addEventListener("click", () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value;
+
+      if (!topic) {
+        alert("Please choose a topic before saving a score.");
+        return;
+      }
+
+      const raw = (scoreInput.value || "").trim();
+      const n = Number(raw);
+
+      if (!raw || isNaN(n) || n < 0 || n > 100) {
+        alert("Enter a valid percentage between 0 and 100.");
+        return;
+      }
+
+      saveTopicScore(form, topic, n);
+      refreshProgressPanel();
+      alert("Score saved! We'll keep your best result for this topic.");
+    });
+
+    // ------- PROGRESS PANEL RENDERING -------
+
+    function refreshProgressPanel() {
+      // Update topic scores
+      const items = topicProgressList.querySelectorAll("li[data-topic]");
+      items.forEach((li) => {
+        const topic = li.dataset.topic;
+        const scoreSpan = li.querySelector(".topic-score");
+        const score = getTopicScore("Form 1", topic);
+
+        if (score == null) {
+          scoreSpan.textContent = "Best: --%";
+        } else {
+          scoreSpan.textContent = `Best: ${score}%`;
+        }
+      });
+
+      // Update lab completion ticks
+      updateLabStatus("density-lab", "lab-density-lab");
+      updateLabStatus("mixtures-lab", "lab-mixtures-lab");
+      updateLabStatus("electricity-lab", "lab-electricity-lab");
+    }
+
+    function updateLabStatus(labId, elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const done = isLabCompleted(labId);
+      if (done) {
+        el.textContent = "✅ Done";
+        el.classList.remove("todo");
+        el.classList.add("done");
+      } else {
+        el.textContent = "⬜ Not done";
+        el.classList.remove("done");
+        el.classList.add("todo");
+      }
+    }
+
+    // Initial load
+    refreshProgressPanel();
+  </script>
 </body>
 </html>
-
