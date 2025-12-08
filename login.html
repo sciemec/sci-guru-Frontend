@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="card" style="max-width:400px; margin:80px auto;">
+        <h2>Teacher Login</h2>
+
+        <input id="username" placeholder="Username">
+        <br><br>
+        <input id="password" type="password" placeholder="Password">
+        <br><br>
+
+        <button onclick="teacherLogin()">Login</button>
+        <p id="login-status"></p>
+    </div>
+
+<script>
+function teacherLogin() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if (user === "teacher" && pass === "lecbiotec2025") {
+        window.location.href = "dashboard.html";
+    } else {
+        document.getElementById("login-status").innerHTML = "Incorrect details";
+    }
+}
+</script>
+
+</body>
+</html>
