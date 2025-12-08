@@ -1,59 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sci-Guru Teacher Login</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .login-card {
-            max-width: 380px;
-            margin: 80px auto;
-            padding: 24px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 8px 10px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        #loginStatus {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #b00020;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru | Teacher Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="login-card">
-    <h2>Teacher Login</h2>
-    <p>Enter the password to view the Sci-Guru dashboard.</p>
+  <!-- Global header with LEC logo -->
+  <header class="site-header">
+    <div class="site-header-left">
+      <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
+      <div class="site-title-block">
+        <h1 class="site-title">Sci-Guru</h1>
+        <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="tutor.html">AI Tutor</a>
+      <a href="sim-density.html">Density Lab</a>
+      <a href="sim-mixtures.html">Mixtures Lab</a>
+      <a href="sim-electricity.html">Electricity Lab</a>
+      <a href="login.html">Teacher Login</a>
+    </nav>
+  </header>
 
-    <input id="password" type="password" placeholder="Password">
-    <br><br>
-    <button onclick="checkLogin()">Login</button>
+  <main class="page-main">
+    <h2>Teacher Dashboard</h2>
+    <p class="muted">
+      (Demo view) – this dashboard will read progress stored on this device.
+    </p>
 
-    <div id="loginStatus"></div>
-</div>
+    <section class="card">
+      <h3>Form 1 Topic Progress</h3>
+      <div id="topicProgress">
+        Loading topic data from this browser…
+      </div>
+    </section>
 
-<script>
-    const TEACHER_PASSWORD = "lecbiotec2025";
+    <section class="card">
+      <h3>Completed Virtual Labs</h3>
+      <ul id="labProgress">
+        <!-- Filled by JS -->
+      </ul>
+    </section>
 
-    function checkLogin() {
-        const pass = document.getElementById("password").value;
-        if (pass === TEACHER_PASSWORD) {
-            window.location.href = "dashboard.html";
-        } else {
-            document.getElementById("loginStatus").textContent = "Incorrect password.";
-        }
+    <button id="logoutBtn" class="secondary-btn">Log out</button>
+  </main>
+
+  <footer class="site-footer">
+    Sci-Guru © LEC Biotec (Pvt) Ltd
+  </footer>
+
+  <script>
+    // Redirect to login if not logged in
+    const loggedIn = localStorage.getItem('sciGuruTeacherLoggedIn') === 'true';
+    if (!loggedIn) {
+      window.location.href = 'login.html';
     }
-</script>
 
+    // Read topic + lab progress (from previous code we used)
+    function loadProgress() {
+      const topicBox = document.getElementById('topicProgress');
+      const labBox = document.getElementById('labProgress');
+
+      const key = 'progress_Form 1';
+      const stored = JSON.parse(localStorage.getItem(key) || '{}');
+
+      // ----- Topics -----
+      if (!stored.topics || Object.keys(stored.topics).length === 0) {
+        topicBox.textContent = 'No quiz data saved yet on this device.';
+      } else {
+        const table = document.createElement('table');
+        table.className = 'progress-table';
+
+        const header = document.createElement('tr');
+        header.innerHTML = '<th>Topic</th><th>Best score</th><th>Attempts</th>';
+        table.appendChild(header);
+
+        Object.entries(stored.topics).forEach(([topic, info]) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${topic}</td>
+            <td>${info.bestScore || 0}%</td>
+            <td>${info.attempts || 0}</td>
+          `;
+          table.appendChild(row);
+        });
+
+        topicBox.innerHTML = '';
+        topicBox.appendChild(table);
+      }
+
+      // ----- Labs -----
+      const labs = stored.labs || {};
+      const labNames = {
+        'density-lab': 'Density & flotation',
+        'mixtures-lab': 'Mixtures & separation',
+        'electricity-lab': 'Electricity circuits'
+      };
+
+      labBox.innerHTML = '';
+      Object.keys(labNames).forEach(id => {
+        const li = document.createElement('li');
+        const done = labs[id];
+        li.textContent = `${labNames[id]} – ${done ? 'Completed ✅' : 'Not done yet'}`;
+        labBox.appendChild(li);
+      });
+    }
+
+    loadProgress();
+
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('sciGuruTeacherLoggedIn');
+      window.location.href = 'login.html';
+    });
+  </script>
 </body>
 </html>
