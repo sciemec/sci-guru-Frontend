@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Guru AI Science Tutor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --lec-teal: #0f766e;
+            --lec-blue: #0369a1;
+            --bg-soft: #eef4ff;
+            --panel-bg: #ffffff;
+            --panel-dark: #020617;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: var(--bg-soft);
+        }
+        header {
+            background: linear-gradient(120deg, var(--lec-blue), #4f46e5);
+            color: #fff;
+            padding: 16px 20px;
+        }
+        header h1 { margin: 0; font-size: 24px; }
+        main { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 5px 16px rgba(0,0,0,0.1);
+        }
+
+        select, textarea {
+            width: 100%; padding: 8px; border-radius: 8px;
+            border: 1px solid #cbd5e1; font-size: 14px;
+        }
+        textarea { min-height: 70px; }
+
+        .button-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        button { padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; }
+        .btn-main { background: var(--lec-teal); color: #fff; }
+        .btn-secondary { background: #0ea5e9; color: #fff; }
+        .btn-ghost { background: #e2e8f0; color: #000; }
+
+        .output-box {
+            background: var(--panel-dark);
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 10px;
+            min-height: 70px;
+            white-space: pre-wrap;
+        }
+
+        #virtual-lab-hub {
+            margin-top: 30px;
+            background: #e0f2fe;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 16px;
+        }
+
+        .lab-card {
+            background: white; padding: 14px; border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .lab-card h3 { margin: 6px 0; }
+        .lab-card button { background: var(--lec-teal); color: white; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Sci-Guru AI Science Tutor</h1>
+</header>
+
+<main>
+
+    <!-- INPUT & OUTPUT PANELS -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <section class="panel">
+            <h2>Ask Sci-Guru</h2>
+
+            <label>Form Level</label>
+            <select id="formSelect">
+                <option>Form 1</option><option>Form 2</option>
+                <option>Form 3</option><option>Form 4</option>
+            </select>
+
+            <label>Topic</label>
+            <select id="topicSelect">
+                <option>Density</option>
+                <option>Electricity</option>
+                <option>Mixtures and Separation</option>
+                <option>General Science</option>
+            </select>
+
+            <label>Your question</label>
+            <textarea id="questionInput" placeholder="Explain density using Zimbabwean examples..."></textarea>
+
+            <div class="button-row">
+                <button class="btn-main" onclick="askSciGuru()">Ask Sci-Guru</button>
+                <button class="btn-secondary" onclick="generateQuiz()">Generate quiz</button>
+                <button class="btn-ghost" onclick="generatePractical()">Generate practical</button>
+                <button class="btn-secondary" onclick="openVirtualLabHub()">Open virtual lab</button>
+            </div>
+
+            <div id="status"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Results</h2>
+
+            <strong>Explanation</strong>
+            <div id="explanationBox" class="output-box">Sci-Guru will answer here…</div>
+            <br>
+
+            <strong>Quiz</strong>
+            <div id="quizBox" class="output-box">Quiz will appear here…</div>
+            <br>
+
+            <strong>Practical</strong>
+            <div id="practicalBox" class="output-box">Practical experiment will appear here…</div>
+        </section>
+    </div>
+
+    <!-- LAB HUB -->
+    <section id="virtual-lab-hub">
+        <h2>Virtual Lab Hub</h2>
+
+        <div class="lab-grid">
+
+            <div class="lab-card">
+                <h3>Density Lab</h3>
+                <p>Test sinking & floating using rocks, wood, water.</p>
+                <button onclick="openLab('sim-density.html')">Open</button>
+            </div>
+
+            <div class="lab-card">
+                <h3>Electricity Lab</h3>
+                <p>Build circuits with bulbs, switches, wires.</p>
+                <button onclick="openLab('sim-electricity.html')">Open</button>
+            </div>
+
+            <div class="lab-card">
+                <h3>Mixtures Lab</h3>
+                <p>Mix & separate sand, salt, oil, water, iron filings.</p>
+                <button onclick="openLab('sim-mixtures.html')">Open</button>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<script>
+/*  ✅ Your Backend URL — FULLY WORKING */
+const API_BASE = "https://sci-guru-backend.onrender.com";
+
+/* --- Helper Functions --- */
+function getInputs() {
+    return {
+        form: document.getElementById("formSelect").value,
+        topic: document.getElementById("topicSelect").value,
+        question: document.getElementById("questionInput").value.trim(),
+    };
+}
+
+function setStatus(msg) {
+    document.getElementById("status").innerText = msg;
+}
+
+/* --- Sci-Guru API Calls --- */
+async function askSciGuru() {
+    const { form, topic, question } = getInputs();
+    if (!question) return setStatus("Please type a question.");
+
+    setStatus("Thinking…");
+
+    const res = await fetch(API_BASE + "/api/explain", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ form, topic, question })
+    });
+
+    const data = await res.json();
+    document.getElementById("explanationBox").innerText = data.answer || "No response.";
+    setStatus("");
+}
+
+async function generateQuiz() {
+    const { form, topic, question } = getInputs();
+    setStatus("Generating quiz…");
+
+    const res = await fetch(API_BASE + "/api/quiz", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ form, topic, question })
+    });
+
+    const data = await res.json();
+    document.getElementById("quizBox").innerText = data.quiz || "No quiz.";
+    setStatus("");
+}
+
+async function generatePractical() {
+    const { form, topic, question } = getInputs();
+    setStatus("Preparing practical…");
+
+    const res = await fetch(API_BASE + "/api/practical", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ form, topic, question })
+    });
+
+    const data = await res.json();
+    document.getElementById("practicalBox").innerText = data.practical || "No practical.";
+    setStatus("");
+}
+
+/* --- VIRTUAL LAB NAVIGATION --- */
+function openVirtualLabHub() {
+    document.getElementById("virtual-lab-hub").scrollIntoView({ behavior: "smooth" });
+}
+
+function openLab(page) {
+    window.open(page, "_blank");
+}
+</script>
+
+</body>
+</html>

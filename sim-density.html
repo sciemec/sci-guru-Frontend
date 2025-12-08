@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Guru Auto Virtual Lab – Density</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f3f6fb;
+            color: #111827;
+        }
+        header {
+            background: #014f86;
+            color: #fff;
+            padding: 12px 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+        header small {
+            display: block;
+            font-size: 11px;
+            opacity: 0.85;
+        }
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 16px 24px;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+            gap: 16px;
+        }
+        @media (max-width: 800px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .answer-box {
+            background: #0b1120;
+            color: #e5e7eb;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .tank-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .tank {
+            position: relative;
+            width: 260px;
+            height: 220px;
+            border-radius: 12px 12px 6px 6px;
+            border: 3px solid #0f172a;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+        .water {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 65%;
+            background: linear-gradient(to top, #0ea5e9, #38bdf8);
+        }
+        .water-label {
+            position: absolute;
+            left: 50%;
+            top: 8px;
+            transform: translateX(-50%);
+            color: #0f172a;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .objects-area {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .object {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: grab;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+        }
+        .object:active { cursor: grabbing; }
+        .dropped-object {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        button {
+            background: #0f766e;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 999px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-right: 6px;
+            margin-top: 6px;
+        }
+        button:hover { opacity: 0.9; }
+        .status {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Sci-Guru Auto Virtual Lab – Density</h1>
+    <small>Practical + simulation generated dynamically from the AI.</small>
+</header>
+
+<main>
+    <button onclick="loadPractical()">Generate density practical & lab</button>
+    <span id="status" class="status"></span>
+
+    <div class="layout" style="margin-top: 12px;">
+        <div class="panel">
+            <h2 id="pTitle">Practical</h2>
+            <div id="pText" class="answer-box">
+Click the button above to ask Sci-Guru to generate a density practical and simulation config.
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Virtual Tank (from simulation config)</h2>
+            <div class="tank-wrapper">
+                <div class="tank" id="tank">
+                    <div class="water"></div>
+                    <div class="water-label">Water</div>
+                </div>
+            </div>
+            <div class="status" id="tankStatus">Objects will appear here once the simulation config loads.</div>
+            <div id="objectsArea" class="objects-area"></div>
+            <button onclick="resetTank()">Reset tank</button>
+        </div>
+    </div>
+</main>
+
+<script>
+let currentSim = null;
+const statusSpan = document.getElementById('status');
+const tank = document.getElementById('tank');
+const tankStatus = document.getElementById('tankStatus');
+const objectsArea = document.getElementById('objectsArea');
+
+async function loadPractical() {
+    statusSpan.textContent = ' Asks Sci-Guru to design the practical…';
+    tankStatus.textContent = 'Loading simulation config…';
+    objectsArea.innerHTML = '';
+    resetTank();
+
+    try {
+        const res = await fetch('http://localhost:5000/api/practical-structured', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                level: 'Form 1',
+                topic: 'Density'
+            })
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+            statusSpan.textContent = ' Error: ' + (data.error || 'Unknown error');
+            return;
+        }
+
+        const p = data.practical;
+        currentSim = p.simulation || null;
+
+        // Build practical text
+        document.getElementById('pTitle').textContent = p.title || 'Practical';
+        document.getElementById('pText').textContent =
+            'Aim: ' + p.aim + '\n\n' +
+            'Apparatus:\n- ' + p.apparatus.join('\n- ') + '\n\n' +
+            'Method:\n- ' + p.steps.join('\n- ') + '\n\n' +
+            'Safety:\n- ' + p.safety.join('\n- ') + '\n\n' +
+            'Expected results:\n- ' + p.expected.join('\n- ') + '\n\n' +
+            'Conclusion:\n' + p.conclusion + '\n\n' +
+            'Follow-up questions:\n- ' + p.followup.join('\n- ');
+
+        // Build simulation objects
+        buildSimulationObjects(currentSim);
+
+        statusSpan.textContent = ' Practical and simulation loaded.';
+    } catch (err) {
+        console.error(err);
+        statusSpan.textContent = ' Error reaching backend.';
+        tankStatus.textContent = 'Could not load simulation.';
+    }
+}
+
+function buildSimulationObjects(sim) {
+    objectsArea.innerHTML = '';
+    resetTank();
+
+    if (!sim || sim.simType !== 'density_tank') {
+        tankStatus.textContent = 'Simulation type not supported yet.';
+        return;
+    }
+
+    tankStatus.textContent = sim.description || 'Drag each object into the water.';
+
+    (sim.objects || []).forEach(obj => {
+        const div = document.createElement('div');
+        div.classList.add('object');
+        div.textContent = obj.label;
+        div.dataset.id = obj.id;
+        div.dataset.behaviour = obj.behaviour;
+
+        // colour by behaviour
+        if (obj.behaviour === 'sink') {
+            div.style.background = '#4b5563';
+            div.style.color = '#f9fafb';
+        } else {
+            div.style.background = '#fbbf24';
+            div.style.color = '#111827';
+        }
+
+        div.draggable = true;
+        div.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({
+                id: obj.id,
+                label: obj.label,
+                behaviour: obj.behaviour
+            }));
+        });
+
+        objectsArea.appendChild(div);
+    });
+}
+
+// Allow drops on tank
+tank.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+tank.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const raw = e.dataTransfer.getData('text/plain');
+    if (!raw) return;
+    let info;
+    try {
+        info = JSON.parse(raw);
+    } catch {
+        return;
+    }
+    dropObjectInTank(info);
+});
+
+function dropObjectInTank(info) {
+    // remove any previous with same id
+    tank.querySelectorAll('.dropped-object').forEach(el => {
+        if (el.dataset.id === info.id) el.remove();
+    });
+
+    const div = document.createElement('div');
+    div.classList.add('dropped-object');
+    div.dataset.id = info.id;
+    div.textContent = info.label;
+
+    if (info.behaviour === 'sink') {
+        div.style.left = '50px';
+        div.style.bottom = '10px';
+        div.style.background = '#374151';
+        div.style.color = '#f9fafb';
+        tankStatus.textContent = info.label + ' sinks – it is denser than water.';
+    } else {
+        div.style.left = '150px';
+        div.style.bottom = '110px';
+        div.style.background = '#fbbf24';
+        div.style.color = '#111827';
+        tankStatus.textContent = info.label + ' floats – it is less dense than water.';
+    }
+
+    tank.appendChild(div);
+}
+
+function resetTank() {
+    tank.querySelectorAll('.dropped-object').forEach(el => el.remove());
+    tankStatus.textContent = 'Tank is ready. Drag an object into the water.';
+}
+</script>
+
+</body>
+</html>

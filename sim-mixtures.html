@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Guru Mixtures & Separation Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- INLINE CSS -->
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #eef4ff;
+            color: #111827;
+        }
+        header {
+            background: #0369a1;
+            color: #fff;
+            padding: 14px 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        header small {
+            display: block;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        main {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 16px 24px;
+        }
+        .intro {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 2fr);
+            gap: 16px;
+        }
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        h3 {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .sub {
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .sub strong {
+            color: #1f2933;
+        }
+
+        /* Substances */
+        #substances {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .substance {
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: #e0edff;
+            border: 1px solid #93c5fd;
+            cursor: grab;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.2);
+        }
+        .substance:active {
+            cursor: grabbing;
+        }
+
+        /* Mixture bowl */
+        #mixtureZone {
+            margin-top: 8px;
+            border-radius: 12px;
+            border: 2px dashed #4f46e5;
+            background: radial-gradient(circle at top, #e0f2fe, #eff6ff);
+            min-height: 200px;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #mixturePlaceholder {
+            position: absolute;
+            inset: 10px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        #chipContainer {
+            position: relative;
+            z-index: 4;
+            min-height: 120px;
+        }
+
+        .mixture-legend {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            margin: 4px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #111827;
+            position: relative;
+        }
+        .chip.sand  { background: #facc15; }
+        .chip.salt  { background: #e5e7eb; }
+        .chip.iron  { background: #9ca3af; color: #f9fafb; }
+        .chip.water { background: #bfdbfe; }
+        .chip.oil   { background: #fed7aa; }
+
+        /* Methods */
+        .methods {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .method-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #e5e7eb;
+            color: #111827;
+        }
+        .method-btn.active {
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        button.main {
+            background: #0f766e;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button.secondary {
+            background: #6b7280;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.95;
+        }
+
+        .result {
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        .result.good { color: #15803d; }
+        .result.bad  { color: #b91c1c; }
+
+        #status {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        #sciGuruBox {
+            margin-top: 10px;
+            background: #020617;
+            color: #e5e7eb;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 230px;
+            overflow-y: auto;
+        }
+
+        /* ---------- BASIC CHIP ANIMATIONS ---------- */
+        @keyframes riseUp {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(-45px); }
+        }
+        @keyframes sinkDown {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(35px); opacity: 0.9; }
+        }
+        @keyframes fadeEvaporate {
+            0%   { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.1; transform: scale(0.9) translateY(-20px); }
+        }
+        @keyframes slideMagnet {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        .anim-rise  { animation: riseUp 1.4s forwards; }
+        .anim-sink  { animation: sinkDown 1.4s forwards; }
+        .anim-fade  { animation: fadeEvaporate 1.6s forwards; }
+        .anim-slide { animation: slideMagnet 1.4s forwards; }
+
+        /* ---------- ADVANCED GRAPHICS ---------- */
+        .bg-layer {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 2;
+        }
+
+        #heatFlame {
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 34px;
+            border-radius: 50% 50% 45% 45%;
+            background: radial-gradient(circle at 30% 0%, #facc15, #ea580c 60%, #7c2d12 100%);
+        }
+
+        #steamClouds {
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.9), rgba(148,163,184,0.1));
+        }
+
+        #bubbleLayer {
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 40px;
+            border-radius: 35px 35px 0 0;
+            border: 1px solid rgba(148,163,184,0.6);
+        }
+
+        #funnelGraphic {
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            border: 2px dashed rgba(148,163,184,0.9);
+        }
+
+        #waterDrip {
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 18px;
+            border-radius: 50% 50% 50% 50%;
+            background: radial-gradient(circle at 30% 20%, #e0f2fe, #3b82f6);
+        }
+
+        #magnetHint {
+            right: 6px;
+            bottom: 6px;
+            font-size: 14px;
+            color: #6b7280;
+            z-index: 3;
+        }
+
+        /* Advanced animation keyframes */
+        @keyframes flameFlicker {
+            0%   { transform: translateX(-50%) scale(0.9); opacity: 0.8; }
+            100% { transform: translateX(-50%) scale(1.05); opacity: 1; }
+        }
+        @keyframes steamRise {
+            0%   { transform: translate(-50%, 0); opacity: 0.2; }
+            100% { transform: translate(-50%, -20px); opacity: 0.8; }
+        }
+        @keyframes bubbleUp {
+            0%   { transform: translate(-50%, 0); opacity: 0.3; }
+            100% { transform: translate(-50%, -12px); opacity: 0.9; }
+        }
+        @keyframes funnelPulse {
+            0%   { transform: translateX(-50%) scale(0.95); }
+            100% { transform: translateX(-50%) scale(1.05); }
+        }
+        @keyframes waterDrop {
+            0%   { transform: translate(-50%, 0); opacity: 0.2; }
+            100% { transform: translate(-50%, 25px); opacity: 0.9; }
+        }
+        @keyframes magnetPulse {
+            0%   { transform: scale(0.9); }
+            100% { transform: scale(1.1); }
+        }
+
+        .show-flame  { opacity: 1; animation: flameFlicker 0.7s infinite alternate; }
+        .show-steam  { opacity: 1; animation: steamRise 1.6s infinite alternate; }
+        .show-bubble { opacity: 1; animation: bubbleUp 1.6s infinite alternate; }
+        .show-funnel { opacity: 1; animation: funnelPulse 1.5s infinite alternate; }
+        .show-drip   { opacity: 1; animation: waterDrop 0.9s infinite; }
+        .show-magnet { animation: magnetPulse 1s infinite alternate; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sci-Guru Mixtures & Separation Lab</h1>
+    <small>Build a mixture and choose the best method to separate it. Then ask Sci-Guru to explain using Zimbabwean examples.</small>
+</header>
+
+<main>
+    <p class="intro">
+        Drag different substances into the bowl to make a mixture (for example,
+        <strong>sand + water</strong> or <strong>salt + water</strong> or <strong>iron filings + sand</strong>).
+        Then select a separation method and test if it is suitable. Watch how the particles move when you choose a good method.
+    </p>
+
+    <div class="layout">
+        <!-- LEFT: substances -->
+        <div class="panel">
+            <h2>Substances</h2>
+            <p class="sub">
+                Drag a substance from here into the <strong>Mixture Bowl</strong>.
+                You can add more than one.
+            </p>
+            <div id="substances">
+                <div class="substance" draggable="true" data-type="sand">Sand</div>
+                <div class="substance" draggable="true" data-type="salt">Salt</div>
+                <div class="substance" draggable="true" data-type="iron">Iron filings</div>
+                <div class="substance" draggable="true" data-type="water">Water</div>
+                <div class="substance" draggable="true" data-type="oil">Cooking oil</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: mixture & methods -->
+        <div class="panel">
+            <h2>Mixture Bowl & Separation</h2>
+
+            <div id="mixtureZone">
+                <div id="mixturePlaceholder">
+                    Drop substances here to form a mixture.
+                </div>
+
+                <!-- Chip layer -->
+                <div id="chipContainer"></div>
+
+                <!-- Advanced graphics -->
+                <div id="heatFlame" class="bg-layer"></div>
+                <div id="steamClouds" class="bg-layer"></div>
+                <div id="bubbleLayer" class="bg-layer"></div>
+                <div id="funnelGraphic" class="bg-layer"></div>
+                <div id="waterDrip" class="bg-layer"></div>
+                <div id="magnetHint" class="bg-layer">🧲</div>
+            </div>
+            <div class="mixture-legend">
+                When you choose a good method, the chips will move:
+                oil rises, sand sinks, water evaporates, iron slides to the magnet, funnels and flames animate.
+            </div>
+
+            <h3 style="margin-top:10px;">Choose a separation method</h3>
+            <p class="sub">
+                Click one method below, then <strong>Test method</strong> to see if it is suitable for the mixture you built.
+            </p>
+
+            <div class="methods">
+                <button class="method-btn" data-method="filtration">Filtration</button>
+                <button class="method-btn" data-method="evaporation">Evaporation</button>
+                <button class="method-btn" data-method="magnet">Magnet</button>
+                <button class="method-btn" data-method="decanting">Decanting</button>
+            </div>
+
+            <div class="controls">
+                <button class="main" id="testBtn">Test method</button>
+                <button class="secondary" id="resetBtn">Reset bowl</button>
+                <button class="main" id="askSciGuruBtn">Ask Sci-Guru</button>
+            </div>
+
+            <div id="testResult" class="result"></div>
+            <div id="status"></div>
+
+            <div id="sciGuruBox">
+Sci-Guru will explain how to separate your mixture here…
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- INLINE JS -->
+<script>
+    let mixture = [];          // substances added
+    let selectedMethod = null; // filtration / evaporation / magnet / decanting
+
+    const substances      = document.querySelectorAll('.substance');
+    const mixtureZone     = document.getElementById('mixtureZone');
+    const chipContainer   = document.getElementById('chipContainer');
+    const placeholder     = document.getElementById('mixturePlaceholder');
+    const methodButtons   = document.querySelectorAll('.method-btn');
+    const testResult      = document.getElementById('testResult');
+    const statusSpan      = document.getElementById('status');
+    const sciGuruBox      = document.getElementById('sciGuruBox');
+
+    const heatFlame    = document.getElementById('heatFlame');
+    const steamClouds  = document.getElementById('steamClouds');
+    const bubbleLayer  = document.getElementById('bubbleLayer');
+    const funnelGraphic = document.getElementById('funnelGraphic');
+    const waterDrip    = document.getElementById('waterDrip');
+    const magnetHint   = document.getElementById('magnetHint');
+
+    function clearChipAnimations() {
+        const chips = chipContainer.querySelectorAll('.chip');
+        chips.forEach(ch => {
+            ch.classList.remove('anim-rise', 'anim-sink', 'anim-fade', 'anim-slide');
+        });
+    }
+
+    function clearAdvancedGraphics() {
+        heatFlame.classList.remove('show-flame');
+        steamClouds.classList.remove('show-steam');
+        bubbleLayer.classList.remove('show-bubble');
+        funnelGraphic.classList.remove('show-funnel');
+        waterDrip.classList.remove('show-drip');
+        magnetHint.classList.remove('show-magnet');
+    }
+
+    // DRAG START
+    substances.forEach(el => {
+        el.addEventListener('dragstart', (e) => {
+            const type = el.dataset.type;
+            e.dataTransfer.setData('substanceType', type);
+        });
+    });
+
+    // ALLOW DROP
+    mixtureZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    // HANDLE DROP
+    mixtureZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const type = e.dataTransfer.getData('substanceType');
+        if (!type) return;
+
+        if (mixture.length === 0) {
+            placeholder.style.display = 'none';
+        }
+
+        mixture.push(type);
+        const chip = document.createElement('span');
+        chip.classList.add('chip', type);
+        chip.textContent = (type === 'iron')
+            ? 'Iron filings'
+            : type.charAt(0).toUpperCase() + type.slice(1);
+        chipContainer.appendChild(chip);
+
+        statusSpan.textContent = 'Added: ' + chip.textContent;
+        testResult.textContent = '';
+        testResult.className = 'result';
+        clearChipAnimations();
+        clearAdvancedGraphics();
+    });
+
+    // SELECT METHOD
+    methodButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            methodButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedMethod = btn.dataset.method;
+            statusSpan.textContent = 'Selected method: ' + btn.textContent;
+            testResult.textContent = '';
+            testResult.className = 'result';
+            clearChipAnimations();
+            clearAdvancedGraphics();
+        });
+    });
+
+    // EVALUATE METHOD
+    function evaluateMixture(method, mixture) {
+        const hasSand  = mixture.includes('sand');
+        const hasSalt  = mixture.includes('salt');
+        const hasIron  = mixture.includes('iron');
+        const hasWater = mixture.includes('water');
+        const hasOil   = mixture.includes('oil');
+
+        if (mixture.length === 0) {
+            return {
+                ok: false,
+                message: 'First drag some substances into the bowl to make a mixture.'
+            };
+        }
+
+        if (!method) {
+            return {
+                ok: false,
+                message: 'Choose a separation method (filtration, evaporation, magnet or decanting) before testing.'
+            };
+        }
+
+        if (hasIron && method === 'magnet') {
+            return {
+                ok: true,
+                message: 'Correct! A magnet can pull out the iron filings from the mixture.'
+            };
+        }
+
+        if (hasSand && hasWater && method === 'filtration') {
+            return {
+                ok: true,
+                message: 'Correct! Filtration will trap the sand on the filter and let the water pass through.'
+            };
+        }
+
+        if (hasSand && hasWater && method === 'decanting') {
+            return {
+                ok: true,
+                message: 'Partly correct. You can decant to pour off most of the clear water, but filtration is more effective to remove all the sand.'
+            };
+        }
+
+        if (hasSalt && hasWater && method === 'evaporation') {
+            return {
+                ok: true,
+                message: 'Correct! When the water evaporates, the salt will remain as crystals.'
+            };
+        }
+
+        if (hasOil && hasWater && method === 'decanting') {
+            return {
+                ok: true,
+                message: 'Correct! Oil floats on top of water, so you can gently pour (decant) off the oil layer.'
+            };
+        }
+
+        return {
+            ok: false,
+            message: 'That method is not the best for this mixture. Think about the properties: which substance is magnetic, which dissolves, and which floats or sinks?'
+        };
+    }
+
+    // RUN VISUAL ANIMATIONS WHEN METHOD IS GOOD
+    function runAnimation(method, mixture) {
+        clearChipAnimations();
+        clearAdvancedGraphics();
+
+        const chips = chipContainer.querySelectorAll('.chip');
+        const hasSand  = mixture.includes('sand');
+        const hasSalt  = mixture.includes('salt');
+        const hasIron  = mixture.includes('iron');
+        const hasWater = mixture.includes('water');
+        const hasOil   = mixture.includes('oil');
+
+        // Oil + water decanting: oil rises, water sinks
+        if (method === 'decanting' && hasOil && hasWater) {
+            chips.forEach(ch => {
+                if (ch.classList.contains('oil'))   ch.classList.add('anim-rise');
+                if (ch.classList.contains('water')) ch.classList.add('anim-sink');
+            });
+        }
+
+        // Sand + water filtration: sand sinks, water rises + funnel + dripping water
+        if (method === 'filtration' && hasSand && hasWater) {
+            chips.forEach(ch => {
+                if (ch.classList.contains('sand'))  ch.classList.add('anim-sink');
+                if (ch.classList.contains('water')) ch.classList.add('anim-rise');
+            });
+            funnelGraphic.classList.add('show-funnel');
+            waterDrip.classList.add('show-drip');
+        }
+
+        // Salt + water evaporation: water fades + flame, steam, bubbles
+        if (method === 'evaporation' && hasSalt && hasWater) {
+            chips.forEach(ch => {
+                if (ch.classList.contains('water')) ch.classList.add('anim-fade');
+            });
+            heatFlame.classList.add('show-flame');
+            steamClouds.classList.add('show-steam');
+            bubbleLayer.classList.add('show-bubble');
+        }
+
+        // Iron + anything, magnet: iron slides + pulsing magnet
+        if (method === 'magnet' && hasIron) {
+            chips.forEach(ch => {
+                if (ch.classList.contains('iron')) ch.classList.add('anim-slide');
+            });
+            magnetHint.classList.add('show-magnet');
+        }
+    }
+
+    // TEST BUTTON
+    document.getElementById('testBtn').addEventListener('click', () => {
+        const { ok, message } = evaluateMixture(selectedMethod, mixture);
+
+        testResult.textContent = message;
+        testResult.className = 'result ' + (ok ? 'good' : 'bad');
+
+        if (ok) {
+            runAnimation(selectedMethod, mixture);
+        } else {
+            clearChipAnimations();
+            clearAdvancedGraphics();
+        }
+    });
+
+    // RESET
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        mixture = [];
+        selectedMethod = null;
+        chipContainer.innerHTML = '';
+        placeholder.style.display = 'block';
+
+        methodButtons.forEach(b => b.classList.remove('active'));
+        testResult.textContent = '';
+        testResult.className = 'result';
+        statusSpan.textContent = 'Bowl reset. Build a new mixture.';
+        clearChipAnimations();
+        clearAdvancedGraphics();
+    });
+
+    // ASK SCI-GURU
+    document.getElementById('askSciGuruBtn').addEventListener('click', async () => {
+        if (mixture.length === 0) {
+            sciGuruBox.textContent = 'First build a mixture by dragging substances into the bowl.';
+            return;
+        }
+
+        const mixtureNames = mixture
+            .map(t => t === 'iron' ? 'iron filings' : t)
+            .join(', ');
+
+        const methodName = selectedMethod
+            ? selectedMethod.charAt(0).toUpperCase() + selectedMethod.slice(1)
+            : 'no method selected';
+
+        const question = `
+I have a mixture made of: ${mixtureNames}.
+The student chose the method: ${methodName}.
+
+1. Explain whether this is a good separation method or not.
+2. Suggest the best method (or sequence of methods) to separate the mixture.
+3. Use simple Form 1–2 language and Zimbabwean examples like borehole water, sadza preparation, meali-meal sieving, etc.
+        `.trim();
+
+        statusSpan.textContent = 'Sci-Guru is thinking about your mixture…';
+
+        try {
+            const response = await fetch('http://localhost:5000/api/explain', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question,
+                    level: 'Form 1',
+                    topic: 'Mixtures and separation'
+                })
+            });
+
+            const data = await response.json();
+            if (data && data.answer) {
+                sciGuruBox.textContent = data.answer;
+            } else {
+                sciGuruBox.textContent = 'Sci-Guru could not explain this mixture right now.';
+            }
+        } catch (err) {
+            console.error(err);
+            sciGuruBox.textContent = 'Could not reach the Sci-Guru backend. Is the server running on http://localhost:5000 ?';
+        } finally {
+            statusSpan.textContent = '';
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Guru Electricity Virtual Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- INLINE CSS -->
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #eef4ff;
+            color: #111827;
+        }
+
+        header {
+            background: #014f86;
+            color: #fff;
+            padding: 14px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        header small {
+            display: block;
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 16px 24px;
+        }
+
+        .intro {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        #lab-container {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 800px) {
+            #lab-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(15,23,42,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        #components {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .component {
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            cursor: grab;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.2);
+        }
+
+        .component:active {
+            cursor: grabbing;
+        }
+
+        .circuit-board-wrapper {
+            margin-top: 4px;
+        }
+
+        #dropzone {
+            height: 260px;
+            border-radius: 12px;
+            border: 2px dashed #4f46e5;
+            background: radial-gradient(circle at top, #e0f2fe, #eff6ff);
+            padding: 8px;
+            font-size: 13px;
+            color: #4b5563;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .placed {
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #f3f4ff;
+            border: 1px solid #9ca3af;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        .placed.battery { background: #fee2e2; border-color: #f87171; }
+        .placed.bulb { background: #fef3c7; border-color: #facc15; }
+        .placed.switch { background: #dcfce7; border-color: #22c55e; }
+        .placed.wire { background: #e5e7eb; border-color: #9ca3af; }
+
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button {
+            background: #0f766e;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.95;
+        }
+
+        .btn-reset {
+            background: #6b7280;
+        }
+
+        #bulbStatus {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #bulbIcon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #9ca3af;
+            background: #f9fafb;
+            box-shadow: 0 0 0 rgba(250,204,21,0);
+            transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        #bulbIcon.on {
+            background: #facc15;
+            border-color: #fbbf24;
+            box-shadow: 0 0 16px rgba(250,204,21,0.8);
+        }
+
+        #status {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        #sciGuruOutput {
+            margin-top: 12px;
+            background: #0b1120;
+            color: #e5e7eb;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sci-Guru Electricity Virtual Lab</h1>
+    <small>Build a simple circuit and let Sci-Guru explain it using Zimbabwean examples.</small>
+</header>
+
+<main>
+    <p class="intro">
+        Drag the circuit components onto the board. A complete circuit needs a <strong>battery</strong>, 
+        <strong>bulb</strong>, <strong>switch</strong> and at least <strong>two wires</strong>. 
+        Then test your circuit and ask Sci-Guru to explain what is happening.
+    </p>
+
+    <div id="lab-container">
+        <!-- LEFT: COMPONENTS -->
+        <div class="panel">
+            <h2>Components</h2>
+            <p style="font-size:13px; margin-top:0;">
+                Drag a component into the circuit board as many times as you need.
+            </p>
+            <div id="components">
+                <div class="component battery" draggable="true" data-type="battery">Battery</div>
+                <div class="component bulb" draggable="true" data-type="bulb">Bulb</div>
+                <div class="component switch" draggable="true" data-type="switch">Switch</div>
+                <div class="component wire" draggable="true" data-type="wire">Wire</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: CIRCUIT BOARD -->
+        <div class="panel">
+            <h2>Circuit Board</h2>
+            <div class="circuit-board-wrapper">
+                <div id="dropzone">
+                    Drag components here to assemble your circuit.
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="testCircuit">Test circuit</button>
+                <button id="resetCircuit" class="btn-reset">Reset board</button>
+                <button id="askSciGuru">Ask Sci-Guru to explain</button>
+            </div>
+
+            <div id="bulbStatus">
+                <div id="bulbIcon"></div>
+                <span id="bulbText">Bulb: OFF (incomplete circuit)</span>
+            </div>
+            <div id="status"></div>
+
+            <div id="sciGuruOutput">
+Sci-Guru will explain your circuit here…
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- INLINE JS -->
+<script>
+    // Keep track of what components have been placed
+    let placedComponents = [];
+
+    const components = document.querySelectorAll('.component');
+    const dropzone = document.getElementById('dropzone');
+    const bulbIcon = document.getElementById('bulbIcon');
+    const bulbText = document.getElementById('bulbText');
+    const statusSpan = document.getElementById('status');
+    const sciGuruOutput = document.getElementById('sciGuruOutput');
+
+    // DRAG START
+    components.forEach(el => {
+        el.addEventListener('dragstart', (event) => {
+            const type = el.dataset.type;
+            event.dataTransfer.setData('componentType', type);
+        });
+    });
+
+    // ALLOW DROP ON BOARD
+    dropzone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+
+    // HANDLE DROP
+    dropzone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const type = event.dataTransfer.getData('componentType');
+        if (!type) return;
+
+        // Create a new visual element
+        const placed = document.createElement('div');
+        placed.classList.add('placed', type);
+        placed.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+
+        dropzone.appendChild(placed);
+        placedComponents.push(type);
+
+        statusSpan.textContent = "Added: " + placed.textContent;
+    });
+
+    // TEST CIRCUIT
+    document.getElementById('testCircuit').addEventListener('click', () => {
+        const hasBattery = placedComponents.includes('battery');
+        const hasBulb = placedComponents.includes('bulb');
+        const hasSwitch = placedComponents.includes('switch');
+        const wireCount = placedComponents.filter(c => c === 'wire').length;
+
+        const complete = hasBattery && hasBulb && hasSwitch && wireCount >= 2;
+
+        if (complete) {
+            bulbIcon.classList.add('on');
+            bulbText.textContent = "Bulb: ON (complete circuit)";
+            statusSpan.textContent = "Great! Your circuit is complete. Current can flow from the battery, through the wires and switch, to the bulb.";
+        } else {
+            bulbIcon.classList.remove('on');
+            bulbText.textContent = "Bulb: OFF (incomplete circuit)";
+            statusSpan.textContent = "The circuit is still incomplete. Check that you have a battery, bulb, switch and at least two wires.";
+        }
+    });
+
+    // RESET CIRCUIT
+    document.getElementById('resetCircuit').addEventListener('click', () => {
+        placedComponents = [];
+        // Remove all placed children
+        dropzone.querySelectorAll('.placed').forEach(el => el.remove());
+        bulbIcon.classList.remove('on');
+        bulbText.textContent = "Bulb: OFF (incomplete circuit)";
+        statusSpan.textContent = "Board reset. Drag components again to build a new circuit.";
+    });
+
+    // ASK SCI-GURU
+    document.getElementById('askSciGuru').addEventListener('click', async () => {
+        statusSpan.textContent = "Sci-Guru is thinking about your circuit…";
+
+        try {
+            const response = await fetch('http://localhost:5000/api/electricity-explain', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ components: placedComponents })
+            });
+
+            const data = await response.json();
+            if (data && data.answer) {
+                sciGuruOutput.textContent = data.answer;
+            } else {
+                sciGuruOutput.textContent = "Sci-Guru could not explain this circuit right now.";
+            }
+        } catch (err) {
+            console.error(err);
+            sciGuruOutput.textContent = "Could not reach the Sci-Guru backend. Is the server running?";
+        } finally {
+            statusSpan.textContent = "";
+        }
+    });
+</script>
+
+</body>
+</html>
