@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Guru Teacher Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-card {
+            max-width: 380px;
+            margin: 80px auto;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #loginStatus {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #b00020;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Teacher Login</h2>
+    <p>Enter the password to view the Sci-Guru dashboard.</p>
+
+    <input id="password" type="password" placeholder="Password">
+    <br><br>
+    <button onclick="checkLogin()">Login</button>
+
+    <div id="loginStatus"></div>
+</div>
+
+<script>
+    const TEACHER_PASSWORD = "lecbiotec2025";
+
+    function checkLogin() {
+        const pass = document.getElementById("password").value;
+        if (pass === TEACHER_PASSWORD) {
+            window.location.href = "dashboard.html";
+        } else {
+            document.getElementById("loginStatus").textContent = "Incorrect password.";
+        }
+    }
+</script>
+
+</body>
+</html>
