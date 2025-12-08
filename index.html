@@ -3,69 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sci-Guru | AI Science Learning</title>
+    <title>Sci-Guru | LEC BIOTEC</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
-<header class="site-header">
-  <div class="site-header-left">
-    <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
-    <div class="site-title-block">
-      <h1 class="site-title">Sci-Guru</h1>
-      <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
-    </div>
-  </div>
-  <nav class="site-nav">
-    <a href="index.html">Home</a>
-    <a href="tutor.html">AI Tutor</a>
-    <a href="sim-density.html">Density Lab</a>
-    <a href="sim-mixtures.html">Mixtures Lab</a>
-    <a href="sim-electricity.html">Electricity Lab</a>
-    <a href="login.html">Teacher Login</a>
-  </nav>
-</header>
 <body>
-    <header class="hero-section">
-        <h1>Sci-Guru</h1>
-        <p>Zimbabwe’s AI-powered Science Learning Platform</p>
-        <button onclick="location.href='tutor.html'" class="primary-btn">Launch AI Tutor</button>
+
+    <nav>
+        <div class="logo-container">
+            <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="nav-logo">
+            <span class="brand-name">Sci-Guru</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="tutor.html">AI Tutor</a></li>
+            <li><a href="sim-density.html">Virtual Labs</a></li>
+            <li><a href="login.html" class="login-btn">Teacher Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Sci-Guru</h1>
+            <p class="subtitle">Zimbabwe's AI-Powered Science Learning Platform</p>
+            <p class="description">Empowering students with interactive AI tutoring and virtual laboratory simulations.</p>
+            <a href="tutor.html" class="btn btn-primary">Launch AI Tutor</a>
+        </div>
     </header>
 
-    <section class="features">
+    <section class="features-section">
         <h2>What Sci-Guru Offers</h2>
-        <div class="feature-grid">
+        <div class="cards-container">
+            
             <div class="card">
-                <h3>AI Tutor</h3>
-                <p>Ask questions, generate quizzes, and get personalized explanations.</p>
-                <button onclick="location.href='tutor.html'">Open Tutor</button>
+                <div class="card-header">
+                    <h3>AI Tutor</h3>
+                </div>
+                <div class="card-body">
+                    <p>Ask complex science questions, generate practice quizzes, and get instant, personalized explanations based on the ZIMSEC syllabus.</p>
+                    <a href="tutor.html" class="btn btn-secondary">Open Tutor</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Virtual Labs</h3>
+                </div>
+                <div class="card-body">
+                    <p>Perform hands-on virtual experiments including Density, Mixtures, and Electricity without needing physical equipment.</p>
+                    <a href="sim-density.html" class="btn btn-secondary">Explore Labs</a>
+                </div>
             </div>
 
             <div class="card">
-                <h3>Virtual Labs</h3>
-                <p>Hands-on density, mixtures, and electricity experiments.</p>
-                <button onclick="location.href='#lab-section'">Explore Labs</button>
+                <div class="card-header">
+                    <h3>Teacher Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <p>Monitor student progress, assign tasks, and view performance analytics to improve classroom outcomes.</p>
+                    <a href="login.html" class="btn btn-secondary">Teacher Login</a>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>Teacher Dashboard</h3>
-                <p>Track student progress and performance.</p>
-                <button onclick="location.href='login.html'">Teacher Login</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="lab-section" class="labs">
-        <h2>Virtual Labs</h2>
-        <div class="lab-grid">
-            <button onclick="location.href='labs/sim-density.html'">Density Lab</button>
-            <button onclick="location.href='labs/sim-mixtures.html'">Mixtures Lab</button>
-            <button onclick="location.href='labs/sim-electricity.html'">Electricity Lab</button>
         </div>
     </section>
 
     <footer>
-        <p>© 2025 Sci-Guru • Built by LEC Biotec</p>
+        <p>&copy; 2025 LEC BIOTEC. All rights reserved.</p>
+        <p>Empowering Science Education in Zimbabwe.</p>
     </footer>
 
 </body>
-
 </html>
