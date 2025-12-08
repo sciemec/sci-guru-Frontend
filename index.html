@@ -14,90 +14,255 @@
             --panel-dark: #020617;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
             background: var(--bg-soft);
+            color: #0f172a;
         }
+
         header {
-            background: linear-gradient(120deg, var(--lec-blue), #4f46e5);
+            background: radial-gradient(circle at top left, #38bdf8, var(--lec-blue));
             color: #fff;
-            padding: 16px 20px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.35);
         }
-        header h1 { margin: 0; font-size: 24px; }
-        main { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+
+        header h1 {
+            margin: 0 0 4px;
+            font-size: 24px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        main {
+            max-width: 1120px;
+            margin: 20px auto 40px;
+            padding: 0 16px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .panel {
             background: var(--panel-bg);
-            border-radius: 14px;
-            padding: 16px;
-            box-shadow: 0 5px 16px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            padding: 16px 18px 18px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+            border: 1px solid rgba(148, 163, 184, 0.4);
         }
 
-        select, textarea {
-            width: 100%; padding: 8px; border-radius: 8px;
-            border: 1px solid #cbd5e1; font-size: 14px;
+        h2 {
+            margin: 0 0 10px;
+            font-size: 18px;
         }
-        textarea { min-height: 70px; }
 
-        .button-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-        button { padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; }
-        .btn-main { background: var(--lec-teal); color: #fff; }
-        .btn-secondary { background: #0ea5e9; color: #fff; }
-        .btn-ghost { background: #e2e8f0; color: #000; }
+        label {
+            display: block;
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px 9px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            background: #f8fafc;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.45);
+            background: #fff;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .button-row {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(15, 23, 42, 0.25);
+        }
+
+        .btn-main {
+            background: var(--lec-teal);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #0ea5e9;
+            color: #0f172a;
+        }
+
+        .btn-ghost {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .status {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #0369a1;
+            min-height: 16px;
+        }
+
+        .output-section-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #e2e8f0;
+        }
 
         .output-box {
             background: var(--panel-dark);
             color: #e2e8f0;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 10px 11px;
+            border-radius: 12px;
+            font-size: 13px;
             min-height: 70px;
             white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 240px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
         }
 
+        .output-box.empty {
+            opacity: 0.5;
+            font-style: italic;
+        }
+
+        /* Virtual Lab Hub */
+
         #virtual-lab-hub {
-            margin-top: 30px;
-            background: #e0f2fe;
-            padding: 20px;
-            border-radius: 14px;
+            margin-top: 26px;
+            background: linear-gradient(135deg, #e0f2fe, #f1f5f9);
+            border-radius: 18px;
+            padding: 18px 18px 20px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+
+        #virtual-lab-hub h2 {
+            margin-bottom: 6px;
+        }
+
+        #virtual-lab-hub p {
+            margin: 0 0 14px;
+            font-size: 13px;
+            color: #475569;
         }
 
         .lab-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
         }
 
         .lab-card {
-            background: white; padding: 14px; border-radius: 12px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px 12px 13px;
+            box-shadow: 0 5px 14px rgba(15, 23, 42, 0.16);
+            border: 1px solid rgba(148, 163, 184, 0.5);
         }
 
-        .lab-card h3 { margin: 6px 0; }
-        .lab-card button { background: var(--lec-teal); color: white; }
+        .lab-card h3 {
+            margin: 0 0 4px;
+            font-size: 15px;
+        }
+
+        .lab-card p {
+            margin: 0 0 10px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .lab-card button {
+            background: var(--lec-teal);
+            color: #fff;
+            font-size: 12px;
+            padding-inline: 12px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 22px;
+        }
     </style>
 </head>
 
 <body>
-
 <header>
     <h1>Sci-Guru AI Science Tutor</h1>
+    <p>Explains ZIMSEC / Heritage-Based curriculum using Zimbabwean examples, practicals & quick quizzes.</p>
 </header>
 
 <main>
-
-    <!-- INPUT & OUTPUT PANELS -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    <div class="layout">
+        <!-- LEFT: INPUT -->
         <section class="panel">
             <h2>Ask Sci-Guru</h2>
 
-            <label>Form Level</label>
+            <label for="formSelect">Form Level</label>
             <select id="formSelect">
-                <option>Form 1</option><option>Form 2</option>
-                <option>Form 3</option><option>Form 4</option>
+                <option>Form 1</option>
+                <option>Form 2</option>
+                <option>Form 3</option>
+                <option>Form 4</option>
             </select>
 
-            <label>Topic</label>
+            <label for="topicSelect">Topic</label>
             <select id="topicSelect">
                 <option>Density</option>
                 <option>Electricity</option>
@@ -105,7 +270,7 @@
                 <option>General Science</option>
             </select>
 
-            <label>Your question</label>
+            <label for="questionInput">Your question</label>
             <textarea id="questionInput" placeholder="Explain density using Zimbabwean examples..."></textarea>
 
             <div class="button-row">
@@ -115,127 +280,156 @@
                 <button class="btn-secondary" onclick="openVirtualLabHub()">Open virtual lab</button>
             </div>
 
-            <div id="status"></div>
+            <div id="status" class="status"></div>
         </section>
 
+        <!-- RIGHT: OUTPUT -->
         <section class="panel">
             <h2>Results</h2>
 
-            <strong>Explanation</strong>
-            <div id="explanationBox" class="output-box">Sci-Guru will answer here…</div>
+            <div class="output-section-title">Explanation</div>
+            <div id="explanationBox" class="output-box empty">Sci-Guru will answer here…</div>
             <br>
 
-            <strong>Quiz</strong>
-            <div id="quizBox" class="output-box">Quiz will appear here…</div>
+            <div class="output-section-title">Quiz</div>
+            <div id="quizBox" class="output-box empty">Quiz will appear here…</div>
             <br>
 
-            <strong>Practical</strong>
-            <div id="practicalBox" class="output-box">Practical experiment will appear here…</div>
+            <div class="output-section-title">Practical</div>
+            <div id="practicalBox" class="output-box empty">Practical experiment will appear here…</div>
         </section>
     </div>
 
-    <!-- LAB HUB -->
+    <!-- VIRTUAL LAB HUB -->
     <section id="virtual-lab-hub">
         <h2>Virtual Lab Hub</h2>
+        <p>Choose a virtual lab. Students can drag objects, test ideas, then ask Sci-Guru to explain what they observed.</p>
 
         <div class="lab-grid">
-
             <div class="lab-card">
                 <h3>Density Lab</h3>
-                <p>Test sinking & floating using rocks, wood, water.</p>
-                <button onclick="openLab('sim-density.html')">Open</button>
+                <p>Compare a rock and a block of wood in water. See which sinks or floats, then link to density.</p>
+                <button onclick="openLab('sim-density.html')">Open Density Lab</button>
             </div>
 
             <div class="lab-card">
                 <h3>Electricity Lab</h3>
-                <p>Build circuits with bulbs, switches, wires.</p>
-                <button onclick="openLab('sim-electricity.html')">Open</button>
+                <p>Build a simple circuit with a battery, bulb, switch and wires. Test if the bulb lights.</p>
+                <button onclick="openLab('sim-electricity.html')">Open Electricity Lab</button>
             </div>
 
             <div class="lab-card">
-                <h3>Mixtures Lab</h3>
-                <p>Mix & separate sand, salt, oil, water, iron filings.</p>
-                <button onclick="openLab('sim-mixtures.html')">Open</button>
+                <h3>Mixtures & Separation Lab</h3>
+                <p>Mix sand, salt, iron filings, water and oil. Test which separation method works best.</p>
+                <button onclick="openLab('sim-mixtures.html')">Open Mixtures Lab</button>
             </div>
-
         </div>
     </section>
 
+    <footer>
+        Sci-Guru prototype • LEC Biotec (Pvt) Ltd
+    </footer>
 </main>
 
 <script>
-/*  ✅ Your Backend URL — FULLY WORKING */
-const API_BASE = "https://sci-guru-backend.onrender.com";
+    // ✅ LIVE BACKEND BASE URL ON RENDER
+    const API_BASE = "https://sci-guru-backend.onrender.com";
 
-/* --- Helper Functions --- */
-function getInputs() {
-    return {
-        form: document.getElementById("formSelect").value,
-        topic: document.getElementById("topicSelect").value,
-        question: document.getElementById("questionInput").value.trim(),
-    };
-}
+    function getInputs() {
+        return {
+            form: document.getElementById("formSelect").value,
+            topic: document.getElementById("topicSelect").value,
+            question: document.getElementById("questionInput").value.trim()
+        };
+    }
 
-function setStatus(msg) {
-    document.getElementById("status").innerText = msg;
-}
+    function setStatus(msg, isError = false) {
+        const el = document.getElementById("status");
+        el.textContent = msg || "";
+        el.style.color = isError ? "#b91c1c" : "#0369a1";
+    }
 
-/* --- Sci-Guru API Calls --- */
-async function askSciGuru() {
-    const { form, topic, question } = getInputs();
-    if (!question) return setStatus("Please type a question.");
+    function fillBox(id, text) {
+        const box = document.getElementById(id);
+        box.textContent = text || "";
+        if (!text || text.trim() === "") {
+            box.classList.add("empty");
+        } else {
+            box.classList.remove("empty");
+        }
+    }
 
-    setStatus("Thinking…");
+    async function askSciGuru() {
+        const { form, topic, question } = getInputs();
+        if (!question) {
+            setStatus("Please type a question first.", true);
+            return;
+        }
+        setStatus("Sci-Guru is thinking…");
 
-    const res = await fetch(API_BASE + "/api/explain", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ form, topic, question })
-    });
+        try {
+            const res = await fetch(API_BASE + "/api/explain", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ form, topic, question })
+            });
 
-    const data = await res.json();
-    document.getElementById("explanationBox").innerText = data.answer || "No response.";
-    setStatus("");
-}
+            const data = await res.json();
+            fillBox("explanationBox", data.answer || "No response from Sci-Guru.");
+            setStatus("");
+        } catch (err) {
+            console.error(err);
+            setStatus("Error: Could not reach the Sci-Guru server.", true);
+        }
+    }
 
-async function generateQuiz() {
-    const { form, topic, question } = getInputs();
-    setStatus("Generating quiz…");
+    async function generateQuiz() {
+        const { form, topic, question } = getInputs();
+        setStatus("Generating quiz…");
 
-    const res = await fetch(API_BASE + "/api/quiz", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ form, topic, question })
-    });
+        try {
+            const res = await fetch(API_BASE + "/api/quiz", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ form, topic, question })
+            });
 
-    const data = await res.json();
-    document.getElementById("quizBox").innerText = data.quiz || "No quiz.";
-    setStatus("");
-}
+            const data = await res.json();
+            fillBox("quizBox", data.quiz || "No quiz generated.");
+            setStatus("");
+        } catch (err) {
+            console.error(err);
+            setStatus("Error: Could not reach the Sci-Guru server.", true);
+        }
+    }
 
-async function generatePractical() {
-    const { form, topic, question } = getInputs();
-    setStatus("Preparing practical…");
+    async function generatePractical() {
+        const { form, topic, question } = getInputs();
+        setStatus("Preparing practical…");
 
-    const res = await fetch(API_BASE + "/api/practical", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ form, topic, question })
-    });
+        try {
+            const res = await fetch(API_BASE + "/api/practical", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ form, topic, question })
+            });
 
-    const data = await res.json();
-    document.getElementById("practicalBox").innerText = data.practical || "No practical.";
-    setStatus("");
-}
+            const data = await res.json();
+            fillBox("practicalBox", data.practical || "No practical generated.");
+            setStatus("");
+        } catch (err) {
+            console.error(err);
+            setStatus("Error: Could not reach the Sci-Guru server.", true);
+        }
+    }
 
-/* --- VIRTUAL LAB NAVIGATION --- */
-function openVirtualLabHub() {
-    document.getElementById("virtual-lab-hub").scrollIntoView({ behavior: "smooth" });
-}
+    function openVirtualLabHub() {
+        document.getElementById("virtual-lab-hub").scrollIntoView({ behavior: "smooth" });
+    }
 
-function openLab(page) {
-    window.open(page, "_blank");
-}
+    function openLab(page) {
+        window.open(page, "_blank");
+    }
 </script>
 
 </body>
