@@ -155,6 +155,9 @@
                 <!-- RIGHT: Results -->
                 <div class="tutor-column tutor-column-right">
                     <h2 class="section-title-small">Results</h2>
+                    <p id="chapterTagDisplay" class="chapter-tag-display">
+                        No chapter tag selected (you can still ask any question).
+                    </p>
 
                     <div class="result-card">
                         <h3 class="result-title">Explanation</h3>
@@ -228,7 +231,7 @@
         <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
     </footer>
 
-    <!-- JS: backend calls + scores + clickable chapters + lab linking -->
+    <!-- JS: backend calls + scores + clickable chapters + lab linking + tags -->
     <script>
         const API_BASE = "https://sci-guru-backend.onrender.com/api";
 
@@ -255,7 +258,10 @@
         const labSuggestionBox = document.getElementById("labSuggestion");
         const labSuggestionLabel = document.getElementById("labSuggestionLabel");
         const labSuggestionButton = document.getElementById("labSuggestionButton");
+        const chapterTagDisplay = document.getElementById("chapterTagDisplay");
+
         let currentLabUrl = null;
+        let selectedChapter = null; // <-- chapter tag
 
         // Map of experiments + topics + labs for each chapter
         const chapterConfig = {
@@ -744,120 +750,10 @@ State whether your hypothesis was supported and list at least two safety or good
                 const res = await fetch(`${API_BASE}/${endpoint}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ form, topic, question })
+                    body: JSON.stringify({
+                        form,
+                        topic,
+                        question,
+                        chapter: selectedChapter  // <-- send chapter tag to backend
+                    })
                 });
-
-                if (!res.ok) {
-                    throw new Error("Network response was not ok");
-                }
-
-                const data = await res.json();
-                outputElement.textContent =
-                    data.answer || data.quiz || data.practical || "No answer returned.";
-            } catch (err) {
-                console.error(err);
-                outputElement.textContent =
-                    "Error: Could not connect to Sci-Guru backend.";
-            }
-        }
-
-        btnExplain.addEventListener("click", () => {
-            callSciGuru("explain", explainOutput);
-        });
-
-        btnQuiz.addEventListener("click", () => {
-            callSciGuru("quiz", quizOutput);
-        });
-
-        btnPractical.addEventListener("click", () => {
-            // Still allow AI-generated practicals
-            callSciGuru("practical", practicalOutput);
-        });
-
-        btnOpenLabs.addEventListener("click", () => {
-            window.location.href = "index.html#labs";
-        });
-
-        // ---------- Topic score saving (local only) ----------
-        btnSaveScore.addEventListener("click", () => {
-            if (!saveScoreChk.checked) {
-                statusText.textContent =
-                    "Saving is disabled. Tick the box if you want to save scores.";
-                return;
-            }
-
-            const score = parseFloat(scoreInput.value);
-            if (isNaN(score) || score < 0 || score > 100) {
-                statusText.textContent = "Please enter a score between 0 and 100.";
-                return;
-            }
-
-            const form = formSelect.value;
-            const topic = topicSelect.value || "Custom question";
-
-            const key = "sciGuruBestScores";
-            const stored = JSON.parse(localStorage.getItem(key) || "{}");
-
-            if (!stored[form]) stored[form] = {};
-            const previous = stored[form][topic];
-
-            if (previous === undefined || score > previous) {
-                stored[form][topic] = score;
-                localStorage.setItem(key, JSON.stringify(stored));
-                statusText.textContent = `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
-            } else {
-                statusText.textContent = `Not saved: you already have ${previous}% for "${topic}".`;
-            }
-        });
-
-        // ---------- Chapter pills: click to auto-set topic, question, experiment + lab ----------
-        chapterPills.forEach((pill) => {
-            pill.addEventListener("click", () => {
-                // Clear active state
-                chapterPills.forEach((p) => p.classList.remove("active"));
-
-                const ch = pill.dataset.chapter;
-                const config = chapterConfig[ch];
-
-                if (!config) {
-                    statusText.textContent =
-                        "Chapter configuration missing. Please choose a topic manually.";
-                    return;
-                }
-
-                // Set form and topic
-                formSelect.value = "Form 1";
-                topicSelect.value = config.topic;
-
-                // Set sample question
-                questionInput.value = config.question;
-
-                // Show predefined experiment
-                practicalOutput.textContent = config.experiment;
-
-                // Handle lab suggestion
-                if (config.labUrl && config.labLabel) {
-                    currentLabUrl = config.labUrl;
-                    labSuggestionLabel.textContent = config.labLabel;
-                    labSuggestionBox.classList.remove("hidden");
-                } else {
-                    currentLabUrl = null;
-                    labSuggestionBox.classList.add("hidden");
-                    labSuggestionLabel.textContent =
-                        "No specific virtual lab is linked to this chapter yet. You can still perform the real-life experiment described above.";
-                }
-
-                pill.classList.add("active");
-                statusText.textContent =
-                    `Ready: Chapter ${ch} selected (Form 1, topic and experiment pre-filled). You can edit the question or press a button to continue.`;
-            });
-        });
-
-        labSuggestionButton.addEventListener("click", () => {
-            if (currentLabUrl) {
-                window.location.href = currentLabUrl;
-            }
-        });
-    </script>
-</body>
-</html>
