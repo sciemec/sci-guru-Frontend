@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru | Form 1 Living Things Lab</title>
+
+  <style>
+    :root {
+      --blue-main: #2563eb;
+      --blue-dark: #1d4ed8;
+      --bg-soft: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-main: #111827;
+      --text-muted: #4b5563;
+      --border-soft: #e5e7eb;
+      --success: #16a34a;
+      --error: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: var(--bg-soft);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    header {
+      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
+      color: #f9fafb;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #eff6ff;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav button {
+      border-radius: 999px;
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      background: rgba(15, 23, 42, 0.12);
+      color: #e5e7eb;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .nav button:hover {
+      background: rgba(15, 23, 42, 0.25);
+    }
+
+    /* Main layout */
+    main {
+      flex: 1;
+      padding: 16px;
+      max-width: 1100px;
+      margin: 0 auto 20px;
+      display: grid;
+      grid-template-columns: 2.1fr 1.9fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 780px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      padding: 14px 14px 16px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0 0 6px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .small-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Instructions card */
+    .instructions {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      font-size: 12px;
+    }
+
+    .instructions ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+
+    /* Items & drop zones */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1.8fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .lab-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .items-panel h3,
+    .zones-panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .items-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #f9fafb;
+      font-size: 13px;
+      cursor: grab;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background 0.08s ease;
+    }
+
+    .item:active {
+      cursor: grabbing;
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.2);
+      background: #e5f0ff;
+    }
+
+    .zones {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .zones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .zone {
+      min-height: 130px;
+      border-radius: 14px;
+      border: 2px dashed #d1d5db;
+      padding: 8px;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.1s ease, background 0.1s ease,
+        box-shadow 0.1s ease;
+    }
+
+    .zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .zone-badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .zone-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .zone.drag-over {
+      border-color: var(--blue-main);
+      background: #eff6ff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Controls & feedback */
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-main,
+    .btn-soft {
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, box-shadow 0.12s ease,
+        transform 0.12s ease;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
+      color: #f9fafb;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-main:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-soft {
+      background: #f3f4f6;
+      color: var(--text-main);
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-soft:hover {
+      background: #e5e7eb;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-size: 13px;
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: none;
+    }
+
+    .feedback.success {
+      display: block;
+      background: #ecfdf3;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      animation: pop-in 0.2s ease-out;
+    }
+
+    .feedback.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      animation: shake 0.24s ease-in-out;
+    }
+
+    @keyframes pop-in {
+      from {
+        transform: scale(0.98);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-2px);
+      }
+      50% {
+        transform: translateX(2px);
+      }
+      75% {
+        transform: translateX(-2px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .tick {
+      font-size: 14px;
+    }
+
+    .item.correct {
+      border-color: var(--success);
+      background: #ecfdf3;
+      color: #166534;
+    }
+
+    .item.wrong {
+      border-color: var(--error);
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    /* Right-side explanation card */
+    .explanation h2 {
+      margin-bottom: 6px;
+    }
+
+    .explanation-section {
+      margin-top: 8px;
+    }
+
+    .explanation-section h3 {
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+
+    .explanation-section ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <img src="lec-logo.jpg" alt="LEC Biotec" class="brand-logo" />
+        <div>
+          <div class="brand-title">Sci-Guru Virtual Lab</div>
+          <div class="brand-sub">
+            Form 1 • Living things &amp; characteristics of life
+          </div>
+        </div>
+      </div>
+      <div class="nav">
+        <button onclick="location.href='index.html'">🏠 Home</button>
+        <button onclick="location.href='tutor.html'">🤖 AI Tutor</button>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main>
+      <!-- Left: Interactive lab -->
+      <section class="card">
+        <h1>Living or non-living? – Sort the items</h1>
+        <p class="small-text">
+          In this lab you will sort different things into
+          <strong>Living</strong> and <strong>Non-living</strong> based on their
+          characteristics.
+        </p>
+
+        <div class="instructions">
+          <strong>Task:</strong>
+          <ul>
+            <li>Drag each chip into either the <strong>Living</strong> box or the
+              <strong>Non-living</strong> box.</li>
+            <li>When you are happy, click <strong>Check answers</strong>.</li>
+            <li>If you get everything correct, this lab will be marked as
+              <strong>completed</strong> on this device.</li>
+          </ul>
+        </div>
+
+        <div class="lab-layout">
+          <!-- Items list -->
+          <div class="items-panel">
+            <h3>Items</h3>
+            <p class="small-text">
+              Drag from here into one of the boxes. You can move items again if
+              you change your mind.
+            </p>
+            <div class="items-list" id="item-bank">
+              <!-- data-answer = "living" or "nonliving" -->
+              <div class="item" draggable="true" data-id="goat" data-answer="living">
+                🐐 Goat
+              </div>
+              <div class="item" draggable="true" data-id="rock" data-answer="nonliving">
+                🪨 Rock
+              </div>
+              <div class="item" draggable="true" data-id="tree" data-answer="living">
+                🌳 Mango tree
+              </div>
+              <div class="item" draggable="true" data-id="car" data-answer="nonliving">
+                🚗 Car
+              </div>
+              <div class="item" draggable="true" data-id="maize" data-answer="living">
+                🌽 Maize seed
+              </div>
+              <div class="item" draggable="true" data-id="river" data-answer="nonliving">
+                🌊 River water
+              </div>
+              <div class="item" draggable="true" data-id="hen" data-answer="living">
+                🐔 Hen
+              </div>
+              <div class="item" draggable="true" data-id="brick" data-answer="nonliving">
+                🧱 Brick
+              </div>
+            </div>
+          </div>
+
+          <!-- Drop zones -->
+          <div class="zones-panel">
+            <h3>Sort into the correct box</h3>
+            <div class="zones">
+              <div class="zone" data-zone="living">
+                <div class="zone-header">
+                  <span>Living</span>
+                  <span class="zone-badge">Can grow, reproduce, respire</span>
+                </div>
+                <div class="zone-items"></div>
+              </div>
+              <div class="zone" data-zone="nonliving">
+                <div class="zone-header">
+                  <span>Non-living</span>
+                  <span class="zone-badge">Do not show all signs of life</span>
+                </div>
+                <div class="zone-items"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+          <button class="btn-main" id="check-btn">✅ Check answers</button>
+          <button class="btn-soft" id="reset-btn">↺ Reset lab</button>
+        </div>
+
+        <!-- Feedback area -->
+        <div id="feedback" class="feedback"></div>
+      </section>
+
+      <!-- Right: Explanation & teacher notes -->
+      <section class="card explanation">
+        <h2>What makes something “living”?</h2>
+        <p>
+          In Form 1 you learn the <strong>characteristics of living things</strong>.
+          A goat, maize plant, or hen is alive because it shows most of these
+          signs.
+        </p>
+
+        <div class="explanation-section">
+          <h3>Key characteristics (MRS GREN):</h3>
+          <ul>
+            <li><strong>M</strong>ovement – can move by themselves (goat, hen).</li>
+            <li><strong>R</strong>espiration – use food to release energy.</li>
+            <li><strong>S</strong>ensitivity – respond to changes (light, sound).</li>
+            <li><strong>G</strong>rowth – increase in size and change over time.</li>
+            <li><strong>R</strong>eproduction – produce young ones or seeds.</li>
+            <li><strong>E</strong>xcretion – remove waste from the body.</li>
+            <li><strong>N</strong>utrition – need food or make their own food.</li>
+          </ul>
+        </div>
+
+        <div class="explanation-section">
+          <h3>Zimbabwean context examples:</h3>
+          <ul>
+            <li>On a rural homestead, a <strong>goat</strong> moves, eats grass,
+              grows and produces kids → living.</li>
+            <li>A <strong>brick</strong> house or <strong>car</strong> does not
+              grow or reproduce → non-living.</li>
+            <li>Stored <strong>maize seeds</strong> look dry, but if you plant
+              them in moist soil they grow into new plants → living.</li>
+          </ul>
+        </div>
+
+        <div class="explanation-section">
+          <h3>Progress tracking</h3>
+          <p class="small-text">
+            When you get all items correct, this lab is saved as
+            <strong>completed</strong> on this device. The AI tutor’s progress
+            panel can read this and show a tick next to “Living things &
+            characteristics of life”.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 LEC BIOTEC · Sci-Guru Form 1 Virtual Lab – Living things.
+    </footer>
+  </div>
+
+  <script>
+    // --- Progress helper: save lab completion in localStorage ---
+    function markLabCompleted(labKey) {
+      try {
+        const storageKey = "sciGuruLabStatus";
+        const raw = localStorage.getItem(storageKey);
+        const data = raw ? JSON.parse(raw) : {};
+        data[labKey] = true;
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (e) {
+        console.error("Could not save lab status", e);
+      }
+    }
+
+    // --- Drag & drop logic ---
+    const itemBank = document.getElementById("item-bank");
+    const zones = document.querySelectorAll(".zone");
+    const feedbackEl = document.getElementById("feedback");
+    const checkBtn = document.getElementById("check-btn");
+    const resetBtn = document.getElementById("reset-btn");
+
+    let draggedItem = null;
+
+    function handleDragStart(e) {
+      draggedItem = e.target;
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", e.target.dataset.id || "");
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      if (!draggedItem) return;
+
+      const zone = e.currentTarget;
+      const zoneItems = zone.querySelector(".zone-items");
+
+      zoneItems.appendChild(draggedItem);
+      zone.classList.remove("drag-over");
+      draggedItem = null;
+      clearFeedback();
+      clearItemMarks();
+    }
+
+    function handleDragEnter(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add("drag-over");
+    }
+
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove("drag-over");
+    }
+
+    function clearFeedback() {
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+    }
+
+    function clearItemMarks() {
+      document.querySelectorAll(".item").forEach((el) => {
+        el.classList.remove("correct", "wrong");
+      });
+    }
+
+    // Attach drag events
+    function setupDragAndDrop() {
+      document.querySelectorAll(".item").forEach((item) => {
+        item.addEventListener("dragstart", handleDragStart);
+      });
+
+      zones.forEach((zone) => {
+        zone.addEventListener("dragover", handleDragOver);
+        zone.addEventListener("drop", handleDrop);
+        zone.addEventListener("dragenter", handleDragEnter);
+        zone.addEventListener("dragleave", handleDragLeave);
+      });
+
+      // Allow dropping back onto the bank
+      itemBank.addEventListener("dragover", handleDragOver);
+      itemBank.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (!draggedItem) return;
+        itemBank.appendChild(draggedItem);
+        draggedItem = null;
+        clearFeedback();
+        clearItemMarks();
+      });
+    }
+
+    setupDragAndDrop();
+
+    // --- Check answers ---
+    checkBtn.addEventListener("click", () => {
+      clearFeedback();
+      clearItemMarks();
+
+      const items = document.querySelectorAll(".item");
+      let total = 0;
+      let correct = 0;
+
+      items.forEach((item) => {
+        const answer = item.dataset.answer; // living / nonliving
+        const parentZone = item.closest(".zone");
+        const inZone = parentZone ? parentZone.dataset.zone : "bank";
+
+        total++;
+
+        if ((answer === "living" && inZone === "living") ||
+            (answer === "nonliving" && inZone === "nonliving")) {
+          correct++;
+          item.classList.add("correct");
+        } else {
+          item.classList.add("wrong");
+        }
+      });
+
+      if (correct === total) {
+        feedbackEl.classList.add("success");
+        feedbackEl.innerHTML =
+          "<span class='tick'>✅</span> Perfect! You correctly sorted all items. This lab is now marked as <strong>completed</strong> on this device.";
+
+        // Save completion
+        markLabCompleted("living-things-lab");
+      } else {
+        feedbackEl.classList.add("error");
+        feedbackEl.innerHTML =
+          "Some items are in the wrong box. Remember: living things show most of the characteristics of life (MRS GREN). Adjust and try again.";
+      }
+    });
+
+    // --- Reset ---
+    resetBtn.addEventListener("click", () => {
+      const items = document.querySelectorAll(".item");
+      items.forEach((item) => itemBank.appendChild(item));
+      clearFeedback();
+      clearItemMarks();
+    });
+  </script>
+</body>
+</html>
