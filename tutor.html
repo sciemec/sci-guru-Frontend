@@ -29,7 +29,7 @@
                 <div class="tutor-column tutor-column-left">
                     <h2 class="section-title-small">Ask Sci-Guru</h2>
                     <p class="tutor-intro">
-                        Choose a form and topic, then ask your question in simple English.
+                        Choose a form and topic, or tap a Form 1 chapter below, then ask your question in simple English.
                     </p>
 
                     <label class="field-label" for="formLevel">Form / Level</label>
@@ -134,30 +134,135 @@
                         </div>
                     </div>
 
-                    <!-- Light, simple chapter strip instead of big progress panel -->
+                    <!-- Clickable chapter strip -->
                     <div class="chapters-strip">
                         <div class="chapters-header">
                             <span class="chapters-title">Form 1 chapters</span>
-                            <span class="chapters-note">Quick reference (Ch. 1–17)</span>
+                            <span class="chapters-note">Tap a chapter to auto-fill topic &amp; sample question</span>
                         </div>
                         <div class="chapters-pills">
-                            <span class="chapter-pill">Ch. 1</span>
-                            <span class="chapter-pill">Ch. 2</span>
-                            <span class="chapter-pill">Ch. 3</span>
-                            <span class="chapter-pill">Ch. 4</span>
-                            <span class="chapter-pill">Ch. 5</span>
-                            <span class="chapter-pill">Ch. 6</span>
-                            <span class="chapter-pill">Ch. 7</span>
-                            <span class="chapter-pill">Ch. 8</span>
-                            <span class="chapter-pill">Ch. 9</span>
-                            <span class="chapter-pill">Ch. 10</span>
-                            <span class="chapter-pill">Ch. 11</span>
-                            <span class="chapter-pill">Ch. 12</span>
-                            <span class="chapter-pill">Ch. 13</span>
-                            <span class="chapter-pill">Ch. 14</span>
-                            <span class="chapter-pill">Ch. 15</span>
-                            <span class="chapter-pill">Ch. 16</span>
-                            <span class="chapter-pill">Ch. 17</span>
+                            <!-- CHAPTERS 1–8: fully wired -->
+                            <button
+                                class="chapter-pill"
+                                data-topic="Living things and characteristics of life"
+                                data-question="Explain what makes something a living thing. Use 3 examples from a Zimbabwean village or city."
+                            >
+                                Ch. 1
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Cells and simple microscopes"
+                                data-question="Explain what a cell is and why it is called the basic unit of life. Use simple examples a Form 1 learner can understand."
+                            >
+                                Ch. 2
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Human body systems and hygiene"
+                                data-question="Describe two human body systems and explain one hygiene practice that keeps each system healthy."
+                            >
+                                Ch. 3
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Ecosystems and environment"
+                                data-question="Explain what an ecosystem is and give one example from a rural and one from an urban area in Zimbabwe."
+                            >
+                                Ch. 4
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="States of matter"
+                                data-question="Explain the three main states of matter using everyday examples from home or school."
+                            >
+                                Ch. 5
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Mixtures and separation methods"
+                                data-question="Explain what a mixture is and describe one method that can be used to separate a mixture of sand and salt."
+                            >
+                                Ch. 6
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Density and flotation"
+                                data-question="Explain why some objects float and others sink using the idea of density. Use at least one Zimbabwean example."
+                            >
+                                Ch. 7
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-topic="Electricity and magnetism"
+                                data-question="Describe a simple electric circuit and explain one safety rule about using electricity at home."
+                            >
+                                Ch. 8
+                            </button>
+
+                            <!-- CHAPTERS 9–17: place-holders for now -->
+                            <button
+                                class="chapter-pill"
+                                data-label="Energy and fuels"
+                                data-coming="true"
+                            >
+                                Ch. 9
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Light"
+                                data-coming="true"
+                            >
+                                Ch. 10
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Sound"
+                                data-coming="true"
+                            >
+                                Ch. 11
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Heat and temperature"
+                                data-coming="true"
+                            >
+                                Ch. 12
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Weather and climate"
+                                data-coming="true"
+                            >
+                                Ch. 13
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Earth and space"
+                                data-coming="true"
+                            >
+                                Ch. 14
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Simple machines and pressure"
+                                data-coming="true"
+                            >
+                                Ch. 15
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Acids, bases and salts"
+                                data-coming="true"
+                            >
+                                Ch. 16
+                            </button>
+                            <button
+                                class="chapter-pill"
+                                data-label="Scientific methods and safety"
+                                data-coming="true"
+                            >
+                                Ch. 17
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -169,7 +274,7 @@
         <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
     </footer>
 
-    <!-- Simple JS to call your backend -->
+    <!-- Simple JS to call your backend and handle chapters -->
     <script>
         const API_BASE = "https://sci-guru-backend.onrender.com/api";
 
@@ -190,6 +295,8 @@
         const scoreInput = document.getElementById("scoreInput");
         const btnSaveScore = document.getElementById("btnSaveScore");
         const statusText = document.getElementById("statusText");
+
+        const chapterPills = document.querySelectorAll(".chapter-pill");
 
         async function callSciGuru(endpoint, outputElement) {
             const form = formSelect.value;
@@ -215,7 +322,8 @@
                 }
 
                 const data = await res.json();
-                outputElement.textContent = data.answer || "No answer returned.";
+                outputElement.textContent =
+                    data.answer || data.quiz || data.practical || "No answer returned.";
             } catch (err) {
                 console.error(err);
                 outputElement.textContent = "Error: Could not connect to Sci-Guru backend.";
@@ -235,14 +343,14 @@
         });
 
         btnOpenLabs.addEventListener("click", () => {
-            // Just go back to homepage Labs section for now
             window.location.href = "index.html#labs";
         });
 
-        // Simple topic score saving (local device only)
+        // ---------- Topic score saving (local only) ----------
         btnSaveScore.addEventListener("click", () => {
             if (!saveScoreChk.checked) {
-                statusText.textContent = "Saving is disabled. Tick the box if you want to save scores.";
+                statusText.textContent =
+                    "Saving is disabled. Tick the box if you want to save scores.";
                 return;
             }
 
@@ -264,10 +372,42 @@
             if (previous === undefined || score > previous) {
                 stored[form][topic] = score;
                 localStorage.setItem(key, JSON.stringify(stored));
-                statusText.textContent = `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
+                statusText.textContent =
+                    `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
             } else {
-                statusText.textContent = `Not saved: you already have ${previous}% for "${topic}".`;
+                statusText.textContent =
+                    `Not saved: you already have ${previous}% for "${topic}".`;
             }
+        });
+
+        // ---------- Chapter pills: click to auto-set topic & question ----------
+        chapterPills.forEach((pill) => {
+            pill.addEventListener("click", () => {
+                // Remove active class from all
+                chapterPills.forEach(p => p.classList.remove("active"));
+
+                const topicValue = pill.dataset.topic;
+                const sampleQuestion = pill.dataset.question;
+                const coming = pill.dataset.coming === "true";
+                const label = pill.dataset.label || pill.textContent.trim();
+
+                if (coming) {
+                    // Future chapters not wired yet
+                    statusText.textContent =
+                        `${label} content is coming soon. You can still type your own question above.`;
+                } else if (topicValue) {
+                    formSelect.value = "Form 1";
+                    topicSelect.value = topicValue;
+
+                    if (sampleQuestion) {
+                        questionInput.value = sampleQuestion;
+                    }
+
+                    pill.classList.add("active");
+                    statusText.textContent =
+                        `Ready: ${label} selected (Form 1, topic pre-filled). You can edit the question or press a button to continue.`;
+                }
+            });
         });
     </script>
 </body>
