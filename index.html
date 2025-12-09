@@ -1,373 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sci-Guru | AI Science Learning</title>
-  <style>
-    :root {
-      --blue-main: #2563eb;
-      --blue-dark: #1d4ed8;
-      --bg-soft: #f3f4f6;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border-soft: #e2e8f0;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 45%, #e5e7eb 100%);
-      color: var(--text-main);
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Header / top bar */
-    header {
-      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
-      color: #f9fafb;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #eff6ff;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      object-fit: cover;
-    }
-
-    .brand-text-main {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .brand-text-sub {
-      font-size: 11px;
-      opacity: 0.9;
-    }
-
-    .nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .nav button {
-      border-radius: 999px;
-      border: 1px solid rgba(191, 219, 254, 0.95);
-      background: rgba(15, 23, 42, 0.1);
-      color: #e5e7eb;
-      padding: 5px 11px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .nav button:hover {
-      background: rgba(15, 23, 42, 0.25);
-    }
-
-    /* Layout */
-    main {
-      flex: 1;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px 16px 28px;
-    }
-
-    /* Hero */
-    .hero {
-      text-align: center;
-      padding: 24px 16px 16px;
-    }
-
-    .hero-tagline {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #1d4ed8;
-      margin-bottom: 6px;
-    }
-
-    .hero-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin: 0 0 6px;
-    }
-
-    .hero-sub {
-      margin: 0 0 14px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-main,
-    .btn-soft {
-      border-radius: 999px;
-      border: none;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 9px 18px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.12s ease, box-shadow 0.12s ease,
-        background 0.12s ease;
-    }
-
-    .btn-main {
-      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
-      color: #f9fafb;
-      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.55);
-    }
-
-    .btn-main:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.7);
-    }
-
-    .btn-soft {
-      background: #f3f4f6;
-      color: var(--text-main);
-      border: 1px solid #d1d5db;
-    }
-
-    .btn-soft:hover {
-      background: #e5e7eb;
-    }
-
-    /* Features */
-    .home-section {
-      margin-top: 18px;
-    }
-
-    .home-section-title {
-      font-size: 16px;
-      margin: 0 0 6px;
-      text-align: center;
-    }
-
-    .home-section-text {
-      margin: 0 0 14px;
-      font-size: 13px;
-      color: var(--text-muted);
-      text-align: center;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    @media (max-width: 720px) {
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
-      border: 1px solid rgba(226, 232, 240, 0.7);
-    }
-
-    .card h3 {
-      margin: 0 0 4px;
-      font-size: 15px;
-    }
-
-    .card p {
-      margin: 0 0 10px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .card button {
-      margin-top: 4px;
-    }
-
-    /* Labs section */
-    #labs {
-      margin-top: 24px;
-    }
-
-    .lab-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 900px) {
-      .lab-buttons {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 540px) {
-      .lab-buttons {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .lab-buttons button {
-      width: 100%;
-      justify-content: center;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 11px;
-      color: #6b7280;
-      padding: 10px 0 14px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sci-Guru | AI Science Learning</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="lec-logo.jpg" type="image/jpeg" />
 </head>
 <body>
-<div class="page">
-  <!-- Header -->
-  <header>
-    <div class="brand">
-      <img src="lec-logo.jpg" alt="LEC Biotec" class="brand-logo" />
-      <div>
-        <div class="brand-text-main">Sci-Guru</div>
-        <div class="brand-text-sub">
-          Zimbabwe's AI-powered Science Learning Platform
+    <!-- Top Navigation -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <div class="brand">
+                <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="brand-logo" />
+                <span class="brand-text">Sci-Guru</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="tutor.html" class="nav-link">AI Tutor</a>
+            </nav>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <div class="nav">
-      <button onclick="location.href='tutor.html'">🤖 AI Tutor</button>
-      <button onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
-        🧪 Virtual Labs
-      </button>
-    </div>
-  </header>
+    <!-- Hero Section -->
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <p class="badge">Zimbabwe’s AI-Powered Science Learning Platform</p>
+                <h1 class="hero-title">Sci-Guru</h1>
+                <p class="hero-subtitle">
+                    Empowering students with interactive AI tutoring and simple virtual lab simulations
+                    aligned to the ZIMSEC / Heritage-Based curriculum.
+                </p>
+                <div class="hero-actions">
+                    <a href="tutor.html" class="btn btn-primary">
+                        Launch AI Tutor
+                    </a>
+                    <a href="#labs" class="btn btn-ghost">
+                        Explore Virtual Labs
+                    </a>
+                </div>
+            </div>
+        </section>
 
-  <!-- Main content -->
-  <main>
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-tagline">Nothing is limited.</div>
-      <h1 class="hero-title">Learn science with an AI tutor & virtual labs.</h1>
-      <p class="hero-sub">
-        Ask questions, get practice quizzes, and run simple experiments for
-        the ZIMSEC / Heritage-Based curriculum.
-      </p>
+        <!-- What Sci-Guru Offers (simplified) -->
+        <section class="section">
+            <h2 class="section-title">What Sci-Guru Offers</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>AI Tutor</h3>
+                    <p>
+                        Ask questions from Form 1–4, generate quizzes, and get explanations
+                        using Zimbabwean examples.
+                    </p>
+                    <a href="tutor.html" class="btn btn-outline">Open AI Tutor</a>
+                </div>
 
-      <div class="hero-actions">
-        <button class="btn-main" onclick="location.href='tutor.html'">
-          🚀 Launch AI Tutor
-        </button>
-        <button class="btn-soft" onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
-          🧪 Explore Labs
-        </button>
-      </div>
-    </section>
+                <div class="card">
+                    <h3>Virtual Labs</h3>
+                    <p>
+                        Try simple, hands-on simulations for density, mixtures, electricity, and more
+                        without needing a full laboratory.
+                    </p>
+                    <a href="#labs" class="btn btn-outline">View Labs</a>
+                </div>
+            </div>
+        </section>
 
-    <!-- What Sci-Guru Offers -->
-    <section class="home-section">
-      <h2 class="home-section-title">What Sci-Guru offers</h2>
-      <p class="home-section-text">
-        Simple tools focused on what matters most: <strong>lessons</strong> and
-        <strong>virtual labs</strong>.
-      </p>
+        <!-- Virtual Labs Section -->
+        <section class="section" id="labs">
+            <h2 class="section-title">Virtual Labs</h2>
+            <p class="section-subtitle">
+                Start with a few key practicals. More Form 1–4 virtual labs will be added over time.
+            </p>
 
-      <div class="feature-grid">
-        <div class="card">
-          <h3>AI Tutor</h3>
-          <p>
-            Ask questions, generate practice quizzes, and get personalised
-            explanations using Zimbabwean examples.
-          </p>
-          <button class="btn-main" onclick="location.href='tutor.html'">
-            Open Tutor
-          </button>
-        </div>
+            <div class="card-grid labs-grid">
+                <div class="card lab-card">
+                    <h3>Density Lab</h3>
+                    <p>Compare sinking and floating objects to understand density.</p>
+                    <a href="sim-density.html" class="btn btn-outline">Open Density Lab</a>
+                </div>
 
-        <div class="card">
-          <h3>Virtual Labs</h3>
-          <p>
-            Perform hands-on virtual experiments for Form 1 topics like
-            living things, density, mixtures, and electricity.
-          </p>
-          <button class="btn-soft" onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
-            View Labs
-          </button>
-        </div>
-      </div>
-    </section>
+                <div class="card lab-card">
+                    <h3>Mixtures Lab</h3>
+                    <p>Mix sand, salt, water, oil, and iron filings, then test separation methods.</p>
+                    <a href="sim-mixtures.html" class="btn btn-outline">Open Mixtures Lab</a>
+                </div>
 
-    <!-- Virtual labs section -->
-    <section class="home-section" id="labs">
-      <h2 class="home-section-title">Virtual Labs</h2>
-      <p class="home-section-text">
-        Choose a lab to start experimenting. Progress is tracked on the tutor page.
-      </p>
+                <div class="card lab-card">
+                    <h3>Electricity Lab</h3>
+                    <p>Build a simple circuit with battery, bulb, switch, and wires.</p>
+                    <a href="sim-electricity.html" class="btn btn-outline">Open Electricity Lab</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-      <div class="lab-buttons">
-        <button class="btn-soft" onclick="openLab('sim-form1-living-things.html')">
-          🌱 Living Things Lab
-        </button>
-        <button class="btn-soft" onclick="openLab('sim-density.html')">
-          💧 Density Lab
-        </button>
-        <button class="btn-soft" onclick="openLab('sim-mixtures.html')">
-          🥣 Mixtures Lab
-        </button>
-        <button class="btn-soft" onclick="openLab('sim-electricity.html')">
-          ⚡ Electricity Lab
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    © 2025 LEC BIOTEC · Sci-Guru AI Science Platform.
-  </footer>
-</div>
-
-<script>
-  function openLab(page) {
-    // Open lab in a new tab
-    window.open(page, "_blank");
-  }
-</script>
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>© 2025 LEC BIOTEC. All rights reserved.</p>
+        <p class="footer-note">Sci-Guru prototype • Built for Zimbabwean schools.</p>
+    </footer>
 </body>
 </html>
