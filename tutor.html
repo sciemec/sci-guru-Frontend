@@ -1,804 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sci-Guru AI Science Tutor</title>
-
-  <style>
-    :root {
-      --blue-main: #2563eb;
-      --blue-dark: #1d4ed8;
-      --bg-soft: #f3f4f6;
-      --card-bg: #ffffff;
-      --card-dark: #020617;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border-soft: #e2e8f0;
-      --accent-green: #22c55e;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 45%, #e5e7eb 100%);
-      color: var(--text-main);
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Top bar */
-    header {
-      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
-      color: #f9fafb;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #eff6ff;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      object-fit: cover;
-    }
-
-    .brand-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      opacity: 0.9;
-    }
-
-    .nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .nav button {
-      border-radius: 999px;
-      border: 1px solid rgba(191, 219, 254, 0.95);
-      background: rgba(15, 23, 42, 0.1);
-      color: #e5e7eb;
-      padding: 5px 11px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .nav button:hover {
-      background: rgba(15, 23, 42, 0.25);
-    }
-
-    /* Layout */
-    main {
-      flex: 1;
-      padding: 18px 16px 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.3fr) minmax(0, 0.9fr);
-      gap: 16px;
-    }
-
-    @media (max-width: 960px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 18px;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
-      padding: 14px 14px 16px;
-    }
-
-    .card-dark {
-      background: radial-gradient(circle at top left, #0f172a, #020617 55%, #020617 100%);
-      color: #e5e7eb;
-      border-radius: 18px;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
-      padding: 14px 14px 16px;
-    }
-
-    h1 {
-      margin: 0 0 6px;
-      font-size: 18px;
-    }
-
-    h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-
-    h3 {
-      margin: 0 0 6px;
-      font-size: 14px;
-    }
-
-    p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .small-text {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Ask panel */
-    .field-label {
-      font-size: 12px;
-      margin-top: 8px;
-      margin-bottom: 4px;
-      color: var(--text-muted);
-    }
-
-    select,
-    textarea,
-    input[type="number"] {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid var(--border-soft);
-      padding: 7px 9px;
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-      background: #f9fafb;
-    }
-
-    select:focus,
-    textarea:focus,
-    input[type="number"]:focus {
-      border-color: var(--blue-main);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
-      background: #ffffff;
-    }
-
-    textarea {
-      min-height: 70px;
-      resize: vertical;
-    }
-
-    .button-row {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn-main,
-    .btn-soft {
-      border-radius: 999px;
-      border: none;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 15px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.12s ease, box-shadow 0.12s ease,
-        background 0.12s ease;
-    }
-
-    .btn-main {
-      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
-      color: #f9fafb;
-      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.55);
-    }
-
-    .btn-main:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.7);
-    }
-
-    .btn-soft {
-      background: #f3f4f6;
-      color: var(--text-main);
-      border: 1px solid #d1d5db;
-    }
-
-    .btn-soft:hover {
-      background: #e5e7eb;
-    }
-
-    .ai-status {
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    /* Results */
-    .result-card {
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 10px 11px;
-      margin-top: 10px;
-      min-height: 90px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      color: #e5e7eb;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .result-card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(circle at top left,
-          rgba(59, 130, 246, 0.2),
-          transparent 55%);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .result-card.has-content::before {
-      opacity: 1;
-    }
-
-    .result-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #94a3b8;
-    }
-
-    .result-body {
-      font-size: 13px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    /* Progress panel */
-    .progress-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 4px;
-    }
-
-    .badge-pill {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-    }
-
-    .progress-section {
-      margin-top: 10px;
-    }
-
-    .progress-list {
-      list-style: none;
-      padding: 0;
-      margin: 6px 0 0;
-      font-size: 12px;
-    }
-
-    .progress-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .progress-item:last-child {
-      border-bottom: none;
-    }
-
-    .progress-label {
-      max-width: 70%;
-    }
-
-    .progress-score {
-      font-size: 11px;
-      color: #94a3b8;
-    }
-
-    .lab-status {
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .lab-status.done {
-      color: var(--accent-green);
-    }
-
-    .lab-status.not-done {
-      color: #9ca3af;
-    }
-
-    /* Save topic score row */
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 9px;
-      flex-wrap: wrap;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .score-row input[type="checkbox"] {
-      transform: scale(1.05);
-    }
-
-    .score-input {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-
-    .score-input input[type="number"] {
-      width: 56px;
-      border: none;
-      padding: 2px;
-      background: transparent;
-    }
-
-    .score-input input[type="number"]:focus {
-      outline: none;
-      box-shadow: none;
-    }
-
-    .save-score-btn {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 500;
-      background: #22c55e;
-      color: #f9fafb;
-      box-shadow: 0 8px 18px rgba(34, 197, 94, 0.45);
-    }
-
-    .save-score-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    footer {
-      text-align: center;
-      font-size: 11px;
-      color: #6b7280;
-      padding-bottom: 10px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sci-Guru AI Tutor</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="lec-logo.jpg" type="image/jpeg" />
 </head>
 <body>
-<div class="page">
-  <!-- Header -->
-  <header>
-    <div class="brand">
-      <img src="lec-logo.jpg" alt="LEC Biotec" class="brand-logo" />
-      <div>
-        <div class="brand-title">Sci-Guru AI Science Tutor</div>
-        <div class="brand-sub">
-          Zimbabwe's AI-powered tutor for the ZIMSEC / Heritage-Based curriculum
+    <!-- Top bar -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <div class="brand">
+                <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="brand-logo" />
+                <span class="brand-text">Sci-Guru Tutor</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tutor.html" class="nav-link active">AI Tutor</a>
+            </nav>
         </div>
-      </div>
-    </div>
-    <div class="nav">
-      <button onclick="location.href='index.html'">🏠 Home</button>
-      <button onclick="location.href='tutor.html'">🤖 AI Tutor</button>
-    </div>
-  </header>
+    </header>
 
-  <!-- Main -->
-  <main>
-    <!-- Ask Sci-Guru panel -->
-    <section class="card">
-      <h1>Ask Sci-Guru</h1>
-      <p class="small-text">
-        Choose a form and topic, then ask your question in simple English.
-      </p>
+    <main class="page-main">
+        <section class="section tutor-section">
+            <div class="tutor-layout">
+                <!-- LEFT: Ask Sci-Guru -->
+                <div class="tutor-column tutor-column-left">
+                    <h2 class="section-title-small">Ask Sci-Guru</h2>
+                    <p class="tutor-intro">
+                        Choose a form and topic, then ask your question in simple English.
+                    </p>
 
-      <label class="field-label" for="form">Form / Level</label>
-      <select id="form">
-        <option value="Form 1">Form 1</option>
-        <!-- ready for future forms -->
-        <option value="Form 2">Form 2</option>
-        <option value="Form 3">Form 3</option>
-        <option value="Form 4">Form 4</option>
-      </select>
+                    <label class="field-label" for="formLevel">Form / Level</label>
+                    <select id="formLevel" class="field-select">
+                        <option value="Form 1">Form 1</option>
+                        <option value="Form 2">Form 2</option>
+                        <option value="Form 3">Form 3</option>
+                        <option value="Form 4">Form 4</option>
+                    </select>
 
-      <label class="field-label" for="topic">Topic (Form 1 topics grouped + general)</label>
-      <select id="topic">
-        <option value="">-- Optional: choose a topic --</option>
+                    <label class="field-label" for="topic">Topic (Form 1 topics grouped + general)</label>
+                    <select id="topic" class="field-select">
+                        <option value="">-- Optional: choose a topic --</option>
 
-        <optgroup label="General">
-          <option value="General Science">General Science</option>
-        </optgroup>
+                        <optgroup label="General">
+                            <option value="General Science">General Science</option>
+                        </optgroup>
 
-        <optgroup label="Form 1 — Biology">
-          <option value="Living things and characteristics of life">
-            Living things & characteristics of life
-          </option>
-          <option value="Cells and simple microscopes">
-            Cells and simple microscopes
-          </option>
-          <option value="Human body systems and hygiene">
-            Human body systems & hygiene
-          </option>
-          <option value="Ecosystems and environment">
-            Ecosystems & environment
-          </option>
-        </optgroup>
+                        <optgroup label="Form 1 — Biology">
+                            <option value="Living things and characteristics of life">
+                                Living things &amp; characteristics of life
+                            </option>
+                            <option value="Cells and simple microscopes">
+                                Cells and simple microscopes
+                            </option>
+                            <option value="Human body systems and hygiene">
+                                Human body systems &amp; hygiene
+                            </option>
+                            <option value="Ecosystems and environment">
+                                Ecosystems &amp; environment
+                            </option>
+                        </optgroup>
 
-        <optgroup label="Form 1 — Physical science">
-          <option value="States of matter">States of matter</option>
-          <option value="Mixtures and separation methods">Mixtures & separation methods</option>
-          <option value="Density and flotation">Density & flotation</option>
-          <option value="Electricity and magnetism">Electricity & magnetism</option>
-        </optgroup>
-      </select>
+                        <optgroup label="Form 1 — Chemistry & Physics">
+                            <option value="States of matter">States of matter</option>
+                            <option value="Mixtures and separation methods">
+                                Mixtures &amp; separation methods
+                            </option>
+                            <option value="Density and flotation">
+                                Density &amp; flotation
+                            </option>
+                            <option value="Electricity and magnetism">
+                                Electricity &amp; magnetism
+                            </option>
+                        </optgroup>
+                    </select>
 
-      <label class="field-label" for="question">Your question</label>
-      <textarea id="question"
-        placeholder="Explain density using Zimbabwean examples..."></textarea>
+                    <label class="field-label" for="question">Your question</label>
+                    <textarea id="question" class="field-textarea" rows="4"
+                        placeholder="Explain density using Zimbabwean examples..."></textarea>
 
-      <div class="button-row">
-        <button class="btn-main" id="ask-btn">Ask Sci-Guru</button>
-        <button class="btn-soft" id="quiz-btn">Generate quiz</button>
-        <button class="btn-soft" id="prac-btn">Generate practical</button>
-        <button class="btn-soft" onclick="openVirtualLabHub()">Open virtual lab hub</button>
-      </div>
+                    <div class="button-row">
+                        <button id="btnExplain" class="btn btn-primary">Ask Sci-Guru</button>
+                        <button id="btnQuiz" class="btn btn-secondary">Generate quiz</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="btnPractical" class="btn btn-outline">Generate practical</button>
+                        <button id="btnOpenLabs" class="btn btn-outline">Open virtual lab hub</button>
+                    </div>
 
-      <div class="score-row">
-        <label>
-          <input type="checkbox" id="save-score-toggle" checked />
-          I want to save my quiz result for this topic
-        </label>
-        <div class="score-input">
-          <span>I scored</span>
-          <input type="number" id="score-input" min="0" max="100" placeholder="e.g. 75" />
-          <span>%</span>
-        </div>
-        <button class="save-score-btn" id="save-score-btn">Save topic score</button>
-      </div>
+                    <div class="save-score">
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="saveScoreChk" checked />
+                            <span>I want to save my quiz result for this topic</span>
+                        </label>
+                        <div class="score-row">
+                            <span>I scored</span>
+                            <input type="number" id="scoreInput" class="score-input" placeholder="75" min="0" max="100" />
+                            <span>%</span>
+                            <button id="btnSaveScore" class="btn btn-small btn-success">
+                                Save topic score
+                            </button>
+                        </div>
+                        <p id="statusText" class="status-text">
+                            Sci-Guru is ready. Backend: <span class="status-live">LIVE</span>.
+                        </p>
+                    </div>
+                </div>
 
-      <div class="ai-status" id="status">
-        Sci-Guru is ready. Backend: <strong>LIVE</strong>.
-      </div>
-    </section>
+                <!-- RIGHT: Results -->
+                <div class="tutor-column tutor-column-right">
+                    <h2 class="section-title-small">Results</h2>
 
-    <!-- Results panel -->
-    <section class="card-dark">
-      <h2>Results</h2>
+                    <div class="result-card">
+                        <h3 class="result-title">Explanation</h3>
+                        <div id="explainOutput" class="result-body">
+                            Sci-Guru will answer here…
+                        </div>
+                    </div>
 
-      <div class="result-card" id="explain-card">
-        <div class="result-title">Explanation</div>
-        <div class="result-body" id="explain-result">
-          Sci-Guru will answer here...
-        </div>
-      </div>
+                    <div class="result-card">
+                        <h3 class="result-title">Quiz</h3>
+                        <div id="quizOutput" class="result-body">
+                            Quiz will appear here…
+                        </div>
+                    </div>
 
-      <div class="result-card" id="quiz-card">
-        <div class="result-title">Quiz</div>
-        <div class="result-body" id="quiz-result">
-          Quiz will appear here...
-        </div>
-      </div>
+                    <div class="result-card">
+                        <h3 class="result-title">Practical</h3>
+                        <div id="practicalOutput" class="result-body">
+                            Practical experiment will appear here…
+                        </div>
+                    </div>
 
-      <div class="result-card" id="prac-card">
-        <div class="result-title">Practical</div>
-        <div class="result-body" id="prac-result">
-          Practical experiment will appear here...
-        </div>
-      </div>
-    </section>
+                    <!-- Light, simple chapter strip instead of big progress panel -->
+                    <div class="chapters-strip">
+                        <div class="chapters-header">
+                            <span class="chapters-title">Form 1 chapters</span>
+                            <span class="chapters-note">Quick reference (Ch. 1–17)</span>
+                        </div>
+                        <div class="chapters-pills">
+                            <span class="chapter-pill">Ch. 1</span>
+                            <span class="chapter-pill">Ch. 2</span>
+                            <span class="chapter-pill">Ch. 3</span>
+                            <span class="chapter-pill">Ch. 4</span>
+                            <span class="chapter-pill">Ch. 5</span>
+                            <span class="chapter-pill">Ch. 6</span>
+                            <span class="chapter-pill">Ch. 7</span>
+                            <span class="chapter-pill">Ch. 8</span>
+                            <span class="chapter-pill">Ch. 9</span>
+                            <span class="chapter-pill">Ch. 10</span>
+                            <span class="chapter-pill">Ch. 11</span>
+                            <span class="chapter-pill">Ch. 12</span>
+                            <span class="chapter-pill">Ch. 13</span>
+                            <span class="chapter-pill">Ch. 14</span>
+                            <span class="chapter-pill">Ch. 15</span>
+                            <span class="chapter-pill">Ch. 16</span>
+                            <span class="chapter-pill">Ch. 17</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <!-- Progress / labs panel -->
-    <aside class="card">
-      <div class="progress-header">
-        <h2>Form 1 Progress</h2>
-        <span class="badge-pill">Saved on this device</span>
-      </div>
+    <footer class="site-footer">
+        <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
+    </footer>
 
-      <div class="progress-section">
-        <h3>Topics (best quiz score)</h3>
-        <ul class="progress-list" id="topic-progress-list">
-          <!-- filled by JS -->
-        </ul>
-      </div>
+    <!-- Simple JS to call your backend -->
+    <script>
+        const API_BASE = "https://sci-guru-backend.onrender.com/api";
 
-      <div class="progress-section">
-        <h3>Virtual labs (completion)</h3>
-        <ul class="progress-list" id="lab-progress-list">
-          <!-- filled by JS -->
-        </ul>
-      </div>
-    </aside>
-  </main>
+        const formSelect = document.getElementById("formLevel");
+        const topicSelect = document.getElementById("topic");
+        const questionInput = document.getElementById("question");
 
-  <footer>
-    © 2025 LEC BIOTEC · Sci-Guru AI Science Platform.
-  </footer>
-</div>
+        const explainOutput = document.getElementById("explainOutput");
+        const quizOutput = document.getElementById("quizOutput");
+        const practicalOutput = document.getElementById("practicalOutput");
 
-<script>
-  // === CONFIG ===
-  const API_BASE = "https://sci-guru-backend.onrender.com/api"; // your Render backend
-  const TOPIC_SCORE_KEY = "sciGuruTopicScores";
-  const LAB_STATUS_KEY = "sciGuruLabStatus";
+        const btnExplain = document.getElementById("btnExplain");
+        const btnQuiz = document.getElementById("btnQuiz");
+        const btnPractical = document.getElementById("btnPractical");
+        const btnOpenLabs = document.getElementById("btnOpenLabs");
 
-  // topics we track for Form 1 progress
-  const FORM1_TOPICS = [
-    "Living things and characteristics of life",
-    "Cells and simple microscopes",
-    "Human body systems and hygiene",
-    "Ecosystems and environment",
-    "States of matter",
-    "Mixtures and separation methods",
-    "Density and flotation",
-    "Electricity and magnetism",
-  ];
+        const saveScoreChk = document.getElementById("saveScoreChk");
+        const scoreInput = document.getElementById("scoreInput");
+        const btnSaveScore = document.getElementById("btnSaveScore");
+        const statusText = document.getElementById("statusText");
 
-  // labs we track – includes new Living Things Lab
-  const LABS = [
-    { key: "living-things-lab", label: "Living Things Lab" },
-    { key: "density-lab", label: "Density Lab" },
-    { key: "mixtures-lab", label: "Mixtures Lab" },
-    { key: "electricity-lab", label: "Electricity Lab" },
-  ];
+        async function callSciGuru(endpoint, outputElement) {
+            const form = formSelect.value;
+            const topic = topicSelect.value;
+            const question = questionInput.value.trim();
 
-  // === DOM ===
-  const formSelect = document.getElementById("form");
-  const topicSelect = document.getElementById("topic");
-  const questionInput = document.getElementById("question");
+            if (!question) {
+                outputElement.textContent = "Please type a question first.";
+                return;
+            }
 
-  const explainResultEl = document.getElementById("explain-result");
-  const quizResultEl = document.getElementById("quiz-result");
-  const pracResultEl = document.getElementById("prac-result");
+            outputElement.textContent = "Sci-Guru is thinking…";
 
-  const explainCard = document.getElementById("explain-card");
-  const quizCard = document.getElementById("quiz-card");
-  const pracCard = document.getElementById("prac-card");
+            try {
+                const res = await fetch(`${API_BASE}/${endpoint}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ form, topic, question })
+                });
 
-  const statusEl = document.getElementById("status");
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
 
-  const scoreToggleEl = document.getElementById("save-score-toggle");
-  const scoreInputEl = document.getElementById("score-input");
-  const saveScoreBtn = document.getElementById("save-score-btn");
+                const data = await res.json();
+                outputElement.textContent = data.answer || "No answer returned.";
+            } catch (err) {
+                console.error(err);
+                outputElement.textContent = "Error: Could not connect to Sci-Guru backend.";
+            }
+        }
 
-  const topicProgressList = document.getElementById("topic-progress-list");
-  const labProgressList = document.getElementById("lab-progress-list");
+        btnExplain.addEventListener("click", () => {
+            callSciGuru("explain", explainOutput);
+        });
 
-  // === Helpers ===
-  function setStatus(text) {
-    statusEl.textContent = text;
-  }
+        btnQuiz.addEventListener("click", () => {
+            callSciGuru("quiz", quizOutput);
+        });
 
-  async function callApi(path, payload) {
-    try {
-      setStatus("Thinking… contacting Sci-Guru backend…");
-      const res = await fetch(API_BASE + path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+        btnPractical.addEventListener("click", () => {
+            callSciGuru("practical", practicalOutput);
+        });
 
-      if (!res.ok) {
-        throw new Error("API error " + res.status);
-      }
-      const data = await res.json();
-      setStatus("Done ✅");
-      return data;
-    } catch (err) {
-      console.error(err);
-      setStatus("Error talking to backend. Please try again.");
-      return { answer: "Error: Could not reach Sci-Guru backend." };
-    }
-  }
+        btnOpenLabs.addEventListener("click", () => {
+            // Just go back to homepage Labs section for now
+            window.location.href = "index.html#labs";
+        });
 
-  function markCardHasContent(cardEl, text) {
-    cardEl.classList.remove("has-content");
-    if (text && text.trim().length > 0) {
-      cardEl.classList.add("has-content");
-    }
-  }
+        // Simple topic score saving (local device only)
+        btnSaveScore.addEventListener("click", () => {
+            if (!saveScoreChk.checked) {
+                statusText.textContent = "Saving is disabled. Tick the box if you want to save scores.";
+                return;
+            }
 
-  // === Button handlers ===
-  document.getElementById("ask-btn").addEventListener("click", async () => {
-    const form = formSelect.value;
-    const topic = topicSelect.value || "General Science";
-    const question = questionInput.value.trim();
+            const score = parseFloat(scoreInput.value);
+            if (isNaN(score) || score < 0 || score > 100) {
+                statusText.textContent = "Please enter a score between 0 and 100.";
+                return;
+            }
 
-    if (!question) {
-      alert("Please type a question first.");
-      return;
-    }
+            const form = formSelect.value;
+            const topic = topicSelect.value || "Custom question";
 
-    const data = await callApi("/explain", { form, topic, question });
-    explainResultEl.textContent = data.answer || data.error || "No answer.";
-    markCardHasContent(explainCard, explainResultEl.textContent);
-  });
+            const key = "sciGuruBestScores";
+            const stored = JSON.parse(localStorage.getItem(key) || "{}");
 
-  document.getElementById("quiz-btn").addEventListener("click", async () => {
-    const form = formSelect.value;
-    const topic = topicSelect.value || "General Science";
-    const question = questionInput.value.trim() || "Create a practice quiz.";
+            if (!stored[form]) stored[form] = {};
+            const previous = stored[form][topic];
 
-    const data = await callApi("/quiz", { form, topic, question });
-    quizResultEl.textContent = data.answer || data.error || "No quiz.";
-    markCardHasContent(quizCard, quizResultEl.textContent);
-  });
-
-  document.getElementById("prac-btn").addEventListener("click", async () => {
-    const form = formSelect.value;
-    const topic = topicSelect.value || "General Science";
-    const question = questionInput.value.trim() || "Create a practical experiment.";
-
-    const data = await callApi("/practical", { form, topic, question });
-    pracResultEl.textContent = data.answer || data.error || "No practical.";
-    markCardHasContent(pracCard, pracResultEl.textContent);
-  });
-
-  // Virtual Lab navigation
-  function openVirtualLabHub() {
-    window.open("index.html#labs", "_blank");
-  }
-
-  window.openVirtualLabHub = openVirtualLabHub; // expose to HTML
-
-  // === Topic score saving ===
-  function loadTopicScores() {
-    try {
-      const raw = localStorage.getItem(TOPIC_SCORE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  }
-
-  function saveTopicScores(obj) {
-    try {
-      localStorage.setItem(TOPIC_SCORE_KEY, JSON.stringify(obj));
-    } catch (e) {
-      console.error("Could not save topic scores", e);
-    }
-  }
-
-  function renderTopicProgress() {
-    const scores = loadTopicScores();
-    topicProgressList.innerHTML = "";
-
-    FORM1_TOPICS.forEach((topic) => {
-      const li = document.createElement("li");
-      li.className = "progress-item";
-
-      const label = document.createElement("div");
-      label.className = "progress-label";
-      label.textContent = topic;
-
-      const scoreEl = document.createElement("div");
-      scoreEl.className = "progress-score";
-      const value = scores[topic];
-      scoreEl.textContent =
-        value !== undefined ? `Best: ${value}%` : "Best: --%";
-
-      li.appendChild(label);
-      li.appendChild(scoreEl);
-      topicProgressList.appendChild(li);
-    });
-  }
-
-  saveScoreBtn.addEventListener("click", () => {
-    if (!scoreToggleEl.checked) {
-      alert("Tick 'I want to save my quiz result' first.");
-      return;
-    }
-    const topic = topicSelect.value;
-    if (!topic) {
-      alert("Please choose a specific topic in the dropdown.");
-      return;
-    }
-
-    const score = parseFloat(scoreInputEl.value);
-    if (isNaN(score) || score < 0 || score > 100) {
-      alert("Please enter a score between 0 and 100.");
-      return;
-    }
-
-    const scores = loadTopicScores();
-    const currentBest = scores[topic];
-
-    if (currentBest === undefined || score > currentBest) {
-      scores[topic] = score;
-      saveTopicScores(scores);
-      renderTopicProgress();
-      alert("Saved! New best score for this topic.");
-    } else {
-      alert(
-        "Not saved. This score is lower than your best (" +
-          currentBest +
-          "%)."
-      );
-    }
-  });
-
-  // === Labs progress ===
-  function loadLabStatus() {
-    try {
-      const raw = localStorage.getItem(LAB_STATUS_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
-    }
-  }
-
-  function renderLabProgress() {
-    const status = loadLabStatus();
-    labProgressList.innerHTML = "";
-
-    LABS.forEach((lab) => {
-      const li = document.createElement("li");
-      li.className = "progress-item";
-
-      const label = document.createElement("div");
-      label.className = "progress-label";
-      label.textContent = lab.label;
-
-      const state = document.createElement("div");
-      state.className =
-        "lab-status " + (status[lab.key] ? "done" : "not-done");
-      state.innerHTML = status[lab.key]
-        ? "✅ Done"
-        : "⬜ Not done";
-
-      li.appendChild(label);
-      li.appendChild(state);
-      labProgressList.appendChild(li);
-    });
-  }
-
-  // === Init ===
-  function init() {
-    renderTopicProgress();
-    renderLabProgress();
-  }
-
-  init();
-</script>
+            if (previous === undefined || score > previous) {
+                stored[form][topic] = score;
+                localStorage.setItem(key, JSON.stringify(stored));
+                statusText.textContent = `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
+            } else {
+                statusText.textContent = `Not saved: you already have ${previous}% for "${topic}".`;
+            }
+        });
+    </script>
 </body>
 </html>
