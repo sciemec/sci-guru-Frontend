@@ -1,238 +1,201 @@
-/* --- GLOBAL VARIABLES (LEC BIOTEC PALETTE) --- */
-:root {
-    --primary-navy: #002D62;    /* The deep corporate blue */
-    --science-blue: #007BFF;    /* Brighter blue for highlights */
-    --action-green: #28a745;    /* Green for 'Start' buttons */
-    --bg-light: #F4F7F6;        /* Light grey-blue background */
-    --white: #ffffff;
-    --text-dark: #333333;
-    --text-grey: #666666;
-    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* --- RESET & BASIC SETUP --- */
-* {
+/* ------------------------------------------------------
+   GLOBAL LIGHT-MODE OVERRIDE  
+   Ensures the site is always white on Android + iPhone
+------------------------------------------------------ */
+html, body {
+    color-scheme: light !important;
+    background: #ffffff !important;
+    color: #000000 !important;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-body {
-    font-family: 'Roboto', 'Segoe UI', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+/* Prevent Android Chrome from auto-inverting colors */
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
 }
 
-/* --- NAVIGATION BAR --- */
-nav {
-    background-color: var(--white);
-    padding: 15px 5%;
+/* ------------------------------------------------------
+   HEADER + NAVBAR
+------------------------------------------------------ */
+header {
+    background: linear-gradient(to right, #0A1A6F, #1427A8);
+    padding: 15px 25px;
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+header img {
+    height: 45px;
 }
 
-.nav-logo {
-    height: 45px; /* Adjusts your logo size automatically */
-    width: auto;
-}
-
-.brand-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-navy);
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-.nav-links a {
+nav a {
+    color: white;
     text-decoration: none;
-    color: var(--text-dark);
+    margin-left: 20px;
     font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.3s ease;
 }
 
-.nav-links a:hover, .nav-links a.active {
-    color: var(--science-blue);
+nav a:hover {
+    text-decoration: underline;
 }
 
-/* Special styling for the login link in nav */
-.login-btn {
-    border: 2px solid var(--primary-navy);
-    padding: 6px 15px;
-    border-radius: 4px;
-    color: var(--primary-navy) !important;
-}
-
-.login-btn:hover {
-    background-color: var(--primary-navy);
-    color: var(--white) !important;
-}
-
-/* --- HERO SECTION --- */
+/* ------------------------------------------------------
+   HERO SECTION
+------------------------------------------------------ */
 .hero {
-    background: linear-gradient(135deg, var(--primary-navy) 0%, #001f44 100%);
-    color: var(--white);
     text-align: center;
-    padding: 80px 20px 100px 20px;
-    /* This creates the modern diagonal cut at the bottom */
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    padding: 80px 20px;
+    background: linear-gradient(to bottom, #0A1A6F, #152B9F);
+    color: white;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
+    font-size: 48px;
     margin-bottom: 10px;
 }
 
-.subtitle {
-    font-size: 1.5rem;
-    color: #e0e0e0;
-    margin-bottom: 15px;
-}
-
-.description {
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto 30px auto;
+.hero p {
+    font-size: 20px;
     opacity: 0.9;
 }
 
-/* --- BUTTONS --- */
-.btn {
-    display: inline-block;
-    padding: 12px 35px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
+.hero button {
+    background: #0DD300;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-size: 18px;
     border: none;
+    margin-top: 20px;
+    cursor: pointer;
 }
 
-.btn-primary {
-    background-color: var(--action-green);
-    color: var(--white);
-    font-size: 1.1rem;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+.hero button:hover {
+    background: #0BB800;
 }
 
-.btn-primary:hover {
-    transform: translateY(-3px);
-    background-color: #218838;
-}
-
-.btn-secondary {
-    background-color: var(--science-blue);
-    color: var(--white);
-    padding: 10px 25px;
-    font-size: 0.95rem;
-}
-
-.btn-secondary:hover {
-    background-color: #0056b3;
-}
-
-/* --- FEATURES / CARDS SECTION --- */
-.features-section {
-    padding: 20px 5% 60px 5%;
+/* ------------------------------------------------------
+   CARDS SECTION
+------------------------------------------------------ */
+.section-title {
     text-align: center;
-}
-
-.features-section h2 {
-    color: var(--primary-navy);
-    margin-bottom: 40px;
-    font-size: 2.2rem;
-    position: relative;
-    display: inline-block;
-}
-
-/* Adds a small underline to the heading */
-.features-section h2::after {
-    content: '';
-    display: block;
-    width: 50%;
-    height: 3px;
-    background: var(--science-blue);
-    margin: 10px auto 0 auto;
+    margin-top: 40px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0A1A6F;
 }
 
 .cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    width: 90%;
 }
 
 .card {
-    background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-top: 5px solid var(--science-blue); /* The professional accent line */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: left;
-}
-
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.card-header {
-    padding: 25px 25px 10px 25px;
-}
-
-.card-header h3 {
-    color: var(--primary-navy);
-    font-size: 1.4rem;
-}
-
-.card-body {
-    padding: 0 25px 30px 25px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.card-body p {
-    color: var(--text-grey);
-    margin-bottom: 25px;
-    flex-grow: 1; /* Pushes the button to the bottom */
-}
-
-/* --- FOOTER --- */
-footer {
-    background-color: var(--primary-navy);
-    color: var(--white);
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    width: 260px;
     text-align: center;
-    padding: 30px;
-    margin-top: auto; /* Pushes footer to bottom */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-footer p {
-    opacity: 0.8;
-    font-size: 0.9rem;
+.card h3 {
+    font-size: 20px;
+    color: #0A1A6F;
+}
+
+.card p {
+    font-size: 15px;
+    opacity: 0.7;
+}
+
+.card button {
+    margin-top: 15px;
+    background: #0A1A6F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    background: #1427A8;
+}
+
+/* ------------------------------------------------------
+   TUTOR LAYOUT
+------------------------------------------------------ */
+.tutor-container {
+    display: flex;
+    gap: 25px;
+    width: 95%;
+    margin: 30px auto;
+}
+
+.tutor-left, .tutor-right {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ------------------------------------------------------
+   BUTTONS
+------------------------------------------------------ */
+.primary-btn {
+    background: #0A1A6F;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #1427A8;
+}
+
+.secondary-btn {
+    background: white;
+    border: 2px solid #0A1A6F;
+    padding: 12px 25px;
+    color: #0A1A6F;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    background: #0A1A6F;
+    color: white;
+}
+
+/* ------------------------------------------------------
+   MOBILE RESPONSIVE
+------------------------------------------------------ */
+@media (max-width: 768px) {
+    .tutor-container {
+        flex-direction: column;
+    }
+
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
 }
