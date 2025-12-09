@@ -122,7 +122,7 @@
                         <button id="btnQuiz" class="btn btn-secondary">Generate quiz</button>
                     </div>
                     <div class="button-row">
-                        <button id="btnPractical" class="btn btn-outline">Generate practical</button>
+                        <button id="btnPractical" class="btn btn-outline">Generate practical with AI</button>
                         <button id="btnOpenLabs" class="btn btn-outline">Open virtual lab hub</button>
                     </div>
 
@@ -177,137 +177,46 @@
                         </div>
                     </div>
 
+                    <!-- Recommended lab box -->
+                    <div id="labSuggestion" class="lab-suggestion hidden">
+                        <div class="lab-suggestion-text">
+                            <div class="lab-suggestion-title">Recommended virtual lab</div>
+                            <div id="labSuggestionLabel" class="lab-suggestion-label">
+                                Sci-Guru will suggest a lab when you choose a practical chapter.
+                            </div>
+                        </div>
+                        <button id="labSuggestionButton" class="btn btn-outline">
+                            Open lab
+                        </button>
+                    </div>
+
                     <!-- Clickable chapter strip -->
                     <div class="chapters-strip">
                         <div class="chapters-header">
                             <span class="chapters-title">Form 1 chapters</span>
                             <span class="chapters-note">
-                                Tap a chapter to auto-fill topic &amp; sample question
+                                Tap a chapter to auto-fill topic, sample question and experiment
                             </span>
                         </div>
                         <div class="chapters-pills">
-                            <!-- CHAPTERS 1–8 -->
-                            <button
-                                class="chapter-pill"
-                                data-topic="Living things and characteristics of life"
-                                data-question="Explain what makes something a living thing. Use 3 examples from a Zimbabwean village or city."
-                            >
-                                Ch. 1
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Cells and simple microscopes"
-                                data-question="Explain what a cell is and why it is called the basic unit of life. Use simple examples a Form 1 learner can understand."
-                            >
-                                Ch. 2
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Human body systems and hygiene"
-                                data-question="Describe two human body systems and explain one hygiene practice that keeps each system healthy."
-                            >
-                                Ch. 3
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Ecosystems and environment"
-                                data-question="Explain what an ecosystem is and give one example from a rural and one from an urban area in Zimbabwe."
-                            >
-                                Ch. 4
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="States of matter"
-                                data-question="Explain the three main states of matter using everyday examples from home or school."
-                            >
-                                Ch. 5
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Mixtures and separation methods"
-                                data-question="Explain what a mixture is and describe one method that can be used to separate a mixture of sand and salt."
-                            >
-                                Ch. 6
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Density and flotation"
-                                data-question="Explain why some objects float while others sink using the idea of density. Use at least one Zimbabwean example."
-                            >
-                                Ch. 7
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Electricity and magnetism"
-                                data-question="Describe a simple electric circuit and explain one safety rule about using electricity at home."
-                            >
-                                Ch. 8
-                            </button>
-
-                            <!-- CHAPTERS 9–17 -->
-                            <button
-                                class="chapter-pill"
-                                data-topic="Energy and fuels"
-                                data-question="Explain the difference between renewable and non-renewable sources of energy and give Zimbabwean examples of each."
-                            >
-                                Ch. 9
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Light"
-                                data-question="Explain how light travels and describe one simple experiment to show that light travels in straight lines."
-                            >
-                                Ch. 10
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Sound"
-                                data-question="Explain how sound is produced and how it travels. Use an example of music or drums from a Zimbabwean setting."
-                            >
-                                Ch. 11
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Heat and temperature"
-                                data-question="Explain the difference between heat and temperature, and describe a simple experiment to show expansion when substances are heated."
-                            >
-                                Ch. 12
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Weather and climate"
-                                data-question="Explain the difference between weather and climate and give one example of how climate affects people in Zimbabwe."
-                            >
-                                Ch. 13
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Earth and space"
-                                data-question="Describe the main layers of the Earth and explain one way the movement of the Earth affects day and night."
-                            >
-                                Ch. 14
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Simple machines and pressure"
-                                data-question="Explain what a simple machine is and give an example of a simple machine used on a Zimbabwean farm or home."
-                            >
-                                Ch. 15
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Acids, bases and salts"
-                                data-question="Explain the difference between an acid and a base and give one example of each from everyday life."
-                            >
-                                Ch. 16
-                            </button>
-                            <button
-                                class="chapter-pill"
-                                data-topic="Scientific methods and safety"
-                                data-question="Describe the main steps of the scientific method and mention two safety rules learners must follow in the laboratory."
-                            >
-                                Ch. 17
-                            </button>
+                            <!-- CHAPTERS 1–17 -->
+                            <button class="chapter-pill" data-chapter="1">Ch. 1</button>
+                            <button class="chapter-pill" data-chapter="2">Ch. 2</button>
+                            <button class="chapter-pill" data-chapter="3">Ch. 3</button>
+                            <button class="chapter-pill" data-chapter="4">Ch. 4</button>
+                            <button class="chapter-pill" data-chapter="5">Ch. 5</button>
+                            <button class="chapter-pill" data-chapter="6">Ch. 6</button>
+                            <button class="chapter-pill" data-chapter="7">Ch. 7</button>
+                            <button class="chapter-pill" data-chapter="8">Ch. 8</button>
+                            <button class="chapter-pill" data-chapter="9">Ch. 9</button>
+                            <button class="chapter-pill" data-chapter="10">Ch. 10</button>
+                            <button class="chapter-pill" data-chapter="11">Ch. 11</button>
+                            <button class="chapter-pill" data-chapter="12">Ch. 12</button>
+                            <button class="chapter-pill" data-chapter="13">Ch. 13</button>
+                            <button class="chapter-pill" data-chapter="14">Ch. 14</button>
+                            <button class="chapter-pill" data-chapter="15">Ch. 15</button>
+                            <button class="chapter-pill" data-chapter="16">Ch. 16</button>
+                            <button class="chapter-pill" data-chapter="17">Ch. 17</button>
                         </div>
                     </div>
                 </div>
@@ -319,7 +228,7 @@
         <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
     </footer>
 
-    <!-- JS: backend calls + scores + clickable chapters -->
+    <!-- JS: backend calls + scores + clickable chapters + lab linking -->
     <script>
         const API_BASE = "https://sci-guru-backend.onrender.com/api";
 
@@ -342,6 +251,482 @@
         const statusText = document.getElementById("statusText");
 
         const chapterPills = document.querySelectorAll(".chapter-pill");
+
+        const labSuggestionBox = document.getElementById("labSuggestion");
+        const labSuggestionLabel = document.getElementById("labSuggestionLabel");
+        const labSuggestionButton = document.getElementById("labSuggestionButton");
+        let currentLabUrl = null;
+
+        // Map of experiments + topics + labs for each chapter
+        const chapterConfig = {
+            "1": {
+                topic: "Living things and characteristics of life",
+                question:
+                    "Explain what makes something a living thing. Use 3 examples from a Zimbabwean village or city.",
+                experiment: `Experiment: Observing living and non-living things
+
+Aim:
+To compare living and non-living things using simple observations.
+
+Apparatus:
+- Exercise book and pen
+- School yard or home surroundings
+
+Procedure:
+1. Go outside and choose one area (for example near the classroom, garden or tuckshop).
+2. List at least five objects you can see.
+3. For each object, decide if it is living or non-living.
+4. For the living things, write which characteristics of life they show (movement, growth, response, reproduction, etc.).
+
+Observations:
+Record your table of living and non-living things.
+
+Conclusion:
+State two differences between living and non-living things using your examples.`
+            },
+            "2": {
+                topic: "Cells and simple microscopes",
+                question:
+                    "Explain what a cell is and why it is called the basic unit of life. Use simple examples a Form 1 learner can understand.",
+                experiment: `Experiment: Observing cells using a simple microscope or hand lens
+
+Aim:
+To observe simple cells or small structures using a microscope or hand lens.
+
+Apparatus:
+- Onion bulb or leaf
+- Razor blade or toothpick
+- Microscope or hand lens if available
+- Dropper of water
+- Slide and cover slip (or clear plastic if slide is not available)
+
+Procedure:
+1. Gently peel a thin, transparent layer from the inside of an onion or soft leaf.
+2. Place the thin layer on a slide and add one drop of water.
+3. Cover it with a cover slip or clear plastic.
+4. Observe under a microscope or hand lens.
+5. Draw what you see.
+
+Observations:
+Note the small box-like shapes or tiny units.
+
+Conclusion:
+State why these small units are called cells and why they are the basic units of life.`
+            },
+            "3": {
+                topic: "Human body systems and hygiene",
+                question:
+                    "Describe two human body systems and explain one hygiene practice that keeps each system healthy.",
+                experiment: `Experiment: Measuring breathing rate before and after exercise
+
+Aim:
+To investigate how exercise affects breathing rate.
+
+Apparatus:
+- Stopwatch or phone timer
+- Partner to help count
+
+Procedure:
+1. Sit quietly for 2 minutes.
+2. Count how many breaths you take in 1 minute. Record this as the resting breathing rate.
+3. Jog on the spot or do star jumps for 2 minutes.
+4. Immediately count how many breaths you take in 1 minute after exercise.
+5. Compare the two values.
+
+Observations:
+Record resting and post-exercise breathing rate.
+
+Conclusion:
+State how exercise affects breathing and explain why hygiene and fitness are important for body systems like the breathing and circulatory system.`
+            },
+            "4": {
+                topic: "Ecosystems and environment",
+                question:
+                    "Explain what an ecosystem is and give one example from a rural and one from an urban area in Zimbabwe.",
+                experiment: `Experiment: Simple ecosystem survey in the school yard
+
+Aim:
+To observe different organisms in a small ecosystem.
+
+Apparatus:
+- A piece of string or sticks to mark a small square (quadrat)
+- Exercise book and pen
+
+Procedure:
+1. Mark a small square on the ground using string or four sticks (for example 1 m by 1 m).
+2. Carefully look inside the square and list all living things you see (plants, insects, worms, etc.).
+3. Also list non-living things (soil, stones, water, litter, etc.).
+4. Note how the living things depend on the non-living things.
+
+Observations:
+Make a table of organisms and their role (producer, consumer, decomposer).
+
+Conclusion:
+Explain why this small area can be called an ecosystem.`
+            },
+            "5": {
+                topic: "States of matter",
+                question:
+                    "Explain the three main states of matter using everyday examples from home or school.",
+                experiment: `Experiment: Observing solid, liquid and gas
+
+Aim:
+To observe the three main states of matter.
+
+Apparatus:
+- Ice cubes or frozen water in a plastic bag
+- Cup of liquid water
+- Kettle or pot to boil water (under supervision)
+- Heat source
+
+Procedure:
+1. Observe the ice and describe its shape and how it behaves in a container.
+2. Place the ice in a cup and allow it to melt into liquid water.
+3. With supervision, gently heat some water in a kettle or pot until steam is seen.
+4. Observe how the water changes from solid to liquid to gas.
+
+Observations:
+Describe the properties of the solid, liquid and gas.
+
+Conclusion:
+Explain how heating changes the state of water and relate this to states of matter.`
+            },
+            "6": {
+                topic: "Mixtures and separation methods",
+                question:
+                    "Explain what a mixture is and describe one method that can be used to separate a mixture of sand and salt.",
+                experiment: `Experiment: Separating a mixture of sand and salt
+
+Aim:
+To separate sand and salt using filtration and evaporation.
+
+Apparatus:
+- Small amount of dry sand
+- Small amount of table salt
+- Beaker or cup
+- Water
+- Filter paper or clean cloth
+- Container and heat source for evaporation (sun or stove under supervision)
+
+Procedure:
+1. Mix sand and salt in a beaker.
+2. Add water and stir until the salt dissolves.
+3. Filter the mixture using filter paper or cloth to separate the sand from salt solution.
+4. Place the salt solution in a shallow container and leave it in the sun or gently heat it until the water evaporates.
+5. Observe the salt crystals left behind.
+
+Observations:
+Record what is collected on the filter and what remains after evaporation.
+
+Conclusion:
+Explain why this method separates sand and salt and name the separation methods used.`,
+                labLabel: "Open Mixtures Virtual Lab",
+                labUrl: "sim-mixtures.html"
+            },
+            "7": {
+                topic: "Density and flotation",
+                question:
+                    "Explain why some objects float while others sink using the idea of density. Use at least one Zimbabwean example.",
+                experiment: `Experiment: Comparing sinking and floating objects
+
+Aim:
+To compare the density of different objects using flotation in water.
+
+Apparatus:
+- Container of water (bucket, basin, bowl)
+- Small stone or brick piece
+- Empty plastic bottle with lid
+- Piece of dry wood
+
+Procedure:
+1. Fill a container with water.
+2. Place the stone gently on the water and observe if it sinks or floats.
+3. Place the empty plastic bottle on the water and observe what happens.
+4. Place the piece of wood on the water and observe.
+5. Compare the behaviour of the three objects.
+
+Observations:
+Record which objects float and which sink.
+
+Conclusion:
+Explain how density allows some objects to float and others to sink using your observations.`,
+                labLabel: "Open Density Virtual Lab",
+                labUrl: "sim-density.html"
+            },
+            "8": {
+                topic: "Electricity and magnetism",
+                question:
+                    "Describe a simple electric circuit and explain one safety rule about using electricity at home.",
+                experiment: `Experiment: Making a simple electric circuit
+
+Aim:
+To set up a simple electric circuit to light a bulb.
+
+Apparatus:
+- Dry cell (battery)
+- Small bulb
+- Two or three pieces of insulated wire
+- Switch (or you can use a simple join and remove method)
+
+Procedure:
+1. Connect one wire from the positive terminal of the battery to one side of the switch.
+2. Connect another wire from the other side of the switch to the bulb.
+3. Connect the last wire from the bulb back to the negative terminal of the battery.
+4. Close the switch or complete the circuit and observe the bulb.
+5. Open the switch and observe what happens.
+
+Observations:
+Record whether the bulb lights when the circuit is closed.
+
+Conclusion:
+Explain the conditions needed for current to flow and mention one safety rule about electricity at home.`,
+                labLabel: "Open Electricity Virtual Lab",
+                labUrl: "sim-electricity.html"
+            },
+            "9": {
+                topic: "Energy and fuels",
+                question:
+                    "Explain the difference between renewable and non-renewable sources of energy and give Zimbabwean examples of each.",
+                experiment: `Experiment: Comparing simple energy sources
+
+Aim:
+To compare different sources of energy used in the home.
+
+Apparatus:
+- Candle or paraffin lamp (use with supervision)
+- Small piece of firewood or charcoal
+- List of other energy sources used at home (solar, electricity, gas)
+
+Procedure:
+1. Observe a candle or paraffin lamp while it is burning. Note what is used as fuel.
+2. Observe a small fire using firewood or charcoal (from a safe distance).
+3. Make a table of energy sources: firewood, charcoal, paraffin, electricity, solar.
+4. In the table, classify each as renewable or non-renewable and note one advantage and one disadvantage.
+
+Observations:
+Fill in your comparison table.
+
+Conclusion:
+Explain why some energy sources are considered renewable and others non-renewable.`
+            },
+            "10": {
+                topic: "Light",
+                question:
+                    "Explain how light travels and describe one simple experiment to show that light travels in straight lines.",
+                experiment: `Experiment: Showing that light travels in straight lines
+
+Aim:
+To demonstrate that light travels in straight lines.
+
+Apparatus:
+- Three pieces of cardboard
+- Nail or sharp object to make holes (under supervision)
+- Candle or torch
+
+Procedure:
+1. Make a small hole at the same height in the centre of each cardboard.
+2. Arrange the three cardboards in a straight line and support them so they can stand.
+3. Place the candle or torch on one side and your eye at the other side.
+4. Look through the holes and adjust the cardboards until you can see the light through all three holes.
+5. Now move one cardboard slightly out of line and observe what happens.
+
+Observations:
+Record when the light is visible and when it is blocked.
+
+Conclusion:
+Explain how this shows that light travels in straight lines.`
+            },
+            "11": {
+                topic: "Sound",
+                question:
+                    "Explain how sound is produced and how it travels. Use an example of music or drums from a Zimbabwean setting.",
+                experiment: `Experiment: Observing vibration and sound
+
+Aim:
+To show that sound is produced by vibrations.
+
+Apparatus:
+- Rubber band
+- Empty plastic container or small box
+- Drum or homemade drum (tin with stretched plastic) if available
+
+Procedure:
+1. Stretch a rubber band around a small box or container.
+2. Pluck the rubber band and observe its motion and the sound produced.
+3. If a drum is available, hit the drum surface gently and feel it with your fingers.
+4. Observe what happens when the vibration stops.
+
+Observations:
+Write what you see and hear when the rubber band or drum is vibrating.
+
+Conclusion:
+State the relationship between vibration and sound production.`
+            },
+            "12": {
+                topic: "Heat and temperature",
+                question:
+                    "Explain the difference between heat and temperature, and describe a simple experiment to show expansion when substances are heated.",
+                experiment: `Experiment: Observing expansion of a metal wire when heated
+
+Aim:
+To show that metals expand when heated.
+
+Apparatus:
+- Thin metal wire (or metal strip)
+- Two supports (books, bricks or desks)
+- Small weight (e.g. stone)
+- Candle or small flame (with supervision)
+
+Procedure:
+1. Stretch the metal wire between two supports so it is tight and hang a small weight at the middle.
+2. Observe the position of the weight.
+3. Gently heat the metal wire near the centre using a candle or small flame under supervision.
+4. Observe any change in the position of the weight.
+
+Observations:
+Record what happens to the weight as the wire is heated.
+
+Conclusion:
+Explain what the change in position tells you about expansion when metal is heated.`
+            },
+            "13": {
+                topic: "Weather and climate",
+                question:
+                    "Explain the difference between weather and climate and give one example of how climate affects people in Zimbabwe.",
+                experiment: `Experiment: Recording simple weather data
+
+Aim:
+To observe daily weather changes.
+
+Apparatus:
+- Notebook and pen
+- Simple thermometer if available
+- Access to outside area
+
+Procedure:
+1. For 5 days, at the same time each day, go outside and observe the weather.
+2. Record cloud cover (sunny, cloudy, rainy), wind (calm or windy) and temperature reading if you have a thermometer.
+3. Draw a simple table and fill in the data for each day.
+4. At the end of the period, summarise the pattern.
+
+Observations:
+Complete your weather table for the 5 days.
+
+Conclusion:
+Explain how daily weather observations differ from long-term climate patterns.`
+            },
+            "14": {
+                topic: "Earth and space",
+                question:
+                    "Describe the main layers of the Earth and explain one way the movement of the Earth affects day and night.",
+                experiment: `Experiment: Shadow stick investigation
+
+Aim:
+To observe the movement of the Sun in the sky using shadows.
+
+Apparatus:
+- Straight stick
+- Open ground where the Sun shines
+- Chalk or small stones
+- Watch or clock
+
+Procedure:
+1. Push a straight stick into the ground where it can cast a clear shadow.
+2. Mark the tip of the shadow on the ground with chalk or a small stone.
+3. Record the time.
+4. Repeat the marking after every hour for about 3 to 4 hours.
+5. Compare the positions of the shadow marks.
+
+Observations:
+Draw the pattern of the shadow positions on the ground.
+
+Conclusion:
+Explain how the change in shadow position is related to the movement of the Earth and the apparent movement of the Sun.`
+            },
+            "15": {
+                topic: "Simple machines and pressure",
+                question:
+                    "Explain what a simple machine is and give an example of a simple machine used on a Zimbabwean farm or home.",
+                experiment: `Experiment: Investigating a simple lever
+
+Aim:
+To show how a lever can make lifting easier.
+
+Apparatus:
+- Strong plank or rigid stick
+- Stone or brick as fulcrum
+- Two different stones or weights
+
+Procedure:
+1. Place the plank over the stone so that it can act as a seesaw (lever).
+2. Place a heavy stone near one end of the plank.
+3. Push down on the other end and observe the effort needed to lift the heavy stone.
+4. Move the fulcrum closer to the heavy stone and try again.
+5. Compare how the position of the fulcrum affects the effort.
+
+Observations:
+Record how easy or difficult it is to lift the load in each case.
+
+Conclusion:
+Explain how a lever helps to reduce the effort needed to lift a load.`
+            },
+            "16": {
+                topic: "Acids, bases and salts",
+                question:
+                    "Explain the difference between an acid and a base and give one example of each from everyday life.",
+                experiment: `Experiment: Testing household substances with a natural indicator
+
+Aim:
+To classify common substances as acidic, basic or neutral using a simple indicator.
+
+Apparatus:
+- Red cabbage leaves or beetroot (for indicator)
+- Hot water
+- Clear cups
+- Household substances: lemon juice, vinegar, baking soda solution, soap solution, water
+
+Procedure:
+1. Crush red cabbage or beetroot and soak it in hot water to make a coloured indicator solution. Let it cool.
+2. Pour small amounts of indicator into separate clear cups.
+3. Add a small amount of each household substance into different cups with indicator.
+4. Observe any colour changes.
+
+Observations:
+Make a table showing each substance and the colour change.
+
+Conclusion:
+Classify each substance as acid, base or neutral based on the colour change.`
+            },
+            "17": {
+                topic: "Scientific methods and safety",
+                question:
+                    "Describe the main steps of the scientific method and mention two safety rules learners must follow in the laboratory.",
+                experiment: `Experiment: Applying the scientific method to a simple question
+
+Aim:
+To use the scientific method to investigate a simple question.
+
+Example Question:
+Does the amount of sunlight affect how fast clothes dry?
+
+Apparatus:
+- Two small wet cloths
+- Sunny area and shaded area
+- Watch or clock
+
+Procedure:
+1. Write the question and your hypothesis (for example: clothes in the Sun will dry faster).
+2. Place one wet cloth in the Sun and the other in the shade at the same time.
+3. Check the cloths every 10 minutes and note when each one becomes dry.
+4. Record your observations.
+
+Observations:
+Note the time taken for each cloth to dry.
+
+Conclusion:
+State whether your hypothesis was supported and list at least two safety or good practice rules you followed during the investigation.`
+            }
+        };
 
         async function callSciGuru(endpoint, outputElement) {
             const form = formSelect.value;
@@ -385,6 +770,7 @@
         });
 
         btnPractical.addEventListener("click", () => {
+            // Still allow AI-generated practicals
             callSciGuru("practical", practicalOutput);
         });
 
@@ -424,26 +810,53 @@
             }
         });
 
-        // ---------- Chapter pills: click to auto-set topic & question ----------
+        // ---------- Chapter pills: click to auto-set topic, question, experiment + lab ----------
         chapterPills.forEach((pill) => {
             pill.addEventListener("click", () => {
-                // Clear active state from all
+                // Clear active state
                 chapterPills.forEach((p) => p.classList.remove("active"));
 
-                const topicValue = pill.dataset.topic;
-                const sampleQuestion = pill.dataset.question;
+                const ch = pill.dataset.chapter;
+                const config = chapterConfig[ch];
 
-                if (topicValue) {
-                    formSelect.value = "Form 1";
-                    topicSelect.value = topicValue;
-                    if (sampleQuestion) {
-                        questionInput.value = sampleQuestion;
-                    }
-                    pill.classList.add("active");
+                if (!config) {
                     statusText.textContent =
-                        `Ready: ${pill.textContent.trim()} selected (Form 1, topic pre-filled). You can edit the question or press a button to continue.`;
+                        "Chapter configuration missing. Please choose a topic manually.";
+                    return;
                 }
+
+                // Set form and topic
+                formSelect.value = "Form 1";
+                topicSelect.value = config.topic;
+
+                // Set sample question
+                questionInput.value = config.question;
+
+                // Show predefined experiment
+                practicalOutput.textContent = config.experiment;
+
+                // Handle lab suggestion
+                if (config.labUrl && config.labLabel) {
+                    currentLabUrl = config.labUrl;
+                    labSuggestionLabel.textContent = config.labLabel;
+                    labSuggestionBox.classList.remove("hidden");
+                } else {
+                    currentLabUrl = null;
+                    labSuggestionBox.classList.add("hidden");
+                    labSuggestionLabel.textContent =
+                        "No specific virtual lab is linked to this chapter yet. You can still perform the real-life experiment described above.";
+                }
+
+                pill.classList.add("active");
+                statusText.textContent =
+                    `Ready: Chapter ${ch} selected (Form 1, topic and experiment pre-filled). You can edit the question or press a button to continue.`;
             });
+        });
+
+        labSuggestionButton.addEventListener("click", () => {
+            if (currentLabUrl) {
+                window.location.href = currentLabUrl;
+            }
         });
     </script>
 </body>
