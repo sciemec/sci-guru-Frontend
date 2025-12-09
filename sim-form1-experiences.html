@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sci-Guru – Form 1 Virtual Experiences</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="lec-logo.jpg" type="image/jpeg" />
+    <style>
+        /* Extra tiny tweaks just for this page (re-using your main palette) */
+
+        .experience-layout {
+            max-width: 1080px;
+            margin: 1.5rem auto 2.5rem;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+            gap: 1.5rem;
+        }
+
+        .experience-column {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+            padding: 1.1rem 1.2rem;
+        }
+
+        .experience-title-main {
+            margin-top: 0;
+            margin-bottom: 0.4rem;
+            font-size: 1.2rem;
+        }
+
+        .experience-intro {
+            margin: 0 0 0.9rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .chapter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.45rem;
+        }
+
+        .chapter-card {
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: #f9fafb;
+            padding: 0.5rem 0.6rem;
+            font-size: 0.83rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 0.18rem;
+            transition: background var(--transition-fast),
+                border-color var(--transition-fast),
+                transform var(--transition-fast),
+                box-shadow var(--transition-fast);
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-1px);
+            border-color: var(--primary-soft);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .chapter-card.active {
+            background: #1d4ed8;
+            color: #e5e7eb;
+            border-color: #1d4ed8;
+        }
+
+        .chapter-card.active .chapter-tagline {
+            color: #c7d2fe;
+        }
+
+        .chapter-code {
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .chapter-name {
+            font-weight: 600;
+        }
+
+        .chapter-tagline {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .xp-header-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.18rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .xp-header-tag span {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .xp-title {
+            margin: 0 0 0.2rem;
+            font-size: 1.05rem;
+        }
+
+        .xp-subtitle {
+            margin: 0 0 0.6rem;
+            font-size: 0.86rem;
+            color: var(--text-muted);
+        }
+
+        .xp-box {
+            margin-top: 0.4rem;
+            padding: 0.7rem 0.8rem;
+            border-radius: var(--radius-md);
+            background: #f1f5f9;
+            border: 1px dashed rgba(148, 163, 184, 0.9);
+            font-size: 0.86rem;
+        }
+
+        .xp-box-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .xp-options-grid {
+            margin-top: 0.6rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.4rem;
+        }
+
+        .xp-option-btn {
+            border-radius: 11px;
+            border: 1px solid rgba(148, 163, 184, 0.9);
+            background: #ffffff;
+            padding: 0.48rem 0.55rem;
+            font-size: 0.83rem;
+            cursor: pointer;
+            text-align: left;
+            transition: background var(--transition-fast),
+                border-color var(--transition-fast),
+                transform var(--transition-fast),
+                box-shadow var(--transition-fast),
+                color var(--transition-fast);
+        }
+
+        .xp-option-btn:hover {
+            transform: translateY(-1px);
+            border-color: var(--primary-soft);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+        }
+
+        .xp-option-btn.correct {
+            background: #22c55e;
+            border-color: #16a34a;
+            color: #052e16;
+        }
+
+        .xp-option-btn.wrong {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #7f1d1d;
+        }
+
+        .xp-feedback {
+            margin-top: 0.5rem;
+            font-size: 0.82rem;
+        }
+
+        .xp-feedback.ok {
+            color: #16a34a;
+        }
+
+        .xp-feedback.no {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
+            .experience-layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top bar -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <div class="brand">
+                <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="brand-logo" />
+                <span class="brand-text">Sci-Guru Tutor</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tutor.html" class="nav-link">AI Tutor</a>
+                <a href="sim-form1-experiences.html" class="nav-link active">Form 1 Labs</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <section class="section">
+            <h1 class="section-title">Form 1 Virtual Experiences</h1>
+            <p class="section-subtitle">
+                Tap a chapter to open a mini virtual experience. Each one uses a short scenario,
+                a quick challenge, and instant feedback – all aligned to the Heritage-Based
+                Form 1 Combined Science syllabus.
+            </p>
+
+            <div class="experience-layout">
+                <!-- LEFT: list of chapters -->
+                <div class="experience-column">
+                    <h2 class="experience-title-main">Choose a chapter</h2>
+                    <p class="experience-intro">
+                        Start with any topic you are teaching. Learners can then test ideas
+                        here before (or after) doing real experiments.
+                    </p>
+
+                    <div id="chapterList" class="chapter-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- RIGHT: virtual experience area -->
+                <div class="experience-column">
+                    <div id="xpContainer">
+                        <p class="experience-intro">
+                            Select a chapter on the left to load its virtual experience.
+                        </p>
+                        <div class="xp-box">
+                            <div class="xp-box-title">Tip for teachers</div>
+                            <p style="margin: 0;">
+                                Use these quick simulations as a warm-up, revision tool, or
+                                homework. For some topics (like mixtures, density and
+                                electricity), you can also open the full interactive labs from
+                                your main Sci-Guru hub.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
+    </footer>
+
+    <script>
+        // --- Data: one virtual experience per Form 1 chapter ---
+        // Pattern: simple choice-based interaction with instant feedback
+
+        const chapterExperiences = [
+            {
+                id: 1,
+                code: "Ch. 1",
+                name: "Living things & characteristics of life",
+                tagline: "Classify village and city objects as living / non-living.",
+                scenario:
+                    "You are walking from your home to school in a Zimbabwean township. You see different things on the way.",
+                question:
+                    "Which of these are living things that show many characteristics of life?",
+                options: [
+                    { text: "A goat and a mango tree", correct: true },
+                    { text: "A brick and a parked car", correct: false },
+                    { text: "A plastic bottle and a stool", correct: false },
+                    { text: "A chicken and a grass plant", correct: true }
+                ]
+            },
+            {
+                id: 2,
+                code: "Ch. 2",
+                name: "Cells and simple microscopes",
+                tagline: "Zoom in from tissue → cell → tiny parts.",
+                scenario:
+                    "You place a thin onion peel under a school microscope in Harare.",
+                question:
+                    "Which description best matches what you see when you focus clearly?",
+                options: [
+                    {
+                        text: "Many tiny box-like units arranged in rows",
+                        correct: true
+                    },
+                    {
+                        text: "A single large object with no boundaries",
+                        correct: false
+                    },
+                    {
+                        text: "Only circles of different colours moving around",
+                        correct: false
+                    },
+                    {
+                        text: "Just darkness with no image at all",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 3,
+                code: "Ch. 3",
+                name: "Human body systems & hygiene",
+                tagline: "Link exercise to breathing and hygiene.",
+                scenario:
+                    "Learners run around the school ground during P.E. then measure breathing rate.",
+                question:
+                    "Which statement correctly links exercise and hygiene?",
+                options: [
+                    {
+                        text: "Exercise increases breathing rate and hygiene helps body systems stay healthy.",
+                        correct: true
+                    },
+                    {
+                        text: "Exercise has no effect on breathing and hygiene is not important.",
+                        correct: false
+                    },
+                    {
+                        text: "Exercise only affects bones, not other systems.",
+                        correct: false
+                    },
+                    {
+                        text: "Hygiene only matters in hospitals, not at home.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 4,
+                code: "Ch. 4",
+                name: "Ecosystems & environment",
+                tagline: "See how organisms share one habitat.",
+                scenario:
+                    "You mark a small square in a school garden and list what lives there.",
+                question:
+                    "Which set best represents an ecosystem in that small square?",
+                options: [
+                    {
+                        text: "Grass, insects, soil, air and sunlight interacting together",
+                        correct: true
+                    },
+                    {
+                        text: "Only grass plants with nothing else",
+                        correct: false
+                    },
+                    {
+                        text: "Only stones with no living things",
+                        correct: false
+                    },
+                    {
+                        text: "A single tree that never interacts with anything",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 5,
+                code: "Ch. 5",
+                name: "States of matter",
+                tagline: "Follow water as it changes state.",
+                scenario:
+                    "You heat ice in a beaker until it melts and then boils.",
+                question:
+                    "Which correctly shows the order of states for water as you heat it?",
+                options: [
+                    { text: "Solid → liquid → gas", correct: true },
+                    { text: "Gas → liquid → solid", correct: false },
+                    { text: "Liquid → solid → gas", correct: false },
+                    { text: "Solid → gas → liquid", correct: false }
+                ]
+            },
+            {
+                id: 6,
+                code: "Ch. 6",
+                name: "Mixtures & separation methods",
+                tagline: "Predict how to separate sand and salt.",
+                scenario:
+                    "A school in Gokwe wants to purify a sand–salt mixture for an experiment.",
+                question:
+                    "Which SEQUENCE of methods is best to separate sand from salt?",
+                options: [
+                    {
+                        text: "Add water → filter to remove sand → evaporate to get salt",
+                        correct: true
+                    },
+                    {
+                        text: "Heat dry mixture only",
+                        correct: false
+                    },
+                    {
+                        text: "Pick the grains one by one with fingers",
+                        correct: false
+                    },
+                    {
+                        text: "Stir and hope they separate by themselves",
+                        correct: false
+                    }
+                ],
+                labLink: "sim-mixtures.html",
+                labLabel: "Open full Mixtures Virtual Lab"
+            },
+            {
+                id: 7,
+                code: "Ch. 7",
+                name: "Density & flotation",
+                tagline: "Decide which objects float in a river.",
+                scenario:
+                    "Learners throw different objects into a full bucket of water: a stone, a dry log and an empty plastic bottle.",
+                question:
+                    "Which TWO objects are most likely to float because of lower density than water?",
+                options: [
+                    { text: "Stone", correct: false },
+                    { text: "Dry log", correct: true },
+                    { text: "Empty plastic bottle with lid on", correct: true },
+                    { text: "Brick", correct: false }
+                ],
+                labLink: "sim-density.html",
+                labLabel: "Open full Density Virtual Lab"
+            },
+            {
+                id: 8,
+                code: "Ch. 8",
+                name: "Electricity & magnetism",
+                tagline: "Complete a simple circuit.",
+                scenario:
+                    "You connect a bulb, wires and a dry cell for a mobile lab demonstration.",
+                question:
+                    "Which arrangement makes the bulb light safely?",
+                options: [
+                    {
+                        text: "Battery → wire → bulb → wire back to other battery terminal",
+                        correct: true
+                    },
+                    {
+                        text: "Battery alone with no wires",
+                        correct: false
+                    },
+                    {
+                        text: "Bulb connected to only one side of the battery",
+                        correct: false
+                    },
+                    {
+                        text: "Two wires touching each other only",
+                        correct: false
+                    }
+                ],
+                labLink: "sim-electricity.html",
+                labLabel: "Open full Electricity Virtual Lab"
+            },
+            {
+                id: 9,
+                code: "Ch. 9",
+                name: "Energy & fuels",
+                tagline: "Compare fuels used at home.",
+                scenario:
+                    "A family in a rural area uses firewood, and another in town uses electricity and gas.",
+                question:
+                    "Which statement is TRUE about energy sources?",
+                options: [
+                    {
+                        text: "Firewood can be renewable if trees are replanted.",
+                        correct: true
+                    },
+                    {
+                        text: "All fuels are non-renewable.",
+                        correct: false
+                    },
+                    {
+                        text: "Solar energy will one day run out completely soon.",
+                        correct: false
+                    },
+                    {
+                        text: "Electricity is not a form of energy.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 10,
+                code: "Ch. 10",
+                name: "Light",
+                tagline: "Show that light travels in straight lines.",
+                scenario:
+                    "You line up three cardboards with holes and shine a torch through them.",
+                question:
+                    "When you move the middle cardboard so its hole is no longer in line, what should happen if light travels in straight lines?",
+                options: [
+                    {
+                        text: "You no longer see the light through all three holes.",
+                        correct: true
+                    },
+                    {
+                        text: "The light bends around the cardboard and still passes.",
+                        correct: false
+                    },
+                    {
+                        text: "The hole becomes brighter.",
+                        correct: false
+                    },
+                    {
+                        text: "Nothing changes at all.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 11,
+                code: "Ch. 11",
+                name: "Sound",
+                tagline: "Link vibration with sound.",
+                scenario:
+                    "You pluck a rubber band on a small box and feel it moving.",
+                question:
+                    "Which statement correctly describes sound production?",
+                options: [
+                    { text: "Sound is produced by vibrating objects.", correct: true },
+                    { text: "Sound is produced only by light.", correct: false },
+                    { text: "Sound appears without any cause.", correct: false },
+                    {
+                        text: "Objects make sound only when they are still.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 12,
+                code: "Ch. 12",
+                name: "Heat & temperature",
+                tagline: "See what heating does to metals.",
+                scenario:
+                    "A tight metal wire with a weight in the middle is heated gently.",
+                question:
+                    "If the metal expands when heated, what happens to the hanging weight?",
+                options: [
+                    {
+                        text: "It moves down a little as the wire becomes longer.",
+                        correct: true
+                    },
+                    {
+                        text: "It moves up because the wire becomes shorter.",
+                        correct: false
+                    },
+                    {
+                        text: "It disappears.",
+                        correct: false
+                    },
+                    {
+                        text: "There is never any change when metals are heated.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 13,
+                code: "Ch. 13",
+                name: "Weather & climate",
+                tagline: "Collect simple weather data.",
+                scenario:
+                    "Learners record weather for 5 days in Mutare – sunny, rainy, windy or cloudy.",
+                question:
+                    "Which statement correctly describes the relation between weather and climate?",
+                options: [
+                    {
+                        text: "Weather is day-to-day conditions; climate is the pattern over many years.",
+                        correct: true
+                    },
+                    {
+                        text: "Weather and climate mean exactly the same thing.",
+                        correct: false
+                    },
+                    {
+                        text: "Climate changes completely every day.",
+                        correct: false
+                    },
+                    {
+                        text: "Weather never changes at all.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 14,
+                code: "Ch. 14",
+                name: "Earth & space",
+                tagline: "Use shadows to track the Sun.",
+                scenario:
+                    "You mark the shadow of a stick every hour in the school yard.",
+                question:
+                    "What pattern would you expect to see?",
+                options: [
+                    {
+                        text: "The shadow changes position and length as the Earth rotates.",
+                        correct: true
+                    },
+                    {
+                        text: "The shadow never changes at all.",
+                        correct: false
+                    },
+                    {
+                        text: "The shadow disappears forever after one hour.",
+                        correct: false
+                    },
+                    {
+                        text: "Shadows only appear at night.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 15,
+                code: "Ch. 15",
+                name: "Simple machines & pressure",
+                tagline: "Use a lever to lift a heavy stone.",
+                scenario:
+                    "You use a plank and a brick as a fulcrum to lift a heavy rock.",
+                question:
+                    "What change makes it easier to lift the rock with the lever?",
+                options: [
+                    {
+                        text: "Move the fulcrum closer to the heavy rock.",
+                        correct: true
+                    },
+                    {
+                        text: "Move the fulcrum far away from the rock towards the effort.",
+                        correct: false
+                    },
+                    {
+                        text: "Remove the fulcrum completely.",
+                        correct: false
+                    },
+                    {
+                        text: "Use a very short plank for the effort side.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 16,
+                code: "Ch. 16",
+                name: "Acids, bases & salts",
+                tagline: "Test household substances with an indicator.",
+                scenario:
+                    "You use red cabbage juice as an indicator on lemon juice, soap solution and water.",
+                question:
+                    "Which statement is most likely correct?",
+                options: [
+                    {
+                        text: "Lemon juice is acidic; soap solution is basic; clean water is neutral.",
+                        correct: true
+                    },
+                    {
+                        text: "All three are acids.",
+                        correct: false
+                    },
+                    {
+                        text: "All three are bases.",
+                        correct: false
+                    },
+                    {
+                        text: "None of them react with indicators.",
+                        correct: false
+                    }
+                ]
+            },
+            {
+                id: 17,
+                code: "Ch. 17",
+                name: "Scientific methods & safety",
+                tagline: "Follow the steps of investigation.",
+                scenario:
+                    "You want to test whether clothes dry faster in direct Sun or in the shade.",
+                question:
+                    "Which order of steps best matches the scientific method?",
+                options: [
+                    {
+                        text: "Ask question → form hypothesis → plan and do experiment → record results → conclusion.",
+                        correct: true
+                    },
+                    {
+                        text: "Do experiment first → then think of a question later.",
+                        correct: false
+                    },
+                    {
+                        text: "Jump straight to conclusion without any data.",
+                        correct: false
+                    },
+                    {
+                        text: "Only ask a question and stop there.",
+                        correct: false
+                    }
+                ]
+            }
+        ];
+
+        const chapterList = document.getElementById("chapterList");
+        const xpContainer = document.getElementById("xpContainer");
+
+        let activeChapterId = null;
+
+        function renderChapterList() {
+            chapterList.innerHTML = "";
+            chapterExperiences.forEach((ch) => {
+                const card = document.createElement("button");
+                card.type = "button";
+                card.className =
+                    "chapter-card" +
+                    (ch.id === activeChapterId ? " active" : "");
+                card.dataset.id = ch.id;
+
+                card.innerHTML = `
+                    <div class="chapter-code">${ch.code}</div>
+                    <div class="chapter-name">${ch.name}</div>
+                    <div class="chapter-tagline">${ch.tagline}</div>
+                `;
+
+                card.addEventListener("click", () => {
+                    activeChapterId = ch.id;
+                    renderChapterList();
+                    renderExperience(ch);
+                });
+
+                chapterList.appendChild(card);
+            });
+        }
+
+        function renderExperience(ch) {
+            xpContainer.innerHTML = "";
+
+            const tag = document.createElement("div");
+            tag.className = "xp-header-tag";
+            tag.innerHTML = `
+                <span>Form 1 – ${ch.code}</span>
+                <span style="font-weight:400; color:var(--text-muted);">Virtual Experience</span>
+            `;
+
+            const title = document.createElement("h2");
+            title.className = "xp-title";
+            title.textContent = ch.name;
+
+            const subtitle = document.createElement("p");
+            subtitle.className = "xp-subtitle";
+            subtitle.textContent = ch.tagline;
+
+            const scenarioBox = document.createElement("div");
+            scenarioBox.className = "xp-box";
+            scenarioBox.innerHTML = `
+                <div class="xp-box-title">Scenario</div>
+                <p style="margin:0;">${ch.scenario}</p>
+            `;
+
+            const questionBox = document.createElement("div");
+            questionBox.className = "xp-box";
+            questionBox.innerHTML = `
+                <div class="xp-box-title">Your challenge</div>
+                <p style="margin:0 0 0.45rem;">${ch.question}</p>
+            `;
+
+            const optionsGrid = document.createElement("div");
+            optionsGrid.className = "xp-options-grid";
+
+            const feedback = document.createElement("p");
+            feedback.className = "xp-feedback";
+            feedback.textContent = "Tap an answer to check yourself.";
+
+            ch.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "xp-option-btn";
+                btn.textContent = opt.text;
+                btn.dataset.correct = opt.correct ? "true" : "false";
+
+                btn.addEventListener("click", () => {
+                    // reset states
+                    const allBtns =
+                        optionsGrid.querySelectorAll(".xp-option-btn");
+                    allBtns.forEach((b) => {
+                        b.classList.remove("correct", "wrong");
+                    });
+
+                    if (opt.correct) {
+                        btn.classList.add("correct");
+                        feedback.textContent =
+                            "Correct — that matches the science for this chapter.";
+                        feedback.classList.remove("no");
+                        feedback.classList.add("ok");
+                    } else {
+                        btn.classList.add("wrong");
+                        feedback.textContent =
+                            "Not quite. Try again or discuss with your group.";
+                        feedback.classList.remove("ok");
+                        feedback.classList.add("no");
+                    }
+                });
+
+                optionsGrid.appendChild(btn);
+            });
+
+            questionBox.appendChild(optionsGrid);
+            questionBox.appendChild(feedback);
+
+            xpContainer.appendChild(tag);
+            xpContainer.appendChild(title);
+            xpContainer.appendChild(subtitle);
+            xpContainer.appendChild(scenarioBox);
+            xpContainer.appendChild(questionBox);
+
+            // Lab link (for some chapters)
+            if (ch.labLink && ch.labLabel) {
+                const labBox = document.createElement("div");
+                labBox.className = "xp-box";
+                labBox.style.marginTop = "0.6rem";
+                labBox.innerHTML = `
+                    <div class="xp-box-title">Go deeper</div>
+                    <p style="margin:0 0 0.45rem;">
+                        This chapter connects to a full interactive virtual lab.
+                    </p>
+                    <button type="button" class="btn btn-outline" id="labBtn">
+                        ${ch.labLabel}
+                    </button>
+                `;
+                xpContainer.appendChild(labBox);
+
+                const labBtn = labBox.querySelector("#labBtn");
+                labBtn.addEventListener("click", () => {
+                    window.location.href = ch.labLink;
+                });
+            }
+        }
+
+        // Initial render (no chapter selected)
+        renderChapterList();
+    </script>
+</body>
+</html>
