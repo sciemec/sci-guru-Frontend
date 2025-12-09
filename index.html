@@ -3,20 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sci-Guru | AI Science Tutor</title>
-
-  <!-- If you already have styles.css, keep this line -->
-  <!-- It will still work with the extra styles below -->
-  <link rel="stylesheet" href="styles.css" />
-
+  <title>Sci-Guru | AI Science Learning</title>
   <style>
-    /* === Layout & base === */
+    :root {
+      --blue-main: #2563eb;
+      --blue-dark: #1d4ed8;
+      --bg-soft: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-soft: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-      background: #f3f4f6;
-      color: #111827;
+      background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 45%, #e5e7eb 100%);
+      color: var(--text-main);
     }
 
     .page {
@@ -25,18 +33,20 @@
       flex-direction: column;
     }
 
-    /* === Top bar === */
-    .top-bar {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    /* Header / top bar */
+    header {
+      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
       color: #f9fafb;
       padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
     }
 
-    .brand-left {
+    .brand {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -46,9 +56,9 @@
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      object-fit: cover;
       background: #eff6ff;
       border: 1px solid rgba(255, 255, 255, 0.7);
+      object-fit: cover;
     }
 
     .brand-text-main {
@@ -58,284 +68,306 @@
 
     .brand-text-sub {
       font-size: 11px;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
-    .nav-links {
+    .nav {
       display: flex;
-      gap: 10px;
-      font-size: 13px;
+      gap: 8px;
       flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
-    .nav-links a {
-      color: #e5e7eb;
-      text-decoration: none;
-      padding: 5px 10px;
+    .nav button {
       border-radius: 999px;
-      border: 1px solid transparent;
+      border: 1px solid rgba(191, 219, 254, 0.95);
+      background: rgba(15, 23, 42, 0.1);
+      color: #e5e7eb;
+      padding: 5px 11px;
+      font-size: 12px;
+      cursor: pointer;
     }
 
-    .nav-links a:hover {
-      border-color: rgba(191, 219, 254, 0.5);
-      background: rgba(15, 23, 42, 0.15);
+    .nav button:hover {
+      background: rgba(15, 23, 42, 0.25);
     }
 
-    /* === Main area === */
-    .main {
+    /* Layout */
+    main {
       flex: 1;
-      padding: 16px;
       max-width: 1100px;
-      width: 100%;
-      margin: 0 auto 24px;
-      box-sizing: border-box;
+      margin: 0 auto;
+      padding: 20px 16px 28px;
     }
 
-    .hero-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 18px 16px 20px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-      margin-bottom: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 24px 16px 16px;
+    }
+
+    .hero-tagline {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #1d4ed8;
+      margin-bottom: 6px;
     }
 
     .hero-title {
-      font-size: 20px;
-      font-weight: 650;
-      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 6px;
     }
 
-    .hero-subtitle {
+    .hero-sub {
+      margin: 0 0 14px;
       font-size: 13px;
-      color: #4b5563;
-      margin: 0;
-      max-width: 520px;
+      color: var(--text-muted);
     }
 
-    .hero-buttons {
+    .hero-actions {
       display: flex;
+      justify-content: center;
+      gap: 8px;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
     }
 
-    .btn-primary,
-    .btn-outline {
+    .btn-main,
+    .btn-soft {
       border-radius: 999px;
-      padding: 9px 16px;
       border: none;
-      cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
+      padding: 9px 18px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.12s ease, box-shadow 0.12s ease,
-        transform 0.12s ease;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        background 0.12s ease;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    .btn-main {
+      background: linear-gradient(135deg, var(--blue-main), var(--blue-dark));
       color: #f9fafb;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.55);
     }
 
-    .btn-primary:hover {
+    .btn-main:hover {
       transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.7);
     }
 
-    .btn-outline {
+    .btn-soft {
       background: #f3f4f6;
-      color: #111827;
+      color: var(--text-main);
       border: 1px solid #d1d5db;
     }
 
-    .btn-outline:hover {
+    .btn-soft:hover {
       background: #e5e7eb;
     }
 
-    /* === “What Sci-Guru offers” simplified === */
-    .offers {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 18px;
+    /* Features */
+    .home-section {
+      margin-top: 18px;
     }
 
-    .offer-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 14px 14px 15px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-    }
-
-    .offer-card h3 {
+    .home-section-title {
+      font-size: 16px;
       margin: 0 0 6px;
+      text-align: center;
+    }
+
+    .home-section-text {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 14px 14px 16px;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+      border: 1px solid rgba(226, 232, 240, 0.7);
+    }
+
+    .card h3 {
+      margin: 0 0 4px;
       font-size: 15px;
     }
 
-    .offer-card p {
-      margin: 0;
-      font-size: 13px;
-      color: #4b5563;
-    }
-
-    /* === Virtual lab quick buttons === */
-    .labs-section {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-    }
-
-    .labs-section h2 {
+    .card p {
       margin: 0 0 10px;
-      font-size: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .card button {
+      margin-top: 4px;
+    }
+
+    /* Labs section */
+    #labs {
+      margin-top: 24px;
     }
 
     .lab-buttons {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
+      margin-top: 12px;
     }
 
-    .lab-btn {
-      flex: 1 1 120px;
-      min-width: 120px;
+    @media (max-width: 900px) {
+      .lab-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      .lab-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .lab-buttons button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    footer {
       text-align: center;
-      border-radius: 999px;
-      padding: 9px 12px;
-      border: none;
-      cursor: pointer;
-      background: #2563eb;
-      color: #f9fafb;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-      transition: background 0.12s ease, transform 0.12s ease,
-        box-shadow 0.12s ease;
-    }
-
-    .lab-btn:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
-    }
-
-    /* === Footer === */
-    .footer {
       font-size: 11px;
-      text-align: center;
       color: #6b7280;
-      padding: 8px 0 14px;
-    }
-
-    /* === Mobile tweaks === */
-    @media (max-width: 640px) {
-      .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .nav-links {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .hero-title {
-        font-size: 18px;
-      }
-
-      .hero-card {
-        padding: 16px 12px 16px;
-      }
+      padding: 10px 0 14px;
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- TOP BAR -->
-    <header class="top-bar">
-      <div class="brand-left">
-        <img src="lec-logo.jpg" alt="LEC Biotec logo" class="brand-logo" />
-        <div>
-          <div class="brand-text-main">Sci-Guru AI Science Tutor</div>
-          <div class="brand-text-sub">
-            Zimbabwe’s AI-powered learning platform • Form 1 focus
-          </div>
+<div class="page">
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img src="lec-logo.jpg" alt="LEC Biotec" class="brand-logo" />
+      <div>
+        <div class="brand-text-main">Sci-Guru</div>
+        <div class="brand-text-sub">
+          Zimbabwe's AI-powered Science Learning Platform
         </div>
       </div>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tutor.html">AI Tutor</a>
-        <a href="#labs">Virtual Labs</a>
-      </nav>
-    </header>
+    </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main">
-      <!-- Hero: short + 2 buttons -->
-      <section class="hero-card">
-        <h1 class="hero-title">What should we learn today?</h1>
-        <p class="hero-subtitle">
-          Open the AI tutor to ask questions and practise quizzes, or jump
-          straight into a virtual lab for density, mixtures, or electricity.
-        </p>
-        <div class="hero-buttons">
-          <button class="btn-primary" onclick="location.href='tutor.html'">
-            🚀 Launch AI Tutor
-          </button>
-          <button class="btn-outline" onclick="location.href='#labs'">
-            🧪 See virtual labs
-          </button>
-        </div>
-      </section>
+    <div class="nav">
+      <button onclick="location.href='tutor.html'">🤖 AI Tutor</button>
+      <button onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
+        🧪 Virtual Labs
+      </button>
+    </div>
+  </header>
 
-      <!-- Short “offers” row (no teacher dashboard) -->
-      <section class="offers">
-        <article class="offer-card">
+  <!-- Main content -->
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-tagline">Nothing is limited.</div>
+      <h1 class="hero-title">Learn science with an AI tutor & virtual labs.</h1>
+      <p class="hero-sub">
+        Ask questions, get practice quizzes, and run simple experiments for
+        the ZIMSEC / Heritage-Based curriculum.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-main" onclick="location.href='tutor.html'">
+          🚀 Launch AI Tutor
+        </button>
+        <button class="btn-soft" onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
+          🧪 Explore Labs
+        </button>
+      </div>
+    </section>
+
+    <!-- What Sci-Guru Offers -->
+    <section class="home-section">
+      <h2 class="home-section-title">What Sci-Guru offers</h2>
+      <p class="home-section-text">
+        Simple tools focused on what matters most: <strong>lessons</strong> and
+        <strong>virtual labs</strong>.
+      </p>
+
+      <div class="feature-grid">
+        <div class="card">
           <h3>AI Tutor</h3>
           <p>
-            Ask questions from the ZIMSEC / Heritage-Based curriculum and get
-            simple explanations, quizzes, and practical ideas.
+            Ask questions, generate practice quizzes, and get personalised
+            explanations using Zimbabwean examples.
           </p>
-        </article>
-
-        <article class="offer-card">
-          <h3>Virtual Labs</h3>
-          <p>
-            Run safe, hands-on experiments for density, mixtures &amp;
-            electricity on any phone, tablet, or computer.
-          </p>
-        </article>
-      </section>
-
-      <!-- Virtual labs buttons -->
-      <section id="labs" class="labs-section">
-        <h2>Virtual Labs</h2>
-        <div class="lab-buttons">
-          <button class="lab-btn" onclick="location.href='sim-density.html'">
-            🌊 Density Lab
-          </button>
-          <button class="lab-btn" onclick="location.href='sim-mixtures.html'">
-            🥣 Mixtures Lab
-          </button>
-          <button class="lab-btn" onclick="location.href='sim-electricity.html'">
-            💡 Electricity Lab
+          <button class="btn-main" onclick="location.href='tutor.html'">
+            Open Tutor
           </button>
         </div>
-      </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      © 2025 LEC BIOTEC • Sci-Guru prototype for ZIMSEC / Heritage-Based curriculum.
-    </footer>
-  </div>
+        <div class="card">
+          <h3>Virtual Labs</h3>
+          <p>
+            Perform hands-on virtual experiments for Form 1 topics like
+            living things, density, mixtures, and electricity.
+          </p>
+          <button class="btn-soft" onclick="document.getElementById('labs').scrollIntoView({behavior: 'smooth'});">
+            View Labs
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Virtual labs section -->
+    <section class="home-section" id="labs">
+      <h2 class="home-section-title">Virtual Labs</h2>
+      <p class="home-section-text">
+        Choose a lab to start experimenting. Progress is tracked on the tutor page.
+      </p>
+
+      <div class="lab-buttons">
+        <button class="btn-soft" onclick="openLab('sim-form1-living-things.html')">
+          🌱 Living Things Lab
+        </button>
+        <button class="btn-soft" onclick="openLab('sim-density.html')">
+          💧 Density Lab
+        </button>
+        <button class="btn-soft" onclick="openLab('sim-mixtures.html')">
+          🥣 Mixtures Lab
+        </button>
+        <button class="btn-soft" onclick="openLab('sim-electricity.html')">
+          ⚡ Electricity Lab
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 LEC BIOTEC · Sci-Guru AI Science Platform.
+  </footer>
+</div>
+
+<script>
+  function openLab(page) {
+    // Open lab in a new tab
+    window.open(page, "_blank");
+  }
+</script>
 </body>
 </html>
