@@ -1,759 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sci-Guru AI Tutor</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="lec-logo.jpg" type="image/jpeg" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru AI Science Tutor</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ---- extra styles just for chapter tags & small tweaks ---- */
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f4f6fb;
+      color: #0b1736;
+    }
+
+    .sg-header-bar {
+      background: linear-gradient(90deg, #1b2b7b, #2e6bff);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sg-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sg-header-left img {
+      height: 36px;
+      width: auto;
+      border-radius: 4px;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .sg-header-title {
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    .sg-header-title strong {
+      display: block;
+      font-size: 1.05rem;
+    }
+
+    .sg-nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sg-nav-links a {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: #fff;
+      text-decoration: none;
+      background: rgba(11, 23, 54, 0.25);
+    }
+
+    .sg-nav-links a.active {
+      background: #ffffff;
+      color: #1b2b7b;
+      font-weight: 600;
+    }
+
+    .sg-main-wrap {
+      max-width: 1200px;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .sg-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .sg-card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem 1.6rem;
+    }
+
+    .sg-card h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.1rem;
+    }
+
+    .sg-helper-text {
+      font-size: 0.85rem;
+      color: #5b6485;
+      margin-bottom: 0.75rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #3a4266;
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    select,
+    textarea,
+    input[type="number"] {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #d4d9f2;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .sg-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+    }
+
+    .sg-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        background 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .sg-btn.primary {
+      background: radial-gradient(circle at top left, #28d17c, #08a34e);
+      color: #ffffff;
+      box-shadow: 0 9px 20px rgba(5, 138, 69, 0.45);
+    }
+
+    .sg-btn.secondary {
+      background: #ffffff;
+      color: #1b2b7b;
+      border: 1px solid #cbd3ff;
+    }
+
+    .sg-btn.outline {
+      background: #ffffff;
+      color: #1b2b7b;
+      border: 1px solid #b9c1ff;
+    }
+
+    .sg-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .sg-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      color: #4b5270;
+    }
+
+    .sg-score-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .sg-score-row input[type="number"] {
+      max-width: 80px;
+    }
+
+    .sg-badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: #117a3a;
+    }
+
+    .sg-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #2ecc71;
+      box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.25);
+    }
+
+    /* ---- Results card ---- */
+
+    .sg-results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .sg-results-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .sg-chapter-status {
+      font-size: 0.78rem;
+      color: #6b7395;
+      text-align: right;
+    }
+
+    .sg-result-block {
+      background: #0b1224;
+      color: #eef1ff;
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.6rem;
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .sg-result-block h3 {
+      margin: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: #4e8dff;
+      text-transform: uppercase;
+    }
+
+    .sg-result-text {
+      font-size: 0.86rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    /* ---- Chapter tags ---- */
+
+    .sg-chapter-strip {
+      margin-top: 0.9rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed #d4d9f2;
+    }
+
+    .sg-chapter-strip-label {
+      font-size: 0.8rem;
+      color: #6b7395;
+      margin-bottom: 0.35rem;
+    }
+
+    .sg-chapter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .chapter-tag {
+      border-radius: 999px;
+      border: 1px solid #cbd3ff;
+      background: #f4f6ff;
+      color: #1b2b7b;
+      font-size: 0.78rem;
+      padding: 0.2rem 0.7rem;
+      cursor: pointer;
+      transition: background 0.12s ease, color 0.12s ease,
+        border-color 0.12s ease, transform 0.1s ease;
+    }
+
+    .chapter-tag:hover {
+      transform: translateY(-1px);
+      background: #e1e6ff;
+    }
+
+    .chapter-tag.active {
+      background: #2e6bff;
+      color: #ffffff;
+      border-color: #2e6bff;
+      box-shadow: 0 0 0 2px rgba(46, 107, 255, 0.2);
+    }
+
+    /* ---- Responsive ---- */
+
+    @media (max-width: 900px) {
+      .sg-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sg-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .sg-nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .sg-card {
+        padding: 1.25rem 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Top bar -->
-    <header class="site-header">
-        <div class="nav-inner">
-            <div class="brand">
-                <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="brand-logo" />
-                <span class="brand-text">Sci-Guru Tutor</span>
-            </div>
-            <nav class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="tutor.html" class="nav-link active">AI Tutor</a>
-            </nav>
+  <!-- Top bar with logo and nav -->
+  <header class="sg-header-bar">
+    <div class="sg-header-left">
+      <!-- Your LEC Biotec / Sci-Guru logo -->
+      <img src="lec-logo.jpg" alt="LEC Biotec logo" />
+      <div class="sg-header-title">
+        <strong>Sci-Guru AI Science Tutor</strong>
+        <span>Zimbabwe’s AI-powered tutor for the ZIMSEC / Heritage-Based curriculum</span>
+      </div>
+    </div>
+    <nav class="sg-nav-links">
+      <a href="index.html">Home</a>
+      <a href="tutor.html" class="active">AI Tutor</a>
+    </nav>
+  </header>
+
+  <main class="sg-main-wrap">
+    <div class="sg-layout">
+      <!-- LEFT: Ask Sci-Guru -->
+      <section class="sg-card" aria-label="Ask Sci-Guru">
+        <h2>Ask Sci-Guru</h2>
+        <p class="sg-helper-text">
+          Choose a form and chapter (or topic), then ask your question in simple English.
+        </p>
+
+        <!-- Form / Level -->
+        <div class="sg-field">
+          <label for="form">Form / Level</label>
+          <select id="form">
+            <option value="Form 1" selected>Form 1</option>
+            <option value="Form 2">Form 2</option>
+            <option value="Form 3">Form 3</option>
+            <option value="Form 4">Form 4</option>
+          </select>
         </div>
-    </header>
-
-    <main class="page-main">
-        <section class="section tutor-section">
-            <div class="tutor-layout">
-                <!-- LEFT: Ask Sci-Guru -->
-                <div class="tutor-column tutor-column-left">
-                    <h2 class="section-title-small">Ask Sci-Guru</h2>
-                    <p class="tutor-intro">
-                        Choose a form and topic, or tap a Form 1 chapter below, then ask your question in simple English.
-                    </p>
-
-                    <label class="field-label" for="formLevel">Form / Level</label>
-                    <select id="formLevel" class="field-select">
-                        <option value="Form 1">Form 1</option>
-                        <option value="Form 2">Form 2</option>
-                        <option value="Form 3">Form 3</option>
-                        <option value="Form 4">Form 4</option>
-                    </select>
-
-                    <label class="field-label" for="topic">Topic (Form 1 topics + general)</label>
-                    <select id="topic" class="field-select">
-                        <option value="">-- Optional: choose a topic --</option>
-
-                        <optgroup label="General">
-                            <option value="General Science">General Science</option>
-                        </optgroup>
-
-                        <optgroup label="Form 1 — Chapters 1–4 (Biology)">
-                            <option value="Living things and characteristics of life">
-                                Chapter 1 – Living things &amp; characteristics of life
-                            </option>
-                            <option value="Cells and simple microscopes">
-                                Chapter 2 – Cells and simple microscopes
-                            </option>
-                            <option value="Human body systems and hygiene">
-                                Chapter 3 – Human body systems &amp; hygiene
-                            </option>
-                            <option value="Ecosystems and environment">
-                                Chapter 4 – Ecosystems &amp; environment
-                            </option>
-                        </optgroup>
-
-                        <optgroup label="Form 1 — Chapters 5–8 (Chemistry & Physics)">
-                            <option value="States of matter">
-                                Chapter 5 – States of matter
-                            </option>
-                            <option value="Mixtures and separation methods">
-                                Chapter 6 – Mixtures &amp; separation methods
-                            </option>
-                            <option value="Density and flotation">
-                                Chapter 7 – Density &amp; flotation
-                            </option>
-                            <option value="Electricity and magnetism">
-                                Chapter 8 – Electricity &amp; magnetism
-                            </option>
-                        </optgroup>
-
-                        <optgroup label="Form 1 — Chapters 9–17 (Extended)">
-                            <option value="Energy and fuels">
-                                Chapter 9 – Energy and fuels
-                            </option>
-                            <option value="Light">
-                                Chapter 10 – Light
-                            </option>
-                            <option value="Sound">
-                                Chapter 11 – Sound
-                            </option>
-                            <option value="Heat and temperature">
-                                Chapter 12 – Heat and temperature
-                            </option>
-                            <option value="Weather and climate">
-                                Chapter 13 – Weather and climate
-                            </option>
-                            <option value="Earth and space">
-                                Chapter 14 – Earth and space
-                            </option>
-                            <option value="Simple machines and pressure">
-                                Chapter 15 – Simple machines and pressure
-                            </option>
-                            <option value="Acids, bases and salts">
-                                Chapter 16 – Acids, bases and salts
-                            </option>
-                            <option value="Scientific methods and safety">
-                                Chapter 17 – Scientific methods and safety
-                            </option>
-                        </optgroup>
-                    </select>
-
-                    <label class="field-label" for="question">Your question</label>
-                    <textarea
-                        id="question"
-                        class="field-textarea"
-                        rows="4"
-                        placeholder="Explain density using Zimbabwean examples..."
-                    ></textarea>
-
-                    <div class="button-row">
-                        <button id="btnExplain" class="btn btn-primary">Ask Sci-Guru</button>
-                        <button id="btnQuiz" class="btn btn-secondary">Generate quiz</button>
-                    </div>
-                    <div class="button-row">
-                        <button id="btnPractical" class="btn btn-outline">Generate practical with AI</button>
-                        <button id="btnOpenLabs" class="btn btn-outline">Open virtual lab hub</button>
-                    </div>
-
-                    <div class="save-score">
-                        <label class="checkbox-row">
-                            <input type="checkbox" id="saveScoreChk" checked />
-                            <span>I want to save my quiz result for this topic</span>
-                        </label>
-                        <div class="score-row">
-                            <span>I scored</span>
-                            <input
-                                type="number"
-                                id="scoreInput"
-                                class="score-input"
-                                placeholder="75"
-                                min="0"
-                                max="100"
-                            />
-                            <span>%</span>
-                            <button id="btnSaveScore" class="btn btn-small btn-success">
-                                Save topic score
-                            </button>
-                        </div>
-                        <p id="statusText" class="status-text">
-                            Sci-Guru is ready. Backend: <span class="status-live">LIVE</span>.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- RIGHT: Results -->
-                <div class="tutor-column tutor-column-right">
-                    <h2 class="section-title-small">Results</h2>
-                    <p id="chapterTagDisplay" class="chapter-tag-display">
-                        No chapter tag selected (you can still ask any question).
-                    </p>
-
-                    <div class="result-card">
-                        <h3 class="result-title">Explanation</h3>
-                        <div id="explainOutput" class="result-body">
-                            Sci-Guru will answer here…
-                        </div>
-                    </div>
-
-                    <div class="result-card">
-                        <h3 class="result-title">Quiz</h3>
-                        <div id="quizOutput" class="result-body">
-                            Quiz will appear here…
-                        </div>
-                    </div>
-
-                    <div class="result-card">
-                        <h3 class="result-title">Practical</h3>
-                        <div id="practicalOutput" class="result-body">
-                            Practical experiment will appear here…
-                        </div>
-                    </div>
-
-                    <!-- Recommended lab box -->
-                    <div id="labSuggestion" class="lab-suggestion hidden">
-                        <div class="lab-suggestion-text">
-                            <div class="lab-suggestion-title">Recommended virtual lab</div>
-                            <div id="labSuggestionLabel" class="lab-suggestion-label">
-                                Sci-Guru will suggest a lab when you choose a practical chapter.
-                            </div>
-                        </div>
-                        <button id="labSuggestionButton" class="btn btn-outline">
-                            Open lab
-                        </button>
-                    </div>
-
-                    <!-- Clickable chapter strip -->
-                    <div class="chapters-strip">
-                        <div class="chapters-header">
-                            <span class="chapters-title">Form 1 chapters</span>
-                            <span class="chapters-note">
-                                Tap a chapter to auto-fill topic, sample question and experiment
-                            </span>
-                        </div>
-                        <div class="chapters-pills">
-                            <!-- CHAPTERS 1–17 -->
-                            <button class="chapter-pill" data-chapter="1">Ch. 1</button>
-                            <button class="chapter-pill" data-chapter="2">Ch. 2</button>
-                            <button class="chapter-pill" data-chapter="3">Ch. 3</button>
-                            <button class="chapter-pill" data-chapter="4">Ch. 4</button>
-                            <button class="chapter-pill" data-chapter="5">Ch. 5</button>
-                            <button class="chapter-pill" data-chapter="6">Ch. 6</button>
-                            <button class="chapter-pill" data-chapter="7">Ch. 7</button>
-                            <button class="chapter-pill" data-chapter="8">Ch. 8</button>
-                            <button class="chapter-pill" data-chapter="9">Ch. 9</button>
-                            <button class="chapter-pill" data-chapter="10">Ch. 10</button>
-                            <button class="chapter-pill" data-chapter="11">Ch. 11</button>
-                            <button class="chapter-pill" data-chapter="12">Ch. 12</button>
-                            <button class="chapter-pill" data-chapter="13">Ch. 13</button>
-                            <button class="chapter-pill" data-chapter="14">Ch. 14</button>
-                            <button class="chapter-pill" data-chapter="15">Ch. 15</button>
-                            <button class="chapter-pill" data-chapter="16">Ch. 16</button>
-                            <button class="chapter-pill" data-chapter="17">Ch. 17</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
-    </footer>
-
-    <!-- JS: backend calls + scores + clickable chapters + lab linking + tags -->
-    <script>
-        const API_BASE = "https://sci-guru-backend.onrender.com/api";
-
-        const formSelect = document.getElementById("formLevel");
-        const topicSelect = document.getElementById("topic");
-        const questionInput = document.getElementById("question");
-
-        const explainOutput = document.getElementById("explainOutput");
-        const quizOutput = document.getElementById("quizOutput");
-        const practicalOutput = document.getElementById("practicalOutput");
-
-        const btnExplain = document.getElementById("btnExplain");
-        const btnQuiz = document.getElementById("btnQuiz");
-        const btnPractical = document.getElementById("btnPractical");
-        const btnOpenLabs = document.getElementById("btnOpenLabs");
-
-        const saveScoreChk = document.getElementById("saveScoreChk");
-        const scoreInput = document.getElementById("scoreInput");
-        const btnSaveScore = document.getElementById("btnSaveScore");
-        const statusText = document.getElementById("statusText");
-
-        const chapterPills = document.querySelectorAll(".chapter-pill");
-
-        const labSuggestionBox = document.getElementById("labSuggestion");
-        const labSuggestionLabel = document.getElementById("labSuggestionLabel");
-        const labSuggestionButton = document.getElementById("labSuggestionButton");
-        const chapterTagDisplay = document.getElementById("chapterTagDisplay");
-
-        let currentLabUrl = null;
-        let selectedChapter = null; // <-- chapter tag
-
-        // Map of experiments + topics + labs for each chapter
-        const chapterConfig = {
-            "1": {
-                topic: "Living things and characteristics of life",
-                question:
-                    "Explain what makes something a living thing. Use 3 examples from a Zimbabwean village or city.",
-                experiment: `Experiment: Observing living and non-living things
-
-Aim:
-To compare living and non-living things using simple observations.
-
-Apparatus:
-- Exercise book and pen
-- School yard or home surroundings
-
-Procedure:
-1. Go outside and choose one area (for example near the classroom, garden or tuckshop).
-2. List at least five objects you can see.
-3. For each object, decide if it is living or non-living.
-4. For the living things, write which characteristics of life they show (movement, growth, response, reproduction, etc.).
-
-Observations:
-Record your table of living and non-living things.
-
-Conclusion:
-State two differences between living and non-living things using your examples.`
-            },
-            "2": {
-                topic: "Cells and simple microscopes",
-                question:
-                    "Explain what a cell is and why it is called the basic unit of life. Use simple examples a Form 1 learner can understand.",
-                experiment: `Experiment: Observing cells using a simple microscope or hand lens
-
-Aim:
-To observe simple cells or small structures using a microscope or hand lens.
-
-Apparatus:
-- Onion bulb or leaf
-- Razor blade or toothpick
-- Microscope or hand lens if available
-- Dropper of water
-- Slide and cover slip (or clear plastic if slide is not available)
-
-Procedure:
-1. Gently peel a thin, transparent layer from the inside of an onion or soft leaf.
-2. Place the thin layer on a slide and add one drop of water.
-3. Cover it with a cover slip or clear plastic.
-4. Observe under a microscope or hand lens.
-5. Draw what you see.
-
-Observations:
-Note the small box-like shapes or tiny units.
-
-Conclusion:
-State why these small units are called cells and why they are the basic units of life.`
-            },
-            "3": {
-                topic: "Human body systems and hygiene",
-                question:
-                    "Describe two human body systems and explain one hygiene practice that keeps each system healthy.",
-                experiment: `Experiment: Measuring breathing rate before and after exercise
-
-Aim:
-To investigate how exercise affects breathing rate.
-
-Apparatus:
-- Stopwatch or phone timer
-- Partner to help count
-
-Procedure:
-1. Sit quietly for 2 minutes.
-2. Count how many breaths you take in 1 minute. Record this as the resting breathing rate.
-3. Jog on the spot or do star jumps for 2 minutes.
-4. Immediately count how many breaths you take in 1 minute after exercise.
-5. Compare the two values.
-
-Observations:
-Record resting and post-exercise breathing rate.
-
-Conclusion:
-State how exercise affects breathing and explain why hygiene and fitness are important for body systems like the breathing and circulatory system.`
-            },
-            "4": {
-                topic: "Ecosystems and environment",
-                question:
-                    "Explain what an ecosystem is and give one example from a rural and one from an urban area in Zimbabwe.",
-                experiment: `Experiment: Simple ecosystem survey in the school yard
-
-Aim:
-To observe different organisms in a small ecosystem.
-
-Apparatus:
-- A piece of string or sticks to mark a small square (quadrat)
-- Exercise book and pen
-
-Procedure:
-1. Mark a small square on the ground using string or four sticks (for example 1 m by 1 m).
-2. Carefully look inside the square and list all living things you see (plants, insects, worms, etc.).
-3. Also list non-living things (soil, stones, water, litter, etc.).
-4. Note how the living things depend on the non-living things.
-
-Observations:
-Make a table of organisms and their role (producer, consumer, decomposer).
-
-Conclusion:
-Explain why this small area can be called an ecosystem.`
-            },
-            "5": {
-                topic: "States of matter",
-                question:
-                    "Explain the three main states of matter using everyday examples from home or school.",
-                experiment: `Experiment: Observing solid, liquid and gas
-
-Aim:
-To observe the three main states of matter.
-
-Apparatus:
-- Ice cubes or frozen water in a plastic bag
-- Cup of liquid water
-- Kettle or pot to boil water (under supervision)
-- Heat source
-
-Procedure:
-1. Observe the ice and describe its shape and how it behaves in a container.
-2. Place the ice in a cup and allow it to melt into liquid water.
-3. With supervision, gently heat some water in a kettle or pot until steam is seen.
-4. Observe how the water changes from solid to liquid to gas.
-
-Observations:
-Describe the properties of the solid, liquid and gas.
-
-Conclusion:
-Explain how heating changes the state of water and relate this to states of matter.`
-            },
-            "6": {
-                topic: "Mixtures and separation methods",
-                question:
-                    "Explain what a mixture is and describe one method that can be used to separate a mixture of sand and salt.",
-                experiment: `Experiment: Separating a mixture of sand and salt
-
-Aim:
-To separate sand and salt using filtration and evaporation.
-
-Apparatus:
-- Small amount of dry sand
-- Small amount of table salt
-- Beaker or cup
-- Water
-- Filter paper or clean cloth
-- Container and heat source for evaporation (sun or stove under supervision)
-
-Procedure:
-1. Mix sand and salt in a beaker.
-2. Add water and stir until the salt dissolves.
-3. Filter the mixture using filter paper or cloth to separate the sand from salt solution.
-4. Place the salt solution in a shallow container and leave it in the sun or gently heat it until the water evaporates.
-5. Observe the salt crystals left behind.
-
-Observations:
-Record what is collected on the filter and what remains after evaporation.
-
-Conclusion:
-Explain why this method separates sand and salt and name the separation methods used.`,
-                labLabel: "Open Mixtures Virtual Lab",
-                labUrl: "sim-mixtures.html"
-            },
-            "7": {
-                topic: "Density and flotation",
-                question:
-                    "Explain why some objects float while others sink using the idea of density. Use at least one Zimbabwean example.",
-                experiment: `Experiment: Comparing sinking and floating objects
-
-Aim:
-To compare the density of different objects using flotation in water.
-
-Apparatus:
-- Container of water (bucket, basin, bowl)
-- Small stone or brick piece
-- Empty plastic bottle with lid
-- Piece of dry wood
-
-Procedure:
-1. Fill a container with water.
-2. Place the stone gently on the water and observe if it sinks or floats.
-3. Place the empty plastic bottle on the water and observe what happens.
-4. Place the piece of wood on the water and observe.
-5. Compare the behaviour of the three objects.
-
-Observations:
-Record which objects float and which sink.
-
-Conclusion:
-Explain how density allows some objects to float and others to sink using your observations.`,
-                labLabel: "Open Density Virtual Lab",
-                labUrl: "sim-density.html"
-            },
-            "8": {
-                topic: "Electricity and magnetism",
-                question:
-                    "Describe a simple electric circuit and explain one safety rule about using electricity at home.",
-                experiment: `Experiment: Making a simple electric circuit
-
-Aim:
-To set up a simple electric circuit to light a bulb.
-
-Apparatus:
-- Dry cell (battery)
-- Small bulb
-- Two or three pieces of insulated wire
-- Switch (or you can use a simple join and remove method)
-
-Procedure:
-1. Connect one wire from the positive terminal of the battery to one side of the switch.
-2. Connect another wire from the other side of the switch to the bulb.
-3. Connect the last wire from the bulb back to the negative terminal of the battery.
-4. Close the switch or complete the circuit and observe the bulb.
-5. Open the switch and observe what happens.
-
-Observations:
-Record whether the bulb lights when the circuit is closed.
-
-Conclusion:
-Explain the conditions needed for current to flow and mention one safety rule about electricity at home.`,
-                labLabel: "Open Electricity Virtual Lab",
-                labUrl: "sim-electricity.html"
-            },
-            "9": {
-                topic: "Energy and fuels",
-                question:
-                    "Explain the difference between renewable and non-renewable sources of energy and give Zimbabwean examples of each.",
-                experiment: `Experiment: Comparing simple energy sources
-
-Aim:
-To compare different sources of energy used in the home.
-
-Apparatus:
-- Candle or paraffin lamp (use with supervision)
-- Small piece of firewood or charcoal
-- List of other energy sources used at home (solar, electricity, gas)
-
-Procedure:
-1. Observe a candle or paraffin lamp while it is burning. Note what is used as fuel.
-2. Observe a small fire using firewood or charcoal (from a safe distance).
-3. Make a table of energy sources: firewood, charcoal, paraffin, electricity, solar.
-4. In the table, classify each as renewable or non-renewable and note one advantage and one disadvantage.
-
-Observations:
-Fill in your comparison table.
-
-Conclusion:
-Explain why some energy sources are considered renewable and others non-renewable.`
-            },
-            "10": {
-                topic: "Light",
-                question:
-                    "Explain how light travels and describe one simple experiment to show that light travels in straight lines.",
-                experiment: `Experiment: Showing that light travels in straight lines
-
-Aim:
-To demonstrate that light travels in straight lines.
-
-Apparatus:
-- Three pieces of cardboard
-- Nail or sharp object to make holes (under supervision)
-- Candle or torch
-
-Procedure:
-1. Make a small hole at the same height in the centre of each cardboard.
-2. Arrange the three cardboards in a straight line and support them so they can stand.
-3. Place the candle or torch on one side and your eye at the other side.
-4. Look through the holes and adjust the cardboards until you can see the light through all three holes.
-5. Now move one cardboard slightly out of line and observe what happens.
-
-Observations:
-Record when the light is visible and when it is blocked.
-
-Conclusion:
-Explain how this shows that light travels in straight lines.`
-            },
-            "11": {
-                topic: "Sound",
-                question:
-                    "Explain how sound is produced and how it travels. Use an example of music or drums from a Zimbabwean setting.",
-                experiment: `Experiment: Observing vibration and sound
-
-Aim:
-To show that sound is produced by vibrations.
-
-Apparatus:
-- Rubber band
-- Empty plastic container or small box
-- Drum or homemade drum (tin with stretched plastic) if available
-
-Procedure:
-1. Stretch a rubber band around a small box or container.
-2. Pluck the rubber band and observe its motion and the sound produced.
-3. If a drum is available, hit the drum surface gently and feel it with your fingers.
-4. Observe what happens when the vibration stops.
-
-Observations:
-Write what you see and hear when the rubber band or drum is vibrating.
-
-Conclusion:
-State the relationship between vibration and sound production.`
-            },
-            "12": {
-                topic: "Heat and temperature",
-                question:
-                    "Explain the difference between heat and temperature, and describe a simple experiment to show expansion when substances are heated.",
-                experiment: `Experiment: Observing expansion of a metal wire when heated
-
-Aim:
-To show that metals expand when heated.
-
-Apparatus:
-- Thin metal wire (or metal strip)
-- Two supports (books, bricks or desks)
-- Small weight (e.g. stone)
-- Candle or small flame (with supervision)
-
-Procedure:
-1. Stretch the metal wire between two supports so it is tight and hang a small weight at the middle.
-2. Observe the position of the weight.
-3. Gently heat the metal wire near the centre using a candle or small flame under supervision.
-4. Observe any change in the position of the weight.
-
-Observations:
-Record what happens to the weight as the wire is heated.
-
-Conclusion:
-Explain what the change in position tells you about expansion when metal is heated.`
-            },
-            "13": {
-                topic: "Weather and climate",
-                question:
-                    "Explain the difference between weather and climate and give one example of how climate affects people in Zimbabwe.",
-                experiment: `Experiment: Recording simple weather data
-
-Aim:
-To observe daily weather changes.
-
-Apparatus:
-- Notebook and pen
-- Simple thermometer if available
-- Access to outside area
-
-Procedure:
-1. For 5 days, at the same time each day, go outside and observe the weather.
-2. Record cloud cover (sunny, cloudy, rainy), wind (calm or windy) and temperature reading if you have a thermometer.
-3. Draw a simple table and fill in the data for each day.
-4. At the end of the period, summarise the pattern.
-
-Observations:
-Complete your weather table for the 5 days.
-
-Conclusion:
-Explain how daily weather observations differ from long-term climate patterns.`
-            },
-            "14": {
-                topic: "Earth and space",
-                question:
-                    "Describe the main layers of the Earth and explain one way the movement of the Earth affects day and night.",
-                experiment: `Experiment: Shadow stick investigation
-
-Aim:
-To observe the movement of the Sun in the sky using shadows.
-
-Apparatus:
-- Straight stick
-- Open ground where the Sun shines
-- Chalk or small stones
-- Watch or clock
-
-Procedure:
-1. Push a straight stick into the ground where it can cast a clear shadow.
-2. Mark the tip of the shadow on the ground with chalk or a small stone.
-3. Record the time.
-4. Repeat the marking after every hour for about 3 to 4 hours.
-5. Compare the positions of the shadow marks.
-
-Observations:
-Draw the pattern of the shadow positions on the ground.
-
-Conclusion:
-Explain how the change in shadow position is related to the movement of the Earth and the apparent movement of the Sun.`
-            },
-            "15": {
-                topic: "Simple machines and pressure",
-                question:
-                    "Explain what a simple machine is and give an example of a simple machine used on a Zimbabwean farm or home.",
-                experiment: `Experiment: Investigating a simple lever
-
-Aim:
-To show how a lever can make lifting easier.
-
-Apparatus:
-- Strong plank or rigid stick
-- Stone or brick as fulcrum
-- Two different stones or weights
-
-Procedure:
-1. Place the plank over the stone so that it can act as a seesaw (lever).
-2. Place a heavy stone near one end of the plank.
-3. Push down on the other end and observe the effort needed to lift the heavy stone.
-4. Move the fulcrum closer to the heavy stone and try again.
-5. Compare how the position of the fulcrum affects the effort.
-
-Observations:
-Record how easy or difficult it is to lift the load in each case.
-
-Conclusion:
-Explain how a lever helps to reduce the effort needed to lift a load.`
-            },
-            "16": {
-                topic: "Acids, bases and salts",
-                question:
-                    "Explain the difference between an acid and a base and give one example of each from everyday life.",
-                experiment: `Experiment: Testing household substances with a natural indicator
-
-Aim:
-To classify common substances as acidic, basic or neutral using a simple indicator.
-
-Apparatus:
-- Red cabbage leaves or beetroot (for indicator)
-- Hot water
-- Clear cups
-- Household substances: lemon juice, vinegar, baking soda solution, soap solution, water
-
-Procedure:
-1. Crush red cabbage or beetroot and soak it in hot water to make a coloured indicator solution. Let it cool.
-2. Pour small amounts of indicator into separate clear cups.
-3. Add a small amount of each household substance into different cups with indicator.
-4. Observe any colour changes.
-
-Observations:
-Make a table showing each substance and the colour change.
-
-Conclusion:
-Classify each substance as acid, base or neutral based on the colour change.`
-            },
-            "17": {
-                topic: "Scientific methods and safety",
-                question:
-                    "Describe the main steps of the scientific method and mention two safety rules learners must follow in the laboratory.",
-                experiment: `Experiment: Applying the scientific method to a simple question
-
-Aim:
-To use the scientific method to investigate a simple question.
-
-Example Question:
-Does the amount of sunlight affect how fast clothes dry?
-
-Apparatus:
-- Two small wet cloths
-- Sunny area and shaded area
-- Watch or clock
-
-Procedure:
-1. Write the question and your hypothesis (for example: clothes in the Sun will dry faster).
-2. Place one wet cloth in the Sun and the other in the shade at the same time.
-3. Check the cloths every 10 minutes and note when each one becomes dry.
-4. Record your observations.
-
-Observations:
-Note the time taken for each cloth to dry.
-
-Conclusion:
-State whether your hypothesis was supported and list at least two safety or good practice rules you followed during the investigation.`
+
+        <!-- Topic select (Form 1 topics grouped + general) -->
+        <div class="sg-field" style="margin-top: 0.65rem;">
+          <label for="topic">Topic (Form 1 topics grouped + general)</label>
+          <select id="topic">
+            <option value="">-- Optional: choose a topic --</option>
+
+            <optgroup label="General">
+              <option value="General science">General science</option>
+              <option value="Study skills and safety in the lab">
+                Study skills and safety in the lab
+              </option>
+            </optgroup>
+
+            <optgroup label="Form 1 — Biology">
+              <option value="Living things and characteristics of life">
+                Living things and characteristics of life
+              </option>
+              <option value="Cells and simple microscopes">
+                Cells and simple microscopes
+              </option>
+              <option value="Human body systems and hygiene">
+                Human body systems and hygiene
+              </option>
+              <option value="Ecosystems and environment">
+                Ecosystems and environment
+              </option>
+            </optgroup>
+
+            <optgroup label="Form 1 — Physics & Chemistry">
+              <option value="States of matter">States of matter</option>
+              <option value="Mixtures and separation methods">
+                Mixtures and separation methods
+              </option>
+              <option value="Density and flotation">Density and flotation</option>
+              <option value="Electricity and magnetism">
+                Electricity and magnetism
+              </option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Question -->
+        <div class="sg-field" style="margin-top: 0.65rem;">
+          <label for="question">Your question</label>
+          <textarea
+            id="question"
+            placeholder="Explain density using Zimbabwean examples..."
+          ></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="sg-row">
+          <button id="btnExplain" class="sg-btn primary">Ask Sci-Guru</button>
+          <button id="btnQuiz" class="sg-btn secondary">Generate quiz</button>
+        </div>
+
+        <div class="sg-row">
+          <button id="btnPractical" class="sg-btn outline">
+            Generate practical
+          </button>
+          <button
+            id="btnOpenLabHub"
+            class="sg-btn outline"
+            type="button"
+            onclick="openVirtualLabHub()"
+          >
+            Open virtual lab hub
+          </button>
+        </div>
+
+        <!-- Save quiz score -->
+        <div class="sg-checkbox-row">
+          <input type="checkbox" id="saveScoreToggle" checked />
+          <label for="saveScoreToggle" style="font-weight: 400; margin: 0;">
+            I want to save my quiz result for this topic
+          </label>
+        </div>
+
+        <div class="sg-score-row">
+          <span>I scored</span>
+          <input id="scoreInput" type="number" min="0" max="100" placeholder="e.g. 75" />
+          <span>%</span>
+          <button id="btnSaveScore" class="sg-btn primary" style="padding-inline: 0.9rem;">
+            Save topic score
+          </button>
+        </div>
+
+        <div class="sg-badge-live">
+          <span class="sg-badge-dot"></span>
+          <span>Sci-Guru is ready. Backend: <strong>LIVE.</strong></span>
+        </div>
+      </section>
+
+      <!-- RIGHT: Results + chapter tags -->
+      <section class="sg-card" aria-label="Results">
+        <div class="sg-results-header">
+          <h2>Results</h2>
+          <div class="sg-chapter-status" id="chapterStatus">
+            No chapter tag selected (you can still ask any question).
+          </div>
+        </div>
+
+        <div class="sg-result-block">
+          <h3>Explanation</h3>
+          <div id="explanation" class="sg-result-text">
+            Sci-Guru will answer here…
+          </div>
+        </div>
+
+        <div class="sg-result-block">
+          <h3>Quiz</h3>
+          <div id="quiz" class="sg-result-text">Quiz will appear here…</div>
+        </div>
+
+        <div class="sg-result-block">
+          <h3>Practical</h3>
+          <div id="practical" class="sg-result-text">
+            Practical experiment will appear here…
+          </div>
+        </div>
+
+        <!-- Chapter tags strip -->
+        <div class="sg-chapter-strip">
+          <div class="sg-chapter-strip-label">
+            <strong>Form 1 chapters</strong> · Tap a chapter to auto-fill topic, sample
+            question &amp; experiment focus.
+          </div>
+          <div class="sg-chapter-tags" id="chapterTags">
+            <button class="chapter-tag" data-ch="1">Ch. 1</button>
+            <button class="chapter-tag" data-ch="2">Ch. 2</button>
+            <button class="chapter-tag" data-ch="3">Ch. 3</button>
+            <button class="chapter-tag" data-ch="4">Ch. 4</button>
+            <button class="chapter-tag" data-ch="5">Ch. 5</button>
+            <button class="chapter-tag" data-ch="6">Ch. 6</button>
+            <button class="chapter-tag" data-ch="7">Ch. 7</button>
+            <button class="chapter-tag" data-ch="8">Ch. 8</button>
+            <button class="chapter-tag" data-ch="9">Ch. 9</button>
+            <button class="chapter-tag" data-ch="10">Ch. 10</button>
+            <button class="chapter-tag" data-ch="11">Ch. 11</button>
+            <button class="chapter-tag" data-ch="12">Ch. 12</button>
+            <button class="chapter-tag" data-ch="13">Ch. 13</button>
+            <button class="chapter-tag" data-ch="14">Ch. 14</button>
+            <button class="chapter-tag" data-ch="15">Ch. 15</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "https://sci-guru-backend.onrender.com/api";
+
+    const formSelect = document.getElementById("form");
+    const topicSelect = document.getElementById("topic");
+    const questionInput = document.getElementById("question");
+    const explanationDiv = document.getElementById("explanation");
+    const quizDiv = document.getElementById("quiz");
+    const practicalDiv = document.getElementById("practical");
+
+    const btnExplain = document.getElementById("btnExplain");
+    const btnQuiz = document.getElementById("btnQuiz");
+    const btnPractical = document.getElementById("btnPractical");
+    const btnSaveScore = document.getElementById("btnSaveScore");
+
+    const saveScoreToggle = document.getElementById("saveScoreToggle");
+    const scoreInput = document.getElementById("scoreInput");
+    const chapterStatus = document.getElementById("chapterStatus");
+    const chapterButtons = document.querySelectorAll(".chapter-tag");
+
+    // --- Chapter configuration (topic + sample question + experiment hint) ---
+    const chapterConfig = {
+      1: {
+        label: "Ch. 1 – Living things & characteristics of life",
+        topic: "Living things and characteristics of life",
+        question:
+          "Explain the characteristics of living things using Zimbabwean examples like crops, goats and borehole water organisms.",
+        experimentHint:
+          "Design a simple observation experiment where learners compare living and non-living items around the school yard, recording which characteristics of life they show."
+      },
+      2: {
+        label: "Ch. 2 – Cells and simple microscopes",
+        topic: "Cells and simple microscopes",
+        question:
+          "Explain cells and simple microscopes for Form 1 learners using Zimbabwean classroom examples.",
+        experimentHint:
+          "Create a simple practical where learners make a temporary onion cell slide (or leaf epidermis) and observe it using a simple or improvised microscope."
+      },
+      3: {
+        label: "Ch. 3 – Human body systems and hygiene",
+        topic: "Human body systems and hygiene",
+        question:
+          "Explain human body systems and hygiene using everyday Zimbabwean life examples.",
+        experimentHint:
+          "Suggest a hygiene experiment such as comparing bacterial growth on unwashed vs washed hands using slices of bread or agar plates."
+      },
+      4: {
+        label: "Ch. 4 – Ecosystems and environment",
+        topic: "Ecosystems and environment",
+        question:
+          "Explain ecosystems and the environment using Zimbabwean villages, townships and national parks as examples.",
+        experimentHint:
+          "Design a field-based mini investigation where learners observe biotic and abiotic factors in the school grounds and map simple food chains."
+      },
+      5: {
+        label: "Ch. 5 – States of matter",
+        topic: "States of matter",
+        question:
+          "Explain states of matter with Zimbabwean examples like cooking sadza, boiling water and LPG gas.",
+        experimentHint:
+          "Plan an experiment where learners heat water and record temperature changes during melting and boiling, linking to particle arrangement."
+      },
+      6: {
+        label: "Ch. 6 – Mixtures and separation methods",
+        topic: "Mixtures and separation methods",
+        question:
+          "Explain mixtures and separation methods using local examples like mealie-meal and sand, borehole water and cooking oil.",
+        experimentHint:
+          "Create a separation practical where learners separate a mixture containing sand, salt and iron filings using magnet, filtration and evaporation."
+      },
+      7: {
+        label: "Ch. 7 – Density and flotation",
+        topic: "Density and flotation",
+        question:
+          "Explain density and flotation using Zimbabwean examples like imbokodo vs plastic bucket in water.",
+        experimentHint:
+          "Describe a density experiment using stones, wood blocks and water to compare masses and volumes, predicting which objects float or sink."
+      },
+      8: {
+        label: "Ch. 8 – Electricity and magnetism",
+        topic: "Electricity and magnetism",
+        question:
+          "Explain basic electricity and magnetism using examples like phone chargers, torches and ZESA power lines.",
+        experimentHint:
+          "Plan a simple circuit investigation using dry cells, bulbs and switches to test complete and incomplete circuits."
+      },
+      // The remaining chapters can be extension / revision chapters
+      9: {
+        label: "Ch. 9 – Revision: Living things & cells",
+        topic: "Living things and characteristics of life",
+        question:
+          "Give a revision summary that links living things and cells for Form 1 learners.",
+        experimentHint:
+          "Suggest a revision practical where learners group cards of structures and functions, matching them to organs and cells."
+      },
+      10: {
+        label: "Ch. 10 – Revision: Human body & hygiene",
+        topic: "Human body systems and hygiene",
+        question:
+          "Give a revision explanation on human body systems and hygiene for Form 1.",
+        experimentHint:
+          "Plan a health-focused practical where learners design posters or simple demonstrations on the importance of hand-washing and balanced diet."
+      },
+      11: {
+        label: "Ch. 11 – Revision: Ecosystems & environment",
+        topic: "Ecosystems and environment",
+        question:
+          "Summarise ecosystems and environmental conservation using Zimbabwean examples.",
+        experimentHint:
+          "Describe a school-yard survey where learners count plant species or insects and discuss biodiversity."
+      },
+      12: {
+        label: "Ch. 12 – Revision: States of matter & mixtures",
+        topic: "States of matter",
+        question:
+          "Link states of matter and mixtures in one explanation for Form 1 learners.",
+        experimentHint:
+          "Combine changes of state with separation methods, e.g. evaporating salty water to obtain salt."
+      },
+      13: {
+        label: "Ch. 13 – Revision: Density & flotation",
+        topic: "Density and flotation",
+        question:
+          "Provide a revision explanation on density and flotation using Zimbabwean river and boat examples.",
+        experimentHint:
+          "Design a mini investigation where learners change shape of plasticine to see how it affects floating and sinking."
+      },
+      14: {
+        label: "Ch. 14 – Revision: Electricity & magnetism",
+        topic: "Electricity and magnetism",
+        question:
+          "Give a revision summary on electricity and magnetism for Form 1.",
+        experimentHint:
+          "Suggest a circuit-building or electromagnet practical using nails, wire and dry cells."
+      },
+      15: {
+        label: "Ch. 15 – End-of-form mixed review",
+        topic: "General science",
+        question:
+          "Create a mixed revision set that covers the main Form 1 topics for Zimbabwean learners.",
+        experimentHint:
+          "Propose a mini-science fair where groups design small demonstrations for different Form 1 topics."
+      }
+    };
+
+    let currentChapter = null;
+
+    // --- Helper: call backend ---
+    async function callApi(endpoint, payload) {
+      try {
+        const res = await fetch(`${API_BASE}/${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.error(err);
+        return { answer: "Error: Could not contact Sci-Guru backend." };
+      }
+    }
+
+    function setLoading(targetDiv, label) {
+      targetDiv.textContent = label + " (loading…)";
+    }
+
+    // --- Buttons: Ask, Quiz, Practical ---
+
+    btnExplain.addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value || "General science";
+      const question = questionInput.value.trim();
+
+      if (!question) {
+        alert("Please type a question first.");
+        return;
+      }
+
+      setLoading(explanationDiv, "Sci-Guru is thinking");
+
+      const extraContext =
+        currentChapter && chapterConfig[currentChapter]
+          ? `\n\nChapter tag: ${chapterConfig[currentChapter].label}.`
+          : "";
+
+      const payload = { form, topic, question: question + extraContext };
+      const data = await callApi("explain", payload);
+      explanationDiv.textContent = data.answer || "No answer returned.";
+    });
+
+    btnQuiz.addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value || "General science";
+      const question = questionInput.value.trim() || "Create a quiz for this topic.";
+
+      setLoading(quizDiv, "Generating quiz questions");
+
+      const extraContext =
+        currentChapter && chapterConfig[currentChapter]
+          ? `\n\nChapter tag: ${chapterConfig[currentChapter].label}.`
+          : "";
+
+      const payload = { form, topic, question: question + extraContext };
+      const data = await callApi("quiz", payload);
+      quizDiv.textContent = data.answer || "No quiz returned.";
+    });
+
+    btnPractical.addEventListener("click", async () => {
+      const form = formSelect.value;
+      const topic = topicSelect.value || "General science";
+      const baseQuestion =
+        questionInput.value.trim() ||
+        "Design a simple practical experiment for this topic.";
+
+      const chapterHint =
+        currentChapter && chapterConfig[currentChapter]
+          ? `\n\nFocus the practical on this chapter: ${chapterConfig[currentChapter].label}. Use this idea as a starting point: ${chapterConfig[currentChapter].experimentHint}`
+          : "\n\nDesign a practical suitable for a low-resource Zimbabwean school.";
+
+      setLoading(practicalDiv, "Generating practical experiment");
+
+      const payload = {
+        form,
+        topic,
+        question: baseQuestion + chapterHint
+      };
+      const data = await callApi("practical", payload);
+      practicalDiv.textContent = data.answer || "No practical returned.";
+    });
+
+    // --- Save quiz score locally (per topic) ---
+
+    btnSaveScore.addEventListener("click", () => {
+      if (!saveScoreToggle.checked) {
+        alert("Tick the checkbox if you want to save scores.");
+        return;
+      }
+      const topic = topicSelect.value || "General science";
+      const score = Number(scoreInput.value);
+      if (Number.isNaN(score) || score < 0 || score > 100) {
+        alert("Please enter a valid score between 0 and 100.");
+        return;
+      }
+
+      const key = "sg_form1_topic_scores";
+      const stored = JSON.parse(localStorage.getItem(key) || "{}");
+      stored[topic] = Math.max(stored[topic] || 0, score);
+      localStorage.setItem(key, JSON.stringify(stored));
+      alert("Score saved on this device.");
+    });
+
+    // --- Chapter tag behaviour ---
+
+    chapterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const ch = Number(btn.dataset.ch);
+        const cfg = chapterConfig[ch];
+        currentChapter = ch;
+
+        // Visual active state
+        chapterButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Fill topic dropdown
+        if (cfg && cfg.topic) {
+          let matched = false;
+          for (const opt of topicSelect.options) {
+            if (opt.value === cfg.topic) {
+              topicSelect.value = cfg.topic;
+              matched = true;
+              break;
             }
-        };
+          }
+          if (!matched) {
+            topicSelect.value = "";
+          }
+        }
 
-        async function callSciGuru(endpoint, outputElement) {
-            const form = formSelect.value;
-            const topic = topicSelect.value;
-            const question = questionInput.value.trim();
+        // Fill question box
+        if (cfg && cfg.question) {
+          questionInput.value = cfg.question;
+        }
 
-            if (!question) {
-                outputElement.textContent = "Please type a question first.";
-                return;
-            }
+        // Status text
+        chapterStatus.textContent = `Chapter tag selected: ${cfg.label}`;
+      });
+    });
 
-            outputElement.textContent = "Sci-Guru is thinking…";
+    // --- Virtual lab hub opener ---
 
-            try {
-                const res = await fetch(`${API_BASE}/${endpoint}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        form,
-                        topic,
-                        question,
-                        chapter: selectedChapter  // <-- send chapter tag to backend
-                    })
-                });
+    function openVirtualLabHub() {
+      window.open("sim-hub.html", "_blank");
+    }
+
+    window.openVirtualLabHub = openVirtualLabHub;
+  </script>
+</body>
+</html>
