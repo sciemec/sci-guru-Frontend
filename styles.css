@@ -429,6 +429,40 @@ a:hover {
     white-space: pre-wrap;
 }
 
+/* Lab suggestion box */
+
+.lab-suggestion {
+    margin-top: 0.9rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1px dashed rgba(148, 163, 184, 0.8);
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+.lab-suggestion-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.lab-suggestion-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+.lab-suggestion-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Hidden helper */
+
+.hidden {
+    display: none !important;
+}
+
 /* Chapters strip (light progress ref) */
 
 .chapters-strip {
@@ -548,6 +582,15 @@ a:hover {
 
     .tutor-column {
         padding: 1rem 0.9rem 1.2rem;
+    }
+
+    .lab-suggestion {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lab-suggestion button {
+        width: 100%;
     }
 }
 
