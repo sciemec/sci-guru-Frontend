@@ -40,7 +40,7 @@
                         <option value="Form 4">Form 4</option>
                     </select>
 
-                    <label class="field-label" for="topic">Topic (Form 1 topics grouped + general)</label>
+                    <label class="field-label" for="topic">Topic (Form 1 topics + general)</label>
                     <select id="topic" class="field-select">
                         <option value="">-- Optional: choose a topic --</option>
 
@@ -48,38 +48,74 @@
                             <option value="General Science">General Science</option>
                         </optgroup>
 
-                        <optgroup label="Form 1 — Biology">
+                        <optgroup label="Form 1 — Chapters 1–4 (Biology)">
                             <option value="Living things and characteristics of life">
-                                Living things &amp; characteristics of life
+                                Chapter 1 – Living things &amp; characteristics of life
                             </option>
                             <option value="Cells and simple microscopes">
-                                Cells and simple microscopes
+                                Chapter 2 – Cells and simple microscopes
                             </option>
                             <option value="Human body systems and hygiene">
-                                Human body systems &amp; hygiene
+                                Chapter 3 – Human body systems &amp; hygiene
                             </option>
                             <option value="Ecosystems and environment">
-                                Ecosystems &amp; environment
+                                Chapter 4 – Ecosystems &amp; environment
                             </option>
                         </optgroup>
 
-                        <optgroup label="Form 1 — Chemistry & Physics">
-                            <option value="States of matter">States of matter</option>
+                        <optgroup label="Form 1 — Chapters 5–8 (Chemistry & Physics)">
+                            <option value="States of matter">
+                                Chapter 5 – States of matter
+                            </option>
                             <option value="Mixtures and separation methods">
-                                Mixtures &amp; separation methods
+                                Chapter 6 – Mixtures &amp; separation methods
                             </option>
                             <option value="Density and flotation">
-                                Density &amp; flotation
+                                Chapter 7 – Density &amp; flotation
                             </option>
                             <option value="Electricity and magnetism">
-                                Electricity &amp; magnetism
+                                Chapter 8 – Electricity &amp; magnetism
+                            </option>
+                        </optgroup>
+
+                        <optgroup label="Form 1 — Chapters 9–17 (Extended)">
+                            <option value="Energy and fuels">
+                                Chapter 9 – Energy and fuels
+                            </option>
+                            <option value="Light">
+                                Chapter 10 – Light
+                            </option>
+                            <option value="Sound">
+                                Chapter 11 – Sound
+                            </option>
+                            <option value="Heat and temperature">
+                                Chapter 12 – Heat and temperature
+                            </option>
+                            <option value="Weather and climate">
+                                Chapter 13 – Weather and climate
+                            </option>
+                            <option value="Earth and space">
+                                Chapter 14 – Earth and space
+                            </option>
+                            <option value="Simple machines and pressure">
+                                Chapter 15 – Simple machines and pressure
+                            </option>
+                            <option value="Acids, bases and salts">
+                                Chapter 16 – Acids, bases and salts
+                            </option>
+                            <option value="Scientific methods and safety">
+                                Chapter 17 – Scientific methods and safety
                             </option>
                         </optgroup>
                     </select>
 
                     <label class="field-label" for="question">Your question</label>
-                    <textarea id="question" class="field-textarea" rows="4"
-                        placeholder="Explain density using Zimbabwean examples..."></textarea>
+                    <textarea
+                        id="question"
+                        class="field-textarea"
+                        rows="4"
+                        placeholder="Explain density using Zimbabwean examples..."
+                    ></textarea>
 
                     <div class="button-row">
                         <button id="btnExplain" class="btn btn-primary">Ask Sci-Guru</button>
@@ -97,7 +133,14 @@
                         </label>
                         <div class="score-row">
                             <span>I scored</span>
-                            <input type="number" id="scoreInput" class="score-input" placeholder="75" min="0" max="100" />
+                            <input
+                                type="number"
+                                id="scoreInput"
+                                class="score-input"
+                                placeholder="75"
+                                min="0"
+                                max="100"
+                            />
                             <span>%</span>
                             <button id="btnSaveScore" class="btn btn-small btn-success">
                                 Save topic score
@@ -138,10 +181,12 @@
                     <div class="chapters-strip">
                         <div class="chapters-header">
                             <span class="chapters-title">Form 1 chapters</span>
-                            <span class="chapters-note">Tap a chapter to auto-fill topic &amp; sample question</span>
+                            <span class="chapters-note">
+                                Tap a chapter to auto-fill topic &amp; sample question
+                            </span>
                         </div>
                         <div class="chapters-pills">
-                            <!-- CHAPTERS 1–8: fully wired -->
+                            <!-- CHAPTERS 1–8 -->
                             <button
                                 class="chapter-pill"
                                 data-topic="Living things and characteristics of life"
@@ -187,7 +232,7 @@
                             <button
                                 class="chapter-pill"
                                 data-topic="Density and flotation"
-                                data-question="Explain why some objects float and others sink using the idea of density. Use at least one Zimbabwean example."
+                                data-question="Explain why some objects float while others sink using the idea of density. Use at least one Zimbabwean example."
                             >
                                 Ch. 7
                             </button>
@@ -199,67 +244,67 @@
                                 Ch. 8
                             </button>
 
-                            <!-- CHAPTERS 9–17: place-holders for now -->
+                            <!-- CHAPTERS 9–17 -->
                             <button
                                 class="chapter-pill"
-                                data-label="Energy and fuels"
-                                data-coming="true"
+                                data-topic="Energy and fuels"
+                                data-question="Explain the difference between renewable and non-renewable sources of energy and give Zimbabwean examples of each."
                             >
                                 Ch. 9
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Light"
-                                data-coming="true"
+                                data-topic="Light"
+                                data-question="Explain how light travels and describe one simple experiment to show that light travels in straight lines."
                             >
                                 Ch. 10
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Sound"
-                                data-coming="true"
+                                data-topic="Sound"
+                                data-question="Explain how sound is produced and how it travels. Use an example of music or drums from a Zimbabwean setting."
                             >
                                 Ch. 11
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Heat and temperature"
-                                data-coming="true"
+                                data-topic="Heat and temperature"
+                                data-question="Explain the difference between heat and temperature, and describe a simple experiment to show expansion when substances are heated."
                             >
                                 Ch. 12
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Weather and climate"
-                                data-coming="true"
+                                data-topic="Weather and climate"
+                                data-question="Explain the difference between weather and climate and give one example of how climate affects people in Zimbabwe."
                             >
                                 Ch. 13
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Earth and space"
-                                data-coming="true"
+                                data-topic="Earth and space"
+                                data-question="Describe the main layers of the Earth and explain one way the movement of the Earth affects day and night."
                             >
                                 Ch. 14
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Simple machines and pressure"
-                                data-coming="true"
+                                data-topic="Simple machines and pressure"
+                                data-question="Explain what a simple machine is and give an example of a simple machine used on a Zimbabwean farm or home."
                             >
                                 Ch. 15
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Acids, bases and salts"
-                                data-coming="true"
+                                data-topic="Acids, bases and salts"
+                                data-question="Explain the difference between an acid and a base and give one example of each from everyday life."
                             >
                                 Ch. 16
                             </button>
                             <button
                                 class="chapter-pill"
-                                data-label="Scientific methods and safety"
-                                data-coming="true"
+                                data-topic="Scientific methods and safety"
+                                data-question="Describe the main steps of the scientific method and mention two safety rules learners must follow in the laboratory."
                             >
                                 Ch. 17
                             </button>
@@ -274,7 +319,7 @@
         <p>© 2025 LEC BIOTEC. Sci-Guru AI Tutor prototype.</p>
     </footer>
 
-    <!-- Simple JS to call your backend and handle chapters -->
+    <!-- JS: backend calls + scores + clickable chapters -->
     <script>
         const API_BASE = "https://sci-guru-backend.onrender.com/api";
 
@@ -326,7 +371,8 @@
                     data.answer || data.quiz || data.practical || "No answer returned.";
             } catch (err) {
                 console.error(err);
-                outputElement.textContent = "Error: Could not connect to Sci-Guru backend.";
+                outputElement.textContent =
+                    "Error: Could not connect to Sci-Guru backend.";
             }
         }
 
@@ -372,40 +418,30 @@
             if (previous === undefined || score > previous) {
                 stored[form][topic] = score;
                 localStorage.setItem(key, JSON.stringify(stored));
-                statusText.textContent =
-                    `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
+                statusText.textContent = `Saved! Best score for "${topic}" in ${form} is now ${score}%.`;
             } else {
-                statusText.textContent =
-                    `Not saved: you already have ${previous}% for "${topic}".`;
+                statusText.textContent = `Not saved: you already have ${previous}% for "${topic}".`;
             }
         });
 
         // ---------- Chapter pills: click to auto-set topic & question ----------
         chapterPills.forEach((pill) => {
             pill.addEventListener("click", () => {
-                // Remove active class from all
-                chapterPills.forEach(p => p.classList.remove("active"));
+                // Clear active state from all
+                chapterPills.forEach((p) => p.classList.remove("active"));
 
                 const topicValue = pill.dataset.topic;
                 const sampleQuestion = pill.dataset.question;
-                const coming = pill.dataset.coming === "true";
-                const label = pill.dataset.label || pill.textContent.trim();
 
-                if (coming) {
-                    // Future chapters not wired yet
-                    statusText.textContent =
-                        `${label} content is coming soon. You can still type your own question above.`;
-                } else if (topicValue) {
+                if (topicValue) {
                     formSelect.value = "Form 1";
                     topicSelect.value = topicValue;
-
                     if (sampleQuestion) {
                         questionInput.value = sampleQuestion;
                     }
-
                     pill.classList.add("active");
                     statusText.textContent =
-                        `Ready: ${label} selected (Form 1, topic pre-filled). You can edit the question or press a button to continue.`;
+                        `Ready: ${pill.textContent.trim()} selected (Form 1, topic pre-filled). You can edit the question or press a button to continue.`;
                 }
             });
         });
