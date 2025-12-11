@@ -1,574 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-  <title>Sci-Guru AI Science Tutor</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sci-Guru AI Science Tutor</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body class="app-body">
-  <!-- Top bar with logo + nav -->
-  <header class="top-nav">
+
+<!-- 🌟 Top Navigation -->
+<header class="top-nav">
     <div class="nav-left">
-      <img src="lec-logo.jpg" alt="LEC Biotec logo" class="nav-logo" />
-      <div class="nav-title-block">
-        <div class="nav-title">Sci-Guru AI Science Tutor</div>
-        <div class="nav-subtitle">
-          Zimbabwe's AI-powered tutor for the ZIMSEC / Heritage-Based curriculum
+        <img src="lec-logo.jpg" alt="LEC Biotec logo" class="nav-logo" />
+        <div class="nav-title-block">
+            <div class="nav-title">Sci-Guru AI Science Tutor</div>
+            <div class="nav-subtitle">Zimbabwe's AI-powered tutor for the ZIMSEC / Heritage-Based curriculum</div>
         </div>
-      </div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="tutor.html" class="nav-link active">AI Tutor</a>
-    </nav>
-  </header>
 
-  <!-- Main layout -->
-  <main class="tutor-layout">
-    <!-- ASK PANEL (LEFT) -->
-    <section class="ask-panel">
-      <h2>Ask Sci-Guru</h2>
-      <p class="panel-description">
-        Choose a form and topic (or tap a Form 1 chapter below), then ask your
-        question in simple English.
-      </p>
+    <div class="nav-right">
+        <a href="index.html" class="nav-btn">Home</a>
+        <a href="tutor.html" class="nav-btn active">AI Tutor</a>
+    </div>
+</header>
 
-      <div class="form-group">
-        <label for="formLevel">Form / Level</label>
-        <select id="formLevel">
-          <option value="Form 1" selected>Form 1</option>
-          <option value="Form 2">Form 2</option>
-          <option value="Form 3">Form 3</option>
-          <option value="Form 4">Form 4</option>
+<!-- 🌟 Main Layout -->
+<div class="page-container">
+
+    <!-- LEFT SIDE -->
+    <div class="left-panel">
+        <h2>Ask Sci-Guru</h2>
+
+        <label>Form / Level</label>
+        <select id="formSelect">
+            <option value="Form 1">Form 1</option>
         </select>
-      </div>
 
-      <div class="form-group">
-        <label for="topic">
-          Topic (Form 1 topics grouped + general)
-        </label>
-        <select id="topic">
-          <option value="">
-            -- Optional: choose a topic --
-          </option>
-
-          <optgroup label="General">
-            <option value="General Science">General Science</option>
-            <option value="Everyday Applications">Everyday applications of science</option>
-          </optgroup>
-
-          <optgroup label="Form 1 — Biology">
-            <option value="Living things and characteristics of life">
-              Living things and characteristics of life
-            </option>
-            <option value="Cells and simple microscopes">
-              Cells and simple microscopes
-            </option>
-            <option value="Human body systems and hygiene">
-              Human body systems and hygiene
-            </option>
-            <option value="Ecosystems and environment">
-              Ecosystems and environment
-            </option>
-          </optgroup>
-
-          <optgroup label="Form 1 — Physics">
-            <option value="States of matter">
-              States of matter
-            </option>
-            <option value="Mixtures and separation methods">
-              Mixtures and separation methods
-            </option>
-            <option value="Density and flotation">
-              Density and flotation
-            </option>
-            <option value="Electricity and magnetism">
-              Electricity and magnetism
-            </option>
-          </optgroup>
-
-          <optgroup label="Form 1 — Earth & Space">
-            <option value="Earth, weather and climate">
-              Earth, weather and climate
-            </option>
-            <option value="Solar system and beyond">
-              Solar system and beyond
-            </option>
-          </optgroup>
-
-          <optgroup label="Form 1 — Skills & Careers">
-            <option value="Scientific skills and safety">
-              Scientific skills and safety
-            </option>
-            <option value="Careers in science">
-              Careers in science
-            </option>
-          </optgroup>
+        <label>Topic (Form 1 topics grouped + general)</label>
+        <select id="topicSelect">
+            <option value="">-- Optional: choose a topic --</option>
+            <option value="Cells">Cells</option>
+            <option value="Classification">Classification</option>
+            <option value="States of Matter">States of Matter</option>
+            <option value="Mixtures">Mixtures</option>
+            <option value="Forces">Forces</option>
+            <option value="Energy">Energy</option>
+            <option value="Heat">Heat</option>
+            <option value="Light">Light</option>
+            <option value="Sound">Sound</option>
+            <option value="Electricity">Electricity</option>
+            <option value="Magnetism">Magnetism</option>
+            <option value="Earth & Space">Earth & Space</option>
+            <option value="Human Body">Human Body</option>
+            <option value="Environment">Environment</option>
+            <option value="Careers">Careers</option>
         </select>
-      </div>
 
-      <div class="form-group">
-        <label for="question">Your question</label>
-        <textarea
-          id="question"
-          rows="4"
-          placeholder="Explain density using Zimbabwean examples..."
-        ></textarea>
-      </div>
+        <label>Your question</label>
+        <textarea id="userQuestion" placeholder="Explain density using Zimbabwean examples..."></textarea>
 
-      <!-- Buttons row -->
-      <div class="button-row">
-        <button id="askBtn" class="primary-btn">
-          Ask Sci-Guru
-        </button>
-        <button id="quizBtn" class="secondary-btn">
-          Generate quiz
-        </button>
-      </div>
+        <div class="btn-row">
+            <button id="askBtn" class="main-btn">Ask Sci-Guru</button>
+            <button id="quizBtn" class="sec-btn">Generate quiz</button>
+        </div>
 
-      <div class="button-row">
-        <button id="practicalBtn" class="outline-btn">
-          Generate practical
-        </button>
-        <button
-          id="openLabHubBtn"
-          class="outline-btn"
-          type="button"
-        >
-          Open virtual lab hub
-        </button>
-      </div>
+        <div class="btn-row">
+            <button id="practicalBtn" class="sec-btn">Generate practical</button>
+            <button onclick="openLab()" class="sec-btn">Open virtual lab hub</button>
+        </div>
 
-      <!-- Save score -->
-      <div class="save-score-panel">
-        <label class="checkbox-inline">
-          <input
-            type="checkbox"
-            id="saveScoreCheckbox"
-            checked
-          />
-          I want to save my quiz result for this topic
+        <label class="save-label">
+            <input type="checkbox" id="saveScoreCheck" /> I want to save my quiz result for this topic
         </label>
 
-        <div class="score-input-row">
-          <span>I scored</span>
-          <input
-            type="number"
-            id="scoreInput"
-            min="0"
-            max="100"
-            placeholder="e.g. 75"
-          />
-          <span>%</span>
-          <button id="saveScoreBtn" class="small-primary-btn">
-            Save topic score
-          </button>
-        </div>
-      </div>
-
-      <p id="statusText" class="status-text">
-        Sci-Guru is ready. Backend: <span class="live-pill">LIVE</span>.
-      </p>
-    </section>
-
-    <!-- RESULTS PANEL (RIGHT) -->
-    <section class="results-panel">
-      <div class="results-header">
-        <div id="chapterStatus" class="chapter-status">
-          No chapter tag selected (you can still ask any question).
-        </div>
-      </div>
-
-      <div class="result-card">
-        <h3>EXPLANATION</h3>
-        <p id="explanationText">Sci-Guru will answer here...</p>
-      </div>
-
-      <div class="result-card">
-        <h3>QUIZ</h3>
-        <p id="quizText">Quiz will appear here...</p>
-      </div>
-
-      <div class="result-card">
-        <h3>PRACTICAL</h3>
-        <p id="practicalText">Practical experiment will appear here...</p>
-      </div>
-
-      <!-- CHAPTER STRIP -->
-      <section class="chapters-section">
-        <h4>
-          Form 1 chapters ·
-          <span id="chapterHint" class="chapter-hint">
-            Tap a chapter to auto-fill topic, sample question &amp; experiment focus.
-          </span>
-        </h4>
-
-        <div class="chapter-strip">
-          <button class="chapter-tag" data-chapter="ch1">Ch. 1</button>
-          <button class="chapter-tag" data-chapter="ch2">Ch. 2</button>
-          <button class="chapter-tag" data-chapter="ch3">Ch. 3</button>
-          <button class="chapter-tag" data-chapter="ch4">Ch. 4</button>
-          <button class="chapter-tag" data-chapter="ch5">Ch. 5</button>
-          <button class="chapter-tag" data-chapter="ch6">Ch. 6</button>
-          <button class="chapter-tag" data-chapter="ch7">Ch. 7</button>
-          <button class="chapter-tag" data-chapter="ch8">Ch. 8</button>
-          <button class="chapter-tag" data-chapter="ch9">Ch. 9</button>
-          <button class="chapter-tag" data-chapter="ch10">Ch. 10</button>
-          <button class="chapter-tag" data-chapter="ch11">Ch. 11</button>
-          <button class="chapter-tag" data-chapter="ch12">Ch. 12</button>
-          <button class="chapter-tag" data-chapter="ch13">Ch. 13</button>
-          <button class="chapter-tag" data-chapter="ch14">Ch. 14</button>
-          <button class="chapter-tag" data-chapter="ch15">Ch. 15</button>
-          <button class="chapter-tag" data-chapter="ch16">Ch. 16</button>
-          <button class="chapter-tag" data-chapter="ch17">Ch. 17</button>
+        <div class="score-box">
+            I scored <input type="text" id="scoreInput" placeholder="e.g. 75" /> %
+            <button id="saveScoreBtn" class="green-btn">Save topic score</button>
         </div>
 
-        <p id="chapterFocus" class="chapter-focus-text">
-          Experiment focus will appear here after you tap a chapter.
-        </p>
-      </section>
-    </section>
-  </main>
+        <div id="backendStatus" class="status-bar">Sci-Guru is ready. Backend: <span id="statusValue">LIVE.</span></div>
+    </div>
 
-  <!-- SCRIPT -->
-  <script>
-    const API_BASE = "https://sci-guru-backend.onrender.com/api";
+    <!-- RIGHT SIDE -->
+    <div class="right-panel">
+        <h3 id="chapterLabel">No chapter tag selected.</h3>
 
-    const formLevelEl = document.getElementById("formLevel");
-    const topicEl = document.getElementById("topic");
-    const questionEl = document.getElementById("question");
+        <div class="result-box">
+            <h4>EXPLANATION</h4>
+            <div id="explanationBox" class="result-content">Sci-Guru will answer here...</div>
+        </div>
 
-    const askBtn = document.getElementById("askBtn");
-    const quizBtn = document.getElementById("quizBtn");
-    const practicalBtn = document.getElementById("practicalBtn");
-    const openLabHubBtn = document.getElementById("openLabHubBtn");
+        <div class="result-box">
+            <h4>QUIZ</h4>
+            <div id="quizBox" class="result-content">Quiz will appear here...</div>
+        </div>
 
-    const explanationText = document.getElementById("explanationText");
-    const quizText = document.getElementById("quizText");
-    const practicalText = document.getElementById("practicalText");
-    const statusText = document.getElementById("statusText");
+        <div class="result-box">
+            <h4>PRACTICAL</h4>
+            <div id="practicalBox" class="result-content">Practical experiment will appear here...</div>
+        </div>
 
-    const saveScoreCheckbox = document.getElementById("saveScoreCheckbox");
-    const scoreInput = document.getElementById("scoreInput");
-    const saveScoreBtn = document.getElementById("saveScoreBtn");
+        <!-- CHAPTER BUTTONS -->
+        <div class="chapter-section">
+            <h4>Form 1 chapters · Tap a chapter to auto-fill topic, sample question & experiment focus.</h4>
+            <div class="chapters-grid">
+                <button class="chapter-btn" data-chapter="1">Ch. 1</button>
+                <button class="chapter-btn" data-chapter="2">Ch. 2</button>
+                <button class="chapter-btn" data-chapter="3">Ch. 3</button>
+                <button class="chapter-btn" data-chapter="4">Ch. 4</button>
+                <button class="chapter-btn" data-chapter="5">Ch. 5</button>
+                <button class="chapter-btn" data-chapter="6">Ch. 6</button>
+                <button class="chapter-btn" data-chapter="7">Ch. 7</button>
+                <button class="chapter-btn" data-chapter="8">Ch. 8</button>
+                <button class="chapter-btn" data-chapter="9">Ch. 9</button>
+                <button class="chapter-btn" data-chapter="10">Ch. 10</button>
+                <button class="chapter-btn" data-chapter="11">Ch. 11</button>
+                <button class="chapter-btn" data-chapter="12">Ch. 12</button>
+                <button class="chapter-btn" data-chapter="13">Ch. 13</button>
+                <button class="chapter-btn" data-chapter="14">Ch. 14</button>
+                <button class="chapter-btn" data-chapter="15">Ch. 15</button>
+                <button class="chapter-btn" data-chapter="16">Ch. 16</button>
+                <button class="chapter-btn" data-chapter="17">Ch. 17</button>
+            </div>
+        </div>
 
-    const chapterStatusEl = document.getElementById("chapterStatus");
-    const chapterHintEl = document.getElementById("chapterHint");
-    const chapterFocusEl = document.getElementById("chapterFocus");
+    </div>
+</div>
 
-    let selectedChapterKey = null;
+<!-- ================================
+     JAVASCRIPT SECTION (COMPLETE)
+================================ -->
+<script>
+// ------------------------------
+// FORM 1 CHAPTER DATA
+// ------------------------------
+const form1Chapters = [
+  { id: 1, title: "Introduction to Science", topic: "Science", question: "What is science?", experiment: "Identify objects and classify them as living/non-living." },
+  { id: 2, title: "Cells", topic: "Cells", question: "What is a cell?", experiment: "Virtual onion cell microscope." },
+  { id: 3, title: "Classification", topic: "Classification", question: "How are organisms classified?", experiment: "Group organisms by observable features." },
+  { id: 4, title: "States of Matter", topic: "States of Matter", question: "Explain solids, liquids, gases.", experiment: "Heat & cooling model simulation." },
+  { id: 5, title: "Mixtures", topic: "Mixtures", question: "What is a mixture?", experiment: "Filtration & evaporation simulation." },
+  { id: 6, title: "Forces", topic: "Forces", question: "What is a force?", experiment: "Push and pull force meter simulation." },
+  { id: 7, title: "Energy", topic: "Energy", question: "What is energy?", experiment: "Energy transformation model." },
+  { id: 8, title: "Heat", topic: "Heat", question: "What is conduction?", experiment: "Metal rod heating simulation." },
+  { id: 9, title: "Light", topic: "Light", question: "How does light travel?", experiment: "Ray box simulation." },
+  { id: 10, title: "Sound", topic: "Sound", question: "What is sound?", experiment: "Vibration wave simulation." },
+  { id: 11, title: "Electricity", topic: "Electricity", question: "What is an electric circuit?", experiment: "Build-a-circuit simulation." },
+  { id: 12, title: "Magnetism", topic: "Magnetism", question: "What is a magnet?", experiment: "Magnetic field lines simulation." },
+  { id: 13, title: "Earth & Space", topic: "Earth & Space", question: "What causes day and night?", experiment: "Earth rotation model." },
+  { id: 14, title: "Human Body", topic: "Human Body", question: "Explain the digestive system.", experiment: "Food digestion model." },
+  { id: 15, title: "Environment", topic: "Environment", question: "What causes water pollution?", experiment: "Water filtration demo." },
+  { id: 16, title: "Science & Society", topic: "Science & Society", question: "Why is science important?", experiment: "Community science task." },
+  { id: 17, title: "Careers", topic: "Careers", question: "What are science careers?", experiment: "Career poster activity." }
+];
 
-    // --- FORM 1 CHAPTER DATA ---
-    const chapterData = {
-      ch1: {
-        label: "Ch. 1 – Living things & characteristics of life",
-        topic: "Living things and characteristics of life",
-        sampleQuestion:
-          "List the characteristics of living things and explain them using Zimbabwean farm examples.",
-        practicalFocus:
-          "Survey living and non-living things around the school yard and classify them."
-      },
-      ch2: {
-        label: "Ch. 2 – Cells and simple microscopes",
-        topic: "Cells and simple microscopes",
-        sampleQuestion:
-          "Explain what a cell is and why it is called the basic unit of life.",
-        practicalFocus:
-          "Observe onion cells or leaf peel under a simple microscope or magnifying lens."
-      },
-      ch3: {
-        label: "Ch. 3 – Human body systems and hygiene",
-        topic: "Human body systems and hygiene",
-        sampleQuestion:
-          "Describe the main human body systems and give examples of healthy habits.",
-        practicalFocus:
-          "Demonstrate proper hand-washing and design a hygiene poster for the class."
-      },
-      ch4: {
-        label: "Ch. 4 – Ecosystems and environment",
-        topic: "Ecosystems and environment",
-        sampleQuestion:
-          "Explain what an ecosystem is using a local river or field as an example.",
-        practicalFocus:
-          "Draw a simple food chain from a nearby ecosystem and identify producers, consumers and decomposers."
-      },
-      ch5: {
-        label: "Ch. 5 – States of matter",
-        topic: "States of matter",
-        sampleQuestion:
-          "Explain the three states of matter with local everyday examples.",
-        practicalFocus:
-          "Investigate how heating and cooling water changes its state (ice, liquid, steam)."
-      },
-      ch6: {
-        label: "Ch. 6 – Mixtures & separation methods",
-        topic: "Mixtures and separation methods",
-        sampleQuestion:
-          "What is a mixture? Explain and give examples from the kitchen.",
-        practicalFocus:
-          "Separate sand and salt, or beans and sand, using sieving, decanting or filtration."
-      },
-      ch7: {
-        label: "Ch. 7 – Density and flotation",
-        topic: "Density and flotation",
-        sampleQuestion:
-          "Explain density using an imbokodo and plastic bucket as examples.",
-        practicalFocus:
-          "Compare objects that float or sink in water and relate this to their density."
-      },
-      ch8: {
-        label: "Ch. 8 – Electricity and magnetism",
-        topic: "Electricity and magnetism",
-        sampleQuestion:
-          "Explain the difference between conductors and insulators.",
-        practicalFocus:
-          "Make a simple circuit with a battery and bulb and test local materials as conductors."
-      },
-      ch9: {
-        label: "Ch. 9 – Earth, weather and climate",
-        topic: "Earth, weather and climate",
-        sampleQuestion:
-          "Describe different types of weather found in Zimbabwe.",
-        practicalFocus:
-          "Keep a simple weather chart for one week, recording temperature and rainfall."
-      },
-      ch10: {
-        label: "Ch. 10 – Solar system and beyond",
-        topic: "Solar system and beyond",
-        sampleQuestion:
-          "Name the planets in our solar system in order from the Sun.",
-        practicalFocus:
-          "Create a scale model or drawing of the solar system using classroom materials."
-      },
-      ch11: {
-        label: "Ch. 11 – Scientific skills and safety",
-        topic: "Scientific skills and safety",
-        sampleQuestion:
-          "Explain why safety rules are important in a science laboratory.",
-        practicalFocus:
-          "Role-play correct and incorrect behaviour in a science lab and discuss the dangers."
-      },
-      ch12: {
-        label: "Ch. 12 – Measurement in science",
-        topic: "Scientific skills and safety",
-        sampleQuestion:
-          "Describe basic scientific measuring instruments and their units.",
-        practicalFocus:
-          "Measure mass, volume and length of classroom objects using simple equipment."
-      },
-      ch13: {
-        label: "Ch. 13 – Scientific investigations",
-        topic: "Scientific skills and safety",
-        sampleQuestion:
-          "Describe the main steps of a scientific investigation.",
-        practicalFocus:
-          "Plan a simple investigation, such as how sunlight affects plant growth."
-      },
-      ch14: {
-        label: "Ch. 14 – Everyday applications of science",
-        topic: "Everyday Applications",
-        sampleQuestion:
-          "Give examples of how science is used in Zimbabwean homes and industries.",
-        practicalFocus:
-          "Identify household technologies and explain the science ideas behind them."
-      },
-      ch15: {
-        label: "Ch. 15 – End-of-form revision",
-        topic: "",
-        sampleQuestion:
-          "Give me a mixed revision quiz for Form 1 Combined Science.",
-        practicalFocus:
-          "Create a revision mind map covering all Form 1 topics."
-      },
-      ch16: {
-        label: "Ch. 16 – Project work",
-        topic: "",
-        sampleQuestion:
-          "Suggest project ideas for Form 1 learners using local resources.",
-        practicalFocus:
-          "Design a small community-based science project, such as a clean water or waste-management project."
-      },
-      ch17: {
-        label: "Ch. 17 – Careers in science",
-        topic: "Careers in science",
-        sampleQuestion:
-          "List science-related careers that are important in Zimbabwe.",
-        practicalFocus:
-          "Prepare a career poster or interview project with a local science professional."
-      }
-    };
+// ------------------------------
+// CHAPTER CLICK HANDLING
+// ------------------------------
+const chapterButtons = document.querySelectorAll(".chapter-btn");
+let selectedChapter = null;
 
-    function clearChapterHighlight() {
-      document
-        .querySelectorAll(".chapter-tag")
-        .forEach((btn) => btn.classList.remove("active-chapter"));
-    }
+chapterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
 
-    // --- Chapter click handler (updates cards immediately) ---
-    document.querySelectorAll(".chapter-tag").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.dataset.chapter;
-        const data = chapterData[key];
+    // Clear highlight
+    chapterButtons.forEach(b => b.classList.remove("active-chapter"));
 
-        selectedChapterKey = key;
-        clearChapterHighlight();
-        btn.classList.add("active-chapter");
+    // Add active highlight
+    btn.classList.add("active-chapter");
 
-        // Auto-select topic in dropdown if defined
-        if (data.topic) {
-          for (const opt of topicEl.options) {
-            if (opt.value === data.topic) {
-              opt.selected = true;
-              break;
-            }
-          }
-        } else {
-          topicEl.value = "";
-        }
+    // Load chapter data
+    const chapterId = parseInt(btn.getAttribute("data-chapter"));
+    selectedChapter = form1Chapters.find(ch => ch.id === chapterId);
 
-        // Sample question
-        questionEl.value = data.sampleQuestion;
+    document.getElementById("topicSelect").value = selectedChapter.topic;
+    document.getElementById("userQuestion").value = selectedChapter.question;
 
-        // Update result cards immediately
-        explanationText.textContent =
-          "Focus for " + data.label + ": " + data.sampleQuestion;
+    document.getElementById("practicalBox").innerText =
+      selectedChapter.experiment || "No experiment defined.";
 
-        practicalText.textContent =
-          "Suggested practical / virtual lab focus:\n" +
-          data.practicalFocus;
+    document.getElementById("chapterLabel").innerText =
+      `Chapter tag selected: Ch. ${selectedChapter.id} – ${selectedChapter.title}`;
+  });
+});
 
-        // Header + hint text
-        chapterStatusEl.textContent = "Chapter tag selected: " + data.label;
-        chapterHintEl.textContent =
-          "Experiment focus set. You can still edit the question before asking.";
-        chapterFocusEl.textContent =
-          "Experiment focus: " + data.practicalFocus +
-          " · Now click Ask Sci-Guru, Generate quiz or Generate practical for AI-generated detail.";
-      });
-    });
+// ------------------------------
+// VIRTUAL LAB LINK
+// ------------------------------
+function openLab() {
+  window.location.href = "dashboard.html";
+}
+</script>
 
-    // --- API helper ---
-    async function callApi(endpoint, body) {
-      statusText.textContent = "Sci-Guru is thinking (loading)...";
-      try {
-        const res = await fetch(API_BASE + endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        });
-
-        if (!res.ok) {
-          throw new Error("Server error: " + res.status);
-        }
-
-        const data = await res.json();
-        statusText.textContent = "Sci-Guru is ready. Backend: LIVE.";
-        return data;
-      } catch (err) {
-        console.error(err);
-        statusText.textContent =
-          "Error talking to server. Please check your connection.";
-        return { error: err.message };
-      }
-    }
-
-    // --- Button events ---
-    askBtn.addEventListener("click", async () => {
-      explanationText.textContent = "Sci-Guru is thinking (loading...)";
-      const payload = {
-        formLevel: formLevelEl.value,
-        topic: topicEl.value,
-        question: questionEl.value,
-        chapterTag: selectedChapterKey
-      };
-      const data = await callApi("/ask", payload);
-      if (!data.error && data.answer) {
-        explanationText.textContent = data.answer;
-      } else {
-        explanationText.textContent =
-          "Sorry, something went wrong while generating the explanation.";
-      }
-    });
-
-    quizBtn.addEventListener("click", async () => {
-      quizText.textContent = "Sci-Guru is generating a quiz...";
-      const payload = {
-        formLevel: formLevelEl.value,
-        topic: topicEl.value,
-        question: questionEl.value,
-        chapterTag: selectedChapterKey
-      };
-      const data = await callApi("/quiz", payload);
-      if (!data.error && data.quiz) {
-        quizText.textContent = data.quiz;
-      } else {
-        quizText.textContent =
-          "Sorry, something went wrong while generating the quiz.";
-      }
-    });
-
-    practicalBtn.addEventListener("click", async () => {
-      practicalText.textContent =
-        "Sci-Guru is designing a practical or virtual lab...";
-      const payload = {
-        formLevel: formLevelEl.value,
-        topic: topicEl.value,
-        question: questionEl.value,
-        chapterTag: selectedChapterKey
-      };
-      const data = await callApi("/practical", payload);
-      if (!data.error && data.practical) {
-        practicalText.textContent = data.practical;
-      } else {
-        practicalText.textContent =
-          "Sorry, something went wrong while generating the practical.";
-      }
-    });
-
-    // --- Virtual lab hub button ---
-    openLabHubBtn.addEventListener("click", () => {
-      // You can change this to whichever hub page you prefer
-      window.location.href = "sim-form1-experiences.html";
-    });
-
-    // --- Save topic score (localStorage) ---
-    const STORAGE_KEY = "sciGuruTopicScores";
-
-    function loadScores() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return {};
-        return JSON.parse(raw);
-      } catch {
-        return {};
-      }
-    }
-
-    function saveScores(scores) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
-    }
-
-    saveScoreBtn.addEventListener("click", () => {
-      if (!saveScoreCheckbox.checked) {
-        alert("Tick the box if you want to save scores.");
-        return;
-      }
-      const score = Number(scoreInput.value);
-      if (Number.isNaN(score) || score < 0 || score > 100) {
-        alert("Please enter a valid score between 0 and 100.");
-        return;
-      }
-      const key =
-        formLevelEl.value + " :: " + (topicEl.value || "No specific topic");
-      const scores = loadScores();
-      scores[key] = Math.max(scores[key] || 0, score);
-      saveScores(scores);
-      alert("Saved! Best score for this topic: " + scores[key] + "%");
-    });
-  </script>
 </body>
 </html>
