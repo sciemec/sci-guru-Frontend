@@ -1,456 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sci-Guru AI Science Tutor</title>
-    <link rel="stylesheet" href="styles.css">
-
-    <style>
-        /* Prevent old cache issues */
-        body { background: #f5f7fb; }
-        #loaderScreen { display:none !important; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru AI Science Tutor</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+<body class="tutor-page">
 
-<body>
+  <!-- TOP BAR / NAV -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="lec-logo" />
+      <div class="nav-title-block">
+        <h1 class="app-title">Sci-Guru AI Science Tutor</h1>
+        <p class="app-subtitle">
+          Zimbabwe's AI-powered tutor for the ZIMSEC / Heritage-Based curriculum
+        </p>
+      </div>
+    </div>
 
-<header class="top-nav">
-    <img src="lec-logo.jpg" class="nav-logo">
-    <h1 class="nav-title">Sci-Guru AI Science Tutor</h1>
-
-    <nav>
-        <a href="index.html">Home</a>
-        <a class="active" href="tutor.html">AI Tutor</a>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="tutor.html" class="nav-link nav-link-active">AI Tutor</a>
     </nav>
-</header>
+  </header>
 
-<div class="page-container">
+  <!-- MAIN LAYOUT -->
+  <div class="page-container">
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT PANEL: ASK SCI-GURU -->
     <section class="left-panel">
-        <h2>Ask Sci-Guru</h2>
+      <h2>Ask Sci-Guru</h2>
+      <p class="helper-text">
+        Choose a form and chapter or topic, then ask your question in simple English.
+      </p>
 
-        <label>Form / Level</label>
-        <select id="formLevel">
-            <option value="Form 1">Form 1</option>
-            <option value="Form 2">Form 2</option>
-            <option value="Form 3">Form 3</option>
-            <option value="Form 4">Form 4</option>
-        </select>
+      <!-- Form / Level -->
+      <label class="field-label" for="formLevel">Form / Level</label>
+      <select id="formLevel" class="select-input">
+        <option value="Form 1" selected>Form 1</option>
+        <!-- other forms can be added later -->
+      </select>
 
-        <label>Topic (optional)</label>
-        <select id="topic">
-            <option value="">-- Optional: choose a topic --</option>
-        </select>
+      <!-- Topic select (Form 1 grouped + general) -->
+      <label class="field-label" for="topic">
+        Topic (Form 1 topics grouped + general)
+      </label>
+      <select id="topic" class="select-input">
+        <option value="">-- Optional: choose a topic --</option>
+      </select>
 
-        <label>Your question</label>
-        <textarea id="question" placeholder="Explain density using Zimbabwean examples..."></textarea>
+      <!-- Question text area -->
+      <label class="field-label" for="question">Your question</label>
+      <textarea
+        id="question"
+        class="textarea-input"
+        rows="4"
+        placeholder="Explain density using Zimbabwean examples..."
+      ></textarea>
 
-        <div class="button-row">
-            <button id="askBtn">Ask Sci-Guru</button>
-            <button id="quizBtn" class="secondary">Generate quiz</button>
+      <!-- Action buttons -->
+      <div class="button-row">
+        <button id="askBtn" class="primary-btn">Ask Sci-Guru</button>
+        <button id="quizBtn" class="secondary-btn">Generate quiz</button>
+      </div>
+
+      <div class="button-row">
+        <button id="practicalBtn" class="outline-btn">Generate practical</button>
+        <button
+          type="button"
+          class="outline-btn"
+          onclick="window.open('sim-form1-experiences.html', '_blank')"
+        >
+          Open virtual lab hub
+        </button>
+      </div>
+
+      <!-- Save score -->
+      <div class="save-score-box">
+        <label class="checkbox-label">
+          <input type="checkbox" id="saveScore" />
+          I want to save my quiz result for this topic
+        </label>
+
+        <div class="save-score-row">
+          <span>I scored</span>
+          <input
+            type="number"
+            id="scoreValue"
+            class="score-input"
+            placeholder="e.g. 75"
+            min="0"
+            max="100"
+          />
+          <span>%</span>
+          <button id="saveScoreBtn" class="small-primary-btn">
+            Save topic score
+          </button>
         </div>
+      </div>
 
-        <div class="button-row">
-            <button id="practicalBtn" class="secondary">Generate practical</button>
-            <a href="sim-form1-experiences.html"><button class="secondary">Open virtual lab hub</button></a>
-        </div>
-
-        <div class="score-box">
-            <input type="checkbox" id="saveScore"> I want to save my quiz result
-            <br>
-            <label>I scored</label>
-            <input id="scoreValue" type="number" min="0" max="100" placeholder="e.g. 75">
-            <button id="saveScoreBtn" class="green">Save topic score</button>
-            <p id="backendStatus" class="status">Checking connection...</p>
-        </div>
-        <!-- RIGHT PANEL -->
-    <section class="right-panel">
-        <h2>Results</h2>
-        <p id="chapterStatus" class="chapter-status">
-            No chapter tag selected (you can still ask any question).
-        </p>
-
-        <div class="results-grid">
-            <div class="result-card">
-                <h3>EXPLANATION</h3>
-                <div id="explanationText" class="result-body">
-                    Sci-Guru will answer here...
-                </div>
-            </div>
-
-            <div class="result-card">
-                <h3>QUIZ</h3>
-                <div id="quizText" class="result-body">
-                    Quiz will appear here...
-                </div>
-            </div>
-
-            <div class="result-card">
-                <h3>PRACTICAL</h3>
-                <div id="practicalText" class="result-body">
-                    Practical experiment will appear here...
-                </div>
-            </div>
-        </div>
-
-        <!-- CHAPTER STRIP -->
-        <div class="chapters-strip">
-            <p class="chapters-title">
-                <strong>Form 1 chapters</strong> · Tap a chapter to auto-fill topic, sample question & experiment focus.
-            </p>
-            <div class="chapters-row">
-                <button class="chapter-tag" data-chapter="ch1">Ch. 1</button>
-                <button class="chapter-tag" data-chapter="ch2">Ch. 2</button>
-                <button class="chapter-tag" data-chapter="ch3">Ch. 3</button>
-                <button class="chapter-tag" data-chapter="ch4">Ch. 4</button>
-                <button class="chapter-tag" data-chapter="ch5">Ch. 5</button>
-                <button class="chapter-tag" data-chapter="ch6">Ch. 6</button>
-                <button class="chapter-tag" data-chapter="ch7">Ch. 7</button>
-                <button class="chapter-tag" data-chapter="ch8">Ch. 8</button>
-                <button class="chapter-tag" data-chapter="ch9">Ch. 9</button>
-                <button class="chapter-tag" data-chapter="ch10">Ch. 10</button>
-                <button class="chapter-tag" data-chapter="ch11">Ch. 11</button>
-                <button class="chapter-tag" data-chapter="ch12">Ch. 12</button>
-                <button class="chapter-tag" data-chapter="ch13">Ch. 13</button>
-                <button class="chapter-tag" data-chapter="ch14">Ch. 14</button>
-                <button class="chapter-tag" data-chapter="ch15">Ch. 15</button>
-                <button class="chapter-tag" data-chapter="ch16">Ch. 16</button>
-                <button class="chapter-tag" data-chapter="ch17">Ch. 17</button>
-            </div>
-        </div>
-
-        <p id="chapterHint" class="chapter-hint">
-            Tip: after choosing a chapter, press <strong>Ask Sci-Guru</strong>, 
-            <strong>Generate quiz</strong> or <strong>Generate practical</strong>.
-        </p>
+      <p id="backendStatus" class="status-text">
+        Sci-Guru is ready. Backend: checking...
+      </p>
     </section>
 
-</div> <!-- end .page-container -->
+    <!-- RIGHT PANEL: RESULTS + CHAPTER STRIP -->
+    <section class="right-panel">
+      <h2>Results</h2>
+      <p id="chapterStatus" class="chapter-status">
+        No chapter tag selected (you can still ask any question).
+      </p>
 
+      <div class="results-grid">
+        <div class="result-card">
+          <h3>EXPLANATION</h3>
+          <div id="explanationText" class="result-body">
+            Sci-Guru will answer here...
+          </div>
+        </div>
 
-<!-- ========== SCRIPTS ========== -->
-<script>
-const BACKEND_BASE = "https://sci-guru-backend.onrender.com"; // your Render backend
+        <div class="result-card">
+          <h3>QUIZ</h3>
+          <div id="quizText" class="result-body">
+            Quiz will appear here...
+          </div>
+        </div>
 
-// ---------- DOM ELEMENTS ----------
-const formLevelEl      = document.getElementById('formLevel');
-const topicEl          = document.getElementById('topic');
-const questionEl       = document.getElementById('question');
+        <div class="result-card">
+          <h3>PRACTICAL</h3>
+          <div id="practicalText" class="result-body">
+            Practical experiment will appear here...
+          </div>
+        </div>
+      </div>
 
-const askBtn           = document.getElementById('askBtn');
-const quizBtn          = document.getElementById('quizBtn');
-const practicalBtn     = document.getElementById('practicalBtn');
+      <!-- CHAPTER STRIP -->
+      <div class="chapters-strip">
+        <p class="chapters-title">
+          <strong>Form 1 chapters</strong> · Tap a chapter to auto-fill topic,
+          sample question &amp; experiment focus.
+        </p>
+        <div class="chapters-row">
+          <button class="chapter-tag" data-chapter="ch1">Ch. 1</button>
+          <button class="chapter-tag" data-chapter="ch2">Ch. 2</button>
+          <button class="chapter-tag" data-chapter="ch3">Ch. 3</button>
+          <button class="chapter-tag" data-chapter="ch4">Ch. 4</button>
+          <button class="chapter-tag" data-chapter="ch5">Ch. 5</button>
+          <button class="chapter-tag" data-chapter="ch6">Ch. 6</button>
+          <button class="chapter-tag" data-chapter="ch7">Ch. 7</button>
+          <button class="chapter-tag" data-chapter="ch8">Ch. 8</button>
+          <button class="chapter-tag" data-chapter="ch9">Ch. 9</button>
+          <button class="chapter-tag" data-chapter="ch10">Ch. 10</button>
+          <button class="chapter-tag" data-chapter="ch11">Ch. 11</button>
+          <button class="chapter-tag" data-chapter="ch12">Ch. 12</button>
+          <button class="chapter-tag" data-chapter="ch13">Ch. 13</button>
+          <button class="chapter-tag" data-chapter="ch14">Ch. 14</button>
+          <button class="chapter-tag" data-chapter="ch15">Ch. 15</button>
+          <button class="chapter-tag" data-chapter="ch16">Ch. 16</button>
+          <button class="chapter-tag" data-chapter="ch17">Ch. 17</button>
+        </div>
+      </div>
 
-const saveScoreChk     = document.getElementById('saveScore');
-const scoreValueEl     = document.getElementById('scoreValue');
-const saveScoreBtn     = document.getElementById('saveScoreBtn');
+      <p id="chapterHint" class="chapter-hint">
+        Tip: after choosing a chapter, press <strong>Ask Sci-Guru</strong>,
+        <strong>Generate quiz</strong> or <strong>Generate practical</strong>.
+      </p>
+    </section>
+  </div>
 
-const backendStatusEl  = document.getElementById('backendStatus');
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    const BACKEND_BASE = "https://sci-guru-backend.onrender.com"; // Render backend
 
-const explanationText  = document.getElementById('explanationText');
-const quizText         = document.getElementById('quizText');
-const practicalText    = document.getElementById('practicalText');
+    // ---------- DOM ELEMENTS ----------
+    const formLevelEl = document.getElementById("formLevel");
+    const topicEl = document.getElementById("topic");
+    const questionEl = document.getElementById("question");
 
-const chapterStatusEl  = document.getElementById('chapterStatus');
-const chapterHintEl    = document.getElementById('chapterHint');
+    const askBtn = document.getElementById("askBtn");
+    const quizBtn = document.getElementById("quizBtn");
+    const practicalBtn = document.getElementById("practicalBtn");
 
-let selectedChapterKey = null;
+    const saveScoreChk = document.getElementById("saveScore");
+    const scoreValueEl = document.getElementById("scoreValue");
+    const saveScoreBtn = document.getElementById("saveScoreBtn");
 
-// ---------- FORM 1 TOPICS DROPDOWN (simple grouped list) ----------
-const form1Topics = [
-  "",
-  "Living things & characteristics of life",
-  "Cells and simple microscopes",
-  "Human body systems & hygiene",
-  "Ecosystems & environment",
-  "States of matter",
-  "Mixtures & separation methods",
-  "Density & flotation",
-  "Electricity & magnetism"
-];
+    const backendStatusEl = document.getElementById("backendStatus");
 
-function populateTopicsForForm(form) {
-  topicEl.innerHTML = "";
-  const defaultOpt = document.createElement('option');
-  defaultOpt.value = "";
-  defaultOpt.textContent = "-- Optional: choose a topic --";
-  topicEl.appendChild(defaultOpt);
+    const explanationText = document.getElementById("explanationText");
+    const quizText = document.getElementById("quizText");
+    const practicalText = document.getElementById("practicalText");
 
-  if (form === "Form 1") {
-    form1Topics.forEach(t => {
-      if (!t) return;
-      const opt = document.createElement('option');
-      opt.value = t;
-      opt.textContent = t;
-      topicEl.appendChild(opt);
-    });
-  } else {
-    // other forms can be added later
-  }
-}
+    const chapterStatusEl = document.getElementById("chapterStatus");
+    const chapterHintEl = document.getElementById("chapterHint");
 
-formLevelEl.addEventListener('change', () => {
-  populateTopicsForForm(formLevelEl.value);
-  selectedChapterKey = null;
-  clearChapterHighlight();
-  chapterStatusEl.textContent = "No chapter tag selected (you can still ask any question).";
-});
+    let selectedChapterKey = null;
 
-// initialise for Form 1
-populateTopicsForForm("Form 1");
+    // ---------- FORM 1 TOPICS ----------
+    const form1Topics = [
+      "",
+      "Living things & characteristics of life",
+      "Cells and simple microscopes",
+      "Human body systems & hygiene",
+      "Ecosystems & environment",
+      "States of matter",
+      "Mixtures & separation methods",
+      "Density & flotation",
+      "Electricity & magnetism"
+    ];
 
-// ---------- CHAPTER DATA (1 – 17) ----------
-const chapterData = {
-  ch1: {
-    label: "Ch. 1 – Living things & characteristics of life",
-    topic: "Living things & characteristics of life",
-    sampleQuestion: "Explain the basic characteristics of living things using Zimbabwean farm examples.",
-    practicalFocus: "Simple observations comparing living and non-living things in the school yard."
-  },
-  ch2: {
-    label: "Ch. 2 – Cells and simple microscopes",
-    topic: "Cells and simple microscopes",
-    sampleQuestion: "Explain what cells are and how a simple microscope is used in a school lab.",
-    practicalFocus: "Using a hand lens or simple microscope to observe onion cells or leaf surfaces."
-  },
-  ch3: {
-    label: "Ch. 3 – Human body systems & hygiene",
-    topic: "Human body systems & hygiene",
-    sampleQuestion: "Describe the main human body systems and give examples of good hygiene practices.",
-    practicalFocus: "Hand-washing investigation comparing clean vs dirty hands using simple indicators."
-  },
-  ch4: {
-    label: "Ch. 4 – Ecosystems & environment",
-    topic: "Ecosystems & environment",
-    sampleQuestion: "What is an ecosystem? Use a Zimbabwean river or veld as an example.",
-    practicalFocus: "Mini-ecosystem in a bottle or school garden observation activity."
-  },
-  ch5: {
-    label: "Ch. 5 – States of matter",
-    topic: "States of matter",
-    sampleQuestion: "Explain the three states of matter with examples from a Zimbabwean kitchen.",
-    practicalFocus: "Heating and cooling water to show melting, boiling and condensation."
-  },
-  ch6: {
-    label: "Ch. 6 – Mixtures & separation methods",
-    topic: "Mixtures & separation methods",
-    sampleQuestion: "Explain how we can separate sand and salt in a mixture.",
-    practicalFocus: "Filtration, evaporation and magnet separation for different mixtures."
-  },
-  ch7: {
-    label: "Ch. 7 – Density & flotation",
-    topic: "Density & flotation",
-    sampleQuestion: "Use the imbokodo and plastic bucket example to explain density and flotation.",
-    practicalFocus: "Comparing sinking and floating of different objects in water."
-  },
-  ch8: {
-    label: "Ch. 8 – Electricity & magnetism",
-    topic: "Electricity & magnetism",
-    sampleQuestion: "Explain a simple electric circuit used to light a bulb in a rural home.",
-    practicalFocus: "Building a simple circuit with a cell, switch and bulb."
-  },
-  ch9: {
-    label: "Ch. 9 – Weather & climate",
-    topic: "",
-    sampleQuestion: "Explain the difference between weather and climate using Zimbabwe locations.",
-    practicalFocus: "Recording daily weather observations and drawing simple graphs."
-  },
-  ch10: {
-    label: "Ch. 10 – Soil & agriculture",
-    topic: "",
-    sampleQuestion: "Describe different soil types and how farmers test soil quality.",
-    practicalFocus: "Soil texture test and simple water-holding experiment."
-  },
-  ch11: {
-    label: "Ch. 11 – Energy sources",
-    topic: "",
-    sampleQuestion: "Compare renewable and non-renewable energy sources used in Zimbabwe.",
-    practicalFocus: "Mini-investigation on solar vs battery-powered devices at school."
-  },
-  ch12: {
-    label: "Ch. 12 – Forces & motion",
-    topic: "",
-    sampleQuestion: "Explain friction using examples from everyday life (e.g. bicycle brakes).",
-    practicalFocus: "Rolling objects on different surfaces to compare friction."
-  },
-  ch13: {
-    label: "Ch. 13 – Light & sound",
-    topic: "",
-    sampleQuestion: "How does light travel and how do we make echoes?",
-    practicalFocus: "Simple experiments with mirrors, shadows and echo observation."
-  },
-  ch14: {
-    label: "Ch. 14 – Health & disease",
-    topic: "",
-    sampleQuestion: "Explain how diseases spread and how good hygiene prevents them.",
-    practicalFocus: "Hand-washing / cleaning surfaces experiment using coloured water or flour."
-  },
-  ch15: {
-    label: "Ch. 15 – End-of-form revision",
-    topic: "",
-    sampleQuestion: "Create a mixed revision question set for Form 1 science topics.",
-    practicalFocus: "Revision practical combining measurements, observations and recording."
-  },
-  ch16: {
-    label: "Ch. 16 – Science & technology in Zimbabwe",
-    topic: "",
-    sampleQuestion: "Explain how science and technology are used in Zimbabwean industries.",
-    practicalFocus: "Research-style activity on a local industry (e.g. Hwange, farms, hospitals)."
-  },
-  ch17: {
-    label: "Ch. 17 – Careers in science",
-    topic: "",
-    sampleQuestion: "List science-related careers and how practical work in school prepares learners.",
-    practicalFocus: "Career poster or interview project with a local science professional."
-  }
-};
+    function populateTopicsForForm(form) {
+      topicEl.innerHTML = "";
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Optional: choose a topic --";
+      topicEl.appendChild(defaultOpt);
 
-// ---------- CHAPTER CLICK HANDLING ----------
-function clearChapterHighlight() {
-  document.querySelectorAll('.chapter-tag').forEach(btn => {
-    btn.classList.remove('active-chapter');
-  });
-}
-
-document.querySelectorAll('.chapter-tag').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const key = btn.dataset.chapter;
-    const data = chapterData[key];
-
-    selectedChapterKey = key;
-    clearChapterHighlight();
-    btn.classList.add('active-chapter');
-
-    // If this chapter has a mapped topic, select it
-    if (data.topic) {
-      for (const opt of topicEl.options) {
-        if (opt.value === data.topic) {
-          opt.selected = true;
-          break;
-        }
+      if (form === "Form 1") {
+        form1Topics.forEach((t) => {
+          if (!t) return;
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.textContent = t;
+          topicEl.appendChild(opt);
+        });
       }
-    } else {
-      topicEl.value = "";
     }
 
-    // Autofill question box with sample question
-    questionEl.value = data.sampleQuestion;
-
-    chapterStatusEl.textContent = "Chapter tag selected: " + data.label;
-    chapterHintEl.textContent = "Experiment focus: " + data.practicalFocus +
-      " · Now click Ask Sci-Guru, Generate quiz or Generate practical.";
-  });
-});
-
-// ---------- API CALL HELPER ----------
-async function callSciGuru(endpoint, targetEl) {
-  const formLevel   = formLevelEl.value;
-  const topic       = topicEl.value;
-  const question    = questionEl.value.trim();
-
-  if (!question) {
-    alert("Please type a question first.");
-    return;
-  }
-
-  targetEl.textContent = "Thinking (loading)...";
-  backendStatusEl.textContent = "Contacting backend...";
-
-  try {
-    const res = await fetch(BACKEND_BASE + endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        formLevel,
-        topic,
-        question,
-        chapterTag: selectedChapterKey // used by backend to match chapter/experiment
-      })
+    formLevelEl.addEventListener("change", () => {
+      populateTopicsForForm(formLevelEl.value);
+      selectedChapterKey = null;
+      clearChapterHighlight();
+      chapterStatusEl.textContent =
+        "No chapter tag selected (you can still ask any question).";
     });
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
+    // init
+    populateTopicsForForm("Form 1");
 
-    // Try to display something sensible from whatever the backend returns
-    const text =
-      data.answer ||
-      data.result ||
-      data.message ||
-      data.quiz ||
-      data.practical ||
-      JSON.stringify(data, null, 2);
+    // ---------- CHAPTER DATA (1 – 17) ----------
+    const chapterData = {
+      ch1: {
+        label: "Ch. 1 – Living things & characteristics of life",
+        topic: "Living things & characteristics of life",
+        sampleQuestion:
+          "Explain the basic characteristics of living things using Zimbabwean farm examples.",
+        practicalFocus:
+          "Simple observations comparing living and non-living things in the school yard."
+      },
+      ch2: {
+        label: "Ch. 2 – Cells and simple microscopes",
+        topic: "Cells and simple microscopes",
+        sampleQuestion:
+          "Explain what cells are and how a simple microscope is used in a school lab.",
+        practicalFocus:
+          "Using a hand lens or simple microscope to observe onion cells or leaf surfaces."
+      },
+      ch3: {
+        label: "Ch. 3 – Human body systems & hygiene",
+        topic: "Human body systems & hygiene",
+        sampleQuestion:
+          "Describe the main human body systems and give examples of good hygiene practices.",
+        practicalFocus:
+          "Hand-washing investigation comparing clean vs dirty hands using simple indicators."
+      },
+      ch4: {
+        label: "Ch. 4 – Ecosystems & environment",
+        topic: "Ecosystems & environment",
+        sampleQuestion:
+          "What is an ecosystem? Use a Zimbabwean river or veld as an example.",
+        practicalFocus:
+          "Mini-ecosystem in a bottle or school garden observation activity."
+      },
+      ch5: {
+        label: "Ch. 5 – States of matter",
+        topic: "States of matter",
+        sampleQuestion:
+          "Explain the three states of matter with examples from a Zimbabwean kitchen.",
+        practicalFocus:
+          "Heating and cooling water to show melting, boiling and condensation."
+      },
+      ch6: {
+        label: "Ch. 6 – Mixtures & separation methods",
+        topic: "Mixtures & separation methods",
+        sampleQuestion: "Explain how we can separate sand and salt in a mixture.",
+        practicalFocus:
+          "Filtration, evaporation and magnet separation for different mixtures."
+      },
+      ch7: {
+        label: "Ch. 7 – Density & flotation",
+        topic: "Density & flotation",
+        sampleQuestion:
+          "Use the imbokodo and plastic bucket example to explain density and flotation.",
+        practicalFocus:
+          "Comparing sinking and floating of different objects in water."
+      },
+      ch8: {
+        label: "Ch. 8 – Electricity & magnetism",
+        topic: "Electricity & magnetism",
+        sampleQuestion:
+          "Explain a simple electric circuit used to light a bulb in a rural home.",
+        practicalFocus:
+          "Building a simple circuit with a cell, switch and bulb."
+      },
+      ch9: {
+        label: "Ch. 9 – Weather & climate",
+        topic: "",
+        sampleQuestion:
+          "Explain the difference between weather and climate using Zimbabwe locations.",
+        practicalFocus:
+          "Recording daily weather observations and drawing simple graphs."
+      },
+      ch10: {
+        label: "Ch. 10 – Soil & agriculture",
+        topic: "",
+        sampleQuestion:
+          "Describe different soil types and how farmers test soil quality.",
+        practicalFocus:
+          "Soil texture test and simple water-holding experiment."
+      },
+      ch11: {
+        label: "Ch. 11 – Energy sources",
+        topic: "",
+        sampleQuestion:
+          "Compare renewable and non-renewable energy sources used in Zimbabwe.",
+        practicalFocus:
+          "Mini-investigation on solar vs battery-powered devices at school."
+      },
+      ch12: {
+        label: "Ch. 12 – Forces & motion",
+        topic: "",
+        sampleQuestion:
+          "Explain friction using examples from everyday life (e.g. bicycle brakes).",
+        practicalFocus:
+          "Rolling objects on different surfaces to compare friction."
+      },
+      ch13: {
+        label: "Ch. 13 – Light & sound",
+        topic: "",
+        sampleQuestion:
+          "How does light travel and how do we make echoes?",
+        practicalFocus:
+          "Simple experiments with mirrors, shadows and echo observation."
+      },
+      ch14: {
+        label: "Ch. 14 – Health & disease",
+        topic: "",
+        sampleQuestion:
+          "Explain how diseases spread and how good hygiene prevents them.",
+        practicalFocus:
+          "Hand-washing / cleaning surfaces experiment using coloured water or flour."
+      },
+      ch15: {
+        label: "Ch. 15 – End-of-form revision",
+        topic: "",
+        sampleQuestion:
+          "Create a mixed revision question set for Form 1 science topics.",
+        practicalFocus:
+          "Revision practical combining measurements, observations and recording."
+      },
+      ch16: {
+        label: "Ch. 16 – Science & technology in Zimbabwe",
+        topic: "",
+        sampleQuestion:
+          "Explain how science and technology are used in Zimbabwean industries.",
+        practicalFocus:
+          "Research-style activity on a local industry (e.g. Hwange, farms, hospitals)."
+      },
+      ch17: {
+        label: "Ch. 17 – Careers in science",
+        topic: "",
+        sampleQuestion:
+          "List science-related careers and how practical work in school prepares learners.",
+        practicalFocus:
+          "Career poster or interview project with a local science professional."
+      }
+    };
 
-    targetEl.textContent = text;
-    backendStatusEl.textContent = "Sci-Guru is ready. Backend: LIVE.";
-  } catch (err) {
-    console.error(err);
-    targetEl.textContent = "❌ There was a problem talking to Sci-Guru. Please check your internet or try again.";
-    backendStatusEl.textContent = "Backend: CHECK CONNECTION.";
-  }
-}
+    // ---------- CHAPTER CLICK HANDLING ----------
+    function clearChapterHighlight() {
+      document.querySelectorAll(".chapter-tag").forEach((btn) => {
+        btn.classList.remove("active-chapter");
+      });
+    }
 
-// ---------- BUTTON EVENTS ----------
-askBtn.addEventListener('click', () => {
-  callSciGuru("/api/ask", explanationText);
-});
+    document.querySelectorAll(".chapter-tag").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.chapter;
+        const data = chapterData[key];
 
-quizBtn.addEventListener('click', () => {
-  callSciGuru("/api/quiz", quizText);
-});
+        selectedChapterKey = key;
+        clearChapterHighlight();
+        btn.classList.add("active-chapter");
 
-practicalBtn.addEventListener('click', () => {
-  callSciGuru("/api/practical", practicalText);
-});
+        if (data.topic) {
+          for (const opt of topicEl.options) {
+            if (opt.value === data.topic) {
+              opt.selected = true;
+              break;
+            }
+          }
+        } else {
+          topicEl.value = "";
+        }
 
-// ---------- SAVE SCORE (LOCAL STORAGE) ----------
-const SCORE_KEY = "sciguru_topic_scores";
+        questionEl.value = data.sampleQuestion;
 
-function loadScores() {
-  try {
-    return JSON.parse(localStorage.getItem(SCORE_KEY)) || {};
-  } catch {
-    return {};
-  }
-}
+        chapterStatusEl.textContent = "Chapter tag selected: " + data.label;
+        chapterHintEl.textContent =
+          "Experiment focus: " +
+          data.practicalFocus +
+          " · Now click Ask Sci-Guru, Generate quiz or Generate practical.";
+      });
+    });
 
-function saveScores(scores) {
-  localStorage.setItem(SCORE_KEY, JSON.stringify(scores));
-}
+    // ---------- API CALL HELPER ----------
+    async function callSciGuru(endpoint, targetEl) {
+      const formLevel = formLevelEl.value;
+      const topic = topicEl.value;
+      const question = questionEl.value.trim();
 
-saveScoreBtn.addEventListener('click', () => {
-  if (!saveScoreChk.checked) {
-    alert("Tick the box 'I want to save my quiz result' first.");
-    return;
-  }
-  const value = parseFloat(scoreValueEl.value);
-  if (isNaN(value) || value < 0 || value > 100) {
-    alert("Please enter a score between 0 and 100.");
-    return;
-  }
+      if (!question) {
+        alert("Please type a question first.");
+        return;
+      }
 
-  const form = formLevelEl.value;
-  const topic = topicEl.value || "General";
+      targetEl.textContent = "Thinking (loading)...";
+      backendStatusEl.textContent = "Contacting backend...";
 
-  const scores = loadScores();
-  if (!scores[form]) scores[form] = {};
-  const prev = scores[form][topic] ?? null;
+      try {
+        const res = await fetch(BACKEND_BASE + endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            formLevel,
+            topic,
+            question,
+            chapterTag: selectedChapterKey
+          })
+        });
 
-  if (prev === null || value > prev) {
-    scores[form][topic] = value;
-    saveScores(scores);
-    alert("Best score for " + topic + " updated to " + value + "%.");
-  } else {
-    alert("You already have a higher or equal score saved for this topic (" + prev + "%).");
-  }
-});
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        const text =
+          data.answer ||
+          data.result ||
+          data.message ||
+          data.quiz ||
+          data.practical ||
+          JSON.stringify(data, null, 2);
 
-// initial status text
-backendStatusEl.textContent = "Sci-Guru is ready. Backend: waiting for first question.";
+        targetEl.textContent = text;
+        backendStatusEl.textContent = "Sci-Guru is ready. Backend: LIVE.";
+      } catch (err) {
+        console.error(err);
+        targetEl.textContent =
+          "❌ There was a problem talking to Sci-Guru. Please check your internet or try again.";
+        backendStatusEl.textContent = "Backend: CHECK CONNECTION.";
+      }
+    }
 
-</script>
+    askBtn.addEventListener("click", () => {
+      callSciGuru("/api/ask", explanationText);
+    });
 
+    quizBtn.addEventListener("click", () => {
+      callSciGuru("/api/quiz", quizText);
+    });
+
+    practicalBtn.addEventListener("click", () => {
+      callSciGuru("/api/practical", practicalText);
+    });
+
+    // ---------- SAVE SCORE (LOCAL STORAGE) ----------
+    const SCORE_KEY = "sciguru_topic_scores";
+
+    function loadScores() {
+      try {
+        return JSON.parse(localStorage.getItem(SCORE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveScores(scores) {
+      localStorage.setItem(SCORE_KEY, JSON.stringify(scores));
+    }
+
+    saveScoreBtn.addEventListener("click", () => {
+      if (!saveScoreChk.checked) {
+        alert("Tick the box 'I want to save my quiz result' first.");
+        return;
+      }
+      const value = parseFloat(scoreValueEl.value);
+      if (isNaN(value) || value < 0 || value > 100) {
+        alert("Please enter a score between 0 and 100.");
+        return;
+      }
+
+      const form = formLevelEl.value;
+      const topic = topicEl.value || "General";
+
+      const scores = loadScores();
+      if (!scores[form]) scores[form] = {};
+      const prev = scores[form][topic] ?? null;
+
+      if (prev === null || value > prev) {
+        scores[form][topic] = value;
+        saveScores(scores);
+        alert(
+          "Best score for " + topic + " updated to " + value + "%."
+        );
+      } else {
+        alert(
+          "You already have a higher or equal score saved for this topic (" +
+            prev +
+            "%)."
+        );
+      }
+    });
+
+    backendStatusEl.textContent =
+      "Sci-Guru is ready. Backend: waiting for first question.";
+  </script>
 </body>
 </html>
-    </section>
