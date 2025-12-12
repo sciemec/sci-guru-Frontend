@@ -1,200 +1,147 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sci-Guru AI Science Tutor</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sci-Guru AI Tutor</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
-<body class="app-body">
-<h1 style="background:#ff0; padding:8px; text-align:center;">
-  TEST VERSION – Sci-Guru
-</h1>
-<!-- 🌟 Top Navigation -->
-<header class="top-nav">
-    <div class="nav-left">
-        <img src="lec-logo.jpg" alt="LEC Biotec logo" class="nav-logo" />
-        <div class="nav-title-block">
-            <div class="nav-title">Sci-Guru AI Science Tutor</div>
-            <div class="nav-subtitle">Zimbabwe's AI-powered tutor for the ZIMSEC / Heritage-Based curriculum</div>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">
+        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+        <div class="title">
+          <b>Sci-Guru AI Science Tutor</b>
+          <span>ZIMSEC / Heritage-Based curriculum</span>
         </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a class="active" href="tutor.html">AI Tutor</a>
+        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="nav-right">
-        <a href="index.html" class="nav-btn">Home</a>
-        <a href="tutor.html" class="nav-btn active">AI Tutor</a>
-    </div>
-</header>
-
-<!-- 🌟 Main Layout -->
-<div class="page-container">
-
-    <!-- LEFT SIDE -->
-    <div class="left-panel">
+  <main class="container" style="padding:18px 0 30px;">
+    <div class="split">
+      <!-- LEFT: Ask -->
+      <section class="card">
         <h2>Ask Sci-Guru</h2>
+        <p class="small">Choose Form and Topic, then ask a question.</p>
 
-        <label>Form / Level</label>
-        <select id="formSelect">
-            <option value="Form 1">Form 1</option>
+        <label class="small" for="form">Form / Level</label>
+        <select id="form" class="input">
+          <option value="Form 1">Form 1</option>
+          <option value="Form 2">Form 2</option>
+          <option value="Form 3">Form 3</option>
+          <option value="Form 4">Form 4</option>
         </select>
 
-        <label>Topic (Form 1 topics grouped + general)</label>
-        <select id="topicSelect">
-            <option value="">-- Optional: choose a topic --</option>
-            <option value="Cells">Cells</option>
-            <option value="Classification">Classification</option>
-            <option value="States of Matter">States of Matter</option>
-            <option value="Mixtures">Mixtures</option>
-            <option value="Forces">Forces</option>
-            <option value="Energy">Energy</option>
-            <option value="Heat">Heat</option>
-            <option value="Light">Light</option>
-            <option value="Sound">Sound</option>
-            <option value="Electricity">Electricity</option>
-            <option value="Magnetism">Magnetism</option>
-            <option value="Earth & Space">Earth & Space</option>
-            <option value="Human Body">Human Body</option>
-            <option value="Environment">Environment</option>
-            <option value="Careers">Careers</option>
+        <div style="height:10px"></div>
+
+        <label class="small" for="topic">Topic</label>
+        <select id="topic" class="input">
+          <option value="">Optional: choose a topic</option>
         </select>
 
-        <label>Your question</label>
-        <textarea id="userQuestion" placeholder="Explain density using Zimbabwean examples..."></textarea>
+        <div style="height:10px"></div>
 
-        <div class="btn-row">
-            <button id="askBtn" class="main-btn">Ask Sci-Guru</button>
-            <button id="quizBtn" class="sec-btn">Generate quiz</button>
+        <label class="small" for="q">Your question</label>
+        <textarea id="q" class="input" placeholder="e.g. Explain density using Zimbabwean examples..."></textarea>
+
+        <div style="height:10px"></div>
+
+        <div class="actions">
+          <button class="btn primary" id="askBtn">Ask Sci-Guru</button>
+          <button class="btn" id="quizBtn">Generate quiz</button>
+          <button class="btn" id="pracBtn">Generate practical</button>
+          <a class="btn" href="virtual-lab-hub.html">Open virtual lab hub</a>
         </div>
 
-        <div class="btn-row">
-            <button id="practicalBtn" class="sec-btn">Generate practical</button>
-            <button onclick="openLab()" class="sec-btn">Open virtual lab hub</button>
+        <div id="how-to" style="margin-top:14px" class="small">
+          Tip: If you don’t select a topic, Sci-Guru answers generally for the chosen Form.
         </div>
+      </section>
 
-        <label class="save-label">
-            <input type="checkbox" id="saveScoreCheck" /> I want to save my quiz result for this topic
-        </label>
-
-        <div class="score-box">
-            I scored <input type="text" id="scoreInput" placeholder="e.g. 75" /> %
-            <button id="saveScoreBtn" class="green-btn">Save topic score</button>
+      <!-- RIGHT: Results -->
+      <section class="card">
+        <h2>Output</h2>
+        <p class="small">Your explanation / quiz / practical will appear here.</p>
+        <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
+          <p class="small" style="margin:0">No response yet.</p>
         </div>
-
-        <div id="backendStatus" class="status-bar">Sci-Guru is ready. Backend: <span id="statusValue">LIVE.</span></div>
+      </section>
     </div>
+  </main>
 
-    <!-- RIGHT SIDE -->
-    <div class="right-panel">
-        <h3 id="chapterLabel">No chapter tag selected.</h3>
+  <script>
+    // Simple topic list (you can expand anytime)
+    const TOPICS = {
+      "Form 1": [
+        "Measurement & Safety",
+        "States of Matter",
+        "Density",
+        "Separation of Mixtures",
+        "Electric Circuits (Basics)"
+      ],
+      "Form 2": [
+        "Forces & Pressure",
+        "Energy & Heat",
+        "Cells & Microscopes",
+        "Acids, Bases & Salts"
+      ],
+      "Form 3": [
+        "Chemical Reactions",
+        "Electricity & Magnetism",
+        "Ecology & Environment"
+      ],
+      "Form 4": [
+        "Rates of Reaction",
+        "Genetics (Basics)",
+        "Waves & Light",
+        "Organic Chemistry (Basics)"
+      ]
+    };
 
-        <div class="result-box">
-            <h4>EXPLANATION</h4>
-            <div id="explanationBox" class="result-content">Sci-Guru will answer here...</div>
-        </div>
+    const formEl = document.getElementById('form');
+    const topicEl = document.getElementById('topic');
+    const qEl = document.getElementById('q');
+    const outEl = document.getElementById('out');
 
-        <div class="result-box">
-            <h4>QUIZ</h4>
-            <div id="quizBox" class="result-content">Quiz will appear here...</div>
-        </div>
+    function loadTopics() {
+      const f = formEl.value;
+      const items = TOPICS[f] || [];
+      topicEl.innerHTML = '<option value="">Optional: choose a topic</option>' +
+        items.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
 
-        <div class="result-box">
-            <h4>PRACTICAL</h4>
-            <div id="practicalBox" class="result-content">Practical experiment will appear here...</div>
-        </div>
+    function render(text) {
+      outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.6">${text}</div>`;
+    }
 
-        <!-- CHAPTER BUTTONS -->
-        <div class="chapter-section">
-            <h4>Form 1 chapters · Tap a chapter to auto-fill topic, sample question & experiment focus.</h4>
-            <div class="chapters-grid">
-                <button class="chapter-btn" data-chapter="1">Ch. 1</button>
-                <button class="chapter-btn" data-chapter="2">Ch. 2</button>
-                <button class="chapter-btn" data-chapter="3">Ch. 3</button>
-                <button class="chapter-btn" data-chapter="4">Ch. 4</button>
-                <button class="chapter-btn" data-chapter="5">Ch. 5</button>
-                <button class="chapter-btn" data-chapter="6">Ch. 6</button>
-                <button class="chapter-btn" data-chapter="7">Ch. 7</button>
-                <button class="chapter-btn" data-chapter="8">Ch. 8</button>
-                <button class="chapter-btn" data-chapter="9">Ch. 9</button>
-                <button class="chapter-btn" data-chapter="10">Ch. 10</button>
-                <button class="chapter-btn" data-chapter="11">Ch. 11</button>
-                <button class="chapter-btn" data-chapter="12">Ch. 12</button>
-                <button class="chapter-btn" data-chapter="13">Ch. 13</button>
-                <button class="chapter-btn" data-chapter="14">Ch. 14</button>
-                <button class="chapter-btn" data-chapter="15">Ch. 15</button>
-                <button class="chapter-btn" data-chapter="16">Ch. 16</button>
-                <button class="chapter-btn" data-chapter="17">Ch. 17</button>
-            </div>
-        </div>
+    // NOTE: GitHub Pages is static. This is a placeholder response.
+    // If you later connect to a backend API, tell me the endpoint and I’ll wire it up.
+    function fakeAnswer(mode){
+      const f = formEl.value;
+      const t = topicEl.value || "General";
+      const q = qEl.value.trim() || "No question typed.";
+      return `Mode: ${mode}\nForm: ${f}\nTopic: ${t}\n\n${mode === 'Quiz'
+        ? '1) Question...\n2) Question...\n3) Question...\n\n(You can connect API later for real generation.)'
+        : mode === 'Practical'
+        ? 'Aim:\nApparatus:\nMethod:\nResults:\nSafety:\n\n(You can connect API later for real generation.)'
+        : 'Answer:\n\n(This is a placeholder on GitHub Pages. Connect API for real tutor responses.)'
+      }\n\nYour input: ${q}`;
+    }
 
-    </div>
-</div>
+    document.getElementById('askBtn').onclick = () => render(fakeAnswer('Explain'));
+    document.getElementById('quizBtn').onclick = () => render(fakeAnswer('Quiz'));
+    document.getElementById('pracBtn').onclick = () => render(fakeAnswer('Practical'));
+    formEl.addEventListener('change', loadTopics);
 
-<!-- ================================
-     JAVASCRIPT SECTION (COMPLETE)
-================================ -->
-<script>
-// ------------------------------
-// FORM 1 CHAPTER DATA
-// ------------------------------
-const form1Chapters = [
-  { id: 1, title: "Introduction to Science", topic: "Science", question: "What is science?", experiment: "Identify objects and classify them as living/non-living." },
-  { id: 2, title: "Cells", topic: "Cells", question: "What is a cell?", experiment: "Virtual onion cell microscope." },
-  { id: 3, title: "Classification", topic: "Classification", question: "How are organisms classified?", experiment: "Group organisms by observable features." },
-  { id: 4, title: "States of Matter", topic: "States of Matter", question: "Explain solids, liquids, gases.", experiment: "Heat & cooling model simulation." },
-  { id: 5, title: "Mixtures", topic: "Mixtures", question: "What is a mixture?", experiment: "Filtration & evaporation simulation." },
-  { id: 6, title: "Forces", topic: "Forces", question: "What is a force?", experiment: "Push and pull force meter simulation." },
-  { id: 7, title: "Energy", topic: "Energy", question: "What is energy?", experiment: "Energy transformation model." },
-  { id: 8, title: "Heat", topic: "Heat", question: "What is conduction?", experiment: "Metal rod heating simulation." },
-  { id: 9, title: "Light", topic: "Light", question: "How does light travel?", experiment: "Ray box simulation." },
-  { id: 10, title: "Sound", topic: "Sound", question: "What is sound?", experiment: "Vibration wave simulation." },
-  { id: 11, title: "Electricity", topic: "Electricity", question: "What is an electric circuit?", experiment: "Build-a-circuit simulation." },
-  { id: 12, title: "Magnetism", topic: "Magnetism", question: "What is a magnet?", experiment: "Magnetic field lines simulation." },
-  { id: 13, title: "Earth & Space", topic: "Earth & Space", question: "What causes day and night?", experiment: "Earth rotation model." },
-  { id: 14, title: "Human Body", topic: "Human Body", question: "Explain the digestive system.", experiment: "Food digestion model." },
-  { id: 15, title: "Environment", topic: "Environment", question: "What causes water pollution?", experiment: "Water filtration demo." },
-  { id: 16, title: "Science & Society", topic: "Science & Society", question: "Why is science important?", experiment: "Community science task." },
-  { id: 17, title: "Careers", topic: "Careers", question: "What are science careers?", experiment: "Career poster activity." }
-];
-
-// ------------------------------
-// CHAPTER CLICK HANDLING
-// ------------------------------
-const chapterButtons = document.querySelectorAll(".chapter-btn");
-let selectedChapter = null;
-
-chapterButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    // Clear highlight
-    chapterButtons.forEach(b => b.classList.remove("active-chapter"));
-
-    // Add active highlight
-    btn.classList.add("active-chapter");
-
-    // Load chapter data
-    const chapterId = parseInt(btn.getAttribute("data-chapter"));
-    selectedChapter = form1Chapters.find(ch => ch.id === chapterId);
-
-    document.getElementById("topicSelect").value = selectedChapter.topic;
-    document.getElementById("userQuestion").value = selectedChapter.question;
-
-    document.getElementById("practicalBox").innerText =
-      selectedChapter.experiment || "No experiment defined.";
-
-    document.getElementById("chapterLabel").innerText =
-      `Chapter tag selected: Ch. ${selectedChapter.id} – ${selectedChapter.title}`;
-  });
-});
-
-// ------------------------------
-// VIRTUAL LAB LINK
-// ------------------------------
-function openLab() {
-  window.location.href = "dashboard.html";
-}
-</script>
-
+    loadTopics();
+  </script>
 </body>
 </html>
-
