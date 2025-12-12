@@ -5,7 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sci-Guru AI Tutor</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Tutor page layout */
+    .layout{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:14px;
+      padding:18px 0 30px;
+    }
+    .chapters{
+      position:sticky;
+      top:76px;
+      height: calc(100vh - 96px);
+      overflow:auto;
+      padding-right:6px;
+    }
+    .chapterBtn{
+      width:100%;
+      text-align:left;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor:pointer;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+    .chapterBtn small{
+      display:block;
+      color:var(--muted);
+      font-weight:500;
+      margin-top:4px;
+    }
+    .chapterBtn.active{
+      border-color: rgba(47,107,255,.55);
+      box-shadow: 0 0 0 4px rgba(47,107,255,.12);
+    }
+    .mainArea{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.92rem;
+    }
+    .mutedLine{
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .chapters{position:relative; top:auto; height:auto}
+      .mainArea{grid-template-columns:1fr}
+    }
+  </style>
 </head>
+
 <body>
   <header class="topbar">
     <div class="container row">
@@ -25,87 +85,172 @@
     </div>
   </header>
 
-  <main class="container" style="padding:18px 0 30px;">
-    <div class="split">
-      <section class="card">
-        <h2>Ask Sci-Guru</h2>
-        <p class="small">Choose Form and Topic, then ask a question.</p>
+  <main class="container">
+    <div class="layout">
+
+      <!-- LEFT: CHAPTERS -->
+      <aside class="card chapters">
+        <h2 style="margin-bottom:8px;">Chapters (1–17)</h2>
+        <p class="small" style="margin-bottom:12px;">Select a chapter to load topics.</p>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
           <span class="badge" id="apiStatus">API: checking...</span>
           <span class="badge">Render Free may sleep</span>
         </div>
 
-        <label class="small" for="form">Form / Level</label>
-        <select id="form" class="input">
-          <option value="Form 1">Form 1</option>
-          <option value="Form 2">Form 2</option>
-          <option value="Form 3">Form 3</option>
-          <option value="Form 4">Form 4</option>
-        </select>
+        <div id="chapterList"></div>
 
-        <div style="height:10px"></div>
-
-        <label class="small" for="topic">Topic</label>
-        <select id="topic" class="input">
-          <option value="">Optional: choose a topic</option>
-        </select>
-
-        <div style="height:10px"></div>
-
-        <label class="small" for="q">Your question</label>
-        <textarea id="q" class="input" placeholder="e.g. Explain measurement in science..."></textarea>
-
-        <div style="height:10px"></div>
-
-        <div class="actions">
-          <button class="btn primary" id="askBtn">Ask Sci-Guru</button>
-          <button class="btn" id="quizBtn">Generate quiz</button>
-          <button class="btn" id="pracBtn">Generate practical</button>
-          <a class="btn" href="virtual-lab-hub.html">Open virtual lab hub</a>
+        <div style="margin-top:10px" class="small">
+          Tip: If chapter names differ from your book, tell me and we’ll adjust them.
         </div>
+      </aside>
 
-        <div style="margin-top:14px" class="small">
-          Tip: If you don’t select a topic, Sci-Guru answers generally for the chosen Form.
-        </div>
+      <!-- RIGHT: ASK + OUTPUT -->
+      <section class="mainArea">
+        <!-- ASK -->
+        <section class="card">
+          <h2>Ask Sci-Guru</h2>
+          <p class="small">Choose Form, Chapter and Topic, then ask a question.</p>
+
+          <label class="small" for="form">Form / Level</label>
+          <select id="form" class="input">
+            <option value="Form 1">Form 1</option>
+            <option value="Form 2">Form 2</option>
+            <option value="Form 3">Form 3</option>
+            <option value="Form 4">Form 4</option>
+          </select>
+
+          <div style="height:10px"></div>
+
+          <label class="small" for="chapter">Selected Chapter</label>
+          <input id="chapter" class="input" readonly />
+
+          <div style="height:10px"></div>
+
+          <label class="small" for="topic">Topic</label>
+          <select id="topic" class="input"></select>
+
+          <div style="height:10px"></div>
+
+          <label class="small" for="q">Your question</label>
+          <textarea id="q" class="input" placeholder="e.g. Explain electricity in simple terms using Zimbabwean examples..."></textarea>
+
+          <div style="height:10px"></div>
+
+          <div class="actions">
+            <button class="btn primary" id="askBtn">Ask Sci-Guru</button>
+            <button class="btn" id="quizBtn">Generate quiz</button>
+            <button class="btn" id="pracBtn">Generate practical</button>
+            <a class="btn" id="openLabBtn" href="virtual-lab-hub.html">Open related lab</a>
+          </div>
+
+          <div class="mutedLine" style="margin-top:12px;">
+            If the first request is slow, Render is waking up (free tier).
+          </div>
+        </section>
+
+        <!-- OUTPUT -->
+        <section class="card">
+          <h2>Output</h2>
+          <p class="small">Your explanation / quiz / practical will appear here.</p>
+
+          <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
+            <p class="small" style="margin:0">No response yet.</p>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="copyBtn">Copy answer</button>
+            <button class="btn" id="clearBtn">Clear</button>
+          </div>
+
+          <div class="small" style="margin-top:12px;">
+            <span class="mono">Tip:</span> You can ask “Explain”, “Give examples”, “Create a test”, “Practical steps”, etc.
+          </div>
+        </section>
       </section>
 
-      <section class="card">
-        <h2>Output</h2>
-        <p class="small">Your explanation / quiz / practical will appear here.</p>
-        <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
-          <p class="small" style="margin:0">No response yet.</p>
-        </div>
-      </section>
     </div>
   </main>
 
   <script>
-    // ✅ Your Render backend base URL:
+    // ✅ Your Render backend
     const API_BASE = "https://sci-guru-backend.onrender.com";
 
-    const TOPICS = {
-      "Form 1": ["Measurement & Safety","States of Matter","Density","Separation of Mixtures","Electric Circuits (Basics)"],
-      "Form 2": ["Forces & Pressure","Energy & Heat","Cells & Microscopes","Acids, Bases & Salts"],
-      "Form 3": ["Chemical Reactions","Electricity & Magnetism","Ecology & Environment"],
-      "Form 4": ["Rates of Reaction","Genetics (Basics)","Waves & Light","Organic Chemistry (Basics)"]
+    // ===== Chapters 1–17 (starter structure) =====
+    // We can change these titles to match your exact book later.
+    const CHAPTERS = [
+      { id: 1,  name: "Measurement & Safety", topics: ["Lab safety rules","SI units","Measuring length/mass/time","Accuracy & precision","Errors"] },
+      { id: 2,  name: "States of Matter", topics: ["Solids, liquids, gases","Particle model","Changes of state","Diffusion","Brownian motion"] },
+      { id: 3,  name: "Separating Mixtures", topics: ["Filtration","Evaporation","Distillation","Chromatography","Magnetism"] },
+      { id: 4,  name: "Density", topics: ["Density concept","Mass & volume","Floating & sinking","Relative density","Practical density experiment"] },
+      { id: 5,  name: "Heat & Temperature", topics: ["Heat vs temperature","Thermometers","Expansion","Conduction/Convection/Radiation","Cooling & insulation"] },
+      { id: 6,  name: "Forces & Pressure", topics: ["Types of forces","Friction","Pressure in solids/liquids/gases","Upthrust","Applications of pressure"] },
+      { id: 7,  name: "Work, Energy & Power", topics: ["Work done","Kinetic & potential energy","Energy conversions","Power","Efficiency"] },
+      { id: 8,  name: "Electric Circuits (Basics)", topics: ["Electric current","Voltage & resistance","Series circuits","Parallel circuits","Cells & batteries","Safety with electricity"] },
+      { id: 9,  name: "Magnetism & Electromagnets", topics: ["Magnetic materials","Magnetic fields","Electromagnets","Applications","Generators (intro)"] },
+      { id: 10, name: "Waves & Sound", topics: ["Wave properties","Sound production","Pitch & loudness","Echoes","Hearing & safety"] },
+      { id: 11, name: "Light", topics: ["Reflection","Refraction","Lenses","Images","Optical instruments"] },
+      { id: 12, name: "Cells & Microscopy", topics: ["Cell structure","Microscope use","Plant vs animal cells","Specialised cells","Health link"] },
+      { id: 13, name: "Reproduction (Basics)", topics: ["Human reproduction","Plant reproduction","Pollination","Fertilisation","Growth"] },
+      { id: 14, name: "Ecology & Environment", topics: ["Food chains/webs","Habitat","Population","Pollution","Conservation in Zimbabwe"] },
+      { id: 15, name: "Acids, Bases & Salts", topics: ["pH scale","Indicators","Neutralisation","Preparation of salts","Everyday examples"] },
+      { id: 16, name: "Chemical Reactions", topics: ["Types of reactions","Word equations","Balancing (intro)","Rates of reaction","Catalysts"] },
+      { id: 17, name: "Materials & Metals", topics: ["Properties of materials","Metals vs non-metals","Rusting","Alloys","Recycling"] }
+    ];
+
+    // ===== Map chapter -> best lab link (edit filenames to match your real files) =====
+    const LAB_LINKS = {
+      "Separating Mixtures": "sim-mixtures.html",
+      "Density": "sim-density.html",
+      "Electric Circuits (Basics)": "sim-electricity.html",
+      "Heat & Temperature": "virtual-lab-hub.html",
+      "Waves & Sound": "virtual-lab-hub.html",
+      "Light": "virtual-lab-hub.html"
     };
 
-    const formEl = document.getElementById('form');
-    const topicEl = document.getElementById('topic');
-    const qEl = document.getElementById('q');
-    const outEl = document.getElementById('out');
-    const apiStatusEl = document.getElementById('apiStatus');
+    // ===== DOM =====
+    const chapterListEl = document.getElementById("chapterList");
+    const chapterEl = document.getElementById("chapter");
+    const formEl = document.getElementById("form");
+    const topicEl = document.getElementById("topic");
+    const qEl = document.getElementById("q");
+    const outEl = document.getElementById("out");
+    const apiStatusEl = document.getElementById("apiStatus");
+    const openLabBtn = document.getElementById("openLabBtn");
 
-    function loadTopics() {
-      const f = formEl.value;
-      const items = TOPICS[f] || [];
-      topicEl.innerHTML = '<option value="">Optional: choose a topic</option>' +
-        items.map(t => `<option value="${t}">${t}</option>`).join('');
+    let selectedChapter = CHAPTERS[0];
+
+    function renderOutput(text){
+      outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.65">${text}</div>`;
     }
 
-    function render(text) {
-      outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.6">${text}</div>`;
+    function setChapter(ch){
+      selectedChapter = ch;
+      chapterEl.value = `Chapter ${ch.id}: ${ch.name}`;
+
+      // Load topics
+      topicEl.innerHTML = ch.topics.map(t => `<option value="${t}">${t}</option>`).join("");
+
+      // Lab link
+      const link = LAB_LINKS[ch.name] || "virtual-lab-hub.html";
+      openLabBtn.href = link;
+
+      // Highlight button
+      [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.id == ch.id);
+      });
+    }
+
+    function buildChapterButtons(){
+      chapterListEl.innerHTML = "";
+      CHAPTERS.forEach(ch=>{
+        const btn = document.createElement("button");
+        btn.className = "chapterBtn";
+        btn.dataset.id = ch.id;
+        btn.innerHTML = `Chapter ${ch.id}: ${ch.name}<small>${ch.topics.length} topics</small>`;
+        btn.onclick = ()=> setChapter(ch);
+        chapterListEl.appendChild(btn);
+      });
     }
 
     async function checkHealth(){
@@ -122,39 +267,56 @@
       const payload = {
         mode,
         form: formEl.value,
-        topic: topicEl.value || "General",
+        chapter: `Chapter ${selectedChapter.id}: ${selectedChapter.name}`,
+        topic: topicEl.value || selectedChapter.name,
         question: qEl.value.trim()
       };
 
-      if (!payload.question) {
-        render("Please type a question first.");
+      if(!payload.question){
+        renderOutput("Please type a question first.");
         return;
       }
 
-      render("Loading... (first request may take longer if Render was sleeping)");
-      try {
+      renderOutput("Loading... (Render may sleep on free tier)");
+      try{
         const r = await fetch(`${API_BASE}/api/tutor`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
           body: JSON.stringify(payload)
         });
 
-        const data = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error(data?.detail || data?.error || `Request failed (${r.status})`);
+        const data = await r.json().catch(()=> ({}));
+        if(!r.ok) throw new Error(data?.detail || data?.error || `Request failed (${r.status})`);
 
-        render(data.text || "No text returned.");
-      } catch (e) {
-        render("Error: " + e.message);
+        renderOutput(data.text || "No text returned.");
+      }catch(e){
+        renderOutput("Error: " + e.message);
       }
     }
 
-    document.getElementById('askBtn').onclick  = () => callTutor("Explain");
-    document.getElementById('quizBtn').onclick = () => callTutor("Quiz");
-    document.getElementById('pracBtn').onclick = () => callTutor("Practical");
-    formEl.addEventListener('change', loadTopics);
+    document.getElementById("askBtn").onclick  = ()=> callTutor("Explain");
+    document.getElementById("quizBtn").onclick = ()=> callTutor("Quiz");
+    document.getElementById("pracBtn").onclick = ()=> callTutor("Practical");
 
-    loadTopics();
+    document.getElementById("copyBtn").onclick = async ()=>{
+      const txt = outEl.innerText || "";
+      try{
+        await navigator.clipboard.writeText(txt);
+        alert("Copied!");
+      }catch(e){
+        alert("Copy failed. Select the text and copy manually.");
+      }
+    };
+
+    document.getElementById("clearBtn").onclick = ()=>{
+      qEl.value = "";
+      renderOutput("Cleared.");
+    };
+
+    // Init
+    buildChapterButtons();
+    setChapter(CHAPTERS[0]);
     checkHealth();
   </script>
 </body>
-            </html>
+</html>
