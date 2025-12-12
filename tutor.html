@@ -27,10 +27,14 @@
 
   <main class="container" style="padding:18px 0 30px;">
     <div class="split">
-      <!-- LEFT: Ask -->
       <section class="card">
         <h2>Ask Sci-Guru</h2>
         <p class="small">Choose Form and Topic, then ask a question.</p>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <span class="badge" id="apiStatus">API: checking...</span>
+          <span class="badge">Render Free may sleep</span>
+        </div>
 
         <label class="small" for="form">Form / Level</label>
         <select id="form" class="input">
@@ -50,7 +54,7 @@
         <div style="height:10px"></div>
 
         <label class="small" for="q">Your question</label>
-        <textarea id="q" class="input" placeholder="e.g. Explain density using Zimbabwean examples..."></textarea>
+        <textarea id="q" class="input" placeholder="e.g. Explain measurement in science..."></textarea>
 
         <div style="height:10px"></div>
 
@@ -61,12 +65,11 @@
           <a class="btn" href="virtual-lab-hub.html">Open virtual lab hub</a>
         </div>
 
-        <div id="how-to" style="margin-top:14px" class="small">
+        <div style="margin-top:14px" class="small">
           Tip: If you don’t select a topic, Sci-Guru answers generally for the chosen Form.
         </div>
       </section>
 
-      <!-- RIGHT: Results -->
       <section class="card">
         <h2>Output</h2>
         <p class="small">Your explanation / quiz / practical will appear here.</p>
@@ -78,38 +81,21 @@
   </main>
 
   <script>
-    // Simple topic list (you can expand anytime)
+    // ✅ Your Render backend base URL:
+    const API_BASE = "https://sci-guru-backend.onrender.com";
+
     const TOPICS = {
-      "Form 1": [
-        "Measurement & Safety",
-        "States of Matter",
-        "Density",
-        "Separation of Mixtures",
-        "Electric Circuits (Basics)"
-      ],
-      "Form 2": [
-        "Forces & Pressure",
-        "Energy & Heat",
-        "Cells & Microscopes",
-        "Acids, Bases & Salts"
-      ],
-      "Form 3": [
-        "Chemical Reactions",
-        "Electricity & Magnetism",
-        "Ecology & Environment"
-      ],
-      "Form 4": [
-        "Rates of Reaction",
-        "Genetics (Basics)",
-        "Waves & Light",
-        "Organic Chemistry (Basics)"
-      ]
+      "Form 1": ["Measurement & Safety","States of Matter","Density","Separation of Mixtures","Electric Circuits (Basics)"],
+      "Form 2": ["Forces & Pressure","Energy & Heat","Cells & Microscopes","Acids, Bases & Salts"],
+      "Form 3": ["Chemical Reactions","Electricity & Magnetism","Ecology & Environment"],
+      "Form 4": ["Rates of Reaction","Genetics (Basics)","Waves & Light","Organic Chemistry (Basics)"]
     };
 
     const formEl = document.getElementById('form');
     const topicEl = document.getElementById('topic');
     const qEl = document.getElementById('q');
     const outEl = document.getElementById('out');
+    const apiStatusEl = document.getElementById('apiStatus');
 
     function loadTopics() {
       const f = formEl.value;
@@ -122,26 +108,53 @@
       outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.6">${text}</div>`;
     }
 
-    // NOTE: GitHub Pages is static. This is a placeholder response.
-    // If you later connect to a backend API, tell me the endpoint and I’ll wire it up.
-    function fakeAnswer(mode){
-      const f = formEl.value;
-      const t = topicEl.value || "General";
-      const q = qEl.value.trim() || "No question typed.";
-      return `Mode: ${mode}\nForm: ${f}\nTopic: ${t}\n\n${mode === 'Quiz'
-        ? '1) Question...\n2) Question...\n3) Question...\n\n(You can connect API later for real generation.)'
-        : mode === 'Practical'
-        ? 'Aim:\nApparatus:\nMethod:\nResults:\nSafety:\n\n(You can connect API later for real generation.)'
-        : 'Answer:\n\n(This is a placeholder on GitHub Pages. Connect API for real tutor responses.)'
-      }\n\nYour input: ${q}`;
+    async function checkHealth(){
+      try{
+        const r = await fetch(`${API_BASE}/health`, { method:"GET" });
+        if(!r.ok) throw new Error("Health not OK");
+        apiStatusEl.textContent = "API: online";
+      }catch(e){
+        apiStatusEl.textContent = "API: offline / sleeping";
+      }
     }
 
-    document.getElementById('askBtn').onclick = () => render(fakeAnswer('Explain'));
-    document.getElementById('quizBtn').onclick = () => render(fakeAnswer('Quiz'));
-    document.getElementById('pracBtn').onclick = () => render(fakeAnswer('Practical'));
+    async function callTutor(mode){
+      const payload = {
+        mode,
+        form: formEl.value,
+        topic: topicEl.value || "General",
+        question: qEl.value.trim()
+      };
+
+      if (!payload.question) {
+        render("Please type a question first.");
+        return;
+      }
+
+      render("Loading... (first request may take longer if Render was sleeping)");
+      try {
+        const r = await fetch(`${API_BASE}/api/tutor`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data?.detail || data?.error || `Request failed (${r.status})`);
+
+        render(data.text || "No text returned.");
+      } catch (e) {
+        render("Error: " + e.message);
+      }
+    }
+
+    document.getElementById('askBtn').onclick  = () => callTutor("Explain");
+    document.getElementById('quizBtn').onclick = () => callTutor("Quiz");
+    document.getElementById('pracBtn').onclick = () => callTutor("Practical");
     formEl.addEventListener('change', loadTopics);
 
     loadTopics();
+    checkHealth();
   </script>
 </body>
-</html>
+            </html>
