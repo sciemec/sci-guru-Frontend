@@ -3,9 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Virtual Lab Hub</title>
+  <title>Virtual Lab Hub | Sci-Guru</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:18px 0 30px;}
+    .card2{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .card2 h3{margin:0 0 6px;}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .btn2{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04);color:var(--text);font-weight:800;text-decoration:none;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
+
 <body>
   <header class="topbar">
     <div class="container row">
@@ -13,7 +24,7 @@
         <img src="images/lec-logo.png" alt="LEC Biotec Logo">
         <div class="title">
           <b>Virtual Lab Hub</b>
-          <span>Simulations & practical activities</span>
+          <span>Interactive simulations for Sci-Guru</span>
         </div>
       </div>
 
@@ -26,56 +37,45 @@
   </header>
 
   <main class="container">
-    <section class="hero" style="padding-top:18px">
-      <div class="heroCard">
-        <div>
-          <h1>Choose a lab</h1>
-          <p>If you get 404 on a lab, the file name in GitHub does not match exactly (case matters).</p>
-        </div>
-        <div class="cta">
-          <a class="btn primary" href="tutor.html">Back to AI Tutor</a>
-          <a class="btn" href="index.html">Back Home</a>
-        </div>
-      </div>
-    </section>
+    <div class="grid">
 
-    <section class="grid">
-      <div class="card">
-        <h3>Density Lab</h3>
-        <p>Compare floating/sinking and calculate density.</p>
-        <div class="actions">
-          <a class="btn primary" href="sim-density.html">Open</a>
-        </div>
+      <div class="card2">
+        <h3>Lab Safety (Topic 1)</h3>
+        <div class="small2">Find hazards in a virtual lab scene and learn correct actions + first aid.</div>
+        <a class="btn2" href="sim-safety.html">Open Safety Lab</a>
       </div>
 
-      <div class="card">
-        <h3>Electricity Lab</h3>
-        <p>Build simple circuits and test components.</p>
-        <div class="actions">
-          <a class="btn primary" href="sim-electricity.html">Open</a>
-        </div>
+      <div class="card2">
+        <h3>Apparatus & Measuring (Topic 1)</h3>
+        <div class="small2">Drag-and-drop apparatus to correct uses + practice meniscus reading.</div>
+        <a class="btn2" href="sim-apparatus.html">Open Apparatus Lab</a>
       </div>
 
-      <div class="card">
-        <h3>Mixtures Lab</h3>
-        <p>Separation methods: filtration, evaporation, magnet, etc.</p>
-        <div class="actions">
-          <a class="btn primary" href="sim-mixtures.html">Open</a>
-        </div>
+      <div class="card2">
+        <h3>Mixtures & Separation</h3>
+        <div class="small2">Use your existing separation simulation page.</div>
+        <a class="btn2" href="sim-mixtures.html">Open Mixtures Lab</a>
       </div>
 
-      <div class="card">
-        <h3>Fire Experiments</h3>
-        <p>Safety-first simulations and demonstrations.</p>
-        <div class="actions">
-          <a class="btn primary" href="sim-fire.html">Open</a>
-        </div>
+      <div class="card2">
+        <h3>Density</h3>
+        <div class="small2">Use your existing density simulation page.</div>
+        <a class="btn2" href="sim-density.html">Open Density Lab</a>
       </div>
-    </section>
 
-    <footer class="footer">
-      <div>LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</div>
-    </footer>
+      <div class="card2">
+        <h3>Electric Circuits</h3>
+        <div class="small2">Use your existing electricity simulation page.</div>
+        <a class="btn2" href="sim-electricity.html">Open Electricity Lab</a>
+      </div>
+
+      <div class="card2">
+        <h3>Back to Tutor</h3>
+        <div class="small2">Generate notes, quizzes and practicals using the AI tutor.</div>
+        <a class="btn2" href="tutor.html">Go to AI Tutor</a>
+      </div>
+
+    </div>
   </main>
 </body>
-</html>
+                                                                        </html>
