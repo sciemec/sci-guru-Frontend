@@ -12,7 +12,7 @@
   <style>
     .layout{
       display:grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 320px 1fr;
       gap:14px;
       padding:18px 0 30px;
     }
@@ -33,7 +33,7 @@
       color: var(--text);
       cursor:pointer;
       margin-bottom:10px;
-      font-weight:700;
+      font-weight:800;
       display:flex;
       justify-content:space-between;
       gap:10px;
@@ -42,18 +42,26 @@
     .chapterBtn small{
       display:block;
       color:var(--muted);
-      font-weight:500;
+      font-weight:600;
       margin-top:4px;
+      line-height:1.25;
+    }
+    .chapterBtn .termTag{
+      display:inline-block;
+      font-weight:800;
+      font-size:.78rem;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      margin-top:6px;
     }
     .chapterBtn.active{
       border-color: rgba(47,107,255,.55);
       box-shadow: 0 0 0 4px rgba(47,107,255,.12);
     }
-    .check{
-      font-size: 1rem;
-      opacity: .85;
-      margin-top:2px;
-    }
+    .check{ font-size: 1rem; opacity: .9; margin-top:2px; }
+
     .mainArea{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -72,7 +80,7 @@
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
       color: var(--text);
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       user-select:none;
     }
@@ -117,7 +125,7 @@
         <img src="images/lec-logo.png" alt="LEC Biotec Logo">
         <div class="title">
           <b>Sci-Guru AI Science Tutor</b>
-          <span>ZIMSEC / Heritage-Based curriculum</span>
+          <span>Aligned to Step Ahead Combined Science Book 1 (Form 1)</span>
         </div>
       </div>
 
@@ -133,9 +141,9 @@
   <main class="container">
     <div class="layout">
 
-      <!-- LEFT: CHAPTERS -->
+      <!-- LEFT: TOPICS -->
       <aside class="card chapters">
-        <h2 style="margin-bottom:6px;">Chapters (1–17)</h2>
+        <h2 style="margin-bottom:6px;">Book 1 Topics</h2>
         <p class="small" style="margin-bottom:10px;">Progress is saved on your device.</p>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
@@ -144,14 +152,14 @@
         </div>
 
         <div class="progressWrap">
-          <div class="small" id="progressText">Progress: 0/17</div>
+          <div class="small" id="progressText">Progress: 0/19</div>
           <div class="bar" style="margin-top:8px;"><div id="barFill"></div></div>
         </div>
 
         <div id="chapterList"></div>
 
         <div style="margin-top:10px" class="small">
-          Tip: When your book chapter titles are ready, I’ll replace these titles exactly.
+          Note: We will generate original learning content aligned to the book topics (not copied text).
         </div>
       </aside>
 
@@ -160,8 +168,8 @@
 
         <!-- ASK -->
         <section class="card">
-          <h2>Chapter Content</h2>
-          <p class="small">Generate Notes / Worked Examples / Exam Questions / Marking Scheme.</p>
+          <h2>Chapter Content Generator</h2>
+          <p class="small">Choose Form + Topic + Subtopic, then generate content.</p>
 
           <div class="pillRow" id="contentPills">
             <div class="pill active" data-mode="Notes">Notes</div>
@@ -172,7 +180,7 @@
 
           <label class="small" for="form">Form / Level</label>
           <select id="form" class="input">
-            <option value="Form 1">Form 1</option>
+            <option value="Form 1" selected>Form 1</option>
             <option value="Form 2">Form 2</option>
             <option value="Form 3">Form 3</option>
             <option value="Form 4">Form 4</option>
@@ -180,18 +188,18 @@
 
           <div style="height:10px"></div>
 
-          <label class="small" for="chapter">Selected Chapter</label>
+          <label class="small" for="chapter">Selected Topic</label>
           <input id="chapter" class="input" readonly />
 
           <div style="height:10px"></div>
 
-          <label class="small" for="topic">Topic</label>
+          <label class="small" for="topic">Subtopic</label>
           <select id="topic" class="input"></select>
 
           <div style="height:10px"></div>
 
           <label class="small" for="q">Extra instruction (optional)</label>
-          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, include calculations, include safety notes..."></textarea>
+          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, add calculations, include safety notes, add 5 revision questions..."></textarea>
 
           <div style="height:10px"></div>
 
@@ -203,12 +211,12 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" id="toggleDoneBtn">Mark chapter as done</button>
+            <button class="btn" id="toggleDoneBtn">Mark topic as done</button>
             <a class="btn" href="library.html">Open My Library</a>
           </div>
 
           <div class="mutedLine" style="margin-top:12px;">
-            Render free tier may sleep. First request can take longer.
+            If the first request hangs: Render is waking up. Try again after ~30–60 seconds.
           </div>
         </section>
 
@@ -229,7 +237,7 @@
           </div>
 
           <div class="small" style="margin-top:12px;">
-            Tip: Save Notes + Worked Examples for revision, then generate Exam Questions to test yourself.
+            Best flow: Notes → Worked Examples → Past Exam Questions → Marking Scheme.
           </div>
         </section>
 
@@ -240,36 +248,44 @@
   <script>
     const API_BASE = "https://sci-guru-backend.onrender.com";
 
-    const STORAGE_PROGRESS = "sciguru_progress_v1";
+    const STORAGE_PROGRESS = "sciguru_progress_v2_book1";
     const STORAGE_SAVED = "sciguru_saved_v1";
-    const STORAGE_LAST = "sciguru_last_v1";
+    const STORAGE_LAST = "sciguru_last_v2_book1";
 
-    // Starter chapters (replace later with your exact book titles)
+    // BOOK 1 (Form 1) Topics from contents page (organised by Term)
     const CHAPTERS = [
-      { id: 1,  name: "Measurement & Safety", topics: ["Lab safety rules","SI units","Measuring length/mass/time","Accuracy & precision","Errors"] },
-      { id: 2,  name: "States of Matter", topics: ["Solids, liquids, gases","Particle model","Changes of state","Diffusion","Brownian motion"] },
-      { id: 3,  name: "Separating Mixtures", topics: ["Filtration","Evaporation","Distillation","Chromatography","Magnetism"] },
-      { id: 4,  name: "Density", topics: ["Density concept","Mass & volume","Floating & sinking","Relative density","Practical density experiment"] },
-      { id: 5,  name: "Heat & Temperature", topics: ["Heat vs temperature","Thermometers","Expansion","Conduction/Convection/Radiation","Cooling & insulation"] },
-      { id: 6,  name: "Forces & Pressure", topics: ["Types of forces","Friction","Pressure in solids/liquids/gases","Upthrust","Applications of pressure"] },
-      { id: 7,  name: "Work, Energy & Power", topics: ["Work done","Kinetic & potential energy","Energy conversions","Power","Efficiency"] },
-      { id: 8,  name: "Electric Circuits (Basics)", topics: ["Electric current","Voltage & resistance","Series circuits","Parallel circuits","Cells & batteries","Safety with electricity"] },
-      { id: 9,  name: "Magnetism & Electromagnets", topics: ["Magnetic materials","Magnetic fields","Electromagnets","Applications","Generators (intro)"] },
-      { id: 10, name: "Waves & Sound", topics: ["Wave properties","Sound production","Pitch & loudness","Echoes","Hearing & safety"] },
-      { id: 11, name: "Light", topics: ["Reflection","Refraction","Lenses","Images","Optical instruments"] },
-      { id: 12, name: "Cells & Microscopy", topics: ["Cell structure","Microscope use","Plant vs animal cells","Specialised cells","Health link"] },
-      { id: 13, name: "Reproduction (Basics)", topics: ["Human reproduction","Plant reproduction","Pollination","Fertilisation","Growth"] },
-      { id: 14, name: "Ecology & Environment", topics: ["Food chains/webs","Habitat","Population","Pollution","Conservation in Zimbabwe"] },
-      { id: 15, name: "Acids, Bases & Salts", topics: ["pH scale","Indicators","Neutralisation","Preparation of salts","Everyday examples"] },
-      { id: 16, name: "Chemical Reactions", topics: ["Types of reactions","Word equations","Balancing (intro)","Rates of reaction","Catalysts"] },
-      { id: 17, name: "Materials & Metals", topics: ["Properties of materials","Metals vs non-metals","Rusting","Alloys","Recycling"] }
+      // Biology Term 1
+      { id: 1, term:"Biology Term 1", name: "Laboratory safety and apparatus", topics: ["Laboratory rules","Laboratory apparatus","Topic assessment"] },
+      { id: 2, term:"Biology Term 1", name: "Cells and levels of organisation", topics: ["Cells","Topic assessment"] },
+      { id: 3, term:"Biology Term 1", name: "Nutrition", topics: ["Nutrition and diet","Topic assessment"] },
+      { id: 4, term:"Biology Term 1", name: "The respiratory system", topics: ["Air and respiratory gases","Topic assessment"] },
+      { id: 5, term:"Biology Term 1", name: "Transport systems", topics: ["Transport mechanisms","Transport in plants","Transport in humans","Topic assessment"] },
+      { id: 6, term:"Biology Term 1", name: "Reproductive systems", topics: ["Reproduction in plants and animals","Pollination and fertilisation","Reproduction in humans","Topic assessment"] },
+      { id: 7, term:"Biology Term 1", name: "Health and diseases", topics: ["Health, hygiene and disease","Methods of disease transmission","Topic assessment"] },
+
+      // Chemistry Term 2
+      { id: 8, term:"Chemistry Term 2", name: "Separation", topics: ["Mixtures","Separation methods","Topic assessment"] },
+      { id: 9, term:"Chemistry Term 2", name: "Matter", topics: ["Matter","Solubility and dissolving","Mixtures, elements and compounds","The periodic table","Topic assessment"] },
+      { id:10, term:"Chemistry Term 2", name: "Acids, bases and salts", topics: ["Acids and bases","Topic assessment"] },
+      { id:11, term:"Chemistry Term 2", name: "Industrial processes", topics: ["Processing peanuts","Topic assessment"] },
+      { id:12, term:"Chemistry Term 2", name: "Oxidation", topics: ["Rusting","Topic assessment"] },
+      { id:13, term:"Chemistry Term 2", name: "Organic chemistry", topics: ["Fuels","Topic assessment"] },
+
+      // Physics Term 3
+      { id:14, term:"Physics Term 3", name: "Data presentation", topics: ["Ways to present data","Topic assessment"] },
+      { id:15, term:"Physics Term 3", name: "Measurements", topics: ["Measurement of physical quantities","Topic assessment"] },
+      { id:16, term:"Physics Term 3", name: "Force", topics: ["Effects, types and measurement of forces","Topic assessment"] },
+      { id:17, term:"Physics Term 3", name: "Energy", topics: ["Effects and forms of energy","Energy conversions","Topic assessment"] },
+      { id:18, term:"Physics Term 3", name: "Magnetism", topics: ["Magnetism and magnets","Topic assessment"] },
+      { id:19, term:"Physics Term 3", name: "Electricity", topics: ["Types of charge","Static and current electricity","Topic assessment"] }
     ];
 
-    // Map chapter -> best lab page (edit filenames to match your repo)
+    // Map topic -> lab page (edit filenames to match your repo)
     const LAB_LINKS = {
-      "Separating Mixtures": "sim-mixtures.html",
-      "Density": "sim-density.html",
-      "Electric Circuits (Basics)": "sim-electricity.html"
+      "Separation": "sim-mixtures.html",
+      "Matter": "sim-mixtures.html",
+      "Electricity": "sim-electricity.html",
+      "Magnetism": "sim-electricity.html"
     };
 
     // DOM
@@ -308,10 +324,10 @@
     function updateProgressUI(){
       const done = progress.doneIds.length;
       const total = CHAPTERS.length;
-      progressText.textContent = `Progress: ${done}/${total} chapters done`;
+      progressText.textContent = `Progress: ${done}/${total} topics done`;
       const pct = total ? Math.round((done/total)*100) : 0;
       barFill.style.width = pct + "%";
-      toggleDoneBtn.textContent = isDone(selectedChapter.id) ? "Mark chapter as NOT done" : "Mark chapter as done";
+      toggleDoneBtn.textContent = isDone(selectedChapter.id) ? "Mark topic as NOT done" : "Mark topic as done";
     }
 
     function renderOutput(text){
@@ -328,7 +344,7 @@
 
     function setChapter(ch){
       selectedChapter = ch;
-      chapterEl.value = `Chapter ${ch.id}: ${ch.name}`;
+      chapterEl.value = `Topic ${ch.id}: ${ch.name} (${ch.term})`;
       topicEl.innerHTML = ch.topics.map(t => `<option value="${t}">${t}</option>`).join("");
 
       const link = LAB_LINKS[ch.name] || "virtual-lab-hub.html";
@@ -352,18 +368,17 @@
         const doneMark = isDone(ch.id) ? "✅" : "⬜";
         btn.innerHTML = `
           <div>
-            Chapter ${ch.id}: ${ch.name}
-            <small>${ch.topics.length} topics</small>
+            Topic ${ch.id}: ${ch.name}
+            <small><span class="termTag">${ch.term}</span><br>${ch.topics.length} subtopics</small>
           </div>
           <div class="check">${doneMark}</div>
         `;
-
         btn.onclick = ()=> setChapter(ch);
         chapterListEl.appendChild(btn);
       });
     }
 
-    function refreshChapterChecks(){
+    function refreshChecks(){
       [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
         const id = Number(btn.dataset.id);
         const mark = btn.querySelector(".check");
@@ -387,7 +402,7 @@
       const payload = {
         mode,
         form: formEl.value,
-        chapter: `Chapter ${selectedChapter.id}: ${selectedChapter.name}`,
+        chapter: `Topic ${selectedChapter.id}: ${selectedChapter.name} (${selectedChapter.term})`,
         topic: topicEl.value || selectedChapter.name,
         question: qEl.value.trim() || "(no extra instruction)"
       };
@@ -410,6 +425,16 @@
       }
     }
 
+    function loadLibrary(){
+      try{
+        const raw = localStorage.getItem(STORAGE_SAVED);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch{
+        return [];
+      }
+    }
+
     function saveToLibrary(){
       const text = (outEl.innerText || "").trim();
       if(!text || text.toLowerCase().startsWith("loading") || text.toLowerCase().startsWith("error")){
@@ -422,7 +447,7 @@
         savedAt: new Date().toISOString(),
         mode: selectedMode,
         form: formEl.value,
-        chapter: `Chapter ${selectedChapter.id}: ${selectedChapter.name}`,
+        chapter: `Topic ${selectedChapter.id}: ${selectedChapter.name} (${selectedChapter.term})`,
         topic: topicEl.value || selectedChapter.name,
         instruction: qEl.value.trim(),
         content: text
@@ -432,16 +457,6 @@
       arr.unshift(item);
       localStorage.setItem(STORAGE_SAVED, JSON.stringify(arr));
       alert("Saved to My Library ✅");
-    }
-
-    function loadLibrary(){
-      try{
-        const raw = localStorage.getItem(STORAGE_SAVED);
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      }catch{
-        return [];
-      }
     }
 
     function downloadPDF(){
@@ -461,16 +476,15 @@
       const margin = 40;
       const maxWidth = 515;
 
-      const title = `Sci-Guru - ${selectedMode}`;
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
-      doc.text(title, margin, 55);
+      doc.text(`Sci-Guru - ${selectedMode}`, margin, 55);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       doc.text(`Form: ${formEl.value}`, margin, 75);
-      doc.text(`Chapter: Chapter ${selectedChapter.id} - ${selectedChapter.name}`, margin, 90);
-      doc.text(`Topic: ${topicEl.value || selectedChapter.name}`, margin, 105);
+      doc.text(`Topic: ${selectedChapter.id} - ${selectedChapter.name} (${selectedChapter.term})`, margin, 90);
+      doc.text(`Subtopic: ${topicEl.value || selectedChapter.name}`, margin, 105);
 
       const lines = doc.splitTextToSize(text, maxWidth);
       let y = 135;
@@ -485,7 +499,7 @@
         y += 14;
       });
 
-      const safeName = `${selectedMode}_Chapter${selectedChapter.id}_${(topicEl.value||"Topic").replace(/[^a-z0-9]+/gi,"_")}.pdf`;
+      const safeName = `${selectedMode}_Topic${selectedChapter.id}_${(topicEl.value||"Subtopic").replace(/[^a-z0-9]+/gi,"_")}.pdf`;
       doc.save(safeName);
     }
 
@@ -561,7 +575,7 @@
       }
       saveProgress();
       updateProgressUI();
-      refreshChapterChecks();
+      refreshChecks();
     };
 
     // Init
@@ -571,7 +585,7 @@
     checkHealth();
     restoreLastState();
     updateProgressUI();
-    refreshChapterChecks();
+    refreshChecks();
   </script>
 </body>
-</html>
+  </html>
