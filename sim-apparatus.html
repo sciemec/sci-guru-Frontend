@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Virtual Experiment: Apparatus & Measuring</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 0 30px;}
+    .box{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .dragRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+    .dragItem{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+      cursor:grab;font-weight:900;user-select:none;}
+    .targets{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+    .target{border:2px dashed rgba(47,107,255,.55);border-radius:14px;min-height:74px;padding:10px;background:rgba(47,107,255,.07);}
+    .target.good{border-style:solid;border-color:rgba(56,214,120,.7);background:rgba(56,214,120,.10);}
+    .target.bad{border-style:solid;border-color:rgba(255,98,98,.7);background:rgba(255,98,98,.10);}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .badge2{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:800;}
+    .actions2{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .btn2{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:800;cursor:pointer;}
+    .btn2.primary{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .cyl{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);padding:12px;}
+    .meter{height:220px;width:120px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);position:relative;overflow:hidden;}
+    .water{position:absolute;left:0;right:0;bottom:0;background:rgba(47,107,255,.25);height:40%;}
+    .mark{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.25);}
+    .markLabel{position:absolute;right:6px;font-size:.75rem;color:var(--muted);transform:translateY(-50%);}
+    .toast{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);white-space:pre-wrap;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">
+        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+        <div class="title">
+          <b>Virtual Experiment: Apparatus & Measuring</b>
+          <span>Drag apparatus to correct use + read volume (meniscus)</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">AI Tutor</a>
+        <a class="active" href="sim-apparatus.html">Apparatus Lab</a>
+        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- DRAG & DROP -->
+      <section class="box">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+          <h2 style="margin:0;">A) Apparatus matching</h2>
+          <span class="badge2" id="score">Score: 0/6</span>
+        </div>
+        <div class="small2">Drag each apparatus to its correct use. (6 items)</div>
+
+        <div class="dragRow" id="items"></div>
+
+        <div class="targets" id="targets"></div>
+
+        <div class="actions2">
+          <button class="btn2 primary" id="resetBtn">Reset</button>
+          <button class="btn2" id="showBtn">Auto-complete</button>
+          <a class="btn2" href="tutor.html">Back to Tutor</a>
+        </div>
+
+        <div class="toast" id="toast">Tip: A beaker is not very accurate for measuring volume. Use a measuring cylinder.</div>
+      </section>
+
+      <!-- MENISCUS -->
+      <section class="box">
+        <h2 style="margin:0 0 6px;">B) Meniscus reading (Volume)</h2>
+        <div class="small2">Move the slider. Read the volume at the <b>bottom of the meniscus</b> (water-like liquids).</div>
+
+        <div class="cyl" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+          <div class="meter" id="meter">
+            <div class="water" id="water"></div>
+            <!-- Marks -->
+            <div class="mark" style="bottom:10%;"></div><div class="markLabel" style="bottom:10%;">10 mL</div>
+            <div class="mark" style="bottom:30%;"></div><div class="markLabel" style="bottom:30%;">30 mL</div>
+            <div class="mark" style="bottom:50%;"></div><div class="markLabel" style="bottom:50%;">50 mL</div>
+            <div class="mark" style="bottom:70%;"></div><div class="markLabel" style="bottom:70%;">70 mL</div>
+            <div class="mark" style="bottom:90%;"></div><div class="markLabel" style="bottom:90%;">90 mL</div>
+          </div>
+
+          <div style="min-width:220px;">
+            <label class="small2"><b>Water level</b></label>
+            <input type="range" id="level" min="5" max="95" value="40" style="width:240px;">
+            <div class="small2" style="margin-top:8px;">Your reading: <b id="reading">40 mL</b></div>
+
+            <div style="margin-top:12px;">
+              <label class="small2"><b>Answer check</b></label><br>
+              <input class="input" id="guess" placeholder="Type volume (e.g. 40)" style="max-width:180px;">
+              <button class="btn2 primary" id="checkBtn">Check</button>
+              <div class="toast" id="meniscusToast">Hint: Record the volume in mL.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="small2" style="margin-top:10px;">
+          Extra rule: Always keep your eye level with the meniscus to avoid parallax error.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Apparatus game
+    const apparatus = [
+      { id:"cyl", name:"Measuring cylinder", correct:"measureVolume", tip:"Used to measure volume (mL) more accurately than a beaker." },
+      { id:"bal", name:"Balance/scale", correct:"measureMass", tip:"Used to measure mass (g, kg)." },
+      { id:"therm", name:"Thermometer", correct:"measureTemp", tip:"Used to measure temperature (°C)." },
+      { id:"bunsen", name:"Bunsen burner", correct:"heating", tip:"Used for heating; keep flame controlled and safe." },
+      { id:"funnel", name:"Funnel + filter paper", correct:"filtration", tip:"Used to separate insoluble solids from liquids." },
+      { id:"tongs", name:"Tongs", correct:"holdHot", tip:"Used to hold hot equipment safely." }
+    ];
+
+    const uses = [
+      { id:"measureVolume", label:"Use: Measure volume (mL)" },
+      { id:"measureMass", label:"Use: Measure mass (g/kg)" },
+      { id:"measureTemp", label:"Use: Measure temperature (°C)" },
+      { id:"heating", label:"Use: Heating substances" },
+      { id:"filtration", label:"Use: Filtration (solid + liquid)" },
+      { id:"holdHot", label:"Use: Hold hot apparatus" }
+    ];
+
+    const itemsEl = document.getElementById("items");
+    const targetsEl = document.getElementById("targets");
+    const scoreEl = document.getElementById("score");
+    const toastEl = document.getElementById("toast");
+
+    let placed = {}; // useId -> apparatusId
+
+    function renderGame(){
+      itemsEl.innerHTML = "";
+      targetsEl.innerHTML = "";
+
+      // draggable items
+      apparatus.forEach(a=>{
+        const alreadyPlaced = Object.values(placed).includes(a.id);
+        const div = document.createElement("div");
+        div.className = "dragItem";
+        div.draggable = !alreadyPlaced;
+        div.textContent = a.name + (alreadyPlaced ? " ✓" : "");
+        div.dataset.app = a.id;
+
+        div.addEventListener("dragstart", (e)=>{
+          e.dataTransfer.setData("text/plain", a.id);
+        });
+
+        div.addEventListener("click", ()=>{
+          toastEl.textContent = `${a.name}: ${a.tip}`;
+        });
+
+        itemsEl.appendChild(div);
+      });
+
+      // targets
+      uses.forEach(u=>{
+        const box = document.createElement("div");
+        box.className = "target";
+        box.dataset.use = u.id;
+        box.innerHTML = `<b>${u.label}</b><div class="small2" style="margin-top:6px;" id="slot_${u.id}">${placed[u.id] ? "Placed: " + nameOf(placed[u.id]) : "Drop here..."}</div>`;
+
+        box.addEventListener("dragover", (e)=> e.preventDefault());
+        box.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          const appId = e.dataTransfer.getData("text/plain");
+          if(!appId) return;
+          // prevent placing same item twice
+          if(Object.values(placed).includes(appId)) return;
+
+          placed[u.id] = appId;
+          evaluateTarget(box, u.id, appId);
+          renderGame();
+          updateScore();
+        });
+
+        targetsEl.appendChild(box);
+
+        // color if already placed
+        if(placed[u.id]){
+          const appId = placed[u.id];
+          const correct = apparatus.find(x=>x.id===appId)?.correct === u.id;
+          box.classList.add(correct ? "good" : "bad");
+        }
+      });
+
+      updateScore();
+    }
+
+    function nameOf(appId){
+      return apparatus.find(x=>x.id===appId)?.name || appId;
+    }
+
+    function evaluateTarget(box, useId, appId){
+      const correct = apparatus.find(x=>x.id===appId)?.correct === useId;
+      toastEl.textContent = correct
+        ? `✅ Correct: ${nameOf(appId)} matches "${uses.find(x=>x.id===useId).label}".`
+        : `❌ Not correct. ${nameOf(appId)} does NOT match "${uses.find(x=>x.id===useId).label}". Try again.`;
+    }
+
+    function updateScore(){
+      let score = 0;
+      uses.forEach(u=>{
+        const appId = placed[u.id];
+        if(!appId) return;
+        const ok = apparatus.find(x=>x.id===appId)?.correct === u.id;
+        if(ok) score++;
+      });
+      scoreEl.textContent = `Score: ${score}/6`;
+    }
+
+    document.getElementById("resetBtn").onclick = ()=>{
+      placed = {};
+      toastEl.textContent = "Tip: A beaker is not very accurate for measuring volume. Use a measuring cylinder.";
+      renderGame();
+    };
+
+    document.getElementById("showBtn").onclick = ()=>{
+      placed = {};
+      apparatus.forEach(a=> placed[a.correct] = a.id);
+      toastEl.textContent = "Auto-complete done ✅ Review each apparatus and its use.";
+      renderGame();
+    };
+
+    renderGame();
+
+    // Meniscus simulator
+    const level = document.getElementById("level");
+    const water = document.getElementById("water");
+    const reading = document.getElementById("reading");
+    const guess = document.getElementById("guess");
+    const meniscusToast = document.getElementById("meniscusToast");
+
+    function setLevel(v){
+      const pct = Number(v);
+      water.style.height = pct + "%";
+      // pretend cylinder is 0-100 mL for easy reading
+      reading.textContent = `${pct} mL`;
+    }
+    level.addEventListener("input", ()=> setLevel(level.value));
+    setLevel(level.value);
+
+    document.getElementById("checkBtn").onclick = ()=>{
+      const ans = Number(level.value);
+      const g = Number((guess.value || "").trim());
+      if(!guess.value.trim()) return meniscusToast.textContent = "Type your reading (number only), then press Check.";
+      if(Number.isNaN(g)) return meniscusToast.textContent = "Please type a valid number (e.g. 40).";
+      const diff = Math.abs(g - ans);
+      if(diff === 0) meniscusToast.textContent = "✅ Correct! You read the volume accurately.";
+      else if(diff <= 2) meniscusToast.textContent = `✅ Almost! You are close (off by ${diff} mL).`;
+      else meniscusToast.textContent = `❌ Not correct. You are off by ${diff} mL. Remember: read at eye level at the bottom of the meniscus.`;
+    };
+  </script>
+</body>
+</html>

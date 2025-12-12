@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Virtual Experiment: Lab Safety</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;padding:18px 0 30px;}
+    .scene{position:relative;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);overflow:hidden;min-height:420px;}
+    .panel{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .badge2{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:800;}
+    .hotspot{position:absolute;border:2px dashed rgba(47,107,255,.6);border-radius:14px;cursor:pointer;
+      background:rgba(47,107,255,.08);transition:.15s;}
+    .hotspot:hover{transform:scale(1.02);}
+    .hotspot.found{border-style:solid;border-color:rgba(56,214,120,.7);background:rgba(56,214,120,.10);}
+    .list{margin:10px 0 0;padding-left:18px;color:var(--text);line-height:1.6;}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .actions2{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .btn2{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:800;cursor:pointer;}
+    .btn2.primary{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .toast{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);white-space:pre-wrap;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">
+        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+        <div class="title">
+          <b>Virtual Experiment: Lab Safety</b>
+          <span>Click hazards to identify them + learn the correct action</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">AI Tutor</a>
+        <a class="active" href="sim-safety.html">Safety Lab</a>
+        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- SCENE -->
+      <section class="card scene" id="scene">
+        <!-- Simple “lab” scene using HTML blocks -->
+        <div style="position:absolute;left:18px;top:18px;right:18px;height:70px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:12px;">
+          <b>Lab Bench</b>
+          <div class="small2">Find all hazards. Score updates on the right.</div>
+        </div>
+
+        <!-- Props (visual only) -->
+        <div style="position:absolute;left:30px;top:120px;width:200px;height:120px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:10px;">
+          <b>Work Area</b>
+          <div class="small2">Beaker • Burner • Notes</div>
+        </div>
+
+        <div style="position:absolute;right:30px;top:120px;width:220px;height:170px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:10px;">
+          <b>Sink Area</b>
+          <div class="small2">Water tap • Towels</div>
+        </div>
+
+        <div style="position:absolute;left:30px;bottom:30px;right:30px;height:160px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--border);padding:10px;">
+          <b>Floor Area</b>
+          <div class="small2">Keep clear • no running</div>
+        </div>
+
+        <!-- HOTSPOTS -->
+        <div class="hotspot" data-id="spill" style="left:85px;top:210px;width:110px;height:70px;"></div>
+        <div class="hotspot" data-id="openFlame" style="left:55px;top:150px;width:90px;height:55px;"></div>
+        <div class="hotspot" data-id="food" style="left:170px;top:160px;width:70px;height:55px;"></div>
+        <div class="hotspot" data-id="brokenGlass" style="left:110px;bottom:75px;width:120px;height:70px;"></div>
+        <div class="hotspot" data-id="wetHandsElectric" style="right:70px;top:210px;width:140px;height:70px;"></div>
+        <div class="hotspot" data-id="running" style="right:210px;bottom:70px;width:150px;height:70px;"></div>
+
+      </section>
+
+      <!-- PANEL -->
+      <aside class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span class="badge2" id="scoreBadge">Score: 0/6</span>
+          <span class="badge2" id="statusBadge">Not complete</span>
+        </div>
+
+        <h2 style="margin:12px 0 6px;">Hazard explanations</h2>
+        <div class="small2">Click a highlighted hazard on the scene. You must find all 6 hazards.</div>
+
+        <ul class="list" id="foundList"></ul>
+
+        <div class="actions2">
+          <button class="btn2 primary" id="resetBtn">Reset</button>
+          <button class="btn2" id="showBtn">Show all</button>
+          <a class="btn2" href="tutor.html">Back to Tutor</a>
+        </div>
+
+        <div class="toast" id="toast">Tip: In a real lab, always report accidents to your teacher immediately.</div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
+
+        <h3 style="margin:0 0 6px;">First Aid Quick Guide</h3>
+        <div class="small2" style="white-space:pre-wrap;">
+• Chemical on skin: rinse with lots of water
+• Chemical in eyes: rinse for several minutes + report urgently
+• Burns: cool under running water
+• Cuts: report; don’t touch broken glass with bare hands
+• Fire: switch off gas/electricity; use blanket/sand/extinguisher as instructed
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <script>
+    const hazards = {
+      openFlame: {
+        title: "Open flame near papers/objects",
+        fix: "Keep flammable items away. Control the flame. Turn off gas when not heating."
+      },
+      food: {
+        title: "Food/drink on bench",
+        fix: "No eating or drinking in the lab. Chemicals can contaminate food."
+      },
+      spill: {
+        title: "Chemical/water spill on bench",
+        fix: "Report it. Clean safely. Spills cause slips and chemical contact."
+      },
+      brokenGlass: {
+        title: "Broken glass on floor",
+        fix: "Do not pick with bare hands. Use brush/dustpan; report immediately."
+      },
+      wetHandsElectric: {
+        title: "Wet hands near electrical equipment",
+        fix: "Dry hands first. Water increases risk of electric shock."
+      },
+      running: {
+        title: "Running/playing in the lab",
+        fix: "Walk carefully. Running leads to collisions, spills, and injuries."
+      }
+    };
+
+    const hotspots = [...document.querySelectorAll(".hotspot")];
+    const scoreBadge = document.getElementById("scoreBadge");
+    const statusBadge = document.getElementById("statusBadge");
+    const foundList = document.getElementById("foundList");
+    const toast = document.getElementById("toast");
+
+    const found = new Set();
+
+    function updateUI(){
+      scoreBadge.textContent = `Score: ${found.size}/6`;
+      statusBadge.textContent = found.size === 6 ? "Complete ✅" : "Not complete";
+      foundList.innerHTML = "";
+      [...found].forEach(id=>{
+        const li = document.createElement("li");
+        li.innerHTML = `<b>${hazards[id].title}</b><br><span class="small2">${hazards[id].fix}</span>`;
+        foundList.appendChild(li);
+      });
+      if(found.size === 0) foundList.innerHTML = `<li class="small2">No hazards found yet.</li>`;
+    }
+
+    function clickHazard(el){
+      const id = el.dataset.id;
+      if(!hazards[id]) return;
+      found.add(id);
+      el.classList.add("found");
+      toast.textContent = `Hazard: ${hazards[id].title}\nCorrect action: ${hazards[id].fix}`;
+      updateUI();
+    }
+
+    hotspots.forEach(h => h.addEventListener("click", ()=> clickHazard(h)));
+
+    document.getElementById("resetBtn").onclick = ()=>{
+      found.clear();
+      hotspots.forEach(h=> h.classList.remove("found"));
+      toast.textContent = "Tip: In a real lab, always report accidents to your teacher immediately.";
+      updateUI();
+    };
+
+    document.getElementById("showBtn").onclick = ()=>{
+      hotspots.forEach(h=> clickHazard(h));
+    };
+
+    updateUI();
+  </script>
+</body>
+</html>
