@@ -5,116 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sci-Guru AI Tutor</title>
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- PDF export (client-side) -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
   <style>
-    .layout{
-      display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:14px;
-      padding:18px 0 30px;
-    }
-    .chapters{
-      position:sticky;
-      top:76px;
-      height: calc(100vh - 96px);
-      overflow:auto;
-      padding-right:6px;
-    }
-    .chapterBtn{
-      width:100%;
-      text-align:left;
-      padding:11px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      cursor:pointer;
-      margin-bottom:10px;
-      font-weight:800;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-    .chapterBtn small{
-      display:block;
-      color:var(--muted);
-      font-weight:600;
-      margin-top:4px;
-      line-height:1.25;
-    }
-    .chapterBtn .termTag{
-      display:inline-block;
-      font-weight:800;
-      font-size:.78rem;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      margin-top:6px;
-    }
-    .chapterBtn.active{
-      border-color: rgba(47,107,255,.55);
-      box-shadow: 0 0 0 4px rgba(47,107,255,.12);
-    }
-    .check{ font-size: 1rem; opacity: .9; margin-top:2px; }
-
-    .mainArea{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
-
-    .pillRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin: 8px 0 12px;
-    }
-    .pill{
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-    }
-    .pill.active{
-      border-color: rgba(47,107,255,.55);
-      box-shadow: 0 0 0 4px rgba(47,107,255,.12);
-    }
-
-    .progressWrap{
-      margin: 8px 0 14px;
-      padding:12px;
-      border:1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(255,255,255,.03);
-    }
-    .bar{
-      height:10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-    .bar > div{
-      height:100%;
-      width:0%;
-      background: linear-gradient(90deg, var(--brand), var(--brand2));
-    }
-    .mutedLine{ color: var(--muted); font-size: .92rem; line-height: 1.4; }
-
-    @media (max-width: 980px){
-      .layout{grid-template-columns:1fr}
-      .chapters{position:relative; top:auto; height:auto}
-      .mainArea{grid-template-columns:1fr}
-    }
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:14px;padding:18px 0 30px;}
+    .chapters{position:sticky;top:76px;height:calc(100vh - 96px);overflow:auto;padding-right:6px;}
+    .chapterBtn{width:100%;text-align:left;padding:11px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;margin-bottom:10px;font-weight:800;
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+    .chapterBtn small{display:block;color:var(--muted);font-weight:600;margin-top:4px;line-height:1.25;}
+    .chapterBtn .termTag{display:inline-block;font-weight:800;font-size:.78rem;padding:3px 8px;border-radius:999px;
+      border:1px solid var(--border);background:rgba(255,255,255,.03);margin-top:6px;}
+    .chapterBtn.active{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .check{font-size:1rem;opacity:.9;margin-top:2px;}
+    .mainArea{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .pillRow{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px;}
+    .pill{padding:10px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+      color:var(--text);font-weight:900;cursor:pointer;user-select:none;}
+    .pill.active{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .progressWrap{margin:8px 0 14px;padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);}
+    .bar{height:10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);overflow:hidden;}
+    .bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),var(--brand2));}
+    .mutedLine{color:var(--muted);font-size:.92rem;line-height:1.4;}
+    .hintBox{margin-top:10px;padding:10px 12px;border:1px dashed var(--border);border-radius:12px;background:rgba(255,255,255,.03);}
+    @media (max-width:980px){.layout{grid-template-columns:1fr}.chapters{position:relative;top:auto;height:auto}.mainArea{grid-template-columns:1fr}}
   </style>
 </head>
 
@@ -141,7 +55,7 @@
   <main class="container">
     <div class="layout">
 
-      <!-- LEFT: TOPICS -->
+      <!-- LEFT -->
       <aside class="card chapters">
         <h2 style="margin-bottom:6px;">Book 1 Topics</h2>
         <p class="small" style="margin-bottom:10px;">Progress is saved on your device.</p>
@@ -157,23 +71,23 @@
         </div>
 
         <div id="chapterList"></div>
-
-        <div style="margin-top:10px" class="small">
-          Note: We will generate original learning content aligned to the book topics (not copied text).
-        </div>
       </aside>
 
-      <!-- RIGHT: ASK + OUTPUT -->
+      <!-- RIGHT -->
       <section class="mainArea">
 
         <!-- ASK -->
         <section class="card">
-          <h2>Chapter Content Generator</h2>
-          <p class="small">Choose Form + Topic + Subtopic, then generate content.</p>
+          <h2>Learning Tools</h2>
+          <p class="small">Notes + Exams are generated by AI. Virtual Experiments are interactive simulations.</p>
 
           <div class="pillRow" id="contentPills">
             <div class="pill active" data-mode="Notes">Notes</div>
-            <div class="pill" data-mode="Worked Examples">Worked Examples</div>
+
+            <!-- IMPORTANT: This still sends mode="Worked Examples" to backend if needed,
+                 but we treat it as "Virtual Experiments" on the frontend -->
+            <div class="pill" data-mode="Worked Examples">Virtual Experiments</div>
+
             <div class="pill" data-mode="Past Exam Questions">Past Exam Questions</div>
             <div class="pill" data-mode="Marking Scheme">Marking Scheme</div>
           </div>
@@ -199,7 +113,7 @@
           <div style="height:10px"></div>
 
           <label class="small" for="q">Extra instruction (optional)</label>
-          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, add calculations, include safety notes, add 5 revision questions..."></textarea>
+          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, keep it short, add 5 revision questions..."></textarea>
 
           <div style="height:10px"></div>
 
@@ -210,20 +124,24 @@
             <a class="btn" id="openLabBtn" href="virtual-lab-hub.html">Open related lab</a>
           </div>
 
+          <div class="hintBox" id="modeHint">
+            Tip: Choose **Virtual Experiments** to run a simulation instead of text worked examples.
+          </div>
+
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
             <button class="btn" id="toggleDoneBtn">Mark topic as done</button>
             <a class="btn" href="library.html">Open My Library</a>
           </div>
 
           <div class="mutedLine" style="margin-top:12px;">
-            If the first request hangs: Render is waking up. Try again after ~30–60 seconds.
+            If first request is slow: Render is waking up. Try again after ~30–60 seconds.
           </div>
         </section>
 
         <!-- OUTPUT -->
         <section class="card">
           <h2>Output</h2>
-          <p class="small">Generated content appears here. Save or export it.</p>
+          <p class="small">Text output appears here (Virtual Experiments open as a simulation page).</p>
 
           <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
             <p class="small" style="margin:0">No output yet.</p>
@@ -234,10 +152,6 @@
             <button class="btn" id="pdfBtn">Download PDF</button>
             <button class="btn" id="copyBtn">Copy</button>
             <button class="btn" id="clearBtn">Clear</button>
-          </div>
-
-          <div class="small" style="margin-top:12px;">
-            Best flow: Notes → Worked Examples → Past Exam Questions → Marking Scheme.
           </div>
         </section>
 
@@ -252,9 +166,7 @@
     const STORAGE_SAVED = "sciguru_saved_v1";
     const STORAGE_LAST = "sciguru_last_v2_book1";
 
-    // BOOK 1 (Form 1) Topics from contents page (organised by Term)
     const CHAPTERS = [
-      // Biology Term 1
       { id: 1, term:"Biology Term 1", name: "Laboratory safety and apparatus", topics: ["Laboratory rules","Laboratory apparatus","Topic assessment"] },
       { id: 2, term:"Biology Term 1", name: "Cells and levels of organisation", topics: ["Cells","Topic assessment"] },
       { id: 3, term:"Biology Term 1", name: "Nutrition", topics: ["Nutrition and diet","Topic assessment"] },
@@ -263,7 +175,6 @@
       { id: 6, term:"Biology Term 1", name: "Reproductive systems", topics: ["Reproduction in plants and animals","Pollination and fertilisation","Reproduction in humans","Topic assessment"] },
       { id: 7, term:"Biology Term 1", name: "Health and diseases", topics: ["Health, hygiene and disease","Methods of disease transmission","Topic assessment"] },
 
-      // Chemistry Term 2
       { id: 8, term:"Chemistry Term 2", name: "Separation", topics: ["Mixtures","Separation methods","Topic assessment"] },
       { id: 9, term:"Chemistry Term 2", name: "Matter", topics: ["Matter","Solubility and dissolving","Mixtures, elements and compounds","The periodic table","Topic assessment"] },
       { id:10, term:"Chemistry Term 2", name: "Acids, bases and salts", topics: ["Acids and bases","Topic assessment"] },
@@ -271,7 +182,6 @@
       { id:12, term:"Chemistry Term 2", name: "Oxidation", topics: ["Rusting","Topic assessment"] },
       { id:13, term:"Chemistry Term 2", name: "Organic chemistry", topics: ["Fuels","Topic assessment"] },
 
-      // Physics Term 3
       { id:14, term:"Physics Term 3", name: "Data presentation", topics: ["Ways to present data","Topic assessment"] },
       { id:15, term:"Physics Term 3", name: "Measurements", topics: ["Measurement of physical quantities","Topic assessment"] },
       { id:16, term:"Physics Term 3", name: "Force", topics: ["Effects, types and measurement of forces","Topic assessment"] },
@@ -280,13 +190,20 @@
       { id:19, term:"Physics Term 3", name: "Electricity", topics: ["Types of charge","Static and current electricity","Topic assessment"] }
     ];
 
-    // Map topic -> lab page (edit filenames to match your repo)
-    const LAB_LINKS = {
-      "Separation": "sim-mixtures.html",
-      "Matter": "sim-mixtures.html",
-      "Electricity": "sim-electricity.html",
-      "Magnetism": "sim-electricity.html"
-    };
+    // Virtual Experiments routing
+    function getExperimentLink(topicName, subtopic){
+      // Topic 1 = safety + apparatus (our new sims)
+      if(topicName === "Laboratory safety and apparatus"){
+        if((subtopic || "").toLowerCase().includes("apparatus")) return "sim-apparatus.html";
+        return "sim-safety.html";
+      }
+      // Existing sims (adjust filenames if yours differ)
+      if(topicName === "Separation") return "sim-mixtures.html";
+      if(topicName === "Matter") return "sim-mixtures.html";
+      if(topicName === "Electricity") return "sim-electricity.html";
+      if(topicName === "Magnetism") return "sim-electricity.html";
+      return "virtual-lab-hub.html";
+    }
 
     // DOM
     const chapterListEl = document.getElementById("chapterList");
@@ -301,32 +218,29 @@
     const toggleDoneBtn = document.getElementById("toggleDoneBtn");
     const progressText = document.getElementById("progressText");
     const barFill = document.getElementById("barFill");
+    const modeHint = document.getElementById("modeHint");
+    const genBtn = document.getElementById("genBtn");
 
     let selectedChapter = CHAPTERS[0];
     let selectedMode = "Notes";
     let lastOutputText = "";
-    let progress = loadProgress(); // { doneIds: [1,2,...] }
+    let progress = loadProgress();
 
     function loadProgress(){
       try{
         const raw = localStorage.getItem(STORAGE_PROGRESS);
         const obj = raw ? JSON.parse(raw) : null;
         return obj && Array.isArray(obj.doneIds) ? obj : { doneIds: [] };
-      }catch{
-        return { doneIds: [] };
-      }
+      }catch{ return { doneIds: [] }; }
     }
-    function saveProgress(){
-      localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
-    }
+    function saveProgress(){ localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress)); }
     function isDone(id){ return progress.doneIds.includes(id); }
 
     function updateProgressUI(){
       const done = progress.doneIds.length;
       const total = CHAPTERS.length;
       progressText.textContent = `Progress: ${done}/${total} topics done`;
-      const pct = total ? Math.round((done/total)*100) : 0;
-      barFill.style.width = pct + "%";
+      barFill.style.width = (total ? Math.round((done/total)*100) : 0) + "%";
       toggleDoneBtn.textContent = isDone(selectedChapter.id) ? "Mark topic as NOT done" : "Mark topic as done";
     }
 
@@ -335,20 +249,33 @@
       outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.65">${text}</div>`;
     }
 
+    function updateModeUI(){
+      if(selectedMode === "Worked Examples"){
+        genBtn.textContent = "Open Virtual Experiment";
+        modeHint.innerHTML = `Virtual Experiments mode: Clicking <b>Open Virtual Experiment</b> will launch an interactive simulation for this topic/subtopic.`;
+      }else{
+        genBtn.textContent = "Generate";
+        modeHint.textContent = "Tip: Choose Virtual Experiments to run a simulation instead of text worked examples.";
+      }
+
+      // Keep the “Open related lab” button always relevant
+      openLabBtn.href = getExperimentLink(selectedChapter.name, topicEl.value);
+    }
+
     function setMode(mode){
       selectedMode = mode;
       [...contentPills.querySelectorAll(".pill")].forEach(p=>{
         p.classList.toggle("active", p.dataset.mode === mode);
       });
+      updateModeUI();
+      saveLastState();
     }
 
     function setChapter(ch){
       selectedChapter = ch;
       chapterEl.value = `Topic ${ch.id}: ${ch.name} (${ch.term})`;
       topicEl.innerHTML = ch.topics.map(t => `<option value="${t}">${t}</option>`).join("");
-
-      const link = LAB_LINKS[ch.name] || "virtual-lab-hub.html";
-      openLabBtn.href = link;
+      updateModeUI();
 
       [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
         btn.classList.toggle("active", btn.dataset.id == ch.id);
@@ -389,9 +316,8 @@
     async function checkHealth(){
       try{
         const r = await fetch(`${API_BASE}/health`, { method:"GET" });
-        if(!r.ok) throw new Error("Health not OK");
-        apiStatusEl.textContent = "API: online";
-      }catch(e){
+        apiStatusEl.textContent = r.ok ? "API: online" : "API: offline / sleeping";
+      }catch{
         apiStatusEl.textContent = "API: offline / sleeping";
       }
     }
@@ -417,7 +343,6 @@
 
         const data = await r.json().catch(()=> ({}));
         if(!r.ok) throw new Error(data?.detail || data?.error || `Request failed (${r.status})`);
-
         renderOutput(data.text || "No text returned.");
         saveLastState();
       }catch(e){
@@ -430,9 +355,7 @@
         const raw = localStorage.getItem(STORAGE_SAVED);
         const arr = raw ? JSON.parse(raw) : [];
         return Array.isArray(arr) ? arr : [];
-      }catch{
-        return [];
-      }
+      }catch{ return []; }
     }
 
     function saveToLibrary(){
@@ -441,7 +364,6 @@
         alert("Generate content first, then save.");
         return;
       }
-
       const item = {
         id: "sg_" + Date.now(),
         savedAt: new Date().toISOString(),
@@ -452,7 +374,6 @@
         instruction: qEl.value.trim(),
         content: text
       };
-
       const arr = loadLibrary();
       arr.unshift(item);
       localStorage.setItem(STORAGE_SAVED, JSON.stringify(arr));
@@ -465,16 +386,11 @@
         alert("Generate content first, then download PDF.");
         return;
       }
-
       const { jsPDF } = window.jspdf || {};
-      if(!jsPDF){
-        alert("PDF library failed to load. Refresh page and try again.");
-        return;
-      }
+      if(!jsPDF){ alert("PDF library failed to load. Refresh page and try again."); return; }
 
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      const margin = 40;
-      const maxWidth = 515;
+      const doc = new jsPDF({ unit:"pt", format:"a4" });
+      const margin = 40, maxWidth = 515;
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
@@ -489,16 +405,11 @@
       const lines = doc.splitTextToSize(text, maxWidth);
       let y = 135;
       doc.setFontSize(11);
-
-      lines.forEach(line=>{
-        if(y > 800){
-          doc.addPage();
-          y = 50;
-        }
+      for(const line of lines){
+        if(y > 800){ doc.addPage(); y = 50; }
         doc.text(line, margin, y);
         y += 14;
-      });
-
+      }
       const safeName = `${selectedMode}_Topic${selectedChapter.id}_${(topicEl.value||"Subtopic").replace(/[^a-z0-9]+/gi,"_")}.pdf`;
       doc.save(safeName);
     }
@@ -522,20 +433,16 @@
         const s = JSON.parse(raw);
         if(s.form) formEl.value = s.form;
         if(s.mode) setMode(s.mode);
-
         const ch = CHAPTERS.find(x => x.id === Number(s.chapterId)) || CHAPTERS[0];
         buildChapterButtons();
         setChapter(ch);
-
         if(s.topic){
           const options = [...topicEl.querySelectorAll("option")].map(o=>o.value);
           if(options.includes(s.topic)) topicEl.value = s.topic;
         }
         if(typeof s.instruction === "string") qEl.value = s.instruction;
         if(typeof s.lastOutput === "string" && s.lastOutput.trim()) renderOutput(s.lastOutput);
-      }catch{
-        // ignore
-      }
+      }catch{}
     }
 
     // Events
@@ -543,10 +450,20 @@
       const pill = e.target.closest(".pill");
       if(!pill) return;
       setMode(pill.dataset.mode);
-      saveLastState();
     });
 
-    document.getElementById("genBtn").onclick  = ()=> callTutor(selectedMode);
+    topicEl.addEventListener("change", ()=> updateModeUI());
+
+    // Generate / Open Virtual Experiment
+    genBtn.onclick = ()=>{
+      if(selectedMode === "Worked Examples"){
+        const link = getExperimentLink(selectedChapter.name, topicEl.value);
+        window.location.href = link; // open simulation
+        return;
+      }
+      callTutor(selectedMode);
+    };
+
     document.getElementById("quizBtn").onclick = ()=> callTutor("Quiz");
     document.getElementById("pracBtn").onclick = ()=> callTutor("Practical");
 
@@ -568,11 +485,8 @@
 
     toggleDoneBtn.onclick = ()=>{
       const id = selectedChapter.id;
-      if(isDone(id)){
-        progress.doneIds = progress.doneIds.filter(x => x !== id);
-      }else{
-        progress.doneIds.push(id);
-      }
+      if(isDone(id)){ progress.doneIds = progress.doneIds.filter(x => x !== id); }
+      else{ progress.doneIds.push(id); }
       saveProgress();
       updateProgressUI();
       refreshChecks();
@@ -588,4 +502,4 @@
     refreshChecks();
   </script>
 </body>
-  </html>
+</html>
