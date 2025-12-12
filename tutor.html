@@ -6,10 +6,13 @@
   <title>Sci-Guru AI Tutor</title>
   <link rel="stylesheet" href="styles.css" />
 
+  <!-- PDF export (client-side) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
   <style>
     .layout{
       display:grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 300px 1fr;
       gap:14px;
       padding:18px 0 30px;
     }
@@ -30,7 +33,11 @@
       color: var(--text);
       cursor:pointer;
       margin-bottom:10px;
-      font-weight:600;
+      font-weight:700;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
     }
     .chapterBtn small{
       display:block;
@@ -42,7 +49,11 @@
       border-color: rgba(47,107,255,.55);
       box-shadow: 0 0 0 4px rgba(47,107,255,.12);
     }
-
+    .check{
+      font-size: 1rem;
+      opacity: .85;
+      margin-top:2px;
+    }
     .mainArea{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -61,7 +72,7 @@
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
       color: var(--text);
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
       user-select:none;
     }
@@ -70,11 +81,26 @@
       box-shadow: 0 0 0 4px rgba(47,107,255,.12);
     }
 
-    .mutedLine{
-      color: var(--muted);
-      font-size: .92rem;
-      line-height: 1.4;
+    .progressWrap{
+      margin: 8px 0 14px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
     }
+    .bar{
+      height:10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+    }
+    .mutedLine{ color: var(--muted); font-size: .92rem; line-height: 1.4; }
 
     @media (max-width: 980px){
       .layout{grid-template-columns:1fr}
@@ -98,6 +124,7 @@
       <nav class="nav">
         <a href="index.html">Home</a>
         <a class="active" href="tutor.html">AI Tutor</a>
+        <a href="library.html">My Library</a>
         <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
       </nav>
     </div>
@@ -108,18 +135,23 @@
 
       <!-- LEFT: CHAPTERS -->
       <aside class="card chapters">
-        <h2 style="margin-bottom:8px;">Chapters (1–17)</h2>
-        <p class="small" style="margin-bottom:12px;">Select a chapter to load topics.</p>
+        <h2 style="margin-bottom:6px;">Chapters (1–17)</h2>
+        <p class="small" style="margin-bottom:10px;">Progress is saved on your device.</p>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
           <span class="badge" id="apiStatus">API: checking...</span>
           <span class="badge">Render Free may sleep</span>
+        </div>
+
+        <div class="progressWrap">
+          <div class="small" id="progressText">Progress: 0/17</div>
+          <div class="bar" style="margin-top:8px;"><div id="barFill"></div></div>
         </div>
 
         <div id="chapterList"></div>
 
         <div style="margin-top:10px" class="small">
-          Tip: If chapter names differ from your book, send me your real chapter list and I’ll update the sidebar.
+          Tip: When your book chapter titles are ready, I’ll replace these titles exactly.
         </div>
       </aside>
 
@@ -129,9 +161,8 @@
         <!-- ASK -->
         <section class="card">
           <h2>Chapter Content</h2>
-          <p class="small">Choose Form + Chapter + Topic, then generate content.</p>
+          <p class="small">Generate Notes / Worked Examples / Exam Questions / Marking Scheme.</p>
 
-          <!-- Content buttons -->
           <div class="pillRow" id="contentPills">
             <div class="pill active" data-mode="Notes">Notes</div>
             <div class="pill" data-mode="Worked Examples">Worked Examples</div>
@@ -160,7 +191,7 @@
           <div style="height:10px"></div>
 
           <label class="small" for="q">Extra instruction (optional)</label>
-          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, include diagrams described in words, include calculations, etc."></textarea>
+          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, include calculations, include safety notes..."></textarea>
 
           <div style="height:10px"></div>
 
@@ -171,6 +202,11 @@
             <a class="btn" id="openLabBtn" href="virtual-lab-hub.html">Open related lab</a>
           </div>
 
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="toggleDoneBtn">Mark chapter as done</button>
+            <a class="btn" href="library.html">Open My Library</a>
+          </div>
+
           <div class="mutedLine" style="margin-top:12px;">
             Render free tier may sleep. First request can take longer.
           </div>
@@ -179,15 +215,21 @@
         <!-- OUTPUT -->
         <section class="card">
           <h2>Output</h2>
-          <p class="small">Generated content will appear here.</p>
+          <p class="small">Generated content appears here. Save or export it.</p>
 
           <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
             <p class="small" style="margin:0">No output yet.</p>
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="saveBtn">Save to My Library</button>
+            <button class="btn" id="pdfBtn">Download PDF</button>
             <button class="btn" id="copyBtn">Copy</button>
             <button class="btn" id="clearBtn">Clear</button>
+          </div>
+
+          <div class="small" style="margin-top:12px;">
+            Tip: Save Notes + Worked Examples for revision, then generate Exam Questions to test yourself.
           </div>
         </section>
 
@@ -198,7 +240,11 @@
   <script>
     const API_BASE = "https://sci-guru-backend.onrender.com";
 
-    // Starter chapters (we can replace with your exact book)
+    const STORAGE_PROGRESS = "sciguru_progress_v1";
+    const STORAGE_SAVED = "sciguru_saved_v1";
+    const STORAGE_LAST = "sciguru_last_v1";
+
+    // Starter chapters (replace later with your exact book titles)
     const CHAPTERS = [
       { id: 1,  name: "Measurement & Safety", topics: ["Lab safety rules","SI units","Measuring length/mass/time","Accuracy & precision","Errors"] },
       { id: 2,  name: "States of Matter", topics: ["Solids, liquids, gases","Particle model","Changes of state","Diffusion","Brownian motion"] },
@@ -236,11 +282,40 @@
     const apiStatusEl = document.getElementById("apiStatus");
     const openLabBtn = document.getElementById("openLabBtn");
     const contentPills = document.getElementById("contentPills");
+    const toggleDoneBtn = document.getElementById("toggleDoneBtn");
+    const progressText = document.getElementById("progressText");
+    const barFill = document.getElementById("barFill");
 
     let selectedChapter = CHAPTERS[0];
     let selectedMode = "Notes";
+    let lastOutputText = "";
+    let progress = loadProgress(); // { doneIds: [1,2,...] }
+
+    function loadProgress(){
+      try{
+        const raw = localStorage.getItem(STORAGE_PROGRESS);
+        const obj = raw ? JSON.parse(raw) : null;
+        return obj && Array.isArray(obj.doneIds) ? obj : { doneIds: [] };
+      }catch{
+        return { doneIds: [] };
+      }
+    }
+    function saveProgress(){
+      localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
+    }
+    function isDone(id){ return progress.doneIds.includes(id); }
+
+    function updateProgressUI(){
+      const done = progress.doneIds.length;
+      const total = CHAPTERS.length;
+      progressText.textContent = `Progress: ${done}/${total} chapters done`;
+      const pct = total ? Math.round((done/total)*100) : 0;
+      barFill.style.width = pct + "%";
+      toggleDoneBtn.textContent = isDone(selectedChapter.id) ? "Mark chapter as NOT done" : "Mark chapter as done";
+    }
 
     function renderOutput(text){
+      lastOutputText = text || "";
       outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.65">${text}</div>`;
     }
 
@@ -254,7 +329,6 @@
     function setChapter(ch){
       selectedChapter = ch;
       chapterEl.value = `Chapter ${ch.id}: ${ch.name}`;
-
       topicEl.innerHTML = ch.topics.map(t => `<option value="${t}">${t}</option>`).join("");
 
       const link = LAB_LINKS[ch.name] || "virtual-lab-hub.html";
@@ -263,6 +337,9 @@
       [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
         btn.classList.toggle("active", btn.dataset.id == ch.id);
       });
+
+      updateProgressUI();
+      saveLastState();
     }
 
     function buildChapterButtons(){
@@ -271,9 +348,26 @@
         const btn = document.createElement("button");
         btn.className = "chapterBtn";
         btn.dataset.id = ch.id;
-        btn.innerHTML = `Chapter ${ch.id}: ${ch.name}<small>${ch.topics.length} topics</small>`;
+
+        const doneMark = isDone(ch.id) ? "✅" : "⬜";
+        btn.innerHTML = `
+          <div>
+            Chapter ${ch.id}: ${ch.name}
+            <small>${ch.topics.length} topics</small>
+          </div>
+          <div class="check">${doneMark}</div>
+        `;
+
         btn.onclick = ()=> setChapter(ch);
         chapterListEl.appendChild(btn);
+      });
+    }
+
+    function refreshChapterChecks(){
+      [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
+        const id = Number(btn.dataset.id);
+        const mark = btn.querySelector(".check");
+        if(mark) mark.textContent = isDone(id) ? "✅" : "⬜";
       });
     }
 
@@ -310,8 +404,123 @@
         if(!r.ok) throw new Error(data?.detail || data?.error || `Request failed (${r.status})`);
 
         renderOutput(data.text || "No text returned.");
+        saveLastState();
       }catch(e){
         renderOutput("Error: " + e.message);
+      }
+    }
+
+    function saveToLibrary(){
+      const text = (outEl.innerText || "").trim();
+      if(!text || text.toLowerCase().startsWith("loading") || text.toLowerCase().startsWith("error")){
+        alert("Generate content first, then save.");
+        return;
+      }
+
+      const item = {
+        id: "sg_" + Date.now(),
+        savedAt: new Date().toISOString(),
+        mode: selectedMode,
+        form: formEl.value,
+        chapter: `Chapter ${selectedChapter.id}: ${selectedChapter.name}`,
+        topic: topicEl.value || selectedChapter.name,
+        instruction: qEl.value.trim(),
+        content: text
+      };
+
+      const arr = loadLibrary();
+      arr.unshift(item);
+      localStorage.setItem(STORAGE_SAVED, JSON.stringify(arr));
+      alert("Saved to My Library ✅");
+    }
+
+    function loadLibrary(){
+      try{
+        const raw = localStorage.getItem(STORAGE_SAVED);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch{
+        return [];
+      }
+    }
+
+    function downloadPDF(){
+      const text = (outEl.innerText || "").trim();
+      if(!text || text.toLowerCase().startsWith("loading") || text.toLowerCase().startsWith("error")){
+        alert("Generate content first, then download PDF.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf || {};
+      if(!jsPDF){
+        alert("PDF library failed to load. Refresh page and try again.");
+        return;
+      }
+
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const margin = 40;
+      const maxWidth = 515;
+
+      const title = `Sci-Guru - ${selectedMode}`;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text(title, margin, 55);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.text(`Form: ${formEl.value}`, margin, 75);
+      doc.text(`Chapter: Chapter ${selectedChapter.id} - ${selectedChapter.name}`, margin, 90);
+      doc.text(`Topic: ${topicEl.value || selectedChapter.name}`, margin, 105);
+
+      const lines = doc.splitTextToSize(text, maxWidth);
+      let y = 135;
+      doc.setFontSize(11);
+
+      lines.forEach(line=>{
+        if(y > 800){
+          doc.addPage();
+          y = 50;
+        }
+        doc.text(line, margin, y);
+        y += 14;
+      });
+
+      const safeName = `${selectedMode}_Chapter${selectedChapter.id}_${(topicEl.value||"Topic").replace(/[^a-z0-9]+/gi,"_")}.pdf`;
+      doc.save(safeName);
+    }
+
+    function saveLastState(){
+      const state = {
+        mode: selectedMode,
+        form: formEl.value,
+        chapterId: selectedChapter.id,
+        topic: topicEl.value || "",
+        instruction: qEl.value || "",
+        lastOutput: lastOutputText || ""
+      };
+      localStorage.setItem(STORAGE_LAST, JSON.stringify(state));
+    }
+
+    function restoreLastState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_LAST);
+        if(!raw) return;
+        const s = JSON.parse(raw);
+        if(s.form) formEl.value = s.form;
+        if(s.mode) setMode(s.mode);
+
+        const ch = CHAPTERS.find(x => x.id === Number(s.chapterId)) || CHAPTERS[0];
+        buildChapterButtons();
+        setChapter(ch);
+
+        if(s.topic){
+          const options = [...topicEl.querySelectorAll("option")].map(o=>o.value);
+          if(options.includes(s.topic)) topicEl.value = s.topic;
+        }
+        if(typeof s.instruction === "string") qEl.value = s.instruction;
+        if(typeof s.lastOutput === "string" && s.lastOutput.trim()) renderOutput(s.lastOutput);
+      }catch{
+        // ignore
       }
     }
 
@@ -320,25 +529,39 @@
       const pill = e.target.closest(".pill");
       if(!pill) return;
       setMode(pill.dataset.mode);
+      saveLastState();
     });
 
     document.getElementById("genBtn").onclick  = ()=> callTutor(selectedMode);
     document.getElementById("quizBtn").onclick = ()=> callTutor("Quiz");
     document.getElementById("pracBtn").onclick = ()=> callTutor("Practical");
 
+    document.getElementById("saveBtn").onclick = saveToLibrary;
+    document.getElementById("pdfBtn").onclick = downloadPDF;
+
     document.getElementById("copyBtn").onclick = async ()=>{
-      const txt = outEl.innerText || "";
-      try{
-        await navigator.clipboard.writeText(txt);
-        alert("Copied!");
-      }catch(e){
-        alert("Copy failed. Select and copy manually.");
-      }
+      const txt = (outEl.innerText || "").trim();
+      if(!txt) return alert("Nothing to copy.");
+      try{ await navigator.clipboard.writeText(txt); alert("Copied!"); }
+      catch{ alert("Copy failed. Select and copy manually."); }
     };
 
     document.getElementById("clearBtn").onclick = ()=>{
       qEl.value = "";
       renderOutput("Cleared.");
+      saveLastState();
+    };
+
+    toggleDoneBtn.onclick = ()=>{
+      const id = selectedChapter.id;
+      if(isDone(id)){
+        progress.doneIds = progress.doneIds.filter(x => x !== id);
+      }else{
+        progress.doneIds.push(id);
+      }
+      saveProgress();
+      updateProgressUI();
+      refreshChapterChecks();
     };
 
     // Init
@@ -346,6 +569,9 @@
     setChapter(CHAPTERS[0]);
     setMode("Notes");
     checkHealth();
+    restoreLastState();
+    updateProgressUI();
+    refreshChapterChecks();
   </script>
 </body>
 </html>
