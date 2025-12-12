@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Virtual Experiment: Bunsen Burner</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;padding:18px 0 30px;}
+    .scene{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;overflow:hidden;}
+    .panel{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .badge2{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .btn2{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:900;cursor:pointer;}
+    .btn2.primary{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .toast{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);white-space:pre-wrap;}
+    .controls{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px;}
+    .control{padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);}
+    .control label{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:900;}
+    .control input[type="range"]{width:100%;}
+    .quizBox{margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:14px;background:rgba(255,255,255,.03);}
+    .q{margin:10px 0 6px;font-weight:900;}
+    .opt{display:block;margin:6px 0;}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+
+    /* Burner drawing */
+    .labWrap{display:grid;grid-template-columns:1fr;gap:12px;}
+    .bench{height:120px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.04);position:relative;overflow:hidden;}
+    .bench:before{
+      content:""; position:absolute; left:0; right:0; top:0; height:22px;
+      background:rgba(255,255,255,.03); border-bottom:1px solid var(--border);
+    }
+
+    .burnerArea{height:360px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.02);position:relative;overflow:hidden;}
+    .burner{
+      position:absolute; left:50%; bottom:40px; transform:translateX(-50%);
+      width:160px; height:260px;
+    }
+    .base{
+      position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+      width:160px; height:38px; border-radius:20px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border);
+    }
+    .tube{
+      position:absolute; left:50%; bottom:38px; transform:translateX(-50%);
+      width:52px; height:155px; border-radius:18px;
+      background:rgba(255,255,255,.04); border:1px solid var(--border);
+    }
+    .collar{
+      position:absolute; left:50%; bottom:105px; transform:translateX(-50%);
+      width:84px; height:42px; border-radius:18px;
+      background:rgba(255,255,255,.04); border:1px solid var(--border);
+    }
+    .airHole{
+      position:absolute; left:50%; bottom:118px; transform:translateX(-50%);
+      width:20px; height:10px; border-radius:6px;
+      background:rgba(47,107,255,.25);
+      border:1px solid rgba(47,107,255,.45);
+    }
+    .gasHose{
+      position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+      width:210px; height:10px; border-radius:999px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border);
+    }
+    .tap{
+      position:absolute; left:18px; bottom:18px;
+      width:150px; height:60px; border-radius:16px;
+      border:1px solid var(--border); background:rgba(255,255,255,.04);
+      padding:10px;
+    }
+    .tap b{display:block}
+    .tap .small2{margin-top:2px}
+
+    /* Flame layers */
+    .flame{
+      position:absolute; left:50%; bottom:190px; transform:translateX(-50%);
+      width:130px; height:190px;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,.22));
+      opacity:0;
+      transition: opacity .2s, transform .2s;
+    }
+    .flame.on{opacity:1;}
+    .flameShape{
+      position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+      width:130px; height:190px; border-radius: 60% 60% 55% 55% / 70% 70% 30% 30%;
+    }
+    .flameInner{
+      position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
+      width:60px; height:105px; border-radius: 60% 60% 55% 55% / 70% 70% 30% 30%;
+      opacity:.85;
+    }
+
+    /* “Types” (we avoid hardcoded colors by using opacity + borders & text, but flame needs some color to be meaningful.
+       We'll use minimal, subtle colors that match the brand tone. */
+    .type-safety .flameShape{ background: rgba(255, 190, 90, .70); }
+    .type-safety .flameInner{ background: rgba(255, 230, 170, .70); }
+
+    .type-roaring .flameShape{ background: rgba(120, 190, 255, .55); }
+    .type-roaring .flameInner{ background: rgba(200, 230, 255, .70); }
+
+    .type-yellow .flameShape{ background: rgba(255, 160, 60, .75); }
+    .type-yellow .flameInner{ background: rgba(255, 240, 200, .70); }
+
+    .type-blown .flameShape{ background: rgba(255, 190, 90, .35); }
+    .type-blown .flameInner{ background: rgba(255, 230, 170, .35); }
+
+    .legend{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;
+    }
+    .legend .pill{font-size:.85rem}
+
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">
+        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+        <div class="title">
+          <b>Virtual Experiment: Bunsen Burner</b>
+          <span>Gas + air control → flame type + safety decisions</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">AI Tutor</a>
+        <a class="active" href="sim-bunsen.html">Bunsen Lab</a>
+        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- SCENE -->
+      <section class="card scene">
+        <div class="row" style="justify-content:space-between;">
+          <div>
+            <span class="badge2" id="flameName">Flame: OFF</span>
+            <span class="badge2" id="riskBadge">Risk: —</span>
+          </div>
+          <span class="badge2" id="taskBadge">Task: 0/3</span>
+        </div>
+
+        <div class="labWrap" style="margin-top:12px;">
+          <div class="burnerArea">
+            <div class="tap">
+              <b>Gas Tap</b>
+              <div class="small2">Turn gas on/off using controls →</div>
+            </div>
+
+            <div class="burner" aria-label="bunsen burner illustration">
+              <div class="flame" id="flame">
+                <div class="flameShape"></div>
+                <div class="flameInner"></div>
+              </div>
+
+              <div class="tube"></div>
+              <div class="collar"></div>
+              <div class="airHole" id="airHole"></div>
+              <div class="base"></div>
+              <div class="gasHose"></div>
+            </div>
+          </div>
+
+          <div class="bench"></div>
+        </div>
+
+        <div class="legend">
+          <span class="pill">Safety flame = visible, easy to see</span>
+          <span class="pill">Roaring flame = hotter for heating</span>
+          <span class="pill">Yellow smoky = poor air (soot)</span>
+        </div>
+
+        <div class="toast" id="sceneToast">
+          Goal: Learn how air-hole + gas flow affects the flame.
+          Use the tasks on the right to score points.
+        </div>
+      </section>
+
+      <!-- PANEL -->
+      <aside class="panel">
+        <h2 style="margin:0 0 6px;">Controls</h2>
+        <div class="small2">Adjust gas and air. The simulator will identify the flame type and give safety guidance.</div>
+
+        <div class="controls">
+          <div class="control">
+            <label>
+              Gas flow
+              <span class="badge2" id="gasVal">0%</span>
+            </label>
+            <input id="gas" type="range" min="0" max="100" value="0" />
+            <div class="small2">0% = off • 20–60% = normal • 80–100% = high</div>
+          </div>
+
+          <div class="control">
+            <label>
+              Air hole opening
+              <span class="badge2" id="airVal">0%</span>
+            </label>
+            <input id="air" type="range" min="0" max="100" value="0" />
+            <div class="small2">Closed air hole gives a yellow flame; open air hole gives a blue roaring flame.</div>
+          </div>
+
+          <div class="control">
+            <label>
+              Safety distance (papers away)
+              <span class="badge2" id="paperVal">Safe</span>
+            </label>
+            <input id="papers" type="range" min="0" max="100" value="70" />
+            <div class="small2">Move “papers” away from the flame for safe heating.</div>
+          </div>
+        </div>
+
+        <div class="actions2">
+          <button class="btn2 primary" id="taskBtn">Start tasks</button>
+          <button class="btn2" id="resetBtn">Reset</button>
+          <a class="btn2" href="tutor.html">Back to Tutor</a>
+        </div>
+
+        <div class="quizBox" id="taskBox" style="display:none;">
+          <div class="badge2" id="taskTitle">Task 1</div>
+          <div class="q" id="taskText">—</div>
+          <div class="small2" id="taskHint">—</div>
+          <div class="toast" id="taskToast">Adjust sliders, then press “Check task”.</div>
+          <div class="actions2" style="margin-top:10px;">
+            <button class="btn2 primary" id="checkTaskBtn">Check task</button>
+            <button class="btn2" id="nextTaskBtn">Next</button>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
+
+        <h3 style="margin:0 0 6px;">Safety reminders</h3>
+        <div class="small2" style="white-space:pre-wrap;">
+• Light burner only when instructed by teacher.
+• Keep flammable materials away from the flame.
+• Use a safety flame (visible) when not heating.
+• Turn off gas after use.
+• Never leave a lit burner unattended.
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <script>
+    // DOM
+    const gas = document.getElementById("gas");
+    const air = document.getElementById("air");
+    const papers = document.getElementById("papers");
+
+    const gasVal = document.getElementById("gasVal");
+    const airVal = document.getElementById("airVal");
+    const paperVal = document.getElementById("paperVal");
+
+    const flame = document.getElementById("flame");
+    const airHole = document.getElementById("airHole");
+
+    const flameName = document.getElementById("flameName");
+    const riskBadge = document.getElementById("riskBadge");
+    const sceneToast = document.getElementById("sceneToast");
+
+    const taskBtn = document.getElementById("taskBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const taskBox = document.getElementById("taskBox");
+    const taskTitle = document.getElementById("taskTitle");
+    const taskText = document.getElementById("taskText");
+    const taskHint = document.getElementById("taskHint");
+    const taskToast = document.getElementById("taskToast");
+    const checkTaskBtn = document.getElementById("checkTaskBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+    const taskBadge = document.getElementById("taskBadge");
+
+    // Flame classification rules (simple but realistic for school level)
+    function classify(g, a){
+      if(g === 0) return { type:"off", label:"OFF", risk:"—", advice:"Gas is off." };
+
+      // Yellow luminous flame when air is very low
+      if(a <= 20){
+        return {
+          type:"yellow",
+          label:"Yellow (luminous) flame",
+          risk:"Medium (sooty)",
+          advice:"Air hole mostly closed → incomplete combustion → yellow smoky flame. Not best for heating; produces soot."
+        };
+      }
+
+      // Roaring flame when air is open & gas moderate to high
+      if(a >= 60 && g >= 25){
+        return {
+          type:"roaring",
+          label:"Blue (roaring) flame",
+          risk:"High heat",
+          advice:"Air hole open → more oxygen → blue roaring flame. Hotter and good for heating, but harder to see. Use carefully."
+        };
+      }
+
+      // Safety flame when air partly open and gas low/medium
+      return {
+        type:"safety",
+        label:"Blue (safety) flame",
+        risk:"Low/Medium",
+        advice:"Good visible flame for safety while waiting. Use roaring flame only for heating."
+      };
+    }
+
+    function paperSafety(p){
+      // papers slider: 0 = very close (danger), 100 = far away (safe)
+      if(p <= 35) return { label:"Danger", advice:"Flammable papers are too close. Move them away from the flame." };
+      if(p <= 60) return { label:"Caution", advice:"Papers are a bit close. Increase distance to reduce fire risk." };
+      return { label:"Safe", advice:"Papers are far enough from the flame." };
+    }
+
+    function update(){
+      const g = Number(gas.value);
+      const a = Number(air.value);
+      const p = Number(papers.value);
+
+      gasVal.textContent = g + "%";
+      airVal.textContent = a + "%";
+
+      // Air hole indicator size
+      airHole.style.width = (10 + Math.round(a/3)) + "px";
+
+      const f = classify(g, a);
+      const ps = paperSafety(p);
+      paperVal.textContent = ps.label;
+
+      flame.className = "flame"; // reset classes
+      flame.querySelector(".flameShape").className = "flameShape";
+      flame.querySelector(".flameInner").className = "flameInner";
+
+      if(f.type !== "off"){
+        flame.classList.add("on");
+        flame.classList.add("type-" + f.type);
+
+        // flame height depends on gas level
+        const h = 90 + Math.round(g * 1.1);
+        flame.style.height = h + "px";
+        flame.style.width = Math.max(90, Math.round(80 + g * 0.7)) + "px";
+
+        // Slight flame movement for roaring
+        flame.style.transform = (f.type === "roaring")
+          ? "translateX(-50%) translateY(-2px) scale(1.02)"
+          : "translateX(-50%) scale(1)";
+      }else{
+        flame.classList.remove("on");
+      }
+
+      flameName.textContent = "Flame: " + (f.type === "off" ? "OFF" : f.label);
+      riskBadge.textContent = "Risk: " + (f.type === "off" ? "—" : f.risk);
+
+      // Combined guidance
+      let extra = "";
+      if(f.type !== "off"){
+        if(ps.label === "Danger") extra = "\n⚠️ Fire risk: papers too close!";
+        if(ps.label === "Caution") extra = "\n⚠️ Caution: increase distance from flame.";
+      }
+      sceneToast.textContent = f.advice + "\n" + ps.advice + extra;
+    }
+
+    // Tasks
+    const tasks = [
+      {
+        title: "Task 1: Set a SAFETY flame",
+        text: "Set the burner to a safe waiting flame (visible, not roaring).",
+        hint: "Gas low/medium + air partly open (not fully closed, not fully open). Keep papers SAFE.",
+        check: (g,a,p)=> g>=15 && g<=55 && a>=25 && a<=55 && p>60
+      },
+      {
+        title: "Task 2: Set a ROARING heating flame",
+        text: "Set a hot heating flame for warming a beaker.",
+        hint: "Air hole mostly open + gas medium/high. Papers must be SAFE.",
+        check: (g,a,p)=> g>=30 && a>=60 && p>60
+      },
+      {
+        title: "Task 3: Fix a YELLOW smoky flame",
+        text: "Your flame is yellow and sooty. Adjust to improve combustion.",
+        hint: "Increase air opening while keeping gas at a safe level. Papers SAFE.",
+        check: (g,a,p)=> g>=20 && g<=60 && a>=35 && p>60
+      }
+    ];
+
+    let started = false;
+    let current = 0;
+    let passed = [false,false,false];
+
+    function showTask(){
+      const t = tasks[current];
+      taskTitle.textContent = t.title;
+      taskText.textContent = t.text;
+      taskHint.textContent = t.hint;
+      taskToast.textContent = "Adjust sliders, then press “Check task”.";
+      updateTaskBadge();
+    }
+
+    function updateTaskBadge(){
+      const done = passed.filter(Boolean).length;
+      taskBadge.textContent = `Task: ${done}/3`;
+    }
+
+    taskBtn.onclick = ()=>{
+      started = true;
+      taskBox.style.display = "block";
+      current = 0;
+      showTask();
+    };
+
+    checkTaskBtn.onclick = ()=>{
+      if(!started) return;
+      const g = Number(gas.value), a = Number(air.value), p = Number(papers.value);
+      const ok = tasks[current].check(g,a,p);
+
+      if(ok){
+        passed[current] = true;
+        taskToast.textContent = "✅ Correct! Task completed.";
+      }else{
+        const f = classify(g,a);
+        const ps = paperSafety(p);
+        taskToast.textContent =
+          "❌ Not yet.\n" +
+          `Current flame: ${f.type === "off" ? "OFF" : f.label}\n` +
+          `Paper safety: ${ps.label}\n` +
+          "Try adjusting gas, air, and papers distance.";
+      }
+      updateTaskBadge();
+    };
+
+    nextTaskBtn.onclick = ()=>{
+      if(!started) return;
+      current = (current + 1) % tasks.length;
+      showTask();
+    };
+
+    resetBtn.onclick = ()=>{
+      gas.value = 0;
+      air.value = 0;
+      papers.value = 70;
+      started = false;
+      current = 0;
+      passed = [false,false,false];
+      taskBox.style.display = "none";
+      updateTaskBadge();
+      update();
+    };
+
+    gas.addEventListener("input", update);
+    air.addEventListener("input", update);
+    papers.addEventListener("input", update);
+
+    updateTaskBadge();
+    update();
+  </script>
+</body>
+</html>
