@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 
   <style>
-    /* Tutor page layout */
     .layout{
       display:grid;
       grid-template-columns: 280px 1fr;
@@ -43,15 +42,34 @@
       border-color: rgba(47,107,255,.55);
       box-shadow: 0 0 0 4px rgba(47,107,255,.12);
     }
+
     .mainArea{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:14px;
     }
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:.92rem;
+
+    .pillRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 8px 0 12px;
     }
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill.active{
+      border-color: rgba(47,107,255,.55);
+      box-shadow: 0 0 0 4px rgba(47,107,255,.12);
+    }
+
     .mutedLine{
       color: var(--muted);
       font-size: .92rem;
@@ -101,16 +119,25 @@
         <div id="chapterList"></div>
 
         <div style="margin-top:10px" class="small">
-          Tip: If chapter names differ from your book, tell me and we’ll adjust them.
+          Tip: If chapter names differ from your book, send me your real chapter list and I’ll update the sidebar.
         </div>
       </aside>
 
       <!-- RIGHT: ASK + OUTPUT -->
       <section class="mainArea">
+
         <!-- ASK -->
         <section class="card">
-          <h2>Ask Sci-Guru</h2>
-          <p class="small">Choose Form, Chapter and Topic, then ask a question.</p>
+          <h2>Chapter Content</h2>
+          <p class="small">Choose Form + Chapter + Topic, then generate content.</p>
+
+          <!-- Content buttons -->
+          <div class="pillRow" id="contentPills">
+            <div class="pill active" data-mode="Notes">Notes</div>
+            <div class="pill" data-mode="Worked Examples">Worked Examples</div>
+            <div class="pill" data-mode="Past Exam Questions">Past Exam Questions</div>
+            <div class="pill" data-mode="Marking Scheme">Marking Scheme</div>
+          </div>
 
           <label class="small" for="form">Form / Level</label>
           <select id="form" class="input">
@@ -132,52 +159,46 @@
 
           <div style="height:10px"></div>
 
-          <label class="small" for="q">Your question</label>
-          <textarea id="q" class="input" placeholder="e.g. Explain electricity in simple terms using Zimbabwean examples..."></textarea>
+          <label class="small" for="q">Extra instruction (optional)</label>
+          <textarea id="q" class="input" placeholder="e.g. Use Zimbabwe examples, make it short, include diagrams described in words, include calculations, etc."></textarea>
 
           <div style="height:10px"></div>
 
           <div class="actions">
-            <button class="btn primary" id="askBtn">Ask Sci-Guru</button>
-            <button class="btn" id="quizBtn">Generate quiz</button>
-            <button class="btn" id="pracBtn">Generate practical</button>
+            <button class="btn primary" id="genBtn">Generate</button>
+            <button class="btn" id="quizBtn">Quick Quiz</button>
+            <button class="btn" id="pracBtn">Practical</button>
             <a class="btn" id="openLabBtn" href="virtual-lab-hub.html">Open related lab</a>
           </div>
 
           <div class="mutedLine" style="margin-top:12px;">
-            If the first request is slow, Render is waking up (free tier).
+            Render free tier may sleep. First request can take longer.
           </div>
         </section>
 
         <!-- OUTPUT -->
         <section class="card">
           <h2>Output</h2>
-          <p class="small">Your explanation / quiz / practical will appear here.</p>
+          <p class="small">Generated content will appear here.</p>
 
           <div id="out" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
-            <p class="small" style="margin:0">No response yet.</p>
+            <p class="small" style="margin:0">No output yet.</p>
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" id="copyBtn">Copy answer</button>
+            <button class="btn" id="copyBtn">Copy</button>
             <button class="btn" id="clearBtn">Clear</button>
           </div>
-
-          <div class="small" style="margin-top:12px;">
-            <span class="mono">Tip:</span> You can ask “Explain”, “Give examples”, “Create a test”, “Practical steps”, etc.
-          </div>
         </section>
-      </section>
 
+      </section>
     </div>
   </main>
 
   <script>
-    // ✅ Your Render backend
     const API_BASE = "https://sci-guru-backend.onrender.com";
 
-    // ===== Chapters 1–17 (starter structure) =====
-    // We can change these titles to match your exact book later.
+    // Starter chapters (we can replace with your exact book)
     const CHAPTERS = [
       { id: 1,  name: "Measurement & Safety", topics: ["Lab safety rules","SI units","Measuring length/mass/time","Accuracy & precision","Errors"] },
       { id: 2,  name: "States of Matter", topics: ["Solids, liquids, gases","Particle model","Changes of state","Diffusion","Brownian motion"] },
@@ -198,17 +219,14 @@
       { id: 17, name: "Materials & Metals", topics: ["Properties of materials","Metals vs non-metals","Rusting","Alloys","Recycling"] }
     ];
 
-    // ===== Map chapter -> best lab link (edit filenames to match your real files) =====
+    // Map chapter -> best lab page (edit filenames to match your repo)
     const LAB_LINKS = {
       "Separating Mixtures": "sim-mixtures.html",
       "Density": "sim-density.html",
-      "Electric Circuits (Basics)": "sim-electricity.html",
-      "Heat & Temperature": "virtual-lab-hub.html",
-      "Waves & Sound": "virtual-lab-hub.html",
-      "Light": "virtual-lab-hub.html"
+      "Electric Circuits (Basics)": "sim-electricity.html"
     };
 
-    // ===== DOM =====
+    // DOM
     const chapterListEl = document.getElementById("chapterList");
     const chapterEl = document.getElementById("chapter");
     const formEl = document.getElementById("form");
@@ -217,25 +235,31 @@
     const outEl = document.getElementById("out");
     const apiStatusEl = document.getElementById("apiStatus");
     const openLabBtn = document.getElementById("openLabBtn");
+    const contentPills = document.getElementById("contentPills");
 
     let selectedChapter = CHAPTERS[0];
+    let selectedMode = "Notes";
 
     function renderOutput(text){
       outEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.65">${text}</div>`;
+    }
+
+    function setMode(mode){
+      selectedMode = mode;
+      [...contentPills.querySelectorAll(".pill")].forEach(p=>{
+        p.classList.toggle("active", p.dataset.mode === mode);
+      });
     }
 
     function setChapter(ch){
       selectedChapter = ch;
       chapterEl.value = `Chapter ${ch.id}: ${ch.name}`;
 
-      // Load topics
       topicEl.innerHTML = ch.topics.map(t => `<option value="${t}">${t}</option>`).join("");
 
-      // Lab link
       const link = LAB_LINKS[ch.name] || "virtual-lab-hub.html";
       openLabBtn.href = link;
 
-      // Highlight button
       [...chapterListEl.querySelectorAll(".chapterBtn")].forEach(btn=>{
         btn.classList.toggle("active", btn.dataset.id == ch.id);
       });
@@ -263,19 +287,16 @@
       }
     }
 
-    async function callTutor(mode){
+    async function callTutor(modeOverride){
+      const mode = modeOverride || selectedMode;
+
       const payload = {
         mode,
         form: formEl.value,
         chapter: `Chapter ${selectedChapter.id}: ${selectedChapter.name}`,
         topic: topicEl.value || selectedChapter.name,
-        question: qEl.value.trim()
+        question: qEl.value.trim() || "(no extra instruction)"
       };
-
-      if(!payload.question){
-        renderOutput("Please type a question first.");
-        return;
-      }
 
       renderOutput("Loading... (Render may sleep on free tier)");
       try{
@@ -294,7 +315,14 @@
       }
     }
 
-    document.getElementById("askBtn").onclick  = ()=> callTutor("Explain");
+    // Events
+    contentPills.addEventListener("click", (e)=>{
+      const pill = e.target.closest(".pill");
+      if(!pill) return;
+      setMode(pill.dataset.mode);
+    });
+
+    document.getElementById("genBtn").onclick  = ()=> callTutor(selectedMode);
     document.getElementById("quizBtn").onclick = ()=> callTutor("Quiz");
     document.getElementById("pracBtn").onclick = ()=> callTutor("Practical");
 
@@ -304,7 +332,7 @@
         await navigator.clipboard.writeText(txt);
         alert("Copied!");
       }catch(e){
-        alert("Copy failed. Select the text and copy manually.");
+        alert("Copy failed. Select and copy manually.");
       }
     };
 
@@ -316,6 +344,7 @@
     // Init
     buildChapterButtons();
     setChapter(CHAPTERS[0]);
+    setMode("Notes");
     checkHealth();
   </script>
 </body>
