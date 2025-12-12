@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Library | Sci-Guru</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; padding:18px 0 30px; }
+    .itemBtn{
+      width:100%;
+      text-align:left;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      color: var(--text);
+      margin-bottom:10px;
+    }
+    .itemBtn b{display:block}
+    .itemBtn small{display:block; color:var(--muted); margin-top:4px}
+    .itemBtn.active{
+      border-color: rgba(47,107,255,.55);
+      box-shadow: 0 0 0 4px rgba(47,107,255,.12);
+    }
+    @media (max-width: 980px){
+      .row2{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div class="brand">
+        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+        <div class="title">
+          <b>My Library</b>
+          <span>Saved Notes, Examples, Questions & Memos</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">AI Tutor</a>
+        <a class="active" href="library.html">My Library</a>
+        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="row2">
+      <section class="card">
+        <h2>Saved Items</h2>
+        <p class="small">These are stored on this device/browser.</p>
+
+        <div class="actions" style="margin:10px 0;">
+          <button class="btn" id="exportAllBtn">Export ALL to PDF</button>
+          <button class="btn" id="deleteAllBtn">Delete ALL</button>
+        </div>
+
+        <div id="list"></div>
+      </section>
+
+      <section class="card">
+        <h2>Preview</h2>
+        <p class="small">Select an item to view it.</p>
+
+        <div id="preview" class="card" style="background:rgba(255,255,255,.03); border-radius:12px; border:1px solid var(--border); box-shadow:none;">
+          <p class="small" style="margin:0">No item selected.</p>
+        </div>
+
+        <div class="actions" style="margin-top:12px;">
+          <button class="btn" id="pdfBtn">Download PDF</button>
+          <button class="btn" id="copyBtn">Copy</button>
+          <button class="btn" id="deleteBtn">Delete</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_SAVED = "sciguru_saved_v1";
+
+    const listEl = document.getElementById("list");
+    const previewEl = document.getElementById("preview");
+
+    let items = loadItems();
+    let selectedId = null;
+
+    function loadItems(){
+      try{
+        const raw = localStorage.getItem(STORAGE_SAVED);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch{
+        return [];
+      }
+    }
+    function saveItems(){
+      localStorage.setItem(STORAGE_SAVED, JSON.stringify(items));
+    }
+
+    function renderList(){
+      listEl.innerHTML = "";
+      if(items.length === 0){
+        listEl.innerHTML = `<p class="small">No saved items yet. Go to AI Tutor and click “Save to My Library”.</p>`;
+        return;
+      }
+
+      items.forEach(it=>{
+        const btn = document.createElement("button");
+        btn.className = "itemBtn";
+        btn.dataset.id = it.id;
+        btn.innerHTML = `
+          <b>${it.mode} • ${it.form}</b>
+          <small>${it.chapter} — ${it.topic}</small>
+          <small>Saved: ${new Date(it.savedAt).toLocaleString()}</small>
+        `;
+        btn.onclick = ()=> selectItem(it.id);
+        listEl.appendChild(btn);
+      });
+
+      highlightSelected();
+    }
+
+    function highlightSelected(){
+      [...document.querySelectorAll(".itemBtn")].forEach(b=>{
+        b.classList.toggle("active", b.dataset.id === selectedId);
+      });
+    }
+
+    function selectItem(id){
+      selectedId = id;
+      const it = items.find(x => x.id === id);
+      if(!it) return;
+
+      const header =
+`Mode: ${it.mode}
+Form: ${it.form}
+${it.chapter}
+Topic: ${it.topic}
+Saved: ${new Date(it.savedAt).toLocaleString()}
+
+`;
+
+      previewEl.innerHTML = `<div style="white-space:pre-wrap; line-height:1.65">${header}${it.content}</div>`;
+      highlightSelected();
+    }
+
+    function currentItem(){
+      return items.find(x => x.id === selectedId) || null;
+    }
+
+    function copyCurrent(){
+      const it = currentItem();
+      if(!it) return alert("Select an item first.");
+      const txt = previewEl.innerText || "";
+      navigator.clipboard.writeText(txt).then(()=>alert("Copied!")).catch(()=>alert("Copy failed."));
+    }
+
+    function deleteCurrent(){
+      const it = currentItem();
+      if(!it) return alert("Select an item first.");
+      items = items.filter(x => x.id !== it.id);
+      saveItems();
+      selectedId = null;
+      previewEl.innerHTML = `<p class="small" style="margin:0">No item selected.</p>`;
+      renderList();
+    }
+
+    function deleteAll(){
+      if(!confirm("Delete ALL saved items?")) return;
+      items = [];
+      saveItems();
+      selectedId = null;
+      previewEl.innerHTML = `<p class="small" style="margin:0">No item selected.</p>`;
+      renderList();
+    }
+
+    function pdfFromText(title, text){
+      const { jsPDF } = window.jspdf || {};
+      if(!jsPDF){ alert("PDF library failed to load. Refresh and try again."); return; }
+
+      const doc = new jsPDF({ unit:"pt", format:"a4" });
+      const margin = 40;
+      const maxWidth = 515;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text(title, margin, 55);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+
+      const lines = doc.splitTextToSize(text, maxWidth);
+      let y = 85;
+      lines.forEach(line=>{
+        if(y > 800){ doc.addPage(); y = 50; }
+        doc.text(line, margin, y);
+        y += 14;
+      });
+
+      doc.save(title.replace(/[^a-z0-9]+/gi,"_") + ".pdf");
+    }
+
+    function downloadCurrentPDF(){
+      const it = currentItem();
+      if(!it) return alert("Select an item first.");
+      const title = `Sci-Guru_${it.mode}_${it.chapter}_` + (it.topic || "Topic");
+      const txt = previewEl.innerText || "";
+      pdfFromText(title, txt);
+    }
+
+    function exportAllPDF(){
+      if(items.length === 0) return alert("No items to export.");
+      let combined = "";
+      items.forEach((it, idx)=>{
+        combined +=
+`# ${idx+1}. ${it.mode} • ${it.form}
+${it.chapter}
+Topic: ${it.topic}
+Saved: ${new Date(it.savedAt).toLocaleString()}
+
+${it.content}
+
+------------------------------------------------------------
+
+`;
+      });
+      pdfFromText("Sci-Guru_Library_All", combined);
+    }
+
+    document.getElementById("copyBtn").onclick = copyCurrent;
+    document.getElementById("deleteBtn").onclick = deleteCurrent;
+    document.getElementById("pdfBtn").onclick = downloadCurrentPDF;
+    document.getElementById("deleteAllBtn").onclick = deleteAll;
+    document.getElementById("exportAllBtn").onclick = exportAllPDF;
+
+    // Init
+    renderList();
+    if(items[0]) selectItem(items[0].id);
+  </script>
+</body>
+</html>
