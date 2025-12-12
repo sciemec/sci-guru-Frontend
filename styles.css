@@ -1,7 +1,6 @@
 :root{
   --bg:#0b1020;
   --panel:#111a33;
-  --panel2:#0f1730;
   --text:#eaf0ff;
   --muted:#a9b6e6;
   --brand:#2f6bff;
@@ -37,6 +36,7 @@ a{color:inherit; text-decoration:none}
   padding:12px 0;
   gap:12px;
 }
+
 .brand{
   display:flex; align-items:center; gap:10px;
   min-width: 220px;
@@ -48,9 +48,7 @@ a{color:inherit; text-decoration:none}
   border-radius:10px;
   padding:6px;
 }
-.brand .title{
-  line-height:1.1;
-}
+.brand .title{line-height:1.1;}
 .brand .title b{display:block; font-size:1.05rem}
 .brand .title span{display:block; font-size:.85rem; color:var(--muted)}
 
@@ -70,9 +68,7 @@ a{color:inherit; text-decoration:none}
   box-shadow: 0 0 0 4px rgba(47,107,255,.12);
 }
 
-.hero{
-  padding:34px 0 18px;
-}
+.hero{padding:34px 0 18px;}
 .heroCard{
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
   border:1px solid var(--border);
@@ -86,11 +82,7 @@ a{color:inherit; text-decoration:none}
 .heroCard h1{margin:0 0 6px; font-size:1.5rem}
 .heroCard p{margin:0; color:var(--muted); line-height:1.55}
 
-.cta{
-  display:flex; flex-direction:column;
-  gap:10px;
-  justify-content:center;
-}
+.cta{display:flex; flex-direction:column; gap:10px; justify-content:center;}
 .btn{
   display:inline-flex;
   align-items:center;
@@ -101,6 +93,7 @@ a{color:inherit; text-decoration:none}
   border: 1px solid var(--border);
   background: rgba(255,255,255,.05);
   font-weight:600;
+  cursor:pointer;
 }
 .btn.primary{
   background: linear-gradient(90deg, var(--brand), var(--brand2));
