@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Virtual Experiment: Osmosis & Diffusion</title>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <style>
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;padding:18px 0 30px;}
+    .card2{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .badge2{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+    .btn2{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:900;cursor:pointer;}
+    .btn2.primary{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .controls{display:grid;gap:10px;margin-top:12px;}
+    .control{padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);}
+    .control label{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:900;}
+    .control input[type="range"]{width:100%;}
+    .tank{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:12px;min-height:420px;position:relative;overflow:hidden;}
+    .membrane{position:absolute;top:12px;bottom:12px;left:50%;width:6px;transform:translateX(-50%);
+      border-radius:999px;background:rgba(255,255,255,.10);border:1px dashed rgba(255,255,255,.22);}
+    .cell{position:absolute;left:25%;top:55%;transform:translate(-50%,-50%);
+      width:170px;height:170px;border-radius:50%;border:2px solid rgba(47,107,255,.35);background:rgba(47,107,255,.05);}
+    .cellInner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      width:140px;height:140px;border-radius:50%;border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.03);}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+    canvas{width:100%;height:260px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.02);}
+    .toast{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);white-space:pre-wrap;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container row">
+    <div class="brand">
+      <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+      <div class="title">
+        <b>Virtual Experiment: Osmosis & Diffusion</b>
+        <span>Water movement across membrane + particles spreading</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="tutor.html">AI Tutor</a>
+      <a class="active" href="sim-osmosis.html">Osmosis Lab</a>
+      <a href="sim-cells-hub.html">Topic 2 Hub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+
+    <!-- SIM -->
+    <section class="card2">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div>
+          <span class="pill">Semi-permeable membrane</span>
+          <div class="small2">Left side shows a “cell”. Right side is outside solution.</div>
+        </div>
+        <div>
+          <span class="badge2" id="state">State: —</span>
+          <span class="badge2" id="size">Cell size: 100%</span>
+        </div>
+      </div>
+
+      <div class="tank" style="margin-top:12px;">
+        <div class="membrane" title="membrane"></div>
+
+        <div class="cell" id="cell">
+          <div class="cellInner"></div>
+        </div>
+
+        <div style="position:absolute;left:8px;top:10px;" class="badge2">Inside (cell)</div>
+        <div style="position:absolute;right:8px;top:10px;" class="badge2">Outside solution</div>
+
+        <div style="position:absolute;left:10px;bottom:12px;right:10px;">
+          <canvas id="cv"></canvas>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="pill">Hypotonic → water enters → cell swells</span>
+        <span class="pill">Hypertonic → water leaves → cell shrinks</span>
+        <span class="pill">Isotonic → no net change</span>
+      </div>
+
+      <div class="toast" id="toast">
+Tip: Osmosis = movement of water from dilute solution to concentrated solution across a semi-permeable membrane.
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <aside class="card2">
+      <h2 style="margin:0 0 6px;">Controls</h2>
+      <div class="small2">Adjust outside concentration and watch the cell size and particle diffusion.</div>
+
+      <div class="controls">
+        <div class="control">
+          <label>Outside concentration <span class="badge2" id="concVal">50</span></label>
+          <input id="conc" type="range" min="0" max="100" value="50">
+          <div class="small2">0 = very dilute (hypotonic). 100 = very concentrated (hypertonic).</div>
+        </div>
+
+        <div class="control">
+          <label>Inside concentration <span class="badge2" id="insideVal">50</span></label>
+          <input id="inside" type="range" min="0" max="100" value="50">
+          <div class="small2">Set the “cell” concentration.</div>
+        </div>
+
+        <div class="control">
+          <label>Diffusion speed <span class="badge2" id="spdVal">1.0×</span></label>
+          <input id="spd" type="range" min="5" max="30" value="12">
+          <div class="small2">Higher speed spreads particles faster.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn2 primary" id="start">Start</button>
+        <button class="btn2" id="pause">Pause</button>
+        <button class="btn2" id="reset">Reset</button>
+        <a class="btn2" href="sim-cells-hub.html">Back to Topic 2 Hub</a>
+      </div>
+
+      <div class="card2" style="margin-top:12px;box-shadow:none;">
+        <b>Quick questions</b>
+        <div class="small2" style="margin-top:6px;">
+          1) When outside is more concentrated than inside, what happens to the cell?<br>
+          2) Define osmosis in one sentence.<br>
+          3) What is isotonic?
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<script>
+  const conc = document.getElementById("conc");
+  const inside = document.getElementById("inside");
+  const spd = document.getElementById("spd");
+
+  const concVal = document.getElementById("concVal");
+  const insideVal = document.getElementById("insideVal");
+  const spdVal = document.getElementById("spdVal");
+
+  const stateEl = document.getElementById("state");
+  const sizeEl = document.getElementById("size");
+  const toast = document.getElementById("toast");
+  const cell = document.getElementById("cell");
+
+  const cv = document.getElementById("cv");
+  const ctx = cv.getContext("2d");
+
+  let running=false;
+  let raf=null;
+
+  // Particle diffusion demo (left vs right)
+  let particles=[];
+  function initParticles(){
+    particles=[];
+    const w = cv.width, h = cv.height;
+    // Create more particles on the higher concentration side (outside)
+    const outsideCount = 120;
+    const insideCount = 60;
+    for(let i=0;i<insideCount;i++){
+      particles.push({x: w*0.25 + Math.random()*w*0.18, y: Math.random()*h, vx:(Math.random()-0.5), vy:(Math.random()-0.5), side:"in"});
+    }
+    for(let i=0;i<outsideCount;i++){
+      particles.push({x: w*0.62 + Math.random()*w*0.30, y: Math.random()*h, vx:(Math.random()-0.5), vy:(Math.random()-0.5), side:"out"});
+    }
+  }
+
+  function resize(){
+    const r = cv.getBoundingClientRect();
+    cv.width = Math.round(r.width * devicePixelRatio);
+    cv.height = Math.round(r.height * devicePixelRatio);
+    initParticles();
+    draw();
+  }
+  window.addEventListener("resize", resize);
+
+  // Osmosis “cell size” model
+  let cellSize = 100; // percent
+  function updateState(){
+    concVal.textContent = conc.value;
+    insideVal.textContent = inside.value;
+    spdVal.textContent = (Number(spd.value)/12).toFixed(1) + "×";
+
+    const outC = Number(conc.value);
+    const inC = Number(inside.value);
+    const diff = outC - inC;
+
+    if(Math.abs(diff) <= 5){
+      stateEl.textContent = "State: Isotonic";
+      toast.textContent = "Isotonic: concentrations are similar → no net movement of water.";
+    }else if(diff > 5){
+      stateEl.textContent = "State: Hypertonic outside";
+      toast.textContent = "Hypertonic outside: outside is more concentrated → water leaves the cell → cell shrinks.";
+    }else{
+      stateEl.textContent = "State: Hypotonic outside";
+      toast.textContent = "Hypotonic outside: outside is more dilute → water enters the cell → cell swells.";
+    }
+  }
+
+  function step(){
+    // adjust cell size slowly based on difference
+    const outC = Number(conc.value);
+    const inC = Number(inside.value);
+    const diff = outC - inC; // + means outside more concentrated => shrink
+
+    // change per tick
+    cellSize += (-diff) * 0.01; // if diff positive => decrease
+    cellSize = Math.max(70, Math.min(135, cellSize));
+
+    sizeEl.textContent = "Cell size: " + Math.round(cellSize) + "%";
+    cell.style.width = (170 * (cellSize/100)) + "px";
+    cell.style.height = (170 * (cellSize/100)) + "px";
+
+    // diffusion motion
+    const speed = Number(spd.value) / 12;
+    const w = cv.width, h = cv.height;
+    const mid = w*0.5;
+
+    for(const p of particles){
+      // Brownian-like motion
+      p.vx += (Math.random()-0.5) * 0.3 * speed;
+      p.vy += (Math.random()-0.5) * 0.3 * speed;
+
+      p.vx *= 0.85;
+      p.vy *= 0.85;
+
+      p.x += p.vx * 2.0;
+      p.y += p.vy * 2.0;
+
+      // boundaries
+      if(p.x < 0) p.x = 0;
+      if(p.x > w) p.x = w;
+      if(p.y < 0) p.y = 0;
+      if(p.y > h) p.y = h;
+
+      // membrane behavior:
+      // particles can cross slowly (diffusion), but we bias direction from high to low concentration
+      const bias = (Number(conc.value) - Number(inside.value)) / 100; // + means outside higher
+      // If particle is near membrane, allow crossing chance
+      if(Math.abs(p.x - mid) < 8){
+        const crossChance = 0.06 * speed;
+        if(Math.random() < crossChance){
+          // bias: if outside higher, encourage movement from right to left
+          if(bias > 0 && p.x > mid) p.x -= 20 + Math.random()*10;
+          else if(bias < 0 && p.x < mid) p.x += 20 + Math.random()*10;
+          else p.x += (Math.random()<0.5?-1:1) * (12+Math.random()*10);
+        }else{
+          // bounce off membrane lightly
+          p.x += (p.x < mid ? -1 : 1) * (1 + Math.random()*1.5);
+        }
+      }
+    }
+
+    draw();
+    if(running) raf = requestAnimationFrame(step);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.save();
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+
+    const w = cv.width / devicePixelRatio;
+    const h = cv.height / devicePixelRatio;
+    const mid = w/2;
+
+    // background panels
+    ctx.fillStyle = "rgba(255,255,255,.03)";
+    ctx.fillRect(0,0,w,h);
+
+    ctx.fillStyle = "rgba(47,107,255,.06)";
+    ctx.fillRect(0,0,mid,h);
+    ctx.fillStyle = "rgba(255,255,255,.04)";
+    ctx.fillRect(mid,0,mid,h);
+
+    // membrane line
+    ctx.strokeStyle = "rgba(255,255,255,.18)";
+    ctx.setLineDash([6,6]);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(mid,0); ctx.lineTo(mid,h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // particles
+    for(const p of particles){
+      const px = p.x / devicePixelRatio;
+      const py = p.y / devicePixelRatio;
+      // simple particle
+      ctx.fillStyle = (px < mid) ? "rgba(200,230,255,.55)" : "rgba(255,220,180,.55)";
+      ctx.beginPath();
+      ctx.arc(px,py,2.2,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    // labels
+    ctx.fillStyle = "rgba(255,255,255,.55)";
+    ctx.font = "12px sans-serif";
+    ctx.fillText("Inside", 10, 18);
+    ctx.fillText("Outside", mid + 10, 18);
+
+    ctx.restore();
+  }
+
+  document.getElementById("start").onclick = ()=>{
+    if(running) return;
+    running = true;
+    updateState();
+    raf = requestAnimationFrame(step);
+  };
+
+  document.getElementById("pause").onclick = ()=>{
+    running = false;
+    if(raf) cancelAnimationFrame(raf);
+    raf = null;
+  };
+
+  document.getElementById("reset").onclick = ()=>{
+    running = false;
+    if(raf) cancelAnimationFrame(raf);
+    raf = null;
+
+    conc.value = 50;
+    inside.value = 50;
+    spd.value = 12;
+
+    cellSize = 100;
+    cell.style.width = "170px";
+    cell.style.height = "170px";
+
+    updateState();
+    initParticles();
+    draw();
+    sizeEl.textContent = "Cell size: 100%";
+  };
+
+  conc.addEventListener("input", updateState);
+  inside.addEventListener("input", updateState);
+  spd.addEventListener("input", updateState);
+
+  resize();
+  updateState();
+</script>
+</body>
+</html>

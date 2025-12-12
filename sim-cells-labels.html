@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Virtual Experiment: Cell Labeling</title>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <style>
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 0 30px;}
+    .card2{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
+    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
+    .badge2{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+    .btn2{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-weight:900;cursor:pointer;}
+    .btn2.primary{border-color:rgba(47,107,255,.55);box-shadow:0 0 0 4px rgba(47,107,255,.12);}
+    .dragRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;}
+    .dragItem{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+      cursor:grab;font-weight:900;user-select:none;}
+    .board{display:grid;grid-template-columns:1fr;gap:12px;}
+    .cellBox{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:12px;position:relative;min-height:340px;}
+    .target{position:absolute;border:2px dashed rgba(47,107,255,.55);border-radius:12px;background:rgba(47,107,255,.07);
+      padding:6px 8px;min-width:120px;cursor:pointer;}
+    .target.good{border-style:solid;border-color:rgba(56,214,120,.75);background:rgba(56,214,120,.10);}
+    .target.bad{border-style:solid;border-color:rgba(255,98,98,.75);background:rgba(255,98,98,.10);}
+    .shape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.9;}
+    .toast{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.03);white-space:pre-wrap;}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container row">
+    <div class="brand">
+      <img src="images/lec-logo.png" alt="LEC Biotec Logo">
+      <div class="title">
+        <b>Virtual Experiment: Cell Labeling</b>
+        <span>Plant vs Animal cell structures</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="tutor.html">AI Tutor</a>
+      <a class="active" href="sim-cells-label.html">Cell Label Lab</a>
+      <a href="sim-cells-hub.html">Topic 2 Hub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+
+    <!-- PLANT -->
+    <section class="card2">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div>
+          <span class="pill">Plant Cell</span>
+          <div class="small2">Drag labels to correct parts.</div>
+        </div>
+        <span class="badge2" id="plantScore">Plant score: 0/6</span>
+      </div>
+
+      <div class="cellBox" id="plantBox">
+        <!-- Simple plant cell drawing -->
+        <div class="shape" style="width:260px;height:240px;border-radius:18px;border:3px solid rgba(255,255,255,.30);background:rgba(255,255,255,.05);"></div>
+        <div class="shape" style="width:240px;height:220px;border-radius:18px;border:2px solid rgba(47,107,255,.35);background:rgba(47,107,255,.05);"></div>
+
+        <div class="shape" style="width:120px;height:110px;border-radius:18px;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.04);transform:translate(-50%,-50%) translate(30px,10px);"></div>
+        <div class="shape" style="width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.04);transform:translate(-50%,-50%) translate(-40px,-30px);"></div>
+        <!-- chloroplast dots -->
+        <div class="shape" style="width:16px;height:10px;border-radius:999px;border:1px solid rgba(56,214,120,.55);background:rgba(56,214,120,.15);transform:translate(-50%,-50%) translate(70px,-50px);"></div>
+        <div class="shape" style="width:16px;height:10px;border-radius:999px;border:1px solid rgba(56,214,120,.55);background:rgba(56,214,120,.15);transform:translate(-50%,-50%) translate(85px,-20px);"></div>
+        <div class="shape" style="width:16px;height:10px;border-radius:999px;border:1px solid rgba(56,214,120,.55);background:rgba(56,214,120,.15);transform:translate(-50%,-50%) translate(-85px,15px);"></div>
+        <div class="shape" style="width:16px;height:10px;border-radius:999px;border:1px solid rgba(56,214,120,.55);background:rgba(56,214,120,.15);transform:translate(-50%,-50%) translate(-65px,55px);"></div>
+
+        <!-- Targets (plant) -->
+        <div class="target" data-cell="plant" data-id="cellWall" style="left:12px;top:16px;">Drop: Cell wall</div>
+        <div class="target" data-cell="plant" data-id="cellMembrane" style="left:12px;top:70px;">Drop: Cell membrane</div>
+        <div class="target" data-cell="plant" data-id="cytoplasm" style="left:12px;top:124px;">Drop: Cytoplasm</div>
+        <div class="target" data-cell="plant" data-id="nucleus" style="left:12px;top:178px;">Drop: Nucleus</div>
+        <div class="target" data-cell="plant" data-id="vacuole" style="left:12px;top:232px;">Drop: Vacuole</div>
+        <div class="target" data-cell="plant" data-id="chloroplast" style="left:12px;top:286px;">Drop: Chloroplast</div>
+      </div>
+
+      <div class="toast" id="plantToast">Tip: Plant cells have a <b>cell wall</b>, <b>chloroplasts</b>, and a large <b>vacuole</b>.</div>
+    </section>
+
+    <!-- ANIMAL -->
+    <section class="card2">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div>
+          <span class="pill">Animal Cell</span>
+          <div class="small2">Drag labels to correct parts.</div>
+        </div>
+        <span class="badge2" id="animalScore">Animal score: 0/4</span>
+      </div>
+
+      <div class="cellBox" id="animalBox">
+        <!-- Simple animal cell drawing -->
+        <div class="shape" style="width:250px;height:220px;border-radius:50%;border:2px solid rgba(47,107,255,.35);background:rgba(47,107,255,.05);"></div>
+        <div class="shape" style="width:70px;height:70px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.04);transform:translate(-50%,-50%) translate(-35px,-20px);"></div>
+        <!-- small vacuole-like dot -->
+        <div class="shape" style="width:40px;height:30px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.03);transform:translate(-50%,-50%) translate(55px,30px);"></div>
+
+        <!-- Targets (animal) -->
+        <div class="target" data-cell="animal" data-id="cellMembrane" style="left:12px;top:30px;">Drop: Cell membrane</div>
+        <div class="target" data-cell="animal" data-id="cytoplasm" style="left:12px;top:100px;">Drop: Cytoplasm</div>
+        <div class="target" data-cell="animal" data-id="nucleus" style="left:12px;top:170px;">Drop: Nucleus</div>
+        <div class="target" data-cell="animal" data-id="mitochondria" style="left:12px;top:240px;">Drop: Mitochondria</div>
+      </div>
+
+      <div class="toast" id="animalToast">Tip: Animal cells do not have a cell wall or chloroplasts.</div>
+    </section>
+
+  </div>
+
+  <section class="card2" style="margin-top:14px;">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+      <div>
+        <b>Labels (drag these)</b>
+        <div class="small2">Drag each label onto the correct drop box. A label can only be used once.</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span class="badge2" id="total">Total: 0/10</span>
+        <button class="btn2 primary" id="reset">Reset</button>
+        <button class="btn2" id="auto">Auto-complete</button>
+        <a class="btn2" href="sim-cells-hub.html">Back to Topic 2 Hub</a>
+      </div>
+    </div>
+
+    <div class="dragRow" id="labels"></div>
+  </section>
+</main>
+
+<script>
+  const LABELS = [
+    {id:"cellWall", name:"Cell wall"},
+    {id:"cellMembrane", name:"Cell membrane"},
+    {id:"cytoplasm", name:"Cytoplasm"},
+    {id:"nucleus", name:"Nucleus"},
+    {id:"vacuole", name:"Vacuole"},
+    {id:"chloroplast", name:"Chloroplast"},
+    {id:"mitochondria", name:"Mitochondria"}
+  ];
+
+  // Correct placements per cell
+  const CORRECT = {
+    plant: ["cellWall","cellMembrane","cytoplasm","nucleus","vacuole","chloroplast"],
+    animal:["cellMembrane","cytoplasm","nucleus","mitochondria"]
+  };
+
+  const labelsEl = document.getElementById("labels");
+  const totalEl = document.getElementById("total");
+  const plantScoreEl = document.getElementById("plantScore");
+  const animalScoreEl = document.getElementById("animalScore");
+  const plantToast = document.getElementById("plantToast");
+  const animalToast = document.getElementById("animalToast");
+
+  const targets = [...document.querySelectorAll(".target")];
+
+  // placed: key = cell + ":" + targetId -> labelId
+  let placed = {};
+  function usedLabelIds(){
+    return new Set(Object.values(placed));
+  }
+
+  function renderLabels(){
+    labelsEl.innerHTML = "";
+    const used = usedLabelIds();
+
+    LABELS.forEach(l=>{
+      const div = document.createElement("div");
+      div.className = "dragItem";
+      div.textContent = l.name + (used.has(l.id) ? " ✓" : "");
+      div.draggable = !used.has(l.id);
+      div.dataset.label = l.id;
+
+      div.addEventListener("dragstart", (e)=>{
+        e.dataTransfer.setData("text/plain", l.id);
+      });
+
+      labelsEl.appendChild(div);
+    });
+  }
+
+  function score(){
+    let plant=0, animal=0;
+
+    for(const t of targets){
+      const cell = t.dataset.cell;
+      const id = t.dataset.id;
+      const key = cell + ":" + id;
+      const placedId = placed[key];
+
+      // reset class
+      t.classList.remove("good","bad");
+
+      if(!placedId){
+        t.textContent = "Drop: " + pretty(id);
+        continue;
+      }
+
+      const ok = placedId === id;
+      t.classList.add(ok ? "good" : "bad");
+      t.textContent = (ok ? "✅ " : "❌ ") + pretty(id) + " ← " + pretty(placedId);
+
+      if(ok){
+        if(cell === "plant") plant++;
+        if(cell === "animal") animal++;
+      }
+    }
+
+    plantScoreEl.textContent = `Plant score: ${plant}/6`;
+    animalScoreEl.textContent = `Animal score: ${animal}/4`;
+    totalEl.textContent = `Total: ${plant+animal}/10`;
+
+    if(plant === 6) plantToast.textContent = "✅ Plant cell complete! Cell wall + chloroplast + vacuole are key plant features.";
+    if(animal === 4) animalToast.textContent = "✅ Animal cell complete! No cell wall and no chloroplasts.";
+  }
+
+  function pretty(id){
+    const map = {
+      cellWall:"Cell wall", cellMembrane:"Cell membrane", cytoplasm:"Cytoplasm",
+      nucleus:"Nucleus", vacuole:"Vacuole", chloroplast:"Chloroplast",
+      mitochondria:"Mitochondria"
+    };
+    return map[id] || id;
+  }
+
+  targets.forEach(t=>{
+    t.addEventListener("dragover",(e)=>e.preventDefault());
+    t.addEventListener("drop",(e)=>{
+      e.preventDefault();
+      const labelId = e.dataTransfer.getData("text/plain");
+      if(!labelId) return;
+
+      const cell = t.dataset.cell;
+      const id = t.dataset.id;
+      const key = cell + ":" + id;
+
+      // prevent placing used label twice
+      if(usedLabelIds().has(labelId)) return;
+
+      placed[key] = labelId;
+      renderLabels();
+      score();
+    });
+  });
+
+  document.getElementById("reset").onclick = ()=>{
+    placed = {};
+    plantToast.textContent = "Tip: Plant cells have a cell wall, chloroplasts, and a large vacuole.";
+    animalToast.textContent = "Tip: Animal cells do not have a cell wall or chloroplasts.";
+    renderLabels();
+    score();
+  };
+
+  document.getElementById("auto").onclick = ()=>{
+    placed = {};
+    // plant correct
+    CORRECT.plant.forEach(id=> placed["plant:"+id] = id);
+    CORRECT.animal.forEach(id=> placed["animal:"+id] = id);
+    renderLabels();
+    score();
+  };
+
+  renderLabels();
+  score();
+</script>
+</body>
+</html>
