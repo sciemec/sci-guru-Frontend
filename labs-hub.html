@@ -2,144 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sci-Guru | Virtual Lab Hub</title>
-  <link rel="icon" href="lec-logo.jpg" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Labs • Sci-Guru</title>
+  <meta http-equiv="refresh" content="0; url=labs-hub.html" />
   <style>
-    :root{
-      --bg1:#0b1220; --bg2:#0a2a5f; --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.14); --text:#eaf2ff; --muted:rgba(234,242,255,.75);
-      --btn:#2f7bff;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(47,123,255,.35), transparent 60%),
-                  linear-gradient(135deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
-    header{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:10px 12px; border:1px solid var(--stroke);
-      background:rgba(0,0,0,.22); border-radius:14px; backdrop-filter: blur(8px);
-      position:sticky; top:12px; z-index:5;
-    }
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .brand img{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--stroke);background:#fff}
-    .brand .t{line-height:1.05;min-width:0}
-    .brand .t b{display:block;font-size:16px}
-    .brand .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .btn{
-      appearance:none; border:1px solid var(--stroke); background:rgba(255,255,255,.08);
-      color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer;
-      text-decoration:none; font-weight:650; font-size:13px;
-      transition:transform .08s ease, background .15s ease;
-    }
-    .btn:hover{background:rgba(255,255,255,.12)}
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(47,123,255,.55)); border-color:rgba(47,123,255,.6)}
-    .hero{margin:18px 0 14px; padding:18px; border:1px solid var(--stroke); border-radius:16px; background:rgba(255,255,255,.06)}
-    .hero h1{margin:0 0 8px;font-size:26px}
-    .hero p{margin:0;color:var(--muted);max-width:70ch}
-    .grid{
-      margin-top:14px;
-      display:grid; gap:12px;
-      grid-template-columns: repeat(12, 1fr);
-    }
-    .card{
-      grid-column: span 6;
-      padding:14px; border:1px solid var(--stroke); border-radius:16px;
-      background:var(--card);
-    }
-    .card h3{margin:0 0 6px}
-    .card p{margin:0 0 12px;color:var(--muted)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    footer{margin-top:18px;color:rgba(234,242,255,.65);font-size:12px;text-align:center}
-    @media (max-width: 860px){
-      .card{grid-column: span 12;}
-    }
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; padding:22px; background:#0b1220; color:#eaf2ff;}
+    a{color:#7bb0ff}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="lec-logo.jpg" alt="LEC Biotec Logo" />
-        <div class="t">
-          <b>Sci-Guru</b>
-          <span>Virtual Lab Hub • ZIMSEC / Heritage-Based</span>
-        </div>
-      </div>
-      <nav>
-        <a class="btn" href="index.html">Home</a>
-        <a class="btn" href="tutor.html">Tutor</a>
-        <a class="btn primary" href="labs.html">Labs</a>
-        <a class="btn" href="dashboard.html">Dashboard</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <h1>Virtual Lab Hub</h1>
-      <p>Open interactive experiments. If a button ever shows 404 again, it means the filename in the link does not match the actual file in GitHub.</p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h3>Mixtures & Separation</h3>
-        <p>Filtering, evaporation, decanting and separation methods.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-mixtures.html">Open Mixtures Lab</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Density</h3>
-        <p>Mass, volume, and density comparisons with real-life examples.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-density.html">Open Density Lab</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Electricity</h3>
-        <p>Build circuits, test bulbs, switches, conductors and insulators.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-electricity.html">Open Electricity Lab</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Cells</h3>
-        <p>Microscope + Cell labeling and organization of living things.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-cells-hub.html">Open Cells Hub</a>
-          <a class="btn" href="sim-microscope.html">Microscope</a>
-          <a class="btn" href="sim-form1-living-things.html">Living Things</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Bunsen Burner</h3>
-        <p>Safe heating, flame types, and lab safety basics.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-bunsen.html">Open Bunsen Lab</a>
-          <a class="btn" href="sim-safety.html">Safety</a>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Lab Apparatus</h3>
-        <p>Identify equipment and learn what it is used for.</p>
-        <div class="row">
-          <a class="btn primary" href="sim-apparatus.html">Open Apparatus Lab</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
-  </div>
+  Redirecting to Labs Hub… If nothing happens, <a href="labs-hub.html">click here</a>.
 </body>
 </html>
