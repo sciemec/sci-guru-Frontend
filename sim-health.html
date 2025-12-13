@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 7: Health & Diseases</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+  <style>
+    :root{--bg1:#0b1220;--bg2:#081a3b;--stroke:rgba(255,255,255,.12);--text:#eaf2ff;--muted:rgba(234,242,255,.72);--blue:#2f7bff;--purple:#7c5cff;--good:#33d07a;--warn:#ffcc66;--bad:#ff5a6b}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+      radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{position:sticky;top:10px;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--stroke);background:rgba(0,0,0,.25);backdrop-filter:blur(10px);border-radius:16px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}.t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:900;font-size:13px;cursor:pointer}
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{margin-top:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+    .hero h1{margin:0;font-size:18px}.hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .panel{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}.panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--muted);font-weight:900;font-size:12px;cursor:pointer}
+    .tab.active{color:#071022;border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55))}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:740px){.two{grid-template-columns:1fr}}
+    .card{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}.card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .feedback{margin-top:10px;border:1px solid var(--stroke);background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap}
+    select{width:100%;max-width:380px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:14px;padding:12px;outline:none;font-size:14px}
+    .quizList{display:grid;gap:10px;margin-top:10px}
+    .qItem{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:14px;padding:10px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .qItem b{display:block;font-size:13px}.qItem small{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.4}
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo"><img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';"></div>
+      <div class="t">
+        <b>Topic 7 • Health & Diseases (Virtual Lab)</b>
+        <span>Hygiene • Waste disposal • Disease transmission</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-health.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Preventing Disease (School Level)</h1>
+      <p>Do 3 activities: <b>Hygiene checklist</b>, <b>Waste disposal sorting</b>, <b>Transmission matching</b> + quiz.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Activities</h2><small>Use tabs to switch</small></div>
+        <div class="tabs" id="tabs"></div>
+      </div>
+      <div class="panelBody">
+
+        <div class="view" id="view-hyg">
+          <div class="two">
+            <div class="card">
+              <h3>Hygiene Types</h3>
+              <p>• Personal hygiene • Food hygiene • Environmental hygiene</p>
+            </div>
+            <div class="card">
+              <h3>Task</h3>
+              <p>Select actions that reduce spread of disease.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:10px" id="hygList"></div>
+
+          <div class="controls">
+            <button class="miniBtn primary" id="hygCheck">Check</button>
+            <button class="miniBtn" id="hygReset">Reset</button>
+          </div>
+
+          <div class="feedback" id="hygFeedback">Tick good hygiene actions then press Check.</div>
+        </div>
+
+        <div class="view" id="view-waste" style="display:none">
+          <div class="two">
+            <div class="card">
+              <h3>Solid Waste Disposal</h3>
+              <p>Methods: <b>Landfill (burying)</b>, <b>Burning</b>, <b>Recycling</b>.</p>
+            </div>
+            <div class="card">
+              <h3>Task</h3>
+              <p>Choose the best disposal method for each item.</p>
+            </div>
+          </div>
+
+          <div class="quizList" id="wasteMatch"></div>
+
+          <div class="controls">
+            <button class="miniBtn primary" id="wasteCheck">Check</button>
+            <button class="miniBtn" id="wasteReset">Reset</button>
+          </div>
+
+          <div class="feedback" id="wasteFeedback">Choose methods then press Check.</div>
+        </div>
+
+        <div class="view" id="view-trans" style="display:none">
+          <div class="two">
+            <div class="card">
+              <h3>Transmission</h3>
+              <p>Diseases spread via water/food, contact, air droplets, or vectors (mosquitoes/snails).</p>
+            </div>
+            <div class="card">
+              <h3>Task</h3>
+              <p>Match disease to main transmission route (school level).</p>
+            </div>
+          </div>
+
+          <div class="quizList" id="transMatch"></div>
+
+          <div class="controls">
+            <button class="miniBtn primary" id="transCheck">Check</button>
+            <button class="miniBtn" id="transReset">Reset</button>
+          </div>
+
+          <div class="feedback" id="transFeedback">Select answers then press Check.</div>
+        </div>
+
+        <div class="view" id="view-quiz" style="display:none">
+          <div class="card">
+            <h3>Topic 7 Quiz</h3>
+            <p>Answer all then click <b>Mark Quiz</b>.</p>
+          </div>
+
+          <div class="quizList" id="quizList"></div>
+
+          <div class="controls">
+            <button class="miniBtn primary" id="markQuiz">Mark Quiz</button>
+            <button class="miniBtn" id="resetQuiz">Reset</button>
+          </div>
+
+          <div class="feedback" id="quizFeedback">Start answering the quiz.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead"><div><h2>Progress</h2><small>Saved in your browser</small></div></div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Total Score</h3>
+          <p style="font-size:28px;font-weight:900;margin:6px 0 0" id="score">0</p>
+          <p class="pill" id="badge" style="margin-top:8px;">Badge: Starter</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Remember</h3>
+          <p>
+            • Hygiene prevents disease spread<br/>
+            • Safe water + safe food matter<br/>
+            • Vectors carry pathogens (e.g., mosquitoes)
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY="sciguru_topic7_health_v1";
+  const state = load() || {score:0,_awards:{},tab:"hyg",hyg:{},waste:{},trans:{},quiz:{}};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+  function save(){localStorage.setItem(KEY, JSON.stringify(state)); renderScore();}
+
+  // tabs
+  const TABS=[{id:"hyg",label:"1) Hygiene"},{id:"waste",label:"2) Waste"},{id:"trans",label:"3) Transmission"},{id:"quiz",label:"4) Quiz"}];
+  let active=state.tab||"hyg";
+  const tabsEl=document.getElementById("tabs");
+  function renderTabs(){
+    tabsEl.innerHTML="";
+    TABS.forEach(t=>{
+      const b=document.createElement("button");
+      b.className="tab"+(t.id===active?" active":"");
+      b.type="button"; b.textContent=t.label;
+      b.onclick=()=>{active=t.id; state.tab=active; showView(); renderTabs(); save();};
+      tabsEl.appendChild(b);
+    });
+  }
+  function showView(){
+    document.getElementById("view-hyg").style.display=active==="hyg"?"":"none";
+    document.getElementById("view-waste").style.display=active==="waste"?"":"none";
+    document.getElementById("view-trans").style.display=active==="trans"?"":"none";
+    document.getElementById("view-quiz").style.display=active==="quiz"?"":"none";
+  }
+
+  // score
+  function addScore(points,key){
+    state._awards=state._awards||{};
+    if(state._awards[key]) return;
+    state._awards[key]=true;
+    state.score += points;
+  }
+  function badgeFromScore(s){ if(s>=80) return "Health Champion"; if(s>=55) return "Hygiene Hero"; if(s>=30) return "Improving"; return "Starter"; }
+  function renderScore(){
+    document.getElementById("score").textContent=state.score||0;
+    document.getElementById("badge").textContent="Badge: "+badgeFromScore(state.score||0);
+  }
+
+  // Hygiene checklist
+  const hygGood=[
+    "Wash hands with soap before eating",
+    "Boil or treat drinking water",
+    "Cover food to protect from flies",
+    "Use a clean toilet / latrine",
+    "Dispose rubbish properly",
+    "Wash fruits and vegetables"
+  ];
+  const hygBad=[
+    "Drink untreated water from an open source",
+    "Leave rubbish scattered around",
+    "Eat food with dirty hands",
+    "Leave cooked food uncovered all day"
+  ];
+  const hygAll=[...hygGood,...hygBad].sort(()=>Math.random()-0.5);
+  const hygList=document.getElementById("hygList");
+  const hygFeedback=document.getElementById("hygFeedback");
+
+  function renderHyg(){
+    hygList.innerHTML="<h3>Tick good actions</h3>"+hygAll.map(x=>{
+      const checked=!!state.hyg[x];
+      return `<label style="display:block;margin:8px 0;color:rgba(234,242,255,.8);font-size:12px;cursor:pointer">
+        <input type="checkbox" data-h="${x}" ${checked?"checked":""}/> ${x}
+      </label>`;
+    }).join("");
+    hygList.querySelectorAll("input[data-h]").forEach(i=>{
+      i.onchange=()=>{state.hyg[i.dataset.h]=i.checked; save();};
+    });
+  }
+  renderHyg();
+
+  document.getElementById("hygCheck").onclick=()=>{
+    const picked=Object.keys(state.hyg).filter(k=>state.hyg[k]);
+    const correct=picked.filter(x=>hygGood.includes(x)).length;
+    const wrong=picked.filter(x=>hygBad.includes(x)).length;
+    const pts=Math.max(0, Math.min(25, (correct*4)-(wrong*3)));
+    addScore(pts,"hygDone");
+    hygFeedback.textContent=`Good choices: ${correct}\nWrong choices: ${wrong}\nPoints added: ${pts}/25`;
+    save();
+  };
+  document.getElementById("hygReset").onclick=()=>{
+    state.hyg={}; hygFeedback.textContent="Reset complete."; renderHyg(); save();
+  };
+
+  // Waste match
+  const wasteItems=[
+    {id:"plastic", name:"Plastic bottles", correct:"Recycling"},
+    {id:"paper", name:"Paper/cardboard", correct:"Recycling"},
+    {id:"food", name:"Food waste", correct:"Landfill (burying)"},
+    {id:"glass", name:"Glass bottles", correct:"Recycling"},
+    {id:"dirty", name:"Soiled/dirty mixed waste", correct:"Landfill (burying)"}
+  ];
+  const wasteOpts=["Landfill (burying)","Burning","Recycling"];
+  const wasteMatch=document.getElementById("wasteMatch");
+  const wasteFeedback=document.getElementById("wasteFeedback");
+
+  function renderWaste(){
+    wasteMatch.innerHTML="";
+    wasteItems.forEach((x,i)=>{
+      const val=state.waste[x.id];
+      const row=document.createElement("div");
+      row.className="qItem";
+      row.innerHTML=`
+        <div style="min-width:0"><b>${i+1}. ${x.name}</b><small>Choose best method</small></div>
+        <div>
+          <select data-w="${x.id}">
+            <option value="" ${val==null?"selected":""}>-- choose --</option>
+            ${wasteOpts.map(o=>`<option value="${o}" ${val===o?"selected":""}>${o}</option>`).join("")}
+          </select>
+        </div>
+      `;
+      wasteMatch.appendChild(row);
+    });
+    wasteMatch.querySelectorAll("select[data-w]").forEach(s=>{
+      s.onchange=()=>{state.waste[s.dataset.w]=s.value||null; save();};
+    });
+  }
+  renderWaste();
+
+  document.getElementById("wasteCheck").onclick=()=>{
+    let answered=0, correct=0;
+    wasteItems.forEach(x=>{
+      const a=state.waste[x.id]; if(!a) return;
+      answered++; if(a===x.correct) correct++;
+    });
+    if(answered < wasteItems.length){ wasteFeedback.textContent=`Answered ${answered}/${wasteItems.length}. Finish all to score.`; return; }
+    const pts=Math.round((correct/wasteItems.length)*20);
+    addScore(pts,"wasteDone");
+    wasteFeedback.textContent=`✅ Waste sorting: ${correct}/${wasteItems.length}\nPoints added: ${pts}/20`;
+    save();
+  };
+  document.getElementById("wasteReset").onclick=()=>{
+    state.waste={}; wasteFeedback.textContent="Reset complete."; renderWaste(); save();
+  };
+
+  // Transmission match (school level)
+  const transItems=[
+    {id:"cholera", name:"Cholera", correct:"Water/Food"},
+    {id:"typhoid", name:"Typhoid", correct:"Water/Food"},
+    {id:"ebola", name:"Ebola", correct:"Contact with infected body fluids"},
+    {id:"malaria", name:"Malaria", correct:"Vector (mosquito)"},
+    {id:"bilharzia", name:"Bilharzia", correct:"Vector (snail/water contact)"}
+  ];
+  const transOpts=[
+    "Water/Food",
+    "Contact with infected body fluids",
+    "Vector (mosquito)",
+    "Vector (snail/water contact)"
+  ];
+  const transMatch=document.getElementById("transMatch");
+  const transFeedback=document.getElementById("transFeedback");
+
+  function renderTrans(){
+    transMatch.innerHTML="";
+    transItems.forEach((x,i)=>{
+      const val=state.trans[x.id];
+      const row=document.createElement("div");
+      row.className="qItem";
+      row.innerHTML=`
+        <div style="min-width:0"><b>${i+1}. ${x.name}</b><small>Choose transmission route</small></div>
+        <div>
+          <select data-t="${x.id}">
+            <option value="" ${val==null?"selected":""}>-- choose --</option>
+            ${transOpts.map(o=>`<option value="${o}" ${val===o?"selected":""}>${o}</option>`).join("")}
+          </select>
+        </div>
+      `;
+      transMatch.appendChild(row);
+    });
+    transMatch.querySelectorAll("select[data-t]").forEach(s=>{
+      s.onchange=()=>{state.trans[s.dataset.t]=s.value||null; save();};
+    });
+  }
+  renderTrans();
+
+  document.getElementById("transCheck").onclick=()=>{
+    let answered=0, correct=0;
+    transItems.forEach(x=>{
+      const a=state.trans[x.id]; if(!a) return;
+      answered++; if(a===x.correct) correct++;
+    });
+    if(answered < transItems.length){ transFeedback.textContent=`Answered ${answered}/${transItems.length}. Finish all to score.`; return; }
+    const pts=Math.round((correct/transItems.length)*25);
+    addScore(pts,"transDone");
+    transFeedback.textContent=`✅ Transmission match: ${correct}/${transItems.length}\nPoints added: ${pts}/25`;
+    save();
+  };
+  document.getElementById("transReset").onclick=()=>{
+    state.trans={}; transFeedback.textContent="Reset complete."; renderTrans(); save();
+  };
+
+  // Quiz
+  const QUIZ=[
+    {id:"q1", q:"Personal hygiene means ____.", opts:["keeping yourself clean","building a house","planting maize"], correct:0, exp:"Personal hygiene = keeping yourself clean."},
+    {id:"q2", q:"Food hygiene is about ____.", opts:["safe handling of food","painting walls","charging a phone"], correct:0, exp:"Food hygiene = safe handling and preparation of food."},
+    {id:"q3", q:"Recycling helps to ____.", opts:["reduce waste","increase malaria","make water dirty"], correct:0, exp:"Recycling reduces waste."},
+    {id:"q4", q:"Malaria is carried by ____.", opts:["mosquitoes","cows","stones"], correct:0, exp:"Malaria is carried by mosquitoes (vector)."},
+    {id:"q5", q:"COOKED food should be ____ to protect from flies.", opts:["covered","left open","thrown away immediately"], correct:0, exp:"Cover food to keep flies away."}
+  ];
+  const quizList=document.getElementById("quizList");
+  const quizFeedback=document.getElementById("quizFeedback");
+  function renderQuiz(){
+    quizList.innerHTML="";
+    QUIZ.forEach((x,i)=>{
+      const val=state.quiz[x.id];
+      const row=document.createElement("div");
+      row.className="qItem";
+      row.innerHTML=`
+        <div style="min-width:0"><b>${i+1}. ${x.q}</b><small>Select one answer</small></div>
+        <div>
+          <select data-q="${x.id}">
+            <option value="" ${val==null?"selected":""}>-- choose --</option>
+            ${x.opts.map((o,idx)=>`<option value="${idx}" ${String(val)===String(idx)?"selected":""}>${o}</option>`).join("")}
+          </select>
+        </div>
+      `;
+      quizList.appendChild(row);
+    });
+    quizList.querySelectorAll("select[data-q]").forEach(s=>{
+      s.onchange=()=>{state.quiz[s.dataset.q]=s.value===""?null:Number(s.value); save();};
+    });
+  }
+  renderQuiz();
+
+  document.getElementById("markQuiz").onclick=()=>{
+    let answered=0, correct=0;
+    QUIZ.forEach(x=>{
+      const a=state.quiz[x.id]; if(a==null) return;
+      answered++; if(a===x.correct) correct++;
+    });
+    if(answered < QUIZ.length){ quizFeedback.textContent=`Answered ${answered}/${QUIZ.length}. Finish all then mark.`; return; }
+    const pts=Math.round((correct/QUIZ.length)*30);
+    addScore(pts,"topic7Quiz");
+    let msg=`Quiz Results:\nCorrect: ${correct}/${QUIZ.length}\nPoints added: ${pts}/30\n\n`;
+    QUIZ.forEach((x,i)=>{ const ok=state.quiz[x.id]===x.correct; msg+=`${i+1}) ${ok?"✅":"❌"} ${x.exp}\n`; });
+    quizFeedback.textContent=msg;
+    save();
+  };
+  document.getElementById("resetQuiz").onclick=()=>{state.quiz={}; quizFeedback.textContent="Quiz reset."; renderQuiz(); save();};
+
+  function init(){ renderTabs(); showView(); renderScore(); save(); }
+  init();
+</script>
+</body>
+</html>
