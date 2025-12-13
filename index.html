@@ -2,81 +2,202 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sci-Guru | LEC Biotec</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b33;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --line:rgba(255,255,255,.10);
+      --accent:#4da3ff;
+      --accent2:#7c5cff;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(77,163,255,.18), transparent 55%),
+        radial-gradient(1000px 600px at 90% 30%, rgba(124,92,255,.18), transparent 55%),
+        var(--bg);
+    }
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background:rgba(11,18,32,.72);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:1200px; margin:0 auto; padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    .brand h1{margin:0; font-size:16px; line-height:1.1}
+    .brand .sub{margin-top:2px; font-size:12px; color:var(--muted)}
+    .nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .nav a{
+      text-decoration:none; color:var(--text);
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      font-size:13px;
+      transition:.2s;
+    }
+    .nav a:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.22)}
+    .nav a.primary{
+      border-color:rgba(77,163,255,.45);
+      background:linear-gradient(135deg, rgba(77,163,255,.22), rgba(124,92,255,.18));
+    }
+
+    .wrap{max-width:1200px; margin:0 auto; padding:18px 16px 28px}
+
+    .hero{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
+    .hero h2{margin:0 0 8px; font-size:26px; letter-spacing:.2px}
+    .hero p{margin:0; color:var(--muted); line-height:1.55; max-width:900px}
+
+    .badges{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.14);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:rgba(255,255,255,.85);
+    }
+    .badge .dot{
+      width:10px; height:10px; border-radius:50%;
+      background:rgba(77,163,255,.85);
+    }
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h3{margin:0 0 6px; font-size:16px}
+    .card p{margin:0 0 12px; color:var(--muted); line-height:1.5}
+
+    .btn{
+      display:inline-block;
+      text-decoration:none;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+      color:#071022;
+      background:linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.85));
+    }
+    .btn2{
+      display:inline-block;
+      text-decoration:none;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:800;
+      color:var(--text);
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      margin-left:10px;
+    }
+    footer{
+      max-width:1200px; margin:14px auto 24px; padding:0 16px;
+      color:rgba(255,255,255,.65); font-size:12px;
+    }
+  </style>
 </head>
+
 <body>
-  <header class="topbar">
-    <div class="container row">
+  <div class="topbar">
+    <div class="topbar-inner">
       <div class="brand">
-        <img src="images/lec-logo.png" alt="LEC Biotec Logo">
-        <div class="title">
-          <b>Sci-Guru</b>
-          <span>AI Science Tutor • ZIMSEC / Heritage-Based</span>
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';" />
         </div>
-      </div>
-
-      <nav class="nav">
-        <a class="active" href="index.html">Home</a>
-        <a href="tutor.html">AI Tutor</a>
-        <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <div class="heroCard">
         <div>
-          <h1>Learn science the smart way — with local Zimbabwean examples.</h1>
-          <p>
-            Sci-Guru helps learners study Forms 1–4 with explanations, quizzes, and practical guidance aligned to
-            the ZIMSEC / Heritage-Based curriculum.
-          </p>
-          <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
-            <span class="badge">✅ Clean interface</span>
-            <span class="badge">✅ Organized pages</span>
-            <span class="badge">✅ Real AI answer via Render</span>
-          </div>
-        </div>
-
-        <div class="cta">
-          <a class="btn primary" href="tutor.html">Open Sci-Guru AI Tutor</a>
-          <a class="btn" href="virtual-lab-hub.html">Open Virtual Lab Hub</a>
-          <a class="btn" href="home/">Open/home (fixed)</a>
+          <h1>Sci-Guru</h1>
+          <div class="sub">AI Science Tutor • ZIMSEC / Heritage-Based</div>
         </div>
       </div>
-    </section>
 
-    <section class="grid">
+      <div class="nav">
+        <a class="primary" href="index.html">Home</a>
+        <a href="tutor.html">Tutor</a>
+        <a href="labs.html">Labs</a>
+        <a href="library.html">Library</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="home.html">About</a>
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h2>Learn science the smart way — with local Zimbabwean examples.</h2>
+      <p>
+        Sci-Guru helps learners study Forms 1–4 with explanations, quizzes, and practical guidance aligned to the ZIMSEC / Heritage-Based curriculum.
+        Use the Tutor for learning and revision, and open the Virtual Labs for interactive experiments.
+      </p>
+
+      <div class="badges">
+        <div class="badge"><span class="dot"></span> Clean interface</div>
+        <div class="badge"><span class="dot"></span> Organized pages</div>
+        <div class="badge"><span class="dot"></span> No 404 links</div>
+      </div>
+    </div>
+
+    <div class="grid">
       <div class="card">
-        <h2>AI Tutor</h2>
+        <h3>AI Tutor</h3>
         <p>Ask questions, pick topics, generate quizzes, and get practical steps.</p>
-        <div class="actions">
-          <a class="btn primary" href="tutor.html">Go to Tutor</a>
-        </div>
+        <a class="btn" href="tutor.html">Go to Tutor</a>
       </div>
 
       <div class="card">
-        <h2>Virtual Lab Hub</h2>
-        <p>Open simulations for mixtures, electricity, density, fire experiments and more.</p>
-        <div class="actions">
-          <a class="btn primary" href="virtual-lab-hub.html">Go to Labs</a>
-        </div>
+        <h3>Virtual Lab Hub</h3>
+        <p>Open simulations for density, electricity, bunsen burner, cells labeling, microscope, and more.</p>
+        <a class="btn" href="labs.html">Go to Labs</a>
+        <a class="btn2" href="sim-cells-hub.html">Cells Hub</a>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <footer class="footer">
-      <div>
-        © <span id="yr"></span> LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe
-      </div>
-    </footer>
-  </main>
-
-  <script>
-    document.getElementById('yr').textContent = new Date().getFullYear();
-  </script>
+  <footer>
+    © 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe
+  </footer>
 </body>
-</html>
-
+  </html>
