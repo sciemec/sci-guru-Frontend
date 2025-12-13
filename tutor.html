@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Sci-Guru Tutor</title>
+  <title>Sci-Guru Tutor • Book 1 (Form 1)</title>
   <link rel="icon" href="lec-logo.jpg"/>
 
   <style>
@@ -30,7 +30,8 @@
       min-height:100vh;
     }
 
-    /* Header */
+    .wrap{max-width:1200px; margin:0 auto; padding:14px 14px 40px}
+
     header{
       position:sticky; top:10px; z-index:10;
       max-width:1200px; margin:0 auto;
@@ -49,7 +50,7 @@
     }
     .logo img{width:100%;height:100%;object-fit:cover}
     .brand .t{min-width:0}
-    .brand .t b{display:block; font-size:16px; letter-spacing:.2px}
+    .brand .t b{display:block; font-size:16px}
     .brand .t span{display:block; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 
     nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
@@ -60,7 +61,7 @@
       padding:10px 12px;
       border-radius:12px;
       text-decoration:none;
-      font-weight:750;
+      font-weight:800;
       font-size:13px;
       cursor:pointer;
       transition:transform .08s ease, background .15s ease;
@@ -73,8 +74,9 @@
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
       color:#071022;
     }
+
     .pill{
-      display:inline-flex; align-items:center; gap:6px;
+      display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.06);
       padding:8px 10px;
@@ -83,24 +85,27 @@
       color:var(--muted);
       white-space:nowrap;
     }
-    .pill .dot{
-      width:9px;height:9px;border-radius:99px;
-      background:var(--good);
-      box-shadow:0 0 0 4px rgba(51,208,122,.14);
-    }
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
 
-    /* Page Layout */
-    .wrap{max-width:1200px; margin:0 auto; padding:14px 14px 40px}
-    .topGrid{
+    .hero{
+      margin-top:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .hero h1{margin:0; font-size:18px}
+    .hero p{margin:4px 0 0; color:var(--muted); font-size:13px; line-height:1.5; max-width:820px}
+
+    .grid{
       margin-top:12px;
       display:grid;
-      grid-template-columns: 1fr 1.15fr;
+      grid-template-columns: 1fr 1.1fr;
       gap:12px;
       align-items:stretch;
     }
-    @media(max-width:980px){
-      .topGrid{grid-template-columns:1fr}
-    }
+    @media(max-width:980px){ .grid{grid-template-columns:1fr} }
 
     .panel{
       border:1px solid var(--stroke);
@@ -114,35 +119,10 @@
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       background:rgba(0,0,0,.18);
     }
-    .panelHead h2{margin:0; font-size:14px; letter-spacing:.2px}
+    .panelHead h2{margin:0; font-size:14px}
     .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
 
-    .list{padding:10px}
-    .item{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
-      border-radius:16px;
-      padding:12px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin-bottom:10px;
-    }
-    .item b{display:block; font-size:13px}
-    .item span{display:block; font-size:12px; color:var(--muted); margin-top:2px}
-    .openLink{
-      display:inline-flex; align-items:center; gap:6px;
-      text-decoration:none;
-      padding:10px 12px;
-      border-radius:12px;
-      font-weight:900;
-      font-size:13px;
-      color:#071022;
-      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
-      border:1px solid rgba(47,123,255,.55);
-      white-space:nowrap;
-    }
-
-    /* Tutor */
-    .tutorBox{padding:14px}
     textarea, input, select{
       width:100%;
       background:rgba(255,255,255,.06);
@@ -156,6 +136,7 @@
     textarea{min-height:130px; resize:vertical}
     .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px}
     @media(max-width:740px){.row{grid-template-columns:1fr}}
+
     .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
     .out{
       margin-top:10px;
@@ -169,44 +150,65 @@
     }
     .hint{margin-top:8px; font-size:12px; color:var(--muted)}
 
-    /* Chapters */
-    .chapters{
-      margin-top:12px;
+    /* Topics */
+    .tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
-      border-radius:18px;
-      overflow:hidden;
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
     }
-    .chapHead{
-      padding:14px;
-      border-bottom:1px solid var(--stroke);
-      background:rgba(0,0,0,.18);
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      flex-wrap:wrap;
+    .tab.active{
+      color:#071022;
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
     }
-    .chapHead h2{margin:0; font-size:14px}
-    .chapWrap{padding:12px}
-    .chapGrid{
+
+    .searchRow{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .searchRow input{flex:1}
+    .kpi{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .kpi .pill{border-radius:12px}
+
+    .topicList{
+      margin-top:12px;
       display:grid;
       grid-template-columns: repeat(12, 1fr);
       gap:10px;
     }
-    .chap{
+    .topicCard{
       grid-column: span 6;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.05);
       border-radius:16px;
+      overflow:hidden;
+    }
+    @media(max-width:980px){ .topicCard{grid-column: span 12;} }
+
+    .topicTop{
       padding:12px;
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+      border-bottom:1px solid var(--stroke);
+      background:rgba(0,0,0,.14);
     }
-    @media(max-width:980px){.chap{grid-column:span 12}}
-    .chapTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-    .chapTitle{min-width:0}
-    .chapTitle b{display:block}
-    .chapTitle span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
-    .chk{
-      display:flex; align-items:center; gap:8px; white-space:nowrap;
-      font-size:12px; color:var(--muted);
+    .topicTitle b{display:block}
+    .topicTitle span{display:block; margin-top:4px; font-size:12px; color:var(--muted)}
+    .chk{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); white-space:nowrap}
+
+    details{padding:12px}
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      color:var(--text);
+      list-style:none;
     }
+    summary::-webkit-details-marker{display:none}
+    .bullets{margin-top:10px; color:var(--muted); font-size:12px; line-height:1.5}
+    .bullets ul{margin:8px 0 0 18px; padding:0}
+    .bullets li{margin:6px 0}
     .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
     .mini{
       padding:9px 10px;
@@ -215,20 +217,23 @@
       background:rgba(255,255,255,.06);
       color:var(--text);
       text-decoration:none;
-      font-weight:800;
+      font-weight:900;
       font-size:12px;
+      cursor:pointer;
     }
     .mini.primary{
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
       color:#071022;
       border-color:rgba(47,123,255,.55);
     }
-    .note{
-      margin-top:10px;
-      font-size:12px;
-      color:var(--muted);
+    .mini.disabled{
+      opacity:.45;
+      pointer-events:none;
     }
+    .note{margin-top:10px}
+    .note label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
     .note textarea{min-height:70px; font-size:12px; padding:10px; border-radius:12px}
+
     footer{
       margin-top:16px;
       text-align:center;
@@ -246,15 +251,13 @@
           <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
         </div>
         <div class="t">
-          <b>Sci-Guru Tutor</b>
-          <span>ZIMSEC / Heritage-Based • Forms 1–4</span>
+          <b>Sci-Guru Tutor • Book 1</b>
+          <span>Form 1 Combined Science • Topics 1–19 (Term structured)</span>
         </div>
       </div>
 
       <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-        <div class="pill" title="This page uses exact filenames so links don’t break">
-          <span class="dot"></span> Links fixed ✅
-        </div>
+        <div class="pill"><span class="dot"></span> Progress auto-saves</div>
         <nav>
           <a class="btn" href="index.html">Home</a>
           <a class="btn primary" href="tutor.html">Tutor</a>
@@ -264,92 +267,34 @@
       </div>
     </header>
 
-    <!-- Top split panels -->
-    <div class="topGrid">
+    <section class="hero">
+      <div>
+        <h1>Book 1 Tutor Dashboard (Form 1)</h1>
+        <p>
+          This tutor is structured exactly by your summary: <b>Biology Term 1 (1–7)</b>, <b>Chemistry Term 2 (8–13)</b>, <b>Physics Term 3 (14–19)</b>.
+          Each topic has: overview, key points, experiments, and a place to build virtual labs without losing progress.
+        </p>
+      </div>
 
-      <!-- Virtual Lab Hub panel -->
+      <div class="kpi">
+        <div class="pill">Topics: <b id="kTopics" style="color:var(--text)">19</b></div>
+        <div class="pill">Done: <b id="kDone" style="color:var(--text)">0</b></div>
+        <div class="pill">Remaining: <b id="kLeft" style="color:var(--text)">19</b></div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <!-- LEFT: Tutor Q/A -->
       <section class="panel">
         <div class="panelHead">
           <div>
-            <h2>Virtual Lab Hub</h2>
-            <small>Open simulations fast (no 404)</small>
+            <h2>AI Tutor (Offline mode)</h2>
+            <small>Use topics & experiments below • connect backend later</small>
           </div>
         </div>
 
-        <div class="list">
-
-          <div class="item">
-            <div>
-              <b>Open All Labs (Hub)</b>
-              <span>Density, electricity, bunsen, microscope, cells…</span>
-            </div>
-            <a class="openLink" href="labs-hub.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Density Simulator (Upgraded)</b>
-              <span>More objects + displacement + float/sink challenge</span>
-            </div>
-            <a class="openLink" href="sim-density.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Electricity Simulator (Upgraded)</b>
-              <span>Now includes SERIES circuits + brightness + switch</span>
-            </div>
-            <a class="openLink" href="sim-electricity.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Bunsen Burner Simulator</b>
-              <span>Adjust air hole, flame types & safety</span>
-            </div>
-            <a class="openLink" href="sim-bunsen.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Lab Apparatus Explorer</b>
-              <span>Identify apparatus and their uses</span>
-            </div>
-            <a class="openLink" href="sim-apparatus.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Cells Hub</b>
-              <span>Cell labeling & cell structures</span>
-            </div>
-            <a class="openLink" href="sim-cells-hub.html">Open →</a>
-          </div>
-
-          <div class="item">
-            <div>
-              <b>Microscope Simulator</b>
-              <span>Parts, focusing and magnification</span>
-            </div>
-            <a class="openLink" href="sim-microscope.html">Open →</a>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- AI Tutor panel -->
-      <section class="panel">
-        <div class="panelHead">
-          <div>
-            <h2>AI Tutor</h2>
-            <small>Offline mode (can connect Render later)</small>
-          </div>
-        </div>
-
-        <div class="tutorBox">
-          <div style="font-weight:900; margin-bottom:10px;">Hi Nigel 👋 Ask me anything in Combined Science</div>
-
-          <textarea id="q" placeholder="Type your question... (e.g., Explain cells, calculate density, describe a series circuit)"></textarea>
+        <div class="panelBody">
+          <textarea id="q" placeholder="Ask a question (e.g., Name three types of cell. What is SI unit for mass? Define catalyst.)"></textarea>
 
           <div class="row">
             <div>
@@ -362,8 +307,8 @@
               </select>
             </div>
             <div>
-              <label style="font-size:12px;color:var(--muted)">Topic (optional)</label>
-              <input id="topic" placeholder="e.g., Cells, Density, Electricity..." />
+              <label style="font-size:12px;color:var(--muted)">Topic</label>
+              <select id="topicPick"></select>
             </div>
           </div>
 
@@ -377,25 +322,57 @@
           <div class="out" id="out"></div>
 
           <div class="hint">
-            ✅ Your chapter progress + notes are saved automatically in your browser (so you won’t lose work when we update).
+            ✅ This page saves topic completion + notes in your browser automatically.
           </div>
         </div>
       </section>
 
+      <!-- RIGHT: Virtual Lab quick links -->
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Virtual Lab Hub (Quick Open)</h2>
+            <small>Correct filenames • avoid 404</small>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="links">
+            <a class="mini primary" href="labs-hub.html">Open Labs Hub</a>
+            <a class="mini" href="sim-density.html">Density</a>
+            <a class="mini" href="sim-electricity.html">Electricity (Series)</a>
+            <a class="mini" href="sim-bunsen.html">Bunsen</a>
+            <a class="mini" href="sim-apparatus.html">Apparatus</a>
+            <a class="mini" href="sim-microscope.html">Microscope</a>
+            <a class="mini" href="sim-cells-hub.html">Cells Hub</a>
+            <a class="mini" href="sim-cells-labels.html">Cell Labeling</a>
+          </div>
+
+          <div class="hint" style="margin-top:10px;">
+            If <b>labs.html</b> was giving 404, keep the small redirect file we created earlier:
+            <span style="color:var(--muted)">labs.html → labs-hub.html</span>.
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- Chapters 1–19 (kept and expandable) -->
-    <section class="chapters">
-      <div class="chapHead">
-        <h2>Book Progress • Chapters 1–19</h2>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-          <button class="btn" id="exportBtn" type="button">Export Progress</button>
-          <button class="btn" id="resetProgressBtn" type="button" title="This only resets saved ticks/notes, not your files">Reset Saved Progress</button>
+    <!-- TOPICS / TERMS -->
+    <section class="panel" style="margin-top:12px;">
+      <div class="panelHead">
+        <div>
+          <h2>Topics (Structured by Term)</h2>
+          <small>Open details • tick Done • write notes • add virtual experiments step-by-step</small>
         </div>
+        <div class="tabs" id="tabs"></div>
       </div>
 
-      <div class="chapWrap">
-        <div class="chapGrid" id="chapGrid"></div>
+      <div class="panelBody">
+        <div class="searchRow">
+          <input id="search" placeholder="Search topics (e.g., cells, respiration, filtration, force, electricity)"/>
+          <button class="btn" id="exportBtn" type="button">Export Progress</button>
+          <button class="btn" id="resetBtn" type="button" title="Resets saved ticks/notes only">Reset Progress</button>
+        </div>
+
+        <div class="topicList" id="topicList"></div>
       </div>
     </section>
 
@@ -403,136 +380,391 @@
   </div>
 
   <script>
-    // -----------------------
-    // SAFE PROGRESS STORAGE
-    // -----------------------
-    const STORAGE_KEY = "sciguru_book1_chapters_v1";
+    // =========================
+    // DATA: Topics 1–19 (from your summary)
+    // =========================
+    const TOPICS = [
+      // Biology Term 1
+      {
+        id:"t1", term:"Biology Term 1", num:1,
+        name:"Laboratory safety and apparatus",
+        overview:"Lab rules, safety symbols, correct use of apparatus, and accurate measurements (e.g., meniscus).",
+        keyPoints:[
+          "Identify common apparatus: test tubes, beakers, measuring cylinders, funnels, Bunsen burner, crucible, tripod, safety glasses.",
+          "Safety symbols: corrosive, toxic, flammable, etc.",
+          "Accurate measurement: read the meniscus at eye level; avoid parallax error."
+        ],
+        experiments:[
+          {title:"Measurement practice", aim:"Practice reading the meniscus & recording volume correctly."}
+        ],
+        links:[
+          {label:"Apparatus Explorer", href:"sim-apparatus.html", primary:true},
+          {label:"Bunsen Burner", href:"sim-bunsen.html"},
+        ]
+      },
+      {
+        id:"t2", term:"Biology Term 1", num:2,
+        name:"Cells and levels of organisation",
+        overview:"Plant vs animal cells; cell structures; levels: cell → tissue → organ → system → organism.",
+        keyPoints:[
+          "All cells: cytoplasm, cell membrane, nucleus, organelles.",
+          "Plant cells: cell wall (cellulose), chloroplasts, large permanent vacuole.",
+          "Animal cells: no cell wall/chloroplasts; irregular shape; small/temporary vacuoles.",
+          "Levels of organisation: cells form tissues, tissues form organs, organs form systems."
+        ],
+        experiments:[
+          {title:"Observe plant cells", aim:"View onion/leaf cells and identify parts."},
+          {title:"Observe animal cells", aim:"View cheek cells and identify parts."}
+        ],
+        links:[
+          {label:"Cells Hub", href:"sim-cells-hub.html", primary:true},
+          {label:"Cell Labeling", href:"sim-cells-labels.html"},
+          {label:"Levels Simulator", href:"sim-levels.html"}
+        ]
+      },
+      {
+        id:"t3", term:"Biology Term 1", num:3,
+        name:"Nutrition",
+        overview:"Balanced diet and nutrients: carbohydrates, fats, proteins, vitamins, mineral salts, fibre, and water.",
+        keyPoints:[
+          "Carbohydrates & fats: energy supply.",
+          "Proteins: growth and repair.",
+          "Vitamins & minerals: health and growth.",
+          "Fibre: aids digestion; Water: supports chemical reactions."
+        ],
+        experiments:[
+          {title:"Food group classification", aim:"Classify foods by nutrient group and plan a balanced meal."}
+        ],
+        links:[]
+      },
+      {
+        id:"t4", term:"Biology Term 1", num:4,
+        name:"The respiratory system",
+        overview:"Composition of air and difference between breathing and respiration; tests for oxygen and CO₂.",
+        keyPoints:[
+          "Air composition: ~78% nitrogen, ~21% oxygen, small carbon dioxide.",
+          "Breathing: moving air in/out of lungs.",
+          "Respiration: chemical reactions in cells releasing energy.",
+          "Test oxygen: glowing splint; Test CO₂: limewater turns milky."
+        ],
+        experiments:[
+          {title:"Test for oxygen", aim:"Use a glowing splint to show oxygen supports burning."},
+          {title:"Test for carbon dioxide", aim:"Bubble exhaled air through limewater to show CO₂ presence."}
+        ],
+        links:[]
+      },
+      {
+        id:"t5", term:"Biology Term 1", num:5,
+        name:"Transport systems",
+        overview:"Diffusion and osmosis; human blood components and their functions.",
+        keyPoints:[
+          "Diffusion: particles move from high to low concentration.",
+          "Osmosis: water moves through a partially permeable membrane from high to low water concentration.",
+          "Blood: plasma (liquid), RBCs (oxygen via haemoglobin), WBCs (defense), platelets (clotting)."
+        ],
+        experiments:[
+          {title:"Diffusion demo", aim:"Observe dye spreading in water."}
+        ],
+        links:[]
+      },
+      {
+        id:"t6", term:"Biology Term 1", num:6,
+        name:"Reproductive systems",
+        overview:"Sexual reproduction in plants and humans; flower structure; pollination; fertilisation; puberty changes.",
+        keyPoints:[
+          "Flower: stamen (male) and carpel (female).",
+          "Pollination: transfer of pollen; fertilisation: fusion of gametes in ovule.",
+          "Ovule becomes seed; ovary becomes fruit.",
+          "Puberty: physical changes preparing body for reproduction."
+        ],
+        experiments:[
+          {title:"Flower dissection", aim:"Identify sepals, petals, stamens, stigma, style, ovary, ovules."}
+        ],
+        links:[]
+      },
+      {
+        id:"t7", term:"Biology Term 1", num:7,
+        name:"Health and diseases",
+        overview:"Personal/food/environmental hygiene, waste disposal, infectious diseases and transmission.",
+        keyPoints:[
+          "Hygiene: personal, food and environmental hygiene reduce disease.",
+          "Waste disposal: landfill/burying, burning, recycling.",
+          "Diseases: cholera/typhoid (water/food), malaria (mosquito vector), bilharzia (snails)."
+        ],
+        experiments:[
+          {title:"Hygiene risk mapping", aim:"Identify sources of infection and propose prevention measures."}
+        ],
+        links:[]
+      },
 
-    // Chapters 1–19 (titles are editable via notes; we keep structure stable)
-    // NOTE: We link to your existing sims where possible, and we upgrade electricity & density.
-    const CHAPTERS = [
-      {n:1,  title:"Living Things",                       desc:"Characteristics of living things, basics of life processes", links:[
-        {label:"Virtual Practical", href:"sim-form1-living-things.html", primary:true},
-        {label:"Experiences", href:"sim-form1-experiences.html"}
-      ]},
-      {n:2,  title:"Levels of Organization",              desc:"Cells → tissues → organs → systems → organism", links:[
-        {label:"Levels Simulator", href:"sim-levels.html", primary:true},
-        {label:"Cells Hub", href:"sim-cells-hub.html"}
-      ]},
-      {n:3,  title:"Cells & Cell Structures",             desc:"Plant vs animal cells, organelles & functions", links:[
-        {label:"Cells Hub", href:"sim-cells-hub.html", primary:true},
-        {label:"Cell Labeling", href:"sim-cells-labels.html"}
-      ]},
-      {n:4,  title:"Microscope & Lab Skills",             desc:"Microscope parts, focusing, magnification", links:[
-        {label:"Microscope Simulator", href:"sim-microscope.html", primary:true}
-      ]},
-      {n:5,  title:"Mixtures & Separation",               desc:"Filtration, evaporation, decanting", links:[
-        {label:"Mixtures Lab", href:"sim-mixtures.html", primary:true}
-      ]},
-      {n:6,  title:"Measurements & Units",                desc:"Mass, volume, reading instruments", links:[
-        {label:"Density Simulator", href:"sim-density.html", primary:true}
-      ]},
-      {n:7,  title:"Density",                             desc:"Density = mass ÷ volume, sink/float, displacement", links:[
-        {label:"Density Simulator (Upgraded)", href:"sim-density.html", primary:true}
-      ]},
-      {n:8,  title:"Energy & Heat",                       desc:"Heating, safety, temperature", links:[
-        {label:"Bunsen Burner", href:"sim-bunsen.html", primary:true}
-      ]},
-      {n:9,  title:"Electricity Basics",                  desc:"Circuits, conductors/insulators, switch", links:[
-        {label:"Electricity Simulator (Upgraded)", href:"sim-electricity.html", primary:true}
-      ]},
-      {n:10, title:"Series Circuits",                     desc:"Now added: SERIES circuits, brightness changes", links:[
-        {label:"Series Circuit Mode", href:"sim-electricity.html", primary:true}
-      ]},
-      {n:11, title:"Forces & Motion",                     desc:"Push/pull, speed, basic motion ideas", links:[]},
-      {n:12, title:"Pressure",                            desc:"Liquids & gases, everyday applications", links:[]},
-      {n:13, title:"Materials",                           desc:"Metals/non-metals, properties", links:[]},
-      {n:14, title:"Acids, Bases & Indicators",           desc:"Indicators, neutralization", links:[]},
-      {n:15, title:"Air & Combustion",                    desc:"Fire triangle, combustion basics", links:[
-        {label:"Bunsen Burner", href:"sim-bunsen.html", primary:true}
-      ]},
-      {n:16, title:"Water & Solutions",                   desc:"Solubility, solutions, concentration ideas", links:[]},
-      {n:17, title:"Human Body Overview",                 desc:"Organ systems overview (basic)", links:[]},
-      {n:18, title:"Plants & Photosynthesis",             desc:"Plant structures & processes", links:[]},
-      {n:19, title:"Revision & Practical Consolidation",  desc:"Pulling all practicals together", links:[
-        {label:"Labs Hub", href:"labs-hub.html", primary:true},
-        {label:"Tutor", href:"tutor.html"}
-      ]}
+      // Chemistry Term 2
+      {
+        id:"t8", term:"Chemistry Term 2", num:8,
+        name:"Separation",
+        overview:"Separating mixtures using physical methods: filtration, magnetism, winnowing, decanting, evaporation.",
+        keyPoints:[
+          "Filtration: insoluble solid from liquid (filter paper).",
+          "Magnetism: separate iron filings from mixture.",
+          "Decanting: liquids of different densities (oil/water).",
+          "Evaporation: recover soluble solid (crystals) from solution."
+        ],
+        experiments:[
+          {title:"Filter sand and water", aim:"Use filtration to separate an insoluble solid."},
+          {title:"Magnet separation", aim:"Separate iron filings from sulfur/other solids."}
+        ],
+        links:[
+          {label:"(Add later) Separation Simulator", href:"#", primary:true, disabled:true}
+        ]
+      },
+      {
+        id:"t9", term:"Chemistry Term 2", num:9,
+        name:"Matter",
+        overview:"Kinetic theory; states of matter; changes of state; dissolving and solubility; elements, compounds, mixtures; periodic table.",
+        keyPoints:[
+          "Solids: particles packed, vibrate; Liquids: particles move slowly; Gases: far apart, move fast.",
+          "Changes of state: melting, evaporation, condensation, freezing, sublimation.",
+          "Rate of dissolving depends on particle size, temperature, stirring.",
+          "Elements vs compounds vs mixtures; metals/non-metals/semimetals."
+        ],
+        experiments:[
+          {title:"Changes of state", aim:"Observe melting/evaporation/sublimation with safe materials."}
+        ],
+        links:[]
+      },
+      {
+        id:"t10", term:"Chemistry Term 2", num:10,
+        name:"Acids, bases and salts",
+        overview:"Properties of acids/bases; indicators; neutralisation forming salts.",
+        keyPoints:[
+          "Acids: sour, turn blue litmus red.",
+          "Bases: bitter/soapy, turn red litmus blue.",
+          "Indicators: litmus and others.",
+          "Neutralisation: acid + base → salt + water."
+        ],
+        experiments:[
+          {title:"Indicator tests", aim:"Test substances using litmus to classify acidic/basic."}
+        ],
+        links:[]
+      },
+      {
+        id:"t11", term:"Chemistry Term 2", num:11,
+        name:"Industrial processes",
+        overview:"Peanut butter and peanut oil production steps (local industrial process example).",
+        keyPoints:[
+          "Steps: cleaning, shelling, grading, roasting, blanching, grinding, packaging.",
+          "Oil extraction: oil press or decanting after processing.",
+          "Uses: cooking, frying, skin moisturiser."
+        ],
+        experiments:[
+          {title:"Process flow chart", aim:"Create a clear process diagram from raw peanuts to product."}
+        ],
+        links:[]
+      },
+      {
+        id:"t12", term:"Chemistry Term 2", num:12,
+        name:"Oxidation",
+        overview:"Oxidation as addition of oxygen; rusting conditions; prevention methods (painting, galvanising, electroplating).",
+        keyPoints:[
+          "Rusting needs iron + oxygen + water.",
+          "Prevent rust by blocking air/water contact: paint, grease, galvanise, electroplate."
+        ],
+        experiments:[
+          {title:"Rusting conditions", aim:"Compare rusting with/without water/oxygen (safe setup)."}
+        ],
+        links:[]
+      },
+      {
+        id:"t13", term:"Chemistry Term 2", num:13,
+        name:"Organic chemistry",
+        overview:"Organic compounds (hydrocarbons); fuels; combustion; fuel types and efficiency.",
+        keyPoints:[
+          "Organic chemistry studies carbon + hydrogen compounds.",
+          "Fuels: solid (wood/coal), liquid (petrol/diesel/paraffin), gas (LPG/natural gas).",
+          "Fuel efficiency depends on heat energy produced during combustion."
+        ],
+        experiments:[
+          {title:"Fuel comparison (theory)", aim:"Compare fuel advantages/disadvantages and safety."}
+        ],
+        links:[]
+      },
+
+      // Physics Term 3
+      {
+        id:"t14", term:"Physics Term 3", num:14,
+        name:"Data presentation",
+        overview:"Present and interpret investigation data using tallies, tables and bar graphs.",
+        keyPoints:[
+          "Tallies record frequency using groups of five.",
+          "Tables organize values in rows and columns.",
+          "Bar graphs show categories visually."
+        ],
+        experiments:[
+          {title:"Make a bar graph", aim:"Collect simple class data and draw a correct bar graph."}
+        ],
+        links:[]
+      },
+      {
+        id:"t15", term:"Physics Term 3", num:15,
+        name:"Measurements",
+        overview:"Accurate measurement, SI units, instruments, and errors (parallax, zero error).",
+        keyPoints:[
+          "SI units: length (m), mass (kg), time (s), temperature (°C or K).",
+          "Instruments: metre rule, stopwatch, balance, thermometer.",
+          "Errors: parallax (wrong angle), zero error (not set to zero)."
+        ],
+        experiments:[
+          {title:"Measurement accuracy", aim:"Measure length/mass/time with correct instruments and note errors."}
+        ],
+        links:[]
+      },
+      {
+        id:"t16", term:"Physics Term 3", num:16,
+        name:"Force",
+        overview:"Force as push/pull; effects; contact vs non-contact forces; weight in newtons; force meter.",
+        keyPoints:[
+          "Forces change motion, shape, direction.",
+          "Contact forces: friction, mechanical push/pull.",
+          "Non-contact: gravity, magnetic, electrostatic.",
+          "Weight is gravitational force; unit is newton (N)."
+        ],
+        experiments:[
+          {title:"Friction investigation", aim:"Compare friction on different surfaces."}
+        ],
+        links:[]
+      },
+      {
+        id:"t17", term:"Physics Term 3", num:17,
+        name:"Energy",
+        overview:"Energy forms, sources (renewable/non-renewable), conversions, and energy converters.",
+        keyPoints:[
+          "Kinetic energy: movement.",
+          "Potential: gravitational, elastic, chemical.",
+          "Other: light, heat, electrical, sound.",
+          "Energy conversions represented by chains."
+        ],
+        experiments:[
+          {title:"Energy chain mapping", aim:"Trace energy conversions in common devices (torch, battery, bulb)."}
+        ],
+        links:[]
+      },
+      {
+        id:"t18", term:"Physics Term 3", num:18,
+        name:"Magnetism",
+        overview:"Magnetic materials, poles, types of magnets, electromagnets, magnetic field, compass and Earth’s field.",
+        keyPoints:[
+          "Magnets attract magnetic materials; force strongest at poles.",
+          "Electromagnet: current through coil around iron core.",
+          "Compass aligns with Earth’s magnetic field."
+        ],
+        experiments:[
+          {title:"Make an electromagnet", aim:"Coil wire around nail, connect to cell, test attraction."}
+        ],
+        links:[]
+      },
+      {
+        id:"t19", term:"Physics Term 3", num:19,
+        name:"Electricity",
+        overview:"Charges, static vs current electricity, conductors/insulators, d.c. circuit components and symbols.",
+        keyPoints:[
+          "Charge: positive/protons, negative/electrons; friction transfers electrons.",
+          "Static electricity: charge build-up; current electricity: flow in conductor.",
+          "Circuit parts: cell, wires, bulb, resistor, ammeter, voltmeter, switch and symbols."
+        ],
+        experiments:[
+          {title:"Simple circuit", aim:"Build/test a d.c. circuit and identify components."},
+          {title:"Series circuit (added)", aim:"Compare brightness/current with 1 bulb vs series bulbs."}
+        ],
+        links:[
+          {label:"Electricity Simulator (Series)", href:"sim-electricity.html", primary:true}
+        ]
+      }
     ];
 
-    function loadProgress(){
-      try{
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      }catch(e){
-        return {};
-      }
+    // mark disabled links in data without breaking rendering
+    function normalizeLinks(topic){
+      const links = topic.links || [];
+      return links.map(l => ({
+        label:l.label,
+        href:l.href,
+        primary: !!l.primary,
+        disabled: !!l.disabled
+      }));
     }
-    function saveProgress(p){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+
+    // =========================
+    // STORAGE
+    // =========================
+    const STORE_KEY = "sciguru_book1_topics_progress_v2";
+    function loadStore(){
+      try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+      catch(e){ return {}; }
     }
+    function saveStore(s){
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+    }
+    const store = loadStore();
 
-    const progress = loadProgress();
+    // =========================
+    // TABS
+    // =========================
+    const TERMS = ["All", "Biology Term 1", "Chemistry Term 2", "Physics Term 3"];
+    const tabsEl = document.getElementById("tabs");
+    let activeTerm = "All";
 
-    // Render chapters grid
-    const chapGrid = document.getElementById("chapGrid");
-
-    function renderChapters(){
-      chapGrid.innerHTML = "";
-
-      CHAPTERS.forEach(ch => {
-        const id = "ch" + ch.n;
-        const chState = progress[id] || {done:false, note:""};
-
-        const el = document.createElement("div");
-        el.className = "chap";
-
-        el.innerHTML = `
-          <div class="chapTop">
-            <div class="chapTitle">
-              <b>Chapter ${ch.n}: ${ch.title}</b>
-              <span>${ch.desc || ""}</span>
-            </div>
-            <label class="chk">
-              <input type="checkbox" ${chState.done ? "checked":""} data-ch="${id}" />
-              Done
-            </label>
-          </div>
-
-          <div class="links">
-            ${ch.links && ch.links.length ? ch.links.map(l=>{
-              return `<a class="mini ${l.primary ? "primary":""}" href="${l.href}">${l.label}</a>`;
-            }).join("") : `<span style="font-size:12px;color:var(--muted)">Virtual experiment coming soon (we’ll add next)</span>`}
-          </div>
-
-          <div class="note">
-            <div style="margin-bottom:6px;">Notes / Next experiment ideas:</div>
-            <textarea data-note="${id}" placeholder="Write your notes here (saved automatically)">${escapeHtml(chState.note || "")}</textarea>
-          </div>
-        `;
-
-        chapGrid.appendChild(el);
-      });
-
-      // checkbox handlers
-      chapGrid.querySelectorAll('input[type="checkbox"][data-ch]').forEach(cb=>{
-        cb.addEventListener("change", ()=>{
-          const key = cb.getAttribute("data-ch");
-          progress[key] = progress[key] || {};
-          progress[key].done = cb.checked;
-          saveProgress(progress);
+    function renderTabs(){
+      tabsEl.innerHTML = "";
+      TERMS.forEach(t=>{
+        const b = document.createElement("button");
+        b.className = "tab" + (t===activeTerm ? " active":"");
+        b.textContent = t;
+        b.type = "button";
+        b.addEventListener("click", ()=>{
+          activeTerm = t;
+          renderTabs();
+          renderTopics();
         });
-      });
-
-      // note handlers
-      chapGrid.querySelectorAll('textarea[data-note]').forEach(t=>{
-        t.addEventListener("input", ()=>{
-          const key = t.getAttribute("data-note");
-          progress[key] = progress[key] || {};
-          progress[key].note = t.value;
-          saveProgress(progress);
-        });
+        tabsEl.appendChild(b);
       });
     }
+
+    // =========================
+    // TOPIC PICKER FOR TUTOR
+    // =========================
+    const topicPick = document.getElementById("topicPick");
+    function fillTopicPicker(){
+      topicPick.innerHTML = "";
+      TOPICS.forEach(t=>{
+        const op = document.createElement("option");
+        op.value = t.id;
+        op.textContent = `Topic ${t.num}: ${t.name}`;
+        topicPick.appendChild(op);
+      });
+      topicPick.value = "t1";
+    }
+
+    // =========================
+    // KPIs
+    // =========================
+    function calcDone(){
+      let done = 0;
+      TOPICS.forEach(t=>{
+        const st = store[t.id] || {};
+        if(st.done) done++;
+      });
+      return done;
+    }
+    function renderKPIs(){
+      const done = calcDone();
+      document.getElementById("kDone").textContent = done;
+      document.getElementById("kLeft").textContent = TOPICS.length - done;
+      document.getElementById("kTopics").textContent = TOPICS.length;
+    }
+
+    // =========================
+    // TOPICS RENDER
+    // =========================
+    const listEl = document.getElementById("topicList");
+    const searchEl = document.getElementById("search");
 
     function escapeHtml(s){
       return (s||"")
@@ -541,111 +773,249 @@
         .replaceAll(">","&gt;");
     }
 
-    renderChapters();
-
-    // Export / reset progress
-    document.getElementById("exportBtn").addEventListener("click", ()=>{
-      const data = JSON.stringify(progress, null, 2);
-      const blob = new Blob([data], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "sciguru-progress-ch1-19.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    document.getElementById("resetProgressBtn").addEventListener("click", ()=>{
-      localStorage.removeItem(STORAGE_KEY);
-      for(const k in progress) delete progress[k];
-      renderChapters();
-      document.getElementById("out").textContent = "Saved progress reset (chapters/notes). Your files were NOT deleted.";
-    });
-
-    // -----------------------
-    // OFFLINE TUTOR LOGIC
-    // -----------------------
-    const out = document.getElementById("out");
-    function write(msg){ out.textContent = msg; }
-
-    function getContext(){
-      return {
-        q:(document.getElementById("q").value||"").trim(),
-        level:document.getElementById("level").value,
-        topic:(document.getElementById("topic").value||"").trim()
-      };
+    function topicMatches(topic, q){
+      if(!q) return true;
+      q = q.toLowerCase();
+      const hay = [
+        topic.term, topic.name, topic.overview,
+        (topic.keyPoints||[]).join(" "),
+        (topic.experiments||[]).map(e=>e.title+" "+e.aim).join(" ")
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
     }
 
-    function offlineAnswer(){
-      const {q,level,topic} = getContext();
-      if(!q) return write("Type a question first.");
+    function renderTopics(){
+      listEl.innerHTML = "";
+      const q = (searchEl.value||"").trim();
 
-      const t = topic || "Combined Science";
-      write(
-`${level} • Topic: ${t}
+      TOPICS
+        .filter(t => activeTerm==="All" ? true : t.term===activeTerm)
+        .filter(t => topicMatches(t, q))
+        .forEach(topic=>{
+          const st = store[topic.id] || {done:false, note:""};
+          const links = normalizeLinks(topic);
+
+          const card = document.createElement("div");
+          card.className = "topicCard";
+
+          card.innerHTML = `
+            <div class="topicTop">
+              <div class="topicTitle">
+                <b>Topic ${topic.num}: ${escapeHtml(topic.name)}</b>
+                <span>${escapeHtml(topic.term)} • ${escapeHtml(topic.overview)}</span>
+              </div>
+              <label class="chk">
+                <input type="checkbox" data-done="${topic.id}" ${st.done ? "checked":""}/>
+                Done
+              </label>
+            </div>
+
+            <details>
+              <summary>Open details (Key points • Experiments • Actions)</summary>
+
+              <div class="bullets">
+                <b style="color:var(--text)">Key points</b>
+                <ul>
+                  ${(topic.keyPoints||[]).map(k=>`<li>${escapeHtml(k)}</li>`).join("")}
+                </ul>
+
+                <div style="height:8px"></div>
+                <b style="color:var(--text)">Experiments / Activities</b>
+                <ul>
+                  ${(topic.experiments||[]).map(e=>`<li><b>${escapeHtml(e.title)}</b> — ${escapeHtml(e.aim)}</li>`).join("")}
+                </ul>
+              </div>
+
+              <div class="links">
+                ${
+                  links.length
+                    ? links.map(l=>`<a class="mini ${l.primary?"primary":""} ${l.disabled?"disabled":""}" href="${l.href}">${escapeHtml(l.label)}</a>`).join("")
+                    : `<span class="mini disabled">Virtual experiment: coming next</span>`
+                }
+                <button class="mini" type="button" data-action="quiz" data-topic="${topic.id}">Generate quiz</button>
+                <button class="mini" type="button" data-action="prac" data-topic="${topic.id}">Practical steps</button>
+                <button class="mini" type="button" data-action="summary" data-topic="${topic.id}">Quick summary</button>
+              </div>
+
+              <div class="note">
+                <label>Notes / next build (saved)</label>
+                <textarea data-note="${topic.id}" placeholder="Write notes for this topic (e.g., what virtual lab to build next)">${escapeHtml(st.note||"")}</textarea>
+              </div>
+            </details>
+          `;
+
+          listEl.appendChild(card);
+        });
+
+      // handlers
+      listEl.querySelectorAll('input[type="checkbox"][data-done]').forEach(cb=>{
+        cb.addEventListener("change", ()=>{
+          const id = cb.getAttribute("data-done");
+          store[id] = store[id] || {};
+          store[id].done = cb.checked;
+          saveStore(store);
+          renderKPIs();
+        });
+      });
+
+      listEl.querySelectorAll('textarea[data-note]').forEach(t=>{
+        t.addEventListener("input", ()=>{
+          const id = t.getAttribute("data-note");
+          store[id] = store[id] || {};
+          store[id].note = t.value;
+          saveStore(store);
+        });
+      });
+
+      listEl.querySelectorAll('button[data-action]').forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const action = b.getAttribute("data-action");
+          const id = b.getAttribute("data-topic");
+          runTopicAction(id, action);
+        });
+      });
+    }
+
+    // =========================
+    // Tutor actions (offline templates)
+    // =========================
+    const out = document.getElementById("out");
+
+    function getTopicById(id){
+      return TOPICS.find(t=>t.id===id) || TOPICS[0];
+    }
+
+    function runTopicAction(id, action){
+      const t = getTopicById(id);
+      const lvl = document.getElementById("level").value;
+
+      if(action==="summary"){
+        out.textContent =
+`${lvl} • Topic ${t.num}: ${t.name}
+
+Quick summary:
+- ${t.overview}
+
+Key points:
+${(t.keyPoints||[]).map(x=>"• "+x).join("\n")}
+
+Experiments:
+${(t.experiments||[]).map(e=>`• ${e.title} — ${e.aim}`).join("\n")}
+
+Next: open the simulator (if available) or build a new virtual lab for this topic.`;
+      }
+
+      if(action==="quiz"){
+        out.textContent =
+`QUIZ • ${lvl} • Topic ${t.num}: ${t.name}
+
+1) Define the main terms in this topic.
+2) Explain the key idea using a Zimbabwe example.
+3) Draw/label a diagram (where applicable).
+4) Short questions (5):
+   - 2 recall
+   - 2 understanding
+   - 1 application
+5) Practical question:
+   - Aim, apparatus, method, results, conclusion, safety.
+
+Teacher tip:
+Marking guide: give points for correct keywords + correct explanation + correct steps.`;
+      }
+
+      if(action==="prac"){
+        const exp = (t.experiments||[])[0];
+        out.textContent =
+`PRACTICAL STEPS • ${lvl} • Topic ${t.num}: ${t.name}
+
+${exp ? ("Suggested activity: " + exp.title + "\nAim: " + exp.aim + "\n\n") : ""}A) Aim
+B) Apparatus
+C) Method (step-by-step)
+D) Results/Observations (table)
+E) Calculations (if needed)
+F) Conclusion
+G) Safety precautions
+
+Virtual lab idea:
+- Build an interactive simulator that lets learners change variables and see results instantly.`;
+      }
+
+      // also align dropdown
+      document.getElementById("topicPick").value = t.id;
+    }
+
+    // Manual tutor buttons
+    function offlineAnswer(){
+      const q = (document.getElementById("q").value||"").trim();
+      if(!q){ out.textContent = "Type a question first."; return; }
+      const lvl = document.getElementById("level").value;
+      const t = getTopicById(document.getElementById("topicPick").value);
+
+      out.textContent =
+`${lvl} • Topic ${t.num}: ${t.name}
 
 Your question:
 ${q}
 
-Answer (offline mode):
-• Key idea: explain the concept clearly with simple language.
-• Zimbabwe example: use a local example (home, school lab, farming, cooking, electricity at home).
-• Formula / diagram: include where needed.
-• Practical: list apparatus, steps, results, conclusion, and safety.
+Tutor response (offline template):
+• Explanation: define key terms, then explain in simple steps.
+• Example (Zimbabwe): connect to local life (home/school/farm/electricity/health).
+• Diagram/formula: include if relevant.
+• Quick check: ask 2 follow-up questions to confirm understanding.
 
-Tip: Use the Labs panel to open an interactive simulator for Density and Electricity.`
-      );
+Use the Topic details below for experiments + key points.`;
     }
 
     function offlineQuiz(){
-      const {q,level,topic} = getContext();
-      const t = topic || "This topic";
-      write(
-`QUIZ • ${level} • ${t}
-
-1) Define the main concept in your own words.
-2) Draw a simple labelled diagram related to the topic.
-3) Give ONE local Zimbabwean example showing the concept.
-4) Write ONE practical experiment: aim, apparatus, steps, results, conclusion.
-5) Safety: list 3 precautions.
-
-Extension:
-6) A tricky question: explain WHY something happens (reasoning).`
-      );
+      const t = getTopicById(document.getElementById("topicPick").value);
+      runTopicAction(t.id, "quiz");
     }
 
     function offlinePractical(){
-      const {q,level,topic} = getContext();
-      const t = topic || "the topic";
-      write(
-`PRACTICAL STEPS • ${level} • ${t}
-
-A) Aim (what are you testing?)
-B) Apparatus (list all items)
-C) Method (step-by-step)
-D) Results/Observations (table if possible)
-E) Calculations (if any)
-F) Conclusion (what did you find?)
-G) Safety precautions
-
-If you’re doing Electricity:
-• Use sim-electricity.html (Series mode) to test brightness & switch control.
-
-If you’re doing Density:
-• Use sim-density.html to measure mass/volume by displacement and predict float/sink.`
-      );
+      const t = getTopicById(document.getElementById("topicPick").value);
+      runTopicAction(t.id, "prac");
     }
 
     document.getElementById("askBtn").addEventListener("click", offlineAnswer);
     document.getElementById("quizBtn").addEventListener("click", offlineQuiz);
     document.getElementById("pracBtn").addEventListener("click", offlinePractical);
     document.getElementById("clearBtn").addEventListener("click", ()=>{
-      document.getElementById("q").value="";
-      write("");
+      document.getElementById("q").value = "";
+      out.textContent = "";
     });
 
-    // First message
-    write("Ready ✅\n\n• Chapters 1–19 are preserved.\n• Electricity & Density simulators upgraded (links on the left).\n• Notes + completion ticks auto-save.");
+    // =========================
+    // Export / Reset
+    // =========================
+    document.getElementById("exportBtn").addEventListener("click", ()=>{
+      const data = JSON.stringify(store, null, 2);
+      const blob = new Blob([data], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "sciguru-book1-topics-progress.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", ()=>{
+      localStorage.removeItem(STORE_KEY);
+      for(const k in store) delete store[k];
+      renderKPIs();
+      renderTopics();
+      out.textContent = "Saved progress reset (ticks + notes). Your HTML files were NOT deleted.";
+    });
+
+    searchEl.addEventListener("input", renderTopics);
+
+    // =========================
+    // INIT
+    // =========================
+    renderTabs();
+    fillTopicPicker();
+    renderKPIs();
+    renderTopics();
+    out.textContent = "Ready ✅\n\nChoose a topic, open details, and we continue building virtual experiments topic-by-topic without losing progress.";
   </script>
 </body>
-</html>
+                                                                 </html>
