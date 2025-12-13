@@ -1,359 +1,552 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sci-Guru Auto Virtual Lab – Density</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sci-Guru | Density Simulator</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --card:rgba(255,255,255,.07);
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff; --blue2:#7c5cff;
+      --good:#33d07a; --warn:#ffcc66; --bad:#ff5a6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 500px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 40px}
+    header{
+      position:sticky; top:10px; z-index:10;
+      padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .brand .t b{display:block;font-size:16px}
+    .brand .t span{display:block;font-size:12px;color:var(--muted)}
+    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:800;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .btn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
 
-    <style>
-        <header class="site-header">
-  <div class="site-header-left">
-    <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
-    <div class="site-title-block">
-      <h1 class="site-title">Sci-Guru</h1>
-      <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
-    </div>
-  </div>
-  <nav class="site-nav">
-    <a href="index.html">Home</a>
-    <a href="tutor.html">AI Tutor</a>
-    <a href="sim-density.html">Density Lab</a>
-    <a href="sim-mixtures.html">Mixtures Lab</a>
-    <a href="sim-electricity.html">Electricity Lab</a>
-    <a href="login.html">Teacher Login</a>
-  </nav>
-</header>
-        <script>
-  (function () {
-    const btn = document.getElementById("mark-density-complete");
-    if (!btn) return;
+    .grid{margin-top:12px; display:grid; grid-template-columns: 380px 1fr; gap:12px; align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
 
-    btn.addEventListener("click", () => {
-      try {
-        localStorage.setItem("sciGuru-lab-density-lab", "done");
-      } catch (e) {
-        console.warn("Could not save density lab status", e);
-      }
-      alert("Nice work! Density lab is now marked as completed.");
-    });
-  })();
-</script>
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            background: #f3f6fb;
-            color: #111827;
-        }
-        header {
-            background: #014f86;
-            color: #fff;
-            padding: 12px 20px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-        }
-        header small {
-            display: block;
-            font-size: 11px;
-            opacity: 0.85;
-        }
-        main {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 16px 24px;
-        }
-        .layout {
-            display: grid;
-            grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-            gap: 16px;
-        }
-        @media (max-width: 800px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-        }
-        .panel {
-            background: #ffffff;
-            padding: 14px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
-        }
-        h2 {
-            margin-top: 0;
-            font-size: 18px;
-        }
-        .answer-box {
-            background: #0b1120;
-            color: #e5e7eb;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 13px;
-            white-space: pre-wrap;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-        .tank-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 8px;
-        }
-        .tank {
-            position: relative;
-            width: 260px;
-            height: 220px;
-            border-radius: 12px 12px 6px 6px;
-            border: 3px solid #0f172a;
-            overflow: hidden;
-            background: #e5e7eb;
-        }
-        .water {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 65%;
-            background: linear-gradient(to top, #0ea5e9, #38bdf8);
-        }
-        .water-label {
-            position: absolute;
-            left: 50%;
-            top: 8px;
-            transform: translateX(-50%);
-            color: #0f172a;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .objects-area {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .object {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: grab;
-            box-shadow: 0 2px 6px rgba(15,23,42,0.15);
-        }
-        .object:active { cursor: grabbing; }
-        .dropped-object {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        button {
-            background: #0f766e;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 999px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            margin-right: 6px;
-            margin-top: 6px;
-        }
-        button:hover { opacity: 0.9; }
-        .status {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-    </style>
+    .panel{border:1px solid var(--stroke); background:rgba(255,255,255,.05); border-radius:18px; overflow:hidden}
+    .head{padding:14px;border-bottom:1px solid var(--stroke);background:rgba(0,0,0,.18)}
+    .head h2{margin:0;font-size:14px}
+    .body{padding:12px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.5}
+    select, input{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--stroke);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media(max-width:520px){.row{grid-template-columns:1fr}}
+    .stat{
+      margin-top:10px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      white-space:pre-wrap;
+      min-height:170px;
+    }
+    .good{color:var(--good)}
+    .warn{color:var(--warn)}
+    .bad{color:var(--bad)}
+
+    /* Visual */
+    .sim{
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .simTop{
+      padding:12px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+    }
+    .chip{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .chip b{color:var(--text)}
+    canvas{display:block;width:100%;height:520px}
+    .simBtns{display:flex;gap:8px;flex-wrap:wrap}
+  </style>
 </head>
 <body>
-<header>
-    <h1>Sci-Guru Auto Virtual Lab – Density</h1>
-    <small>Practical + simulation generated dynamically from the AI.</small>
-</header>
-
-<main>
-    <button onclick="loadPractical()">Generate density practical & lab</button>
-    <span id="status" class="status"></span>
-
-    <div class="layout" style="margin-top: 12px;">
-        <div class="panel">
-            <h2 id="pTitle">Practical</h2>
-            <div id="pText" class="answer-box">
-Click the button above to ask Sci-Guru to generate a density practical and simulation config.
-            </div>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
         </div>
-
-        <div class="panel">
-            <h2>Virtual Tank (from simulation config)</h2>
-            <div class="tank-wrapper">
-                <div class="tank" id="tank">
-                    <div class="water"></div>
-                    <div class="water-label">Water</div>
-                </div>
-            </div>
-            <div class="status" id="tankStatus">Objects will appear here once the simulation config loads.</div>
-            <div id="objectsArea" class="objects-area"></div>
-            <button onclick="resetTank()">Reset tank</button>
+        <div class="t">
+          <b>Density Simulator</b>
+          <span>More objects • displacement • float/sink challenge</span>
         </div>
+      </div>
+      <nav>
+        <a class="btn" href="tutor.html">Tutor</a>
+        <a class="btn" href="labs.html">Labs</a>
+        <a class="btn primary" href="sim-density.html">Density</a>
+      </nav>
+    </header>
+
+    <div class="grid">
+      <!-- Controls -->
+      <section class="panel">
+        <div class="head"><h2>Measure & Predict</h2></div>
+        <div class="body">
+          <div class="muted">
+            Use <b>mass</b> and <b>volume</b> to calculate density:
+            <br/><b>Density = mass ÷ volume</b>.
+            <br/><br/>Then predict whether an object will <b>float</b> or <b>sink</b> in a chosen liquid.
+          </div>
+
+          <div style="margin-top:10px;">
+            <label class="muted">Object</label>
+            <select id="obj"></select>
+          </div>
+
+          <div class="row">
+            <div>
+              <label class="muted">Liquid</label>
+              <select id="liq">
+                <option value="1.00">Water (1.00 g/cm³)</option>
+                <option value="0.79">Paraffin / Kerosene (0.79 g/cm³)</option>
+                <option value="1.26">Glycerine (1.26 g/cm³)</option>
+                <option value="1.03">Salt water (1.03 g/cm³)</option>
+              </select>
+            </div>
+            <div>
+              <label class="muted">Challenge</label>
+              <select id="challenge">
+                <option value="none">None</option>
+                <option value="predict3">Predict 3 correctly</option>
+                <option value="findfloat">Find an object that floats in water</option>
+                <option value="findsink">Find an object that sinks in paraffin</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label class="muted">Mass (g)</label>
+              <input id="mass" type="number" step="1" />
+            </div>
+            <div>
+              <label class="muted">Volume (cm³)</label>
+              <input id="vol" type="number" step="1" />
+            </div>
+          </div>
+
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn primary" id="measureBtn" type="button">Use Object Values</button>
+            <button class="btn" id="calcBtn" type="button">Calculate</button>
+            <button class="btn" id="dropBtn" type="button">Drop in Liquid</button>
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+          </div>
+
+          <div class="stat" id="stat"></div>
+        </div>
+      </section>
+
+      <!-- Visual -->
+      <section class="sim">
+        <div class="simTop">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <span class="chip">Object density: <b id="chipD">—</b></span>
+            <span class="chip">Liquid density: <b id="chipL">1.00</b> g/cm³</span>
+            <span class="chip">Result: <b id="chipR">—</b></span>
+          </div>
+          <div class="simBtns">
+            <button class="btn" id="explainBtn" type="button">Explain</button>
+          </div>
+        </div>
+        <canvas id="c" width="1200" height="520"></canvas>
+      </section>
     </div>
-</main>
+  </div>
 
-<script>
-let currentSim = null;
-const statusSpan = document.getElementById('status');
-const tank = document.getElementById('tank');
-const tankStatus = document.getElementById('tankStatus');
-const objectsArea = document.getElementById('objectsArea');
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
 
-async function loadPractical() {
-    statusSpan.textContent = ' Asks Sci-Guru to design the practical…';
-    tankStatus.textContent = 'Loading simulation config…';
-    objectsArea.innerHTML = '';
-    resetTank();
+    const objEl = document.getElementById("obj");
+    const liqEl = document.getElementById("liq");
+    const chEl  = document.getElementById("challenge");
+    const massEl = document.getElementById("mass");
+    const volEl  = document.getElementById("vol");
+    const statEl = document.getElementById("stat");
 
-    try {
-        const res = await fetch('http://localhost:5000/api/practical-structured', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                level: 'Form 1',
-                topic: 'Density'
-            })
-        });
+    const chipD = document.getElementById("chipD");
+    const chipL = document.getElementById("chipL");
+    const chipR = document.getElementById("chipR");
 
-        const data = await res.json();
-        if (!data.success) {
-            statusSpan.textContent = ' Error: ' + (data.error || 'Unknown error');
-            return;
+    const measureBtn = document.getElementById("measureBtn");
+    const calcBtn = document.getElementById("calcBtn");
+    const dropBtn = document.getElementById("dropBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const explainBtn = document.getElementById("explainBtn");
+
+    const OBJECTS = [
+      {name:"Imbokodo (grinding stone)", mass:2200, vol:900},
+      {name:"Brick piece", mass:1200, vol:520},
+      {name:"Iron bolt", mass:180, vol:25},
+      {name:"Aluminium cup", mass:120, vol:120},
+      {name:"Wood block", mass:220, vol:420},
+      {name:"Plastic bottle cap", mass:6, vol:15},
+      {name:"Glass marble", mass:20, vol:8},
+      {name:"Candle wax", mass:40, vol:55},
+      {name:"Rubber eraser", mass:35, vol:30},
+      {name:"Clay ball", mass:260, vol:150}
+    ];
+
+    let state = {
+      density: null,
+      result: null,
+      y: 130,
+      vy: 0,
+      floating: false,
+      dropped: false,
+      correctCount: 0
+    };
+
+    function clamp(n,a,b){return Math.max(a, Math.min(b,n));}
+
+    function init(){
+      objEl.innerHTML = "";
+      OBJECTS.forEach((o,i)=>{
+        const op = document.createElement("option");
+        op.value = i;
+        op.textContent = o.name;
+        objEl.appendChild(op);
+      });
+      objEl.value = "0";
+      liqEl.value = "1.00";
+      chEl.value = "none";
+      applyLiquidChip();
+      useObjectValues();
+      calcDensity();
+      draw();
+      writeStat("Ready ✅\n\n1) Use object values\n2) Calculate density\n3) Drop in liquid to see float/sink\n4) Try challenges");
+    }
+
+    function applyLiquidChip(){
+      chipL.textContent = parseFloat(liqEl.value).toFixed(2);
+    }
+
+    function useObjectValues(){
+      const o = OBJECTS[parseInt(objEl.value,10)];
+      massEl.value = o.mass;
+      volEl.value = o.vol;
+      writeStat(`Loaded object values:\n• ${o.name}\nMass = ${o.mass} g\nVolume = ${o.vol} cm³`);
+    }
+
+    function calcDensity(){
+      const m = parseFloat(massEl.value||"0");
+      const v = parseFloat(volEl.value||"0");
+      if(v<=0){
+        state.density = null;
+        chipD.textContent = "—";
+        return writeStat("Volume must be > 0.");
+      }
+      const d = m / v;
+      state.density = d;
+      chipD.textContent = d.toFixed(2) + " g/cm³";
+      return d;
+    }
+
+    function predict(){
+      if(state.density==null) return null;
+      const L = parseFloat(liqEl.value);
+      return state.density < L ? "FLOAT" : "SINK";
+    }
+
+    function drop(){
+      const pred = predict();
+      if(!pred) return;
+
+      state.result = pred;
+      state.dropped = true;
+      state.vy = 0;
+      state.y = 130;
+
+      const L = parseFloat(liqEl.value);
+      state.floating = (state.density < L);
+
+      chipR.textContent = pred;
+
+      // Challenge scoring
+      const ch = chEl.value;
+      if(ch !== "none"){
+        state.correctCount += 1;
+      }
+
+      writeStat(makeReport());
+    }
+
+    function makeReport(){
+      const o = OBJECTS[parseInt(objEl.value,10)];
+      const L = parseFloat(liqEl.value);
+      const d = state.density;
+      const pred = state.result;
+
+      const lines = [];
+      lines.push(`Object: ${o.name}`);
+      lines.push(`Mass = ${parseFloat(massEl.value).toFixed(0)} g`);
+      lines.push(`Volume = ${parseFloat(volEl.value).toFixed(0)} cm³`);
+      lines.push("");
+      lines.push(`Density = mass ÷ volume = ${d.toFixed(2)} g/cm³`);
+      lines.push(`Liquid density = ${L.toFixed(2)} g/cm³`);
+      lines.push("");
+      lines.push(`Prediction/Result: ${pred}`);
+      lines.push(pred==="FLOAT"
+        ? "Reason: Object density < liquid density → it floats."
+        : "Reason: Object density > liquid density → it sinks."
+      );
+
+      const ch = chEl.value;
+      if(ch !== "none"){
+        lines.push("");
+        lines.push("Challenge:");
+        lines.push(ch==="predict3" ? "Predict 3 correctly (change objects/liquids)" :
+                  ch==="findfloat" ? "Find an object that floats in water" :
+                  "Find an object that sinks in paraffin");
+        lines.push(`Attempts so far: ${state.correctCount}`);
+      }
+
+      lines.push("");
+      lines.push("Try making it more attractive:");
+      lines.push("• Change liquid (water/paraffin/salt water).");
+      lines.push("• Compare wood vs imbokodo.");
+      lines.push("• Explain why boats float but stones sink.");
+
+      return lines.join("\n");
+    }
+
+    function writeStat(txt){
+      statEl.className = "stat";
+      statEl.textContent = txt;
+    }
+
+    function draw(){
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(520 * dpr);
+      canvas.style.height = "520px";
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+
+      const w = rect.width;
+      const h = 520;
+
+      // Background
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = "rgba(255,255,255,0.03)";
+      ctx.fillRect(0,0,w,h);
+
+      // Tank
+      const tankX = w*0.18;
+      const tankY = 80;
+      const tankW = w*0.64;
+      const tankH = 360;
+
+      ctx.strokeStyle = "rgba(255,255,255,0.22)";
+      ctx.lineWidth = 3;
+      roundRect(ctx, tankX, tankY, tankW, tankH, 18, false, true);
+
+      // Liquid level (fixed)
+      const levelY = tankY + 70;
+      ctx.fillStyle = "rgba(47,123,255,0.16)";
+      roundRect(ctx, tankX+3, levelY, tankW-6, tankH - (levelY-tankY)-3, 16, true, false);
+
+      // Surface line
+      ctx.strokeStyle = "rgba(143,183,255,0.55)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(tankX+10, levelY);
+      ctx.lineTo(tankX+tankW-10, levelY);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = "rgba(234,242,255,0.82)";
+      ctx.font = "800 14px system-ui, Segoe UI, Arial";
+      ctx.fillText("Measuring tank (liquid)", tankX, tankY - 14);
+
+      // Object
+      const ox = tankX + tankW*0.5;
+      const objSize = 36;
+      const targetYFloat = levelY + 40;
+      const targetYSink = tankY + tankH - 45;
+
+      if(state.dropped){
+        // Animate
+        const target = state.floating ? targetYFloat : targetYSink;
+        const g = 0.55;
+        state.vy += g;
+        state.y += state.vy;
+
+        // stop when reach target
+        if(state.y >= target){
+          state.y = target;
+          state.vy = 0;
         }
+      }else{
+        state.y = 130;
+        state.vy = 0;
+      }
 
-        const p = data.practical;
-        currentSim = p.simulation || null;
+      // Glow if floating
+      if(state.dropped && state.floating){
+        ctx.fillStyle = "rgba(255,220,120,0.18)";
+        ctx.beginPath();
+        ctx.arc(ox, state.y, 46, 0, Math.PI*2);
+        ctx.fill();
+      }
 
-        // Build practical text
-        document.getElementById('pTitle').textContent = p.title || 'Practical';
-        document.getElementById('pText').textContent =
-            'Aim: ' + p.aim + '\n\n' +
-            'Apparatus:\n- ' + p.apparatus.join('\n- ') + '\n\n' +
-            'Method:\n- ' + p.steps.join('\n- ') + '\n\n' +
-            'Safety:\n- ' + p.safety.join('\n- ') + '\n\n' +
-            'Expected results:\n- ' + p.expected.join('\n- ') + '\n\n' +
-            'Conclusion:\n' + p.conclusion + '\n\n' +
-            'Follow-up questions:\n- ' + p.followup.join('\n- ');
+      ctx.fillStyle = "rgba(255,255,255,0.10)";
+      ctx.strokeStyle = "rgba(255,255,255,0.28)";
+      ctx.lineWidth = 2;
+      roundRect(ctx, ox - objSize, state.y - objSize, objSize*2, objSize*2, 12, true, true);
 
-        // Build simulation objects
-        buildSimulationObjects(currentSim);
+      // Text info
+      ctx.fillStyle = "rgba(234,242,255,0.78)";
+      ctx.font = "700 12px system-ui, Segoe UI, Arial";
+      const o = OBJECTS[parseInt(objEl.value,10)];
+      ctx.fillText(o.name, tankX, tankY + tankH + 28);
 
-        statusSpan.textContent = ' Practical and simulation loaded.';
-    } catch (err) {
-        console.error(err);
-        statusSpan.textContent = ' Error reaching backend.';
-        tankStatus.textContent = 'Could not load simulation.';
-    }
-}
-
-function buildSimulationObjects(sim) {
-    objectsArea.innerHTML = '';
-    resetTank();
-
-    if (!sim || sim.simType !== 'density_tank') {
-        tankStatus.textContent = 'Simulation type not supported yet.';
-        return;
+      requestAnimationFrame(draw);
     }
 
-    tankStatus.textContent = sim.description || 'Drag each object into the water.';
-
-    (sim.objects || []).forEach(obj => {
-        const div = document.createElement('div');
-        div.classList.add('object');
-        div.textContent = obj.label;
-        div.dataset.id = obj.id;
-        div.dataset.behaviour = obj.behaviour;
-
-        // colour by behaviour
-        if (obj.behaviour === 'sink') {
-            div.style.background = '#4b5563';
-            div.style.color = '#f9fafb';
-        } else {
-            div.style.background = '#fbbf24';
-            div.style.color = '#111827';
-        }
-
-        div.draggable = true;
-        div.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', JSON.stringify({
-                id: obj.id,
-                label: obj.label,
-                behaviour: obj.behaviour
-            }));
-        });
-
-        objectsArea.appendChild(div);
-    });
-}
-
-// Allow drops on tank
-tank.addEventListener('dragover', (e) => {
-    e.preventDefault();
-});
-
-tank.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const raw = e.dataTransfer.getData('text/plain');
-    if (!raw) return;
-    let info;
-    try {
-        info = JSON.parse(raw);
-    } catch {
-        return;
+    function roundRect(ctx, x, y, w, h, r, fill, stroke){
+      if(w < 2*r) r = w/2;
+      if(h < 2*r) r = h/2;
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r);
+      ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r);
+      ctx.closePath();
+      if(fill) ctx.fill();
+      if(stroke) ctx.stroke();
     }
-    dropObjectInTank(info);
-});
 
-function dropObjectInTank(info) {
-    // remove any previous with same id
-    tank.querySelectorAll('.dropped-object').forEach(el => {
-        if (el.dataset.id === info.id) el.remove();
+    // Events
+    measureBtn.addEventListener("click", ()=>{
+      useObjectValues();
+      calcDensity();
+      state.dropped = false;
+      chipR.textContent = "—";
     });
 
-    const div = document.createElement('div');
-    div.classList.add('dropped-object');
-    div.dataset.id = info.id;
-    div.textContent = info.label;
+    calcBtn.addEventListener("click", ()=>{
+      calcDensity();
+      const p = predict();
+      if(p){
+        writeStat(`Calculated density ✅\n\nPredicted result in selected liquid: ${p}\n\nNow click "Drop in Liquid" to test.`);
+      }
+      state.dropped = false;
+      chipR.textContent = "—";
+    });
 
-    if (info.behaviour === 'sink') {
-        div.style.left = '50px';
-        div.style.bottom = '10px';
-        div.style.background = '#374151';
-        div.style.color = '#f9fafb';
-        tankStatus.textContent = info.label + ' sinks – it is denser than water.';
-    } else {
-        div.style.left = '150px';
-        div.style.bottom = '110px';
-        div.style.background = '#fbbf24';
-        div.style.color = '#111827';
-        tankStatus.textContent = info.label + ' floats – it is less dense than water.';
-    }
+    dropBtn.addEventListener("click", ()=>{
+      calcDensity();
+      applyLiquidChip();
+      drop();
+    });
 
-    tank.appendChild(div);
-}
+    resetBtn.addEventListener("click", ()=>{
+      state = {density:null,result:null,y:130,vy:0,floating:false,dropped:false,correctCount:0};
+      useObjectValues();
+      calcDensity();
+      chipR.textContent = "—";
+      writeStat("Reset done. Choose an object and try again.");
+    });
 
-function resetTank() {
-    tank.querySelectorAll('.dropped-object').forEach(el => el.remove());
-    tankStatus.textContent = 'Tank is ready. Drag an object into the water.';
-}
-</script>
+    liqEl.addEventListener("change", ()=>{
+      applyLiquidChip();
+      chipR.textContent = "—";
+      state.dropped = false;
+      writeStat("Liquid changed. Recalculate and drop again.");
+    });
 
+    objEl.addEventListener("change", ()=>{
+      state.dropped = false;
+      chipR.textContent = "—";
+      useObjectValues();
+      calcDensity();
+    });
+
+    explainBtn.addEventListener("click", ()=>{
+      writeStat(
+`EXPLAIN
+
+Density = mass ÷ volume
+
+• If object density < liquid density → FLOAT
+• If object density > liquid density → SINK
+
+Volume by displacement:
+1) Record water level (before)
+2) Put object in water
+3) Record water level (after)
+4) Volume of object = after − before
+
+Try:
+• Imbokodo vs wood block in water
+• Paraffin vs salt water`
+      );
+    });
+
+    // Start
+    init();
+  </script>
 </body>
-
 </html>
-
