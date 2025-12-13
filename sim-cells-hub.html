@@ -2,85 +2,164 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Topic 2 Hub: Cells | Sci-Guru</title>
-  <link rel="stylesheet" href="styles.css"/>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cells Hub • Sci-Guru</title>
   <style>
-    .wrap{padding:18px 0 30px;}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-    .card2{border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,.03);padding:14px;}
-    .card2 h3{margin:0 0 6px;}
-    .small2{color:var(--muted);font-size:.93rem;line-height:1.45;}
-    .btn2{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
-      background:rgba(255,255,255,.04);color:var(--text);font-weight:900;text-decoration:none;}
-    .pill{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-weight:900;}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    :root{
+      --bg:#0b1220; --text:#e8eefc; --muted:#a9b7dd;
+      --line:rgba(255,255,255,.10);
+      --accent:#4da3ff; --accent2:#7c5cff;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 700px at 10% 20%, rgba(77,163,255,.18), transparent 55%),
+                  radial-gradient(1000px 600px at 90% 20%, rgba(124,92,255,.18), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 16px 28px}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 14px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      box-shadow:var(--shadow);
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      overflow:hidden; display:flex; align-items:center; justify-content:center;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    h1{margin:0; font-size:16px}
+    .sub{color:var(--muted); font-size:12px; margin-top:2px}
+    .nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .nav a{
+      text-decoration:none; color:var(--text);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:13px;
+    }
+    .nav a.primary{
+      border-color:rgba(77,163,255,.45);
+      background:linear-gradient(135deg, rgba(77,163,255,.22), rgba(124,92,255,.18));
+    }
+
+    .hero{
+      margin-top:16px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .hero h2{margin:0 0 6px; font-size:18px}
+    .hero p{margin:0; color:var(--muted); line-height:1.5}
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:var(--shadow);
+    }
+    .card h3{margin:0 0 6px; font-size:15px}
+    .card p{margin:0 0 12px; color:var(--muted); font-size:13px; line-height:1.45}
+    .btn{
+      display:inline-block;
+      text-decoration:none;
+      color:#071022;
+      font-weight:900;
+      padding:10px 12px;
+      border-radius:14px;
+      background:linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.85));
+    }
+    .btn2{
+      display:inline-block;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:700;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.15);
+      margin-left:8px;
+    }
+    footer{
+      margin-top:14px;
+      color:rgba(255,255,255,.65);
+      font-size:12px;
+      text-align:center;
+    }
   </style>
 </head>
-
 <body>
-<header class="topbar">
-  <div class="container row">
-    <div class="brand">
-      <img src="images/lec-logo.png" alt="LEC Biotec Logo">
-      <div class="title">
-        <b>Topic 2 Virtual Experiments: Cells</b>
-        <span>Microscope • Cell structures • Osmosis & diffusion • Levels of organisation</span>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+        </div>
+        <div>
+          <h1>Cells Hub</h1>
+          <div class="sub">Sci-Guru Virtual Experiments • Biology</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">Tutor</a>
+        <a class="primary" href="sim-cells-hub.html">Cells Hub</a>
       </div>
     </div>
-    <nav class="nav">
-      <a href="index.html">Home</a>
-      <a href="tutor.html">AI Tutor</a>
-      <a class="active" href="sim-cells-hub.html">Topic 2 Hub</a>
-      <a href="virtual-lab-hub.html">Virtual Lab Hub</a>
-    </nav>
+
+    <div class="hero">
+      <h2>Choose an activity</h2>
+      <p>All links below match your repo filenames to avoid GitHub Pages 404 errors.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Cell Labeling (Interactive)</h3>
+        <p>Open the drag-and-drop labeling practical.</p>
+        <!-- ✅ EXACT file name: sim-cells-labels.html -->
+        <a class="btn" href="sim-cells-labels.html">Open Cell Labeling →</a>
+        <a class="btn2" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <div class="card">
+        <h3>Cell Structures Notes</h3>
+        <p>Quick revision of organelles and functions.</p>
+        <a class="btn" href="sim-form1-living-things.html">Open Notes →</a>
+        <a class="btn2" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <div class="card">
+        <h3>Levels of Organisation</h3>
+        <p>Cells → tissues → organs → systems → organism.</p>
+        <a class="btn" href="sim-levels.html">Open Levels →</a>
+        <a class="btn2" href="tutor.html">Back to Tutor</a>
+      </div>
+    </div>
+
+    <footer>© 2025 LEC Biotec • Harare, Zimbabwe</footer>
   </div>
-</header>
-
-<main class="container wrap">
-  <div class="row" style="gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-    <span class="pill">Form 1</span>
-    <span class="pill">Topic 2: Cells & levels of organisation</span>
-  </div>
-
-  <div class="grid">
-    <div class="card2">
-      <h3>Microscope Simulator</h3>
-      <div class="small2">Practice focusing (coarse + fine), choose objective lens, and compute total magnification.</div>
-      <a class="btn2" href="sim-microscope.html">Open Microscope Lab</a>
-    </div>
-
-    <div class="card2">
-      <h3>Cell Labeling</h3>
-      <div class="small2">Drag labels onto plant and animal cell diagrams. Scores + instant feedback.</div>
-      <a class="btn2" href="sim-cells-label.html">Open Cell Label Lab</a>
-    </div>
-
-    <div class="card2">
-      <h3>Osmosis & Diffusion</h3>
-      <div class="small2">See how water moves across a semi-permeable membrane and how particles diffuse.</div>
-      <a class="btn2" href="sim-osmosis.html">Open Osmosis Lab</a>
-    </div>
-
-    <div class="card2">
-      <h3>Levels of Organisation</h3>
-      <div class="small2">Drag-and-drop: Cell → Tissue → Organ → System → Organism (Human & Plant sets).</div>
-      <a class="btn2" href="sim-levels.html">Open Levels Lab</a>
-    </div>
-
-    <div class="card2">
-      <h3>Back to Tutor</h3>
-      <div class="small2">Generate Notes, Past Questions and Marking Scheme for Topic 2.</div>
-      <a class="btn2" href="tutor.html">Go to AI Tutor</a>
-    </div>
-
-    <div class="card2">
-      <h3>Virtual Lab Hub</h3>
-      <div class="small2">See all simulations (Topic 1, Topic 2, and more).</div>
-      <a class="btn2" href="virtual-lab-hub.html">Open Virtual Lab Hub</a>
-    </div>
-  </div>
-</main>
 </body>
 </html>
