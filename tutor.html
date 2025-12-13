@@ -261,7 +261,7 @@
         <nav>
           <a class="btn" href="index.html">Home</a>
           <a class="btn primary" href="tutor.html">Tutor</a>
-          <a class="btn" href="labs.html">Labs</a>
+          <a class="btn" href="labs-hub.html">Labs</a>
           <a class="btn" href="dashboard.html">Dashboard</a>
         </nav>
       </div>
@@ -271,8 +271,8 @@
       <div>
         <h1>Book 1 Tutor Dashboard (Form 1)</h1>
         <p>
-          This tutor is structured exactly by your summary: <b>Biology Term 1 (1–7)</b>, <b>Chemistry Term 2 (8–13)</b>, <b>Physics Term 3 (14–19)</b>.
-          Each topic has: overview, key points, experiments, and a place to build virtual labs without losing progress.
+          Structured by your summary: <b>Biology Term 1 (1–7)</b>, <b>Chemistry Term 2 (8–13)</b>, <b>Physics Term 3 (14–19)</b>.
+          We build virtual experiments topic-by-topic without losing progress.
         </p>
       </div>
 
@@ -338,6 +338,7 @@
         <div class="panelBody">
           <div class="links">
             <a class="mini primary" href="labs-hub.html">Open Labs Hub</a>
+            <a class="mini" href="sim-safety-apparatus.html">Topic 1: Safety & Apparatus</a>
             <a class="mini" href="sim-density.html">Density</a>
             <a class="mini" href="sim-electricity.html">Electricity (Series)</a>
             <a class="mini" href="sim-bunsen.html">Bunsen</a>
@@ -348,8 +349,7 @@
           </div>
 
           <div class="hint" style="margin-top:10px;">
-            If <b>labs.html</b> was giving 404, keep the small redirect file we created earlier:
-            <span style="color:var(--muted)">labs.html → labs-hub.html</span>.
+            If you ever see <b>404</b>: check the filename on GitHub is exactly the same (lowercase/uppercase matters).
           </div>
         </div>
       </section>
@@ -398,8 +398,9 @@
           {title:"Measurement practice", aim:"Practice reading the meniscus & recording volume correctly."}
         ],
         links:[
-          {label:"Apparatus Explorer", href:"sim-apparatus.html", primary:true},
-          {label:"Bunsen Burner", href:"sim-bunsen.html"},
+          {label:"Topic 1 Virtual Lab (Safety + Symbols + Meniscus)", href:"sim-safety-apparatus.html", primary:true},
+          {label:"Apparatus Explorer", href:"sim-apparatus.html"},
+          {label:"Bunsen Burner", href:"sim-bunsen.html"}
         ]
       },
       {
@@ -432,9 +433,7 @@
           "Vitamins & minerals: health and growth.",
           "Fibre: aids digestion; Water: supports chemical reactions."
         ],
-        experiments:[
-          {title:"Food group classification", aim:"Classify foods by nutrient group and plan a balanced meal."}
-        ],
+        experiments:[{title:"Food group classification", aim:"Classify foods by nutrient group and plan a balanced meal."}],
         links:[]
       },
       {
@@ -462,9 +461,7 @@
           "Osmosis: water moves through a partially permeable membrane from high to low water concentration.",
           "Blood: plasma (liquid), RBCs (oxygen via haemoglobin), WBCs (defense), platelets (clotting)."
         ],
-        experiments:[
-          {title:"Diffusion demo", aim:"Observe dye spreading in water."}
-        ],
+        experiments:[{title:"Diffusion demo", aim:"Observe dye spreading in water."}],
         links:[]
       },
       {
@@ -477,9 +474,7 @@
           "Ovule becomes seed; ovary becomes fruit.",
           "Puberty: physical changes preparing body for reproduction."
         ],
-        experiments:[
-          {title:"Flower dissection", aim:"Identify sepals, petals, stamens, stigma, style, ovary, ovules."}
-        ],
+        experiments:[{title:"Flower dissection", aim:"Identify sepals, petals, stamens, stigma, style, ovary, ovules."}],
         links:[]
       },
       {
@@ -491,9 +486,7 @@
           "Waste disposal: landfill/burying, burning, recycling.",
           "Diseases: cholera/typhoid (water/food), malaria (mosquito vector), bilharzia (snails)."
         ],
-        experiments:[
-          {title:"Hygiene risk mapping", aim:"Identify sources of infection and propose prevention measures."}
-        ],
+        experiments:[{title:"Hygiene risk mapping", aim:"Identify sources of infection and propose prevention measures."}],
         links:[]
       },
 
@@ -512,9 +505,7 @@
           {title:"Filter sand and water", aim:"Use filtration to separate an insoluble solid."},
           {title:"Magnet separation", aim:"Separate iron filings from sulfur/other solids."}
         ],
-        links:[
-          {label:"(Add later) Separation Simulator", href:"#", primary:true, disabled:true}
-        ]
+        links:[]
       },
       {
         id:"t9", term:"Chemistry Term 2", num:9,
@@ -526,9 +517,7 @@
           "Rate of dissolving depends on particle size, temperature, stirring.",
           "Elements vs compounds vs mixtures; metals/non-metals/semimetals."
         ],
-        experiments:[
-          {title:"Changes of state", aim:"Observe melting/evaporation/sublimation with safe materials."}
-        ],
+        experiments:[{title:"Changes of state", aim:"Observe melting/evaporation/sublimation with safe materials."}],
         links:[]
       },
       {
@@ -541,9 +530,7 @@
           "Indicators: litmus and others.",
           "Neutralisation: acid + base → salt + water."
         ],
-        experiments:[
-          {title:"Indicator tests", aim:"Test substances using litmus to classify acidic/basic."}
-        ],
+        experiments:[{title:"Indicator tests", aim:"Test substances using litmus to classify acidic/basic."}],
         links:[]
       },
       {
@@ -555,9 +542,7 @@
           "Oil extraction: oil press or decanting after processing.",
           "Uses: cooking, frying, skin moisturiser."
         ],
-        experiments:[
-          {title:"Process flow chart", aim:"Create a clear process diagram from raw peanuts to product."}
-        ],
+        experiments:[{title:"Process flow chart", aim:"Create a clear process diagram from raw peanuts to product."}],
         links:[]
       },
       {
@@ -568,9 +553,7 @@
           "Rusting needs iron + oxygen + water.",
           "Prevent rust by blocking air/water contact: paint, grease, galvanise, electroplate."
         ],
-        experiments:[
-          {title:"Rusting conditions", aim:"Compare rusting with/without water/oxygen (safe setup)."}
-        ],
+        experiments:[{title:"Rusting conditions", aim:"Compare rusting with/without water/oxygen (safe setup)."}],
         links:[]
       },
       {
@@ -582,105 +565,49 @@
           "Fuels: solid (wood/coal), liquid (petrol/diesel/paraffin), gas (LPG/natural gas).",
           "Fuel efficiency depends on heat energy produced during combustion."
         ],
-        experiments:[
-          {title:"Fuel comparison (theory)", aim:"Compare fuel advantages/disadvantages and safety."}
-        ],
+        experiments:[{title:"Fuel comparison (theory)", aim:"Compare fuel advantages/disadvantages and safety."}],
         links:[]
       },
 
       // Physics Term 3
-      {
-        id:"t14", term:"Physics Term 3", num:14,
-        name:"Data presentation",
+      { id:"t14", term:"Physics Term 3", num:14, name:"Data presentation",
         overview:"Present and interpret investigation data using tallies, tables and bar graphs.",
-        keyPoints:[
-          "Tallies record frequency using groups of five.",
-          "Tables organize values in rows and columns.",
-          "Bar graphs show categories visually."
-        ],
-        experiments:[
-          {title:"Make a bar graph", aim:"Collect simple class data and draw a correct bar graph."}
-        ],
+        keyPoints:["Tallies record frequency using groups of five.","Tables organize values in rows and columns.","Bar graphs show categories visually."],
+        experiments:[{title:"Make a bar graph", aim:"Collect simple class data and draw a correct bar graph."}],
         links:[]
       },
-      {
-        id:"t15", term:"Physics Term 3", num:15,
-        name:"Measurements",
+      { id:"t15", term:"Physics Term 3", num:15, name:"Measurements",
         overview:"Accurate measurement, SI units, instruments, and errors (parallax, zero error).",
-        keyPoints:[
-          "SI units: length (m), mass (kg), time (s), temperature (°C or K).",
-          "Instruments: metre rule, stopwatch, balance, thermometer.",
-          "Errors: parallax (wrong angle), zero error (not set to zero)."
-        ],
-        experiments:[
-          {title:"Measurement accuracy", aim:"Measure length/mass/time with correct instruments and note errors."}
-        ],
+        keyPoints:["SI units: length (m), mass (kg), time (s), temperature (°C or K).","Instruments: metre rule, stopwatch, balance, thermometer.","Errors: parallax (wrong angle), zero error (not set to zero)."],
+        experiments:[{title:"Measurement accuracy", aim:"Measure length/mass/time with correct instruments and note errors."}],
         links:[]
       },
-      {
-        id:"t16", term:"Physics Term 3", num:16,
-        name:"Force",
+      { id:"t16", term:"Physics Term 3", num:16, name:"Force",
         overview:"Force as push/pull; effects; contact vs non-contact forces; weight in newtons; force meter.",
-        keyPoints:[
-          "Forces change motion, shape, direction.",
-          "Contact forces: friction, mechanical push/pull.",
-          "Non-contact: gravity, magnetic, electrostatic.",
-          "Weight is gravitational force; unit is newton (N)."
-        ],
-        experiments:[
-          {title:"Friction investigation", aim:"Compare friction on different surfaces."}
-        ],
+        keyPoints:["Forces change motion, shape, direction.","Contact forces: friction, mechanical push/pull.","Non-contact: gravity, magnetic, electrostatic.","Weight is gravitational force; unit is newton (N)."],
+        experiments:[{title:"Friction investigation", aim:"Compare friction on different surfaces."}],
         links:[]
       },
-      {
-        id:"t17", term:"Physics Term 3", num:17,
-        name:"Energy",
+      { id:"t17", term:"Physics Term 3", num:17, name:"Energy",
         overview:"Energy forms, sources (renewable/non-renewable), conversions, and energy converters.",
-        keyPoints:[
-          "Kinetic energy: movement.",
-          "Potential: gravitational, elastic, chemical.",
-          "Other: light, heat, electrical, sound.",
-          "Energy conversions represented by chains."
-        ],
-        experiments:[
-          {title:"Energy chain mapping", aim:"Trace energy conversions in common devices (torch, battery, bulb)."}
-        ],
+        keyPoints:["Kinetic energy: movement.","Potential: gravitational, elastic, chemical.","Other: light, heat, electrical, sound.","Energy conversions represented by chains."],
+        experiments:[{title:"Energy chain mapping", aim:"Trace energy conversions in common devices (torch, battery, bulb)."}],
         links:[]
       },
-      {
-        id:"t18", term:"Physics Term 3", num:18,
-        name:"Magnetism",
+      { id:"t18", term:"Physics Term 3", num:18, name:"Magnetism",
         overview:"Magnetic materials, poles, types of magnets, electromagnets, magnetic field, compass and Earth’s field.",
-        keyPoints:[
-          "Magnets attract magnetic materials; force strongest at poles.",
-          "Electromagnet: current through coil around iron core.",
-          "Compass aligns with Earth’s magnetic field."
-        ],
-        experiments:[
-          {title:"Make an electromagnet", aim:"Coil wire around nail, connect to cell, test attraction."}
-        ],
+        keyPoints:["Magnets attract magnetic materials; force strongest at poles.","Electromagnet: current through coil around iron core.","Compass aligns with Earth’s magnetic field."],
+        experiments:[{title:"Make an electromagnet", aim:"Coil wire around nail, connect to cell, test attraction."}],
         links:[]
       },
-      {
-        id:"t19", term:"Physics Term 3", num:19,
-        name:"Electricity",
+      { id:"t19", term:"Physics Term 3", num:19, name:"Electricity",
         overview:"Charges, static vs current electricity, conductors/insulators, d.c. circuit components and symbols.",
-        keyPoints:[
-          "Charge: positive/protons, negative/electrons; friction transfers electrons.",
-          "Static electricity: charge build-up; current electricity: flow in conductor.",
-          "Circuit parts: cell, wires, bulb, resistor, ammeter, voltmeter, switch and symbols."
-        ],
-        experiments:[
-          {title:"Simple circuit", aim:"Build/test a d.c. circuit and identify components."},
-          {title:"Series circuit (added)", aim:"Compare brightness/current with 1 bulb vs series bulbs."}
-        ],
-        links:[
-          {label:"Electricity Simulator (Series)", href:"sim-electricity.html", primary:true}
-        ]
+        keyPoints:["Charge: positive/protons, negative/electrons; friction transfers electrons.","Static electricity: charge build-up; current electricity: flow in conductor.","Circuit parts: cell, wires, bulb, resistor, ammeter, voltmeter, switch and symbols."],
+        experiments:[{title:"Simple circuit", aim:"Build/test a d.c. circuit and identify components."},{title:"Series circuit (added)", aim:"Compare brightness/current with 1 bulb vs series bulbs."}],
+        links:[{label:"Electricity Simulator (Series)", href:"sim-electricity.html", primary:true}]
       }
     ];
 
-    // mark disabled links in data without breaking rendering
     function normalizeLinks(topic){
       const links = topic.links || [];
       return links.map(l => ({
@@ -692,7 +619,7 @@
     }
 
     // =========================
-    // STORAGE
+    // STORAGE (DOES NOT ERASE YOUR PROGRESS)
     // =========================
     const STORE_KEY = "sciguru_book1_topics_progress_v2";
     function loadStore(){
@@ -940,11 +867,9 @@ Virtual lab idea:
 - Build an interactive simulator that lets learners change variables and see results instantly.`;
       }
 
-      // also align dropdown
       document.getElementById("topicPick").value = t.id;
     }
 
-    // Manual tutor buttons
     function offlineAnswer(){
       const q = (document.getElementById("q").value||"").trim();
       if(!q){ out.textContent = "Type a question first."; return; }
@@ -1015,7 +940,7 @@ Use the Topic details below for experiments + key points.`;
     fillTopicPicker();
     renderKPIs();
     renderTopics();
-    out.textContent = "Ready ✅\n\nChoose a topic, open details, and we continue building virtual experiments topic-by-topic without losing progress.";
+    out.textContent = "Ready ✅\n\nOpen Topic 1 and launch the virtual lab: sim-safety-apparatus.html";
   </script>
 </body>
-                                                                 </html>
+  </html>
