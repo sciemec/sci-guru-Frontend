@@ -436,7 +436,64 @@
         ],
         experiments:[{title:"Food group classification", aim:"Classify foods by nutrient group and plan a balanced meal."}],
         links:[]
-      },
+        
+      },<!-- =========================
+     TOPIC 3: NUTRITION (INLINE QUIZ)
+     Paste this block inside tutor.html (in the body)
+========================= -->
+<section class="sg-panel" id="topic3-nutrition">
+  <div class="sg-panelHead">
+    <div>
+      <h2>Topic 3 • Nutrition — Inline Quiz</h2>
+      <small>Balanced diet • Nutrients • Fibre • Water (Auto-saves)</small>
+    </div>
+
+    <div class="sg-actions">
+      <button class="sg-btn sg-primary" type="button" id="nut3Start">Start / Resume</button>
+      <button class="sg-btn" type="button" id="nut3Mark">Mark Quiz</button>
+      <button class="sg-btn" type="button" id="nut3Reset">Reset</button>
+    </div>
+  </div>
+
+  <div class="sg-panelBody">
+    <div class="sg-two">
+      <div class="sg-card">
+        <h3>Quick Notes</h3>
+        <p>
+          • Carbohydrates & fats: energy<br/>
+          • Proteins: growth & repair<br/>
+          • Vitamins & minerals: keep healthy<br/>
+          • Fibre: digestion<br/>
+          • Water: chemical reactions in the body
+        </p>
+        <div class="sg-miniLinks">
+          <a class="sg-link" href="sim-nutrition.html">Open Full Nutrition Virtual Lab →</a>
+        </div>
+      </div>
+
+      <div class="sg-card">
+        <h3>Your Score</h3>
+        <div class="sg-scoreBox">
+          <div>
+            <span class="sg-muted">Quiz Score</span><br/>
+            <b id="nut3Score" style="font-size:22px;">0</b>
+          </div>
+          <div>
+            <span class="sg-muted">Status</span><br/>
+            <b id="nut3Status">Not started</b>
+          </div>
+        </div>
+        <p class="sg-muted" style="margin-top:8px">
+          Tip: answer all questions, then press <b>Mark Quiz</b>.
+        </p>
+      </div>
+    </div>
+
+    <div class="sg-list" id="nut3QuizList" style="margin-top:12px;"></div>
+
+    <div class="sg-feedback" id="nut3Feedback">Click <b>Start / Resume</b> to load the quiz.</div>
+  </div>
+</section>
       {
         id:"t4", term:"Biology Term 1", num:4,
         name:"The respiratory system",
@@ -452,6 +509,67 @@
           {title:"Test for carbon dioxide", aim:"Bubble exhaled air through limewater to show CO₂ presence."}
         ],
         links:[]
+      <!-- =========================
+     TOPIC 4: RESPIRATORY SYSTEM (INLINE QUIZ)
+     Paste this block inside tutor.html (in the body)
+========================= -->
+<section class="sg-panel" id="topic4-respiratory">
+  <div class="sg-panelHead">
+    <div>
+      <h2>Topic 4 • The Respiratory System — Inline Quiz</h2>
+      <small>Breathing vs Respiration • Oxygen test • Carbon dioxide test</small>
+    </div>
+
+    <div class="sg-actions">
+      <button class="sg-btn sg-primary" type="button" id="resp4Start">Start / Resume</button>
+      <button class="sg-btn" type="button" id="resp4Mark">Mark Quiz</button>
+      <button class="sg-btn" type="button" id="resp4Reset">Reset</button>
+    </div>
+  </div>
+
+  <div class="sg-panelBody">
+    <div class="sg-two">
+      <div class="sg-card">
+        <h3>Key Notes</h3>
+        <p>
+          • Air is mainly <b>78% nitrogen</b> and <b>21% oxygen</b> (CO₂ is very small).<br/>
+          • <b>Breathing</b> = physical movement of air in/out.<br/>
+          • <b>Respiration</b> = chemical reactions in cells releasing energy.<br/>
+          • <b>Oxygen test</b>: glowing splint re-lights.<br/>
+          • <b>CO₂ test</b>: limewater turns milky.
+        </p>
+
+        <div class="sg-miniLinks">
+          <a class="sg-link" href="sim-respiratory.html">Open Full Topic 4 Virtual Lab →</a>
+        </div>
+      </div>
+
+      <div class="sg-card">
+        <h3>Your Score</h3>
+        <div class="sg-scoreBox">
+          <div>
+            <span class="sg-muted">Quiz Score</span><br/>
+            <b id="resp4Score" style="font-size:22px;">0</b>
+          </div>
+          <div>
+            <span class="sg-muted">Status</span><br/>
+            <b id="resp4Status">Not started</b>
+          </div>
+        </div>
+
+        <p class="sg-muted" style="margin-top:8px">
+          Tip: answer all questions then press <b>Mark Quiz</b>.
+        </p>
+      </div>
+    </div>
+
+    <div class="sg-list" id="resp4QuizList" style="margin-top:12px;"></div>
+
+    <div class="sg-feedback" id="resp4Feedback">
+      Click <b>Start / Resume</b> to load the Topic 4 quiz.
+    </div>
+  </div>
+</section>  
       },
       {
         id:"t5", term:"Biology Term 1", num:5,
@@ -945,4 +1063,5 @@ Use the Topic details below for experiments + key points.`;
   </script>
 </body>
   </html>
+
 
