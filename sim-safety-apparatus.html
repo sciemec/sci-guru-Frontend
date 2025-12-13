@@ -1,0 +1,1238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sci-Guru • Topic 1: Lab Safety & Apparatus</title>
+  <link rel="icon" href="lec-logo.jpg" />
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --card:rgba(255,255,255,.07);
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 500px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky; top:10px; z-index:10;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .logo{
+      width:44px; height:44px; border-radius:12px; overflow:hidden;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:center;
+      flex:0 0 auto;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t{min-width:0}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      transition:transform .08s ease, background .15s ease;
+      user-select:none;
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+
+    .hero{
+      margin-top:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:820px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .panelHead{
+      padding:14px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:rgba(0,0,0,.18);
+    }
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .tab.active{
+      color:#071022;
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+    }
+
+    /* Score box */
+    .scoreRow{display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between}
+    .scoreBig{
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .scoreBig b{font-size:18px}
+    .scoreBig span{color:var(--muted);font-size:12px}
+
+    /* Cards / Lists */
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:740px){.twoCol{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+    }
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+    .item{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:14px;
+      padding:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .item .left{min-width:0}
+    .item b{display:block;font-size:13px}
+    .item small{display:block;color:var(--muted);font-size:12px;margin-top:4px;line-height:1.4}
+
+    select, input, textarea{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--stroke);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:100px; resize:vertical}
+
+    .miniBtn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:9px 10px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .miniBtn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+    .miniBtn.good{
+      border-color:rgba(51,208,122,.55);
+      background:rgba(51,208,122,.18);
+    }
+    .miniBtn.bad{
+      border-color:rgba(255,90,107,.55);
+      background:rgba(255,90,107,.18);
+    }
+
+    .feedback{
+      margin-top:10px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      min-height:76px;
+      color:var(--text);
+      white-space:pre-wrap;
+    }
+
+    /* Drag & Drop */
+    .ddWrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media(max-width:740px){.ddWrap{grid-template-columns:1fr}}
+    .pool, .targets{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      padding:12px;
+    }
+    .pool h4, .targets h4{margin:0 0 8px;font-size:13px}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      font-weight:900;
+      font-size:12px;
+      cursor:grab;
+      user-select:none;
+    }
+    .chip:active{cursor:grabbing}
+    .dropZone{
+      border:1px dashed rgba(234,242,255,.22);
+      background:rgba(0,0,0,.10);
+      border-radius:14px;
+      padding:10px;
+      margin-top:10px;
+    }
+    .dropZone b{font-size:12px}
+    .dropZone small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+    .dropSlots{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; min-height:44px}
+    .slot{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .ok{border-color:rgba(51,208,122,.55)!important; background:rgba(51,208,122,.16)!important; color:var(--text)!important}
+    .no{border-color:rgba(255,90,107,.55)!important; background:rgba(255,90,107,.16)!important; color:var(--text)!important}
+
+    /* Measurement mini-lab */
+    .measureBox{
+      display:grid; grid-template-columns:1fr 1fr; gap:10px;
+      margin-top:10px;
+    }
+    @media(max-width:740px){.measureBox{grid-template-columns:1fr}}
+    .meter{
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.16);
+      border-radius:16px;
+      padding:12px;
+    }
+    .meter h4{margin:0 0 8px;font-size:13px}
+    .cyl{
+      width:100%;
+      height:220px;
+      border-radius:18px;
+      border:1px solid rgba(234,242,255,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      position:relative;
+      overflow:hidden;
+    }
+    .water{
+      position:absolute; left:0; right:0; bottom:0;
+      height:40%;
+      background:linear-gradient(180deg, rgba(47,123,255,.35), rgba(47,123,255,.18));
+      border-top:1px solid rgba(234,242,255,.2);
+    }
+    .meniscus{
+      position:absolute; left:8%; right:8%; top:-10px;
+      height:18px;
+      border-radius:0 0 999px 999px;
+      background:rgba(47,123,255,.22);
+      filter: blur(.2px);
+    }
+    .scale{
+      position:absolute; top:10px; bottom:10px; right:8px;
+      width:40px; display:flex; flex-direction:column; justify-content:space-between;
+      color:rgba(234,242,255,.58); font-size:10px;
+    }
+    .scale div{display:flex; align-items:center; justify-content:flex-end; gap:6px}
+    .tick{width:10px; height:1px; background:rgba(234,242,255,.35)}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .small{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+
+    footer{
+      margin-top:16px;
+      text-align:center;
+      color:rgba(234,242,255,.62);
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo"
+               onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+        </div>
+        <div class="t">
+          <b>Topic 1 • Laboratory Safety & Apparatus</b>
+          <span>Virtual Experiment • Rules • Symbols • Apparatus • Meniscus/Measurement</span>
+        </div>
+      </div>
+
+      <nav>
+        <a class="btn" href="tutor.html">← Back to Tutor</a>
+        <a class="btn" href="labs-hub.html">Labs Hub</a>
+        <a class="btn" href="index.html">Home</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Lab Safety & Apparatus (Interactive Virtual Lab)</h1>
+        <p>
+          Complete 3 mini-activities:
+          <b>(1) Safety Rules Quiz</b> • <b>(2) Safety Symbols Match</b> •
+          <b>(3) Apparatus Uses + Meniscus Measurement</b>.
+          Your score saves automatically.
+        </p>
+      </div>
+      <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+    </section>
+
+    <div class="grid">
+      <!-- LEFT: Activities -->
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Activities</h2>
+            <small>Switch tabs and complete each activity</small>
+          </div>
+          <div class="tabs" id="tabs"></div>
+        </div>
+        <div class="panelBody">
+
+          <!-- Activity 1: Rules Quiz -->
+          <div id="view-rules" class="view">
+            <div class="twoCol">
+              <div class="card">
+                <h3>How to play</h3>
+                <p>
+                  Choose the correct action for each situation.
+                  You score points for safe choices.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Goal</h3>
+                <p>
+                  Learn correct lab behavior: eye protection, handling chemicals,
+                  no eating, correct heating, clean-up, and reporting accidents.
+                </p>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+
+            <div class="list" id="rulesList"></div>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="rulesCheckBtn" type="button">Check Answers</button>
+              <button class="miniBtn" id="rulesResetBtn" type="button">Reset</button>
+            </div>
+
+            <div class="feedback" id="rulesFeedback"></div>
+          </div>
+
+          <!-- Activity 2: Symbols Drag & Drop -->
+          <div id="view-symbols" class="view" style="display:none">
+            <div class="card">
+              <h3>Safety Symbols Match (Drag & Drop)</h3>
+              <p>
+                Drag each symbol name into the correct meaning box.
+                (We use common school symbols: flammable, toxic, corrosive, irritant, explosive, oxidising.)
+              </p>
+            </div>
+
+            <div class="ddWrap">
+              <div class="pool">
+                <h4>Symbol Names (drag)</h4>
+                <div class="chips" id="symbolChips"></div>
+                <div class="small">Tip: If you drop a chip in the wrong place, you can reset.</div>
+              </div>
+
+              <div class="targets" id="symbolTargets">
+                <h4>Meanings (drop zones)</h4>
+                <!-- drop zones injected -->
+              </div>
+            </div>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="symbolsCheckBtn" type="button">Check</button>
+              <button class="miniBtn" id="symbolsResetBtn" type="button">Reset</button>
+            </div>
+
+            <div class="feedback" id="symbolsFeedback"></div>
+          </div>
+
+          <!-- Activity 3: Apparatus + Measurement -->
+          <div id="view-apparatus" class="view" style="display:none">
+            <div class="twoCol">
+              <div class="card">
+                <h3>Apparatus Uses</h3>
+                <p>
+                  Choose the correct use for each apparatus.
+                  Then try the meniscus measurement mini-lab.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Safety reminder</h3>
+                <p>
+                  Wear goggles, handle glass carefully, and point test tubes away from people when heating.
+                </p>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+            <div class="list" id="appList"></div>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="appCheckBtn" type="button">Check Apparatus</button>
+              <button class="miniBtn" id="appResetBtn" type="button">Reset</button>
+            </div>
+
+            <div class="feedback" id="appFeedback"></div>
+
+            <div style="height:12px"></div>
+
+            <div class="panel" style="border-radius:18px">
+              <div class="panelHead">
+                <div>
+                  <h2>Meniscus Measurement Mini-Lab</h2>
+                  <small>Read volume correctly at eye level</small>
+                </div>
+              </div>
+              <div class="panelBody">
+                <div class="measureBox">
+                  <div class="meter">
+                    <h4>Measuring Cylinder</h4>
+                    <div class="cyl" aria-label="measuring cylinder">
+                      <div class="water" id="water">
+                        <div class="meniscus" id="meniscus"></div>
+                      </div>
+                      <div class="scale">
+                        <div><span>100 mL</span><span class="tick"></span></div>
+                        <div><span>80</span><span class="tick"></span></div>
+                        <div><span>60</span><span class="tick"></span></div>
+                        <div><span>40</span><span class="tick"></span></div>
+                        <div><span>20</span><span class="tick"></span></div>
+                        <div><span>0</span><span class="tick"></span></div>
+                      </div>
+                    </div>
+
+                    <div class="controls">
+                      <button class="miniBtn" id="volDown" type="button">- Volume</button>
+                      <button class="miniBtn" id="volUp" type="button">+ Volume</button>
+                      <button class="miniBtn" id="newReading" type="button">New Random</button>
+                    </div>
+
+                    <div class="small">
+                      Read the <b>bottom of the meniscus</b> at <b>eye level</b>.
+                      Avoid parallax error (don’t look from above or below).
+                    </div>
+                  </div>
+
+                  <div class="meter">
+                    <h4>Your Answer</h4>
+                    <label style="font-size:12px;color:var(--muted)">Enter volume (mL)</label>
+                    <input id="volAnswer" type="number" placeholder="e.g., 64" />
+                    <div class="controls">
+                      <button class="miniBtn primary" id="checkVol" type="button">Check Reading</button>
+                      <button class="miniBtn" id="hintVol" type="button">Hint</button>
+                    </div>
+                    <div class="feedback" id="volFeedback" style="min-height:92px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT: Score + Notes -->
+      <aside class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Score & Progress</h2>
+            <small>Saved in this browser</small>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="scoreBig">
+            <div>
+              <span>Total Score</span><br/>
+              <b id="score">0</b>
+            </div>
+            <div>
+              <span>Completed</span><br/>
+              <b id="completed">0/3</b>
+            </div>
+            <div>
+              <span>Badge</span><br/>
+              <b id="badge">Starter</b>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="card">
+            <h3>Teacher Notes (optional)</h3>
+            <p>Write feedback or learner notes here. This also saves.</p>
+            <div style="height:8px"></div>
+            <textarea id="notes" placeholder="e.g., Needs to remember: never taste chemicals; read meniscus at eye level."></textarea>
+            <div class="controls">
+              <button class="miniBtn" id="clearNotes" type="button">Clear Notes</button>
+              <button class="miniBtn bad" id="resetAll" type="button">Reset All Progress</button>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="card">
+            <h3>What you learned</h3>
+            <p>
+              ✔ Lab rules and safe behavior<br/>
+              ✔ Safety symbols and meanings<br/>
+              ✔ Apparatus identification and correct use<br/>
+              ✔ Accurate measurement (meniscus)
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+  </div>
+
+  <script>
+    // --------------------------
+    // STORAGE
+    // --------------------------
+    const KEY = "sciguru_topic1_safety_apparatus_v1";
+    const state = load() || {
+      score:0,
+      done:{ rules:false, symbols:false, apparatus:false },
+      notes:"",
+      // Activity data
+      rulesAnswers:{},
+      symbolsPlaced:{},
+      appAnswers:{},
+      meniscusTarget: 64
+    };
+
+    function load(){
+      try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; }
+    }
+    function save(){
+      localStorage.setItem(KEY, JSON.stringify(state));
+      renderScore();
+    }
+
+    // --------------------------
+    // NAV TABS
+    // --------------------------
+    const tabs = [
+      {id:"rules", label:"1) Safety Rules Quiz"},
+      {id:"symbols", label:"2) Safety Symbols Match"},
+      {id:"apparatus", label:"3) Apparatus + Meniscus"}
+    ];
+
+    const tabsEl = document.getElementById("tabs");
+    let active = "rules";
+    function renderTabs(){
+      tabsEl.innerHTML = "";
+      tabs.forEach(t=>{
+        const b = document.createElement("button");
+        b.type="button";
+        b.className = "tab" + (t.id===active ? " active":"");
+        b.textContent = t.label + (state.done[t.id] ? " ✅" : "");
+        b.addEventListener("click", ()=>{
+          active = t.id;
+          showView(t.id);
+          renderTabs();
+        });
+        tabsEl.appendChild(b);
+      });
+    }
+
+    function showView(id){
+      document.getElementById("view-rules").style.display = id==="rules" ? "" : "none";
+      document.getElementById("view-symbols").style.display = id==="symbols" ? "" : "none";
+      document.getElementById("view-apparatus").style.display = id==="apparatus" ? "" : "none";
+    }
+
+    // --------------------------
+    // SCORE
+    // --------------------------
+    function badgeFromScore(s){
+      if(s >= 85) return "Safety Pro";
+      if(s >= 60) return "Lab Ready";
+      if(s >= 35) return "Improving";
+      return "Starter";
+    }
+    function renderScore(){
+      document.getElementById("score").textContent = state.score;
+      const completed = Object.values(state.done).filter(Boolean).length;
+      document.getElementById("completed").textContent = `${completed}/3`;
+      document.getElementById("badge").textContent = badgeFromScore(state.score);
+      document.getElementById("notes").value = state.notes || "";
+    }
+
+    function setDone(key, yes){
+      state.done[key] = !!yes;
+      save();
+      renderTabs();
+    }
+
+    // --------------------------
+    // ACTIVITY 1: Safety Rules Quiz
+    // --------------------------
+    const RULES = [
+      {
+        id:"r1",
+        q:"You enter the lab and see chemicals on the bench. What should you do FIRST?",
+        options:[
+          "Smell them to identify what they are",
+          "Put on safety goggles and wait for teacher instructions",
+          "Taste a little to check if it is acid"
+        ],
+        correct:1,
+        explain:"Always wear PPE first and follow teacher instructions. Never taste or smell chemicals directly."
+      },
+      {
+        id:"r2",
+        q:"A friend starts eating chips in the laboratory. What is the correct action?",
+        options:[
+          "Let them eat because it’s only food",
+          "Tell them to stop and eat outside the laboratory",
+          "Ask them to share"
+        ],
+        correct:1,
+        explain:"No eating/drinking in the lab to avoid contamination and poisoning."
+      },
+      {
+        id:"r3",
+        q:"When heating a test tube, how should you hold it?",
+        options:[
+          "Point the mouth towards yourself to see inside",
+          "Point the mouth towards your friend to show them",
+          "Point the mouth away from people and use a test-tube holder"
+        ],
+        correct:2,
+        explain:"Always point test tubes away from people and use a holder."
+      },
+      {
+        id:"r4",
+        q:"You spill an unknown chemical on your skin. What should you do?",
+        options:[
+          "Wipe it quickly with your shirt",
+          "Rinse with plenty of water and tell the teacher immediately",
+          "Ignore it if it does not hurt"
+        ],
+        correct:1,
+        explain:"Rinse with water (for many chemicals) and report immediately. Teacher decides next steps."
+      },
+      {
+        id:"r5",
+        q:"What is the best way to smell a chemical safely (if teacher allows)?",
+        options:[
+          "Put nose directly over the container",
+          "Use wafting: wave vapour gently towards your nose",
+          "Shake the bottle then smell strongly"
+        ],
+        correct:1,
+        explain:"Wafting reduces inhalation of concentrated fumes."
+      }
+    ];
+
+    const rulesList = document.getElementById("rulesList");
+    const rulesFeedback = document.getElementById("rulesFeedback");
+
+    function renderRules(){
+      rulesList.innerHTML = "";
+      RULES.forEach((r, idx)=>{
+        const sel = state.rulesAnswers[r.id];
+        const row = document.createElement("div");
+        row.className = "item";
+        row.innerHTML = `
+          <div class="left">
+            <b>${idx+1}. ${r.q}</b>
+            <small>Select one answer:</small>
+          </div>
+          <div style="min-width:240px;max-width:320px">
+            <select data-rule="${r.id}">
+              <option value="" ${sel==null ? "selected":""}>-- choose --</option>
+              ${r.options.map((o,i)=>`<option value="${i}" ${String(sel)===String(i)?"selected":""}>${o}</option>`).join("")}
+            </select>
+          </div>
+        `;
+        rulesList.appendChild(row);
+      });
+
+      rulesList.querySelectorAll("select[data-rule]").forEach(s=>{
+        s.addEventListener("change", ()=>{
+          const id = s.getAttribute("data-rule");
+          state.rulesAnswers[id] = s.value==="" ? null : Number(s.value);
+          save();
+        });
+      });
+    }
+
+    function checkRules(){
+      let correct=0, answered=0;
+      let msg = "Safety Rules Results:\n";
+      RULES.forEach((r, i)=>{
+        const a = state.rulesAnswers[r.id];
+        if(a==null) return;
+        answered++;
+        const ok = (a===r.correct);
+        if(ok) correct++;
+        msg += `\n${i+1}) ${ok?"✅ Correct":"❌ Wrong"} — ${r.explain}`;
+      });
+
+      if(answered < RULES.length){
+        msg += `\n\nYou answered ${answered}/${RULES.length}. Finish all questions for full score.`;
+      }
+
+      // scoring: up to 30 points
+      const score = Math.round((correct / RULES.length) * 30);
+      // Only award if completed all questions
+      if(answered === RULES.length){
+        award("rules", score);
+        setDone("rules", true);
+        msg += `\n\nScore for Activity 1: ${score}/30`;
+      } else {
+        msg += `\n\n(Complete all to earn points.)`;
+      }
+
+      rulesFeedback.textContent = msg;
+    }
+
+    function resetRules(){
+      state.rulesAnswers = {};
+      setDone("rules", false);
+      save();
+      renderRules();
+      rulesFeedback.textContent = "Reset complete. Answer the questions again.";
+    }
+
+    document.getElementById("rulesCheckBtn").addEventListener("click", checkRules);
+    document.getElementById("rulesResetBtn").addEventListener("click", resetRules);
+
+    // --------------------------
+    // ACTIVITY 2: Safety Symbols Match (Drag/Drop)
+    // --------------------------
+    const SYMBOLS = [
+      {key:"flammable", name:"Flammable", meaning:"Catches fire easily (keep away from flames)."},
+      {key:"toxic", name:"Toxic", meaning:"Poisonous (can cause serious harm or death)."},
+      {key:"corrosive", name:"Corrosive", meaning:"Burns skin/eyes; damages metals."},
+      {key:"irritant", name:"Irritant", meaning:"Causes skin/eye irritation; avoid contact."},
+      {key:"explosive", name:"Explosive", meaning:"May explode if heated/shocked."},
+      {key:"oxidising", name:"Oxidising", meaning:"Makes fire burn more strongly; keep away from fuels."}
+    ];
+
+    const symbolChips = document.getElementById("symbolChips");
+    const symbolTargets = document.getElementById("symbolTargets");
+    const symbolsFeedback = document.getElementById("symbolsFeedback");
+
+    function renderSymbols(){
+      // chips (random order)
+      symbolChips.innerHTML = "";
+      const shuffled = [...SYMBOLS].sort(()=>Math.random()-0.5);
+      shuffled.forEach(s=>{
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = s.name;
+        chip.draggable = true;
+        chip.dataset.symbol = s.key;
+        chip.addEventListener("dragstart", (e)=>{
+          e.dataTransfer.setData("text/plain", s.key);
+        });
+        symbolChips.appendChild(chip);
+      });
+
+      // targets
+      const targetHtml = SYMBOLS.map(s=>`
+        <div class="dropZone" data-target="${s.key}">
+          <b>${s.meaning}</b>
+          <small>Drop the correct symbol name here</small>
+          <div class="dropSlots" id="slot-${s.key}"></div>
+        </div>
+      `).join("");
+
+      symbolTargets.innerHTML = `<h4>Meanings (drop zones)</h4>${targetHtml}`;
+
+      symbolTargets.querySelectorAll(".dropZone").forEach(z=>{
+        z.addEventListener("dragover", (e)=>{ e.preventDefault(); });
+        z.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          const symKey = e.dataTransfer.getData("text/plain");
+          const targetKey = z.dataset.target;
+          if(!symKey) return;
+
+          // one placement per target
+          state.symbolsPlaced[targetKey] = symKey;
+          save();
+          paintSymbolSlots();
+        });
+      });
+
+      paintSymbolSlots();
+    }
+
+    function paintSymbolSlots(){
+      SYMBOLS.forEach(s=>{
+        const slot = document.getElementById(`slot-${s.key}`);
+        if(!slot) return;
+        slot.innerHTML = "";
+        const placed = state.symbolsPlaced[s.key];
+        if(placed){
+          const name = SYMBOLS.find(x=>x.key===placed)?.name || placed;
+          const chip = document.createElement("div");
+          chip.className = "slot";
+          chip.textContent = name;
+          slot.appendChild(chip);
+        } else {
+          const empty = document.createElement("div");
+          empty.className = "slot";
+          empty.textContent = "— empty —";
+          slot.appendChild(empty);
+        }
+      });
+    }
+
+    function checkSymbols(){
+      let correct=0;
+      SYMBOLS.forEach(s=>{
+        const placed = state.symbolsPlaced[s.key];
+        if(placed === s.key) correct++;
+      });
+
+      // up to 30 points
+      const score = Math.round((correct / SYMBOLS.length) * 30);
+
+      // Show per-zone feedback color
+      symbolTargets.querySelectorAll(".dropZone").forEach(z=>{
+        z.classList.remove("ok","no");
+        const key = z.dataset.target;
+        const placed = state.symbolsPlaced[key];
+        if(!placed) return;
+        if(placed === key) z.classList.add("ok");
+        else z.classList.add("no");
+      });
+
+      let msg = `Safety Symbols Results:\nCorrect: ${correct}/${SYMBOLS.length}\n`;
+      msg += correct===SYMBOLS.length
+        ? "\n✅ Excellent! You know the symbols."
+        : "\nKeep practicing: match symbol names to meanings.";
+
+      if(Object.keys(state.symbolsPlaced).length === SYMBOLS.length){
+        award("symbols", score);
+        setDone("symbols", true);
+        msg += `\n\nScore for Activity 2: ${score}/30`;
+      } else {
+        msg += `\n\n(Complete ALL drop zones to earn points.)`;
+      }
+
+      symbolsFeedback.textContent = msg;
+    }
+
+    function resetSymbols(){
+      state.symbolsPlaced = {};
+      setDone("symbols", false);
+      save();
+      renderSymbols();
+      symbolsFeedback.textContent = "Reset complete. Drag and drop again.";
+      // remove zone color
+      setTimeout(()=> {
+        document.querySelectorAll(".dropZone").forEach(z=>z.classList.remove("ok","no"));
+      }, 0);
+    }
+
+    document.getElementById("symbolsCheckBtn").addEventListener("click", checkSymbols);
+    document.getElementById("symbolsResetBtn").addEventListener("click", resetSymbols);
+
+    // --------------------------
+    // ACTIVITY 3: Apparatus Uses + Meniscus
+    // --------------------------
+    const APPARATUS = [
+      {
+        id:"a1",
+        name:"Measuring Cylinder",
+        prompt:"Main use:",
+        options:["Heating substances", "Measuring volume of liquids accurately", "Filtering mixtures"],
+        correct:1,
+        tip:"Read the meniscus at eye level."
+      },
+      {
+        id:"a2",
+        name:"Bunsen Burner",
+        prompt:"Main use:",
+        options:["Heating substances safely", "Measuring mass", "Separating iron filings"],
+        correct:0,
+        tip:"Use a blue flame for strong heating."
+      },
+      {
+        id:"a3",
+        name:"Funnel",
+        prompt:"Main use:",
+        options:["Transfer liquids into containers / filtration setup", "Measuring time", "Measuring temperature"],
+        correct:0,
+        tip:"Used with filter paper for filtration."
+      },
+      {
+        id:"a4",
+        name:"Crucible",
+        prompt:"Main use:",
+        options:["Heating small amounts to very high temperatures", "Measuring length", "Storing water permanently"],
+        correct:0,
+        tip:"Often used with a lid and tongs."
+      },
+      {
+        id:"a5",
+        name:"Tripod Stand",
+        prompt:"Main use:",
+        options:["Supporting apparatus above a flame (with wire gauze)", "Measuring voltage", "Measuring volume"],
+        correct:0,
+        tip:"Supports beaker over Bunsen burner."
+      },
+      {
+        id:"a6",
+        name:"Safety Goggles",
+        prompt:"Main purpose:",
+        options:["Decoration", "Protect eyes from splashes and glass", "Measure chemicals"],
+        correct:1,
+        tip:"Wear them whenever chemicals are used."
+      }
+    ];
+
+    const appList = document.getElementById("appList");
+    const appFeedback = document.getElementById("appFeedback");
+
+    function renderApparatus(){
+      appList.innerHTML = "";
+      APPARATUS.forEach((a, idx)=>{
+        const sel = state.appAnswers[a.id];
+        const row = document.createElement("div");
+        row.className = "item";
+        row.innerHTML = `
+          <div class="left">
+            <b>${idx+1}. ${a.name}</b>
+            <small>${a.prompt}</small>
+          </div>
+          <div style="min-width:240px;max-width:320px">
+            <select data-app="${a.id}">
+              <option value="" ${sel==null ? "selected":""}>-- choose --</option>
+              ${a.options.map((o,i)=>`<option value="${i}" ${String(sel)===String(i)?"selected":""}>${o}</option>`).join("")}
+            </select>
+          </div>
+        `;
+        appList.appendChild(row);
+      });
+
+      appList.querySelectorAll("select[data-app]").forEach(s=>{
+        s.addEventListener("change", ()=>{
+          const id = s.getAttribute("data-app");
+          state.appAnswers[id] = s.value==="" ? null : Number(s.value);
+          save();
+        });
+      });
+    }
+
+    function checkApparatus(){
+      let correct=0, answered=0;
+      let msg = "Apparatus Uses Results:\n";
+      APPARATUS.forEach((a, i)=>{
+        const ans = state.appAnswers[a.id];
+        if(ans==null) return;
+        answered++;
+        const ok = (ans===a.correct);
+        if(ok) correct++;
+        msg += `\n${i+1}) ${ok?"✅":"❌"} ${a.name} — ${a.tip}`;
+      });
+
+      if(answered < APPARATUS.length){
+        msg += `\n\nYou answered ${answered}/${APPARATUS.length}. Finish all for full score.`;
+      }
+
+      // up to 25 points (we reserve 15 for meniscus check)
+      const score = Math.round((correct / APPARATUS.length) * 25);
+
+      if(answered === APPARATUS.length){
+        // don't mark done yet; meniscus also required
+        awardPartial("apparatusApp", score);
+        msg += `\n\nScore (Apparatus part): ${score}/25`;
+        msg += `\nNow complete Meniscus Reading to finish Activity 3.`;
+      } else {
+        msg += `\n\n(Complete ALL to earn points.)`;
+      }
+
+      appFeedback.textContent = msg;
+    }
+
+    function resetApparatus(){
+      state.appAnswers = {};
+      save();
+      renderApparatus();
+      appFeedback.textContent = "Reset complete. Choose again.";
+      // Activity 3 not done until meniscus + apparatus both
+      setDone("apparatus", false);
+      // remove partial score markers
+      state._partial = state._partial || {};
+      delete state._partial.apparatusApp;
+      delete state._partial.meniscus;
+      recalcFromPartials();
+    }
+
+    document.getElementById("appCheckBtn").addEventListener("click", checkApparatus);
+    document.getElementById("appResetBtn").addEventListener("click", resetApparatus);
+
+    // --------------------------
+    // MENISCUS mini-lab
+    // --------------------------
+    const waterEl = document.getElementById("water");
+    const meniscusEl = document.getElementById("meniscus");
+    const volFeedback = document.getElementById("volFeedback");
+    const volAnswer = document.getElementById("volAnswer");
+
+    // Map target (0..100) to water height %
+    function setWater(target){
+      // clamp
+      state.meniscusTarget = Math.max(10, Math.min(95, target));
+      // Convert to height percentage (0->0%, 100->100%)
+      waterEl.style.height = state.meniscusTarget + "%";
+      // Meniscus sits on top
+      meniscusEl.style.top = "-10px";
+      save();
+    }
+
+    function newRandomReading(){
+      // generate in steps of 2 for easier marking
+      const r = Math.floor((Math.random()*70 + 20)/2)*2; // 20..90
+      setWater(r);
+      volFeedback.textContent = "New reading generated. Enter the volume (mL) by reading the bottom of the meniscus.";
+      volAnswer.value = "";
+    }
+
+    // check: allow ±2 mL tolerance
+    function checkVolume(){
+      const ans = Number(volAnswer.value);
+      if(!Number.isFinite(ans)){
+        volFeedback.textContent = "Enter a number (mL).";
+        return;
+      }
+      const target = Math.round(state.meniscusTarget);
+      const diff = Math.abs(ans - target);
+
+      if(diff <= 2){
+        volFeedback.textContent =
+`✅ Correct!
+You read ${ans} mL and the correct reading is about ${target} mL.
+
+Remember: bottom of meniscus + eye level.`;
+
+        // score up to 15
+        awardPartial("meniscus", 15);
+        // If apparatus part exists too, complete activity 3
+        const hasApp = !!(state._partial && state._partial.apparatusApp != null);
+        if(hasApp){
+          finalizeActivity3();
+        } else {
+          volFeedback.textContent += "\n\nNow go back and complete Apparatus Uses to finish Activity 3.";
+        }
+      } else {
+        volFeedback.textContent =
+`❌ Not quite.
+You entered ${ans} mL but it is closer to ${target} mL.
+
+Hint: read at eye level and use the bottom curve of the meniscus.`;
+      }
+    }
+
+    function hintVolume(){
+      const target = Math.round(state.meniscusTarget);
+      const low = target - 2;
+      const high = target + 2;
+      volFeedback.textContent =
+`Hint:
+The correct reading is between about ${low} and ${high} mL.
+Read the bottom of the meniscus at eye level.`;
+    }
+
+    document.getElementById("volDown").addEventListener("click", ()=> setWater(state.meniscusTarget - 5));
+    document.getElementById("volUp").addEventListener("click", ()=> setWater(state.meniscusTarget + 5));
+    document.getElementById("newReading").addEventListener("click", newRandomReading);
+    document.getElementById("checkVol").addEventListener("click", checkVolume);
+    document.getElementById("hintVol").addEventListener("click", hintVolume);
+
+    // --------------------------
+    // SCORING HELPERS
+    // --------------------------
+    // Award full activity score (replaces previous for that activity)
+    function award(activityKey, score){
+      state._awarded = state._awarded || {};
+      const prev = state._awarded[activityKey] || 0;
+      // adjust total: remove prev, add new
+      state.score = Math.max(0, state.score - prev);
+      state.score += score;
+      state._awarded[activityKey] = score;
+      save();
+    }
+
+    // Partial awards (for subparts) then compute activity 3 completion
+    function awardPartial(partKey, score){
+      state._partial = state._partial || {};
+      state._partial[partKey] = score;
+      recalcFromPartials();
+      save();
+    }
+
+    function recalcFromPartials(){
+      // rebuild total score for partials without breaking other full awards
+      // We keep rules + symbols in _awarded, and add partials for activity 3 into score.
+      // To keep it simple, we subtract any previous computed "activity3" award and rebuild it.
+      state._awarded = state._awarded || {};
+      const prevA3 = state._awarded.activity3 || 0;
+
+      // remove prev activity3 from total
+      state.score = Math.max(0, state.score - prevA3);
+
+      const app = (state._partial && state._partial.apparatusApp) ? state._partial.apparatusApp : 0;
+      const men = (state._partial && state._partial.meniscus) ? state._partial.meniscus : 0;
+      const totalA3 = app + men; // max 40
+
+      state.score += totalA3;
+      state._awarded.activity3 = totalA3;
+
+      // re-add rules/symbols already included? (they already in score)
+      // NOTE: rules/symbols award() adjusts score directly; we do not rebuild them here.
+      // This function only recalculates activity3 portion.
+    }
+
+    function finalizeActivity3(){
+      setDone("apparatus", true);
+      // Ensure activity3 award already computed via partials
+      const a3 = state._awarded?.activity3 || 0;
+      volFeedback.textContent += `\n\n✅ Activity 3 complete! Total Activity 3 score: ${a3}/40`;
+    }
+
+    // --------------------------
+    // NOTES + RESET
+    // --------------------------
+    const notesEl = document.getElementById("notes");
+    notesEl.addEventListener("input", ()=>{
+      state.notes = notesEl.value;
+      save();
+    });
+    document.getElementById("clearNotes").addEventListener("click", ()=>{
+      state.notes = "";
+      notesEl.value = "";
+      save();
+    });
+
+    document.getElementById("resetAll").addEventListener("click", ()=>{
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+
+    // --------------------------
+    // INIT
+    // --------------------------
+    function init(){
+      // default meniscus
+      if(!state.meniscusTarget) state.meniscusTarget = 64;
+      setWater(state.meniscusTarget);
+
+      renderTabs();
+      showView(active);
+      renderScore();
+
+      renderRules();
+      renderSymbols();
+      renderApparatus();
+
+      // restore
+      notesEl.value = state.notes || "";
+      rulesFeedback.textContent = "Answer all questions, then click Check Answers to earn points.";
+      symbolsFeedback.textContent = "Drag each symbol name to the correct meaning, then click Check.";
+      appFeedback.textContent = "Select the correct use for each apparatus, then check.";
+      volFeedback.textContent = "Enter the volume (mL). Correct answers are accepted within ±2 mL.";
+
+      save();
+    }
+
+    init();
+  </script>
+</body>
+</html>
