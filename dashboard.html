@@ -1,123 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sci-Guru | Teacher Dashboard</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b1220; --text:#e8eefc; --muted:#a9b7dd;
+      --line:rgba(255,255,255,.10); --shadow:0 18px 55px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(77,163,255,.18), transparent 55%),
+        radial-gradient(1000px 600px at 90% 30%, rgba(124,92,255,.18), transparent 55%),
+        var(--bg);
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:18px 16px 28px}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px;border:1px solid var(--line);border-radius:18px;
+      background:rgba(255,255,255,.05);box-shadow:var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:44px;height:44px;border-radius:14px;overflow:hidden;
+      border:1px solid var(--line);background:rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center;
+      flex:0 0 auto;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover}
+    h1{margin:0;font-size:16px}
+    .sub{margin-top:2px;color:var(--muted);font-size:12px}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{
+      text-decoration:none;color:var(--text);
+      padding:10px 12px;border:1px solid var(--line);border-radius:12px;
+      background:rgba(255,255,255,.04);font-size:13px;
+    }
+
+    .grid{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--line);border-radius:22px;
+      background:rgba(255,255,255,.04);box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .card h2{margin:0 0 6px;font-size:15px}
+    .card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+    .btn{
+      display:inline-block;margin-top:10px;text-decoration:none;
+      padding:11px 12px;border-radius:14px;font-weight:900;color:#071022;
+      background:linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.85));
+    }
+    .stat{font-size:26px;font-weight:1000;margin:6px 0}
+    footer{margin-top:14px;text-align:center;color:rgba(255,255,255,.65);font-size:12px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+        </div>
+        <div>
+          <h1>Teacher Dashboard</h1>
+          <div class="sub">Sci-Guru • progress overview</div>
+        </div>
+      </div>
 
-  <!-- Global header with LEC logo -->
-  <header class="site-header">
-    <div class="site-header-left">
-      <img src="lec-logo.jpg" alt="LEC Biotec Logo" class="site-logo" />
-      <div class="site-title-block">
-        <h1 class="site-title">Sci-Guru</h1>
-        <p class="site-subtitle">Zimbabwe’s AI Science Tutor by LEC Biotec</p>
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">Tutor</a>
+        <a href="labs.html">Labs</a>
+        <a href="library.html">Library</a>
       </div>
     </div>
-    <nav class="site-nav">
-      <a href="index.html">Home</a>
-      <a href="tutor.html">AI Tutor</a>
-      <a href="sim-density.html">Density Lab</a>
-      <a href="sim-mixtures.html">Mixtures Lab</a>
-      <a href="sim-electricity.html">Electricity Lab</a>
-      <a href="login.html">Teacher Login</a>
-    </nav>
-  </header>
 
-  <main class="page-main">
-    <h2>Teacher Dashboard</h2>
-    <p class="muted">
-      (Demo view) – this dashboard will read progress stored on this device.
-    </p>
-
-    <section class="card">
-      <h3>Form 1 Topic Progress</h3>
-      <div id="topicProgress">
-        Loading topic data from this browser…
+    <div class="grid">
+      <div class="card">
+        <h2>Total Learners</h2>
+        <div class="stat">0</div>
+        <p>Connect database later (Firebase/Sheets/Backend).</p>
       </div>
-    </section>
 
-    <section class="card">
-      <h3>Completed Virtual Labs</h3>
-      <ul id="labProgress">
-        <!-- Filled by JS -->
-      </ul>
-    </section>
+      <div class="card">
+        <h2>Quizzes Completed</h2>
+        <div class="stat">0</div>
+        <p>Auto-update once quiz saving is enabled.</p>
+      </div>
 
-    <button id="logoutBtn" class="secondary-btn">Log out</button>
-  </main>
+      <div class="card">
+        <h2>Practical Activities</h2>
+        <div class="stat">0</div>
+        <p>Track virtual labs usage and mastery.</p>
+      </div>
 
-  <footer class="site-footer">
-    Sci-Guru © LEC Biotec (Pvt) Ltd
-  </footer>
+      <div class="card">
+        <h2>Quick Links</h2>
+        <p>Go straight to learning tools.</p>
+        <a class="btn" href="tutor.html">Open Tutor →</a>
+      </div>
 
-  <script>
-    // Redirect to login if not logged in
-    const loggedIn = localStorage.getItem('sciGuruTeacherLoggedIn') === 'true';
-    if (!loggedIn) {
-      window.location.href = 'login.html';
-    }
+      <div class="card">
+        <h2>Labs Hub</h2>
+        <p>All simulations in one place.</p>
+        <a class="btn" href="labs.html">Open Labs →</a>
+      </div>
 
-    // Read topic + lab progress (from previous code we used)
-    function loadProgress() {
-      const topicBox = document.getElementById('topicProgress');
-      const labBox = document.getElementById('labProgress');
+      <div class="card">
+        <h2>Cells Labeling</h2>
+        <p>Direct link to the practical.</p>
+        <a class="btn" href="sim-cells-labels.html">Open Cell Labeling →</a>
+      </div>
+    </div>
 
-      const key = 'progress_Form 1';
-      const stored = JSON.parse(localStorage.getItem(key) || '{}');
-
-      // ----- Topics -----
-      if (!stored.topics || Object.keys(stored.topics).length === 0) {
-        topicBox.textContent = 'No quiz data saved yet on this device.';
-      } else {
-        const table = document.createElement('table');
-        table.className = 'progress-table';
-
-        const header = document.createElement('tr');
-        header.innerHTML = '<th>Topic</th><th>Best score</th><th>Attempts</th>';
-        table.appendChild(header);
-
-        Object.entries(stored.topics).forEach(([topic, info]) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${topic}</td>
-            <td>${info.bestScore || 0}%</td>
-            <td>${info.attempts || 0}</td>
-          `;
-          table.appendChild(row);
-        });
-
-        topicBox.innerHTML = '';
-        topicBox.appendChild(table);
-      }
-
-      // ----- Labs -----
-      const labs = stored.labs || {};
-      const labNames = {
-        'density-lab': 'Density & flotation',
-        'mixtures-lab': 'Mixtures & separation',
-        'electricity-lab': 'Electricity circuits'
-      };
-
-      labBox.innerHTML = '';
-      Object.keys(labNames).forEach(id => {
-        const li = document.createElement('li');
-        const done = labs[id];
-        li.textContent = `${labNames[id]} – ${done ? 'Completed ✅' : 'Not done yet'}`;
-        labBox.appendChild(li);
-      });
-    }
-
-    loadProgress();
-
-    // Logout button
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.removeItem('sciGuruTeacherLoggedIn');
-      window.location.href = 'login.html';
-    });
-  </script>
+    <footer>© 2025 LEC Biotec • Harare, Zimbabwe</footer>
+  </div>
 </body>
-</html>
+          </html>
