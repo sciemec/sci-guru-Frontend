@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Virtual Labs • Sci-Guru</title>
+  <style>
+    :root{
+      --bg:#0b1220; --text:#e8eefc; --muted:#a9b7dd;
+      --line:rgba(255,255,255,.10);
+      --accent:#4da3ff; --accent2:#7c5cff;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(77,163,255,.18), transparent 55%),
+        radial-gradient(1000px 600px at 90% 30%, rgba(124,92,255,.18), transparent 55%),
+        var(--bg);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:18px 16px 28px}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:14px 14px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      box-shadow:var(--shadow);
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    h1{margin:0; font-size:16px}
+    .sub{margin-top:2px; color:var(--muted); font-size:12px}
+
+    .nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .nav a{
+      text-decoration:none; color:var(--text);
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      font-size:13px;
+      transition:.2s;
+    }
+    .nav a.primary{
+      border-color:rgba(77,163,255,.45);
+      background:linear-gradient(135deg, rgba(77,163,255,.22), rgba(124,92,255,.18));
+    }
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:rgba(255,255,255,.04);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .card h3{margin:0 0 6px; font-size:15px}
+    .card p{margin:0 0 10px; color:var(--muted); font-size:13px; line-height:1.5}
+    .btn{
+      display:inline-block;
+      text-decoration:none;
+      padding:11px 12px;
+      border-radius:14px;
+      font-weight:900;
+      color:#071022;
+      background:linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.85));
+    }
+    footer{
+      margin-top:14px;
+      text-align:center;
+      color:rgba(255,255,255,.65);
+      font-size:12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+        </div>
+        <div>
+          <h1>Virtual Labs</h1>
+          <div class="sub">Open simulations (all links match your repo filenames)</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="tutor.html">Tutor</a>
+        <a class="primary" href="labs.html">Labs</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Density Simulator</h3>
+        <p>Mass, volume & density with practical-style questions.</p>
+        <a class="btn" href="sim-density.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Electricity Simulator</h3>
+        <p>Circuits, switches, current flow and safety.</p>
+        <a class="btn" href="sim-electricity.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Bunsen Burner Simulator</h3>
+        <p>Air hole, flame types, heating rules and lab safety.</p>
+        <a class="btn" href="sim-bunsen.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Lab Apparatus Explorer</h3>
+        <p>Identify common apparatus & what each is used for.</p>
+        <a class="btn" href="sim-apparatus.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Cells Hub</h3>
+        <p>Cell labeling and cell structure learning tools.</p>
+        <a class="btn" href="sim-cells-hub.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Microscope Simulator</h3>
+        <p>Parts, focusing steps, magnification basics.</p>
+        <a class="btn" href="sim-microscope.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Form 1 Experiences</h3>
+        <p>Virtual experiences aligned to early Form 1 skills.</p>
+        <a class="btn" href="sim-form1-experiences.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Living Things</h3>
+        <p>Cells, classification, life processes.</p>
+        <a class="btn" href="sim-form1-living-things.html">Open →</a>
+      </div>
+
+      <div class="card">
+        <h3>Levels of Organisation</h3>
+        <p>Cells → tissues → organs → systems → organism.</p>
+        <a class="btn" href="sim-levels.html">Open →</a>
+      </div>
+    </div>
+
+    <footer>© 2025 LEC Biotec • Harare, Zimbabwe</footer>
+  </div>
+</body>
+</html>
