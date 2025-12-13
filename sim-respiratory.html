@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sci-Guru • Topic 4: Respiratory System (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --card:rgba(255,255,255,.07);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky; top:10px; z-index:10;
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      border-radius:16px;
+      flex-wrap:wrap;
+    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .logo{
+      width:44px;height:44px;border-radius:12px;overflow:hidden;
+      border:1px solid var(--stroke); background:rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center; flex:0 0 auto;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t{min-width:0}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .08s ease, background .15s ease;
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+
+    .hero{
+      margin-top:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .panelHead{
+      padding:14px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:rgba(0,0,0,.18);
+      flex-wrap:wrap;
+    }
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .tab.active{
+      color:#071022;
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+    }
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:740px){.two{grid-template-columns:1fr}}
+
+    .card{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+    }
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    .controls{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .miniBtn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:9px 10px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .miniBtn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+    .miniBtn.good{
+      border-color:rgba(51,208,122,.55);
+      background:rgba(51,208,122,.18);
+    }
+    .miniBtn.bad{
+      border-color:rgba(255,90,107,.55);
+      background:rgba(255,90,107,.18);
+    }
+
+    .feedback{
+      margin-top:10px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      min-height:80px;
+      white-space:pre-wrap;
+    }
+
+    /* Sim widgets */
+    .simRow{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px}
+    @media(max-width:980px){.simRow{grid-template-columns:1fr}}
+    .simBox{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+      overflow:hidden;
+    }
+    .simBox h4{margin:0 0 8px; font-size:13px}
+    .simCanvas{
+      width:100%;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      background:rgba(0,0,0,.22);
+      padding:10px;
+      min-height:210px;
+      position:relative;
+      overflow:hidden;
+    }
+    .meter{
+      display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center
+    }
+    .bar{
+      flex:1;
+      height:12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+      min-width:160px;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+    }
+    .tag{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      padding:7px 9px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+    .bubbles{
+      position:absolute;
+      bottom:12px;
+      left:12px;
+      right:12px;
+      top:12px;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .bubble{
+      position:absolute;
+      width:10px;height:10px;border-radius:99px;
+      background:rgba(234,242,255,.45);
+      border:1px solid rgba(234,242,255,.28);
+      animation: rise 1.8s linear forwards;
+      opacity:.9;
+    }
+    @keyframes rise{
+      from{transform:translateY(0) scale(.9); opacity:.9}
+      to{transform:translateY(-220px) scale(1.2); opacity:0}
+    }
+
+    .tube{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin-top:10px;
+    }
+    .tubeCol{
+      flex:1;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      background:rgba(0,0,0,.22);
+      padding:10px;
+      min-height:190px;
+      position:relative;
+      overflow:hidden;
+    }
+    .liquid{
+      position:absolute;
+      left:10px; right:10px; bottom:10px;
+      height:44%;
+      border-radius:10px;
+      background:rgba(47,123,255,.30);
+      border:1px solid rgba(47,123,255,.28);
+      transition:background .25s ease, border-color .25s ease;
+    }
+    .liquid.milky{
+      background:rgba(220,230,255,.55);
+      border-color:rgba(220,230,255,.45);
+    }
+    .liquidLabel{
+      position:absolute;
+      left:12px; right:12px; top:10px;
+      color:rgba(234,242,255,.85);
+      font-size:12px;
+      font-weight:900;
+    }
+    .tubeInfo{margin-top:8px; color:var(--muted); font-size:12px; line-height:1.5}
+
+    .quizList{display:grid; gap:10px; margin-top:10px}
+    .qItem{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:14px;
+      padding:10px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .qItem b{display:block; font-size:13px}
+    .qItem small{display:block; margin-top:4px; color:var(--muted); font-size:12px; line-height:1.4}
+    select{
+      width:100%;
+      max-width:320px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+
+    footer{
+      margin-top:16px;
+      text-align:center;
+      color:rgba(234,242,255,.62);
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo"
+               onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+        </div>
+        <div class="t">
+          <b>Topic 4 • The Respiratory System (Virtual Lab)</b>
+          <span>Breathing vs Respiration • Test for Oxygen • Test for Carbon Dioxide</span>
+        </div>
+      </div>
+
+      <nav>
+        <a class="btn" href="tutor.html">← Back to Tutor</a>
+        <a class="btn" href="labs-hub.html">Labs Hub</a>
+        <a class="btn primary" href="sim-respiratory.html">Refresh</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Interactive Respiratory Experiments</h1>
+        <p>
+          Learn the difference between <b>breathing</b> and <b>respiration</b>, then run two virtual tests:
+          <b>(1) Oxygen supports burning (glowing splint)</b> and
+          <b>(2) Carbon dioxide turns limewater milky</b>.
+        </p>
+      </div>
+      <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+    </section>
+
+    <div class="grid">
+      <!-- LEFT MAIN -->
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Lab Activities</h2>
+            <small>Use the tabs to switch experiments</small>
+          </div>
+          <div class="tabs" id="tabs"></div>
+        </div>
+
+        <div class="panelBody">
+
+          <!-- TAB 1: Concepts -->
+          <div class="view" id="view-concepts">
+            <div class="two">
+              <div class="card">
+                <h3>Composition of Air</h3>
+                <p>
+                  • Nitrogen: <b>~78%</b><br/>
+                  • Oxygen: <b>~21%</b><br/>
+                  • Carbon dioxide: <b>very small</b> (trace amount)
+                </p>
+              </div>
+              <div class="card">
+                <h3>Breathing vs Respiration</h3>
+                <p>
+                  • <b>Breathing</b>: physical movement of air in and out of lungs.<br/>
+                  • <b>Respiration</b>: chemical reactions in cells releasing energy (often using oxygen).
+                </p>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:10px;">
+              <h3>Quick Check</h3>
+              <p>
+                1) Which process is physical? (breathing or respiration)<br/>
+                2) Which process happens inside cells? (breathing or respiration)<br/>
+                3) What gas makes limewater milky?
+              </p>
+            </div>
+
+            <div class="feedback" id="conceptFeedback">Open the next tab to run the virtual experiments.</div>
+          </div>
+
+          <!-- TAB 2: Oxygen Test -->
+          <div class="view" id="view-oxygen" style="display:none;">
+            <div class="two">
+              <div class="card">
+                <h3>Experiment: Test for Oxygen</h3>
+                <p>
+                  <b>Aim:</b> Show that oxygen supports burning.<br/>
+                  <b>Method:</b> Put a glowing splint into a gas jar. If it re-lights, oxygen is present.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Instructions</h3>
+                <p>
+                  Choose a jar gas and click <b>Insert Glowing Splint</b>.<br/>
+                  Oxygen → splint re-lights ✅<br/>
+                  Carbon dioxide → splint goes out ❌
+                </p>
+              </div>
+            </div>
+
+            <div class="simRow">
+              <div class="simBox">
+                <h4>Gas Jar</h4>
+                <div class="simCanvas" id="jarCanvas">
+                  <div class="tag" style="position:absolute; top:10px; left:10px;" id="jarGasTag">Gas: Air</div>
+                  <div class="tag" style="position:absolute; top:10px; right:10px;" id="splintTag">Splint: Not inserted</div>
+
+                  <div style="position:absolute; left:50%; top:54%; transform:translate(-50%,-50%); text-align:center;">
+                    <div style="font-size:64px; line-height:1;">🫙</div>
+                    <div class="tag" id="jarResult" style="display:inline-block; margin-top:8px;">Result: —</div>
+                  </div>
+                </div>
+
+                <div class="controls">
+                  <button class="miniBtn" id="gasAir">Air</button>
+                  <button class="miniBtn" id="gasO2">Oxygen</button>
+                  <button class="miniBtn" id="gasCO2">Carbon Dioxide</button>
+                </div>
+
+                <div class="controls">
+                  <button class="miniBtn primary" id="insertSplint">Insert Glowing Splint</button>
+                  <button class="miniBtn" id="resetO2">Reset</button>
+                </div>
+
+                <div class="feedback" id="oxygenFeedback">Select a gas, then insert the glowing splint.</div>
+              </div>
+
+              <div class="simBox">
+                <h4>Why this works</h4>
+                <div class="card" style="margin:0;">
+                  <h3 style="margin-bottom:6px;">Explanation</h3>
+                  <p>
+                    A glowing splint needs oxygen to keep burning.<br/>
+                    • In <b>oxygen</b>: it re-lights (supports combustion).<br/>
+                    • In <b>carbon dioxide</b>: it goes out (does not support burning).
+                  </p>
+                </div>
+
+                <div class="card" style="margin-top:10px;">
+                  <h3 style="margin-bottom:6px;">Safety</h3>
+                  <p>
+                    In real labs, handle flames carefully, use tongs, and keep flammables away.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: CO2 Test (Limewater) -->
+          <div class="view" id="view-co2" style="display:none;">
+            <div class="two">
+              <div class="card">
+                <h3>Experiment: Test for Carbon Dioxide</h3>
+                <p>
+                  <b>Aim:</b> Detect CO₂ in exhaled air.<br/>
+                  <b>Method:</b> Bubble the gas through <b>clear limewater</b>. If it turns milky, CO₂ is present.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Instructions</h3>
+                <p>
+                  Choose a gas source and press <b>Bubble Gas</b> to see the change.
+                </p>
+              </div>
+            </div>
+
+            <div class="simRow">
+              <div class="simBox">
+                <h4>Limewater Test Tubes</h4>
+                <div class="tube">
+                  <div class="tubeCol">
+                    <div class="liquidLabel">Tube A: Limewater</div>
+                    <div class="liquid" id="tubeA"></div>
+                    <div class="bubbles" id="bubblesA"></div>
+                  </div>
+                  <div class="tubeCol">
+                    <div class="liquidLabel">Tube B: Limewater</div>
+                    <div class="liquid" id="tubeB"></div>
+                    <div class="bubbles" id="bubblesB"></div>
+                  </div>
+                </div>
+
+                <div class="controls">
+                  <button class="miniBtn" id="srcAir">Gas: Air</button>
+                  <button class="miniBtn" id="srcExhale">Gas: Exhaled Air</button>
+                  <button class="miniBtn" id="srcCO2">Gas: CO₂</button>
+                </div>
+
+                <div class="controls">
+                  <button class="miniBtn primary" id="bubbleBtn">Bubble Gas</button>
+                  <button class="miniBtn" id="resetCO2">Reset</button>
+                </div>
+
+                <div class="meter">
+                  <div class="tag" id="co2Tag">CO₂ level: Low</div>
+                  <div class="bar"><div class="fill" id="co2Fill"></div></div>
+                </div>
+
+                <div class="tubeInfo">
+                  Tube A is your test tube. Tube B is a comparison tube.<br/>
+                  If CO₂ is present, limewater becomes <b>milky</b>.
+                </div>
+
+                <div class="feedback" id="co2Feedback">Choose a gas source and bubble it through the limewater.</div>
+              </div>
+
+              <div class="simBox">
+                <h4>What’s happening?</h4>
+                <div class="card" style="margin:0;">
+                  <h3 style="margin-bottom:6px;">Explanation</h3>
+                  <p>
+                    CO₂ reacts with limewater (calcium hydroxide) to form insoluble calcium carbonate, making it look milky.
+                    (In school level: <b>CO₂ turns limewater milky</b>.)
+                  </p>
+                </div>
+
+                <div class="card" style="margin-top:10px;">
+                  <h3 style="margin-bottom:6px;">Real-life link</h3>
+                  <p>
+                    We exhale air with more CO₂ than the air we inhale. That’s why exhaled air makes limewater turn milky faster.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Quiz -->
+          <div class="view" id="view-quiz" style="display:none;">
+            <div class="card">
+              <h3>Topic 4 Quiz</h3>
+              <p>Answer all questions then click <b>Mark Quiz</b>. Your answers save automatically.</p>
+            </div>
+
+            <div class="quizList" id="quizList"></div>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="markQuiz">Mark Quiz</button>
+              <button class="miniBtn" id="resetQuiz">Reset</button>
+            </div>
+
+            <div class="feedback" id="quizFeedback">Start answering the quiz questions.</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT: Score / Notes -->
+      <aside class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Progress</h2>
+            <small>Saved in your browser</small>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="card">
+            <h3>Total Score</h3>
+            <p style="font-size:28px;font-weight:900;margin:6px 0 0" id="score">0</p>
+            <p class="pill" id="badge" style="margin-top:8px;">Badge: Starter</p>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="card">
+            <h3>Notes</h3>
+            <textarea id="notes" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);border-radius:14px;padding:12px;outline:none;min-height:110px;"
+              placeholder="Write learner notes / teacher notes (saved)."></textarea>
+
+            <div class="controls">
+              <button class="miniBtn" id="clearNotes">Clear Notes</button>
+              <button class="miniBtn bad" id="resetAll">Reset All</button>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="card">
+            <h3>Key facts</h3>
+            <p>
+              • Breathing = physical air movement<br/>
+              • Respiration = chemical reactions in cells releasing energy<br/>
+              • Oxygen supports burning (glowing splint test)<br/>
+              • CO₂ turns limewater milky
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+  </div>
+
+  <script>
+    const KEY = "sciguru_topic4_respiratory_v1";
+    const state = load() || {
+      score: 0,
+      badge: "Starter",
+      notes: "",
+      tab: "concepts",
+      oxygen: { gas:"Air", tried:false },
+      co2: { source:"Air", level:15, milky:false },
+      quiz: {}
+    };
+
+    function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); } catch(e){ return null; } }
+    function save(){ localStorage.setItem(KEY, JSON.stringify(state)); renderScore(); }
+
+    // Tabs
+    const TABS = [
+      {id:"concepts", label:"1) Concepts"},
+      {id:"oxygen", label:"2) Oxygen Test"},
+      {id:"co2", label:"3) CO₂ Test"},
+      {id:"quiz", label:"4) Quiz"}
+    ];
+    let active = state.tab || "concepts";
+
+    const tabsEl = document.getElementById("tabs");
+    function renderTabs(){
+      tabsEl.innerHTML = "";
+      TABS.forEach(t=>{
+        const b = document.createElement("button");
+        b.className = "tab" + (t.id===active ? " active":"");
+        b.type = "button";
+        b.textContent = t.label;
+        b.onclick = ()=>{ active=t.id; state.tab=active; showView(); renderTabs(); save(); };
+        tabsEl.appendChild(b);
+      });
+    }
+
+    function showView(){
+      document.getElementById("view-concepts").style.display = active==="concepts" ? "" : "none";
+      document.getElementById("view-oxygen").style.display = active==="oxygen" ? "" : "none";
+      document.getElementById("view-co2").style.display = active==="co2" ? "" : "none";
+      document.getElementById("view-quiz").style.display = active==="quiz" ? "" : "none";
+    }
+
+    // Score / badge
+    function badgeFromScore(s){
+      if(s >= 85) return "Respiration Pro";
+      if(s >= 60) return "Lab Explorer";
+      if(s >= 35) return "Improving";
+      return "Starter";
+    }
+    function renderScore(){
+      document.getElementById("score").textContent = state.score || 0;
+      document.getElementById("badge").textContent = "Badge: " + badgeFromScore(state.score||0);
+      document.getElementById("notes").value = state.notes || "";
+    }
+
+    // Notes
+    const notesEl = document.getElementById("notes");
+    notesEl.oninput = ()=>{ state.notes = notesEl.value; save(); };
+    document.getElementById("clearNotes").onclick = ()=>{ state.notes=""; notesEl.value=""; save(); };
+    document.getElementById("resetAll").onclick = ()=>{ localStorage.removeItem(KEY); location.reload(); };
+
+    // ---------- Oxygen Test ----------
+    let jarGas = state.oxygen.gas || "Air";
+    const jarGasTag = document.getElementById("jarGasTag");
+    const splintTag = document.getElementById("splintTag");
+    const jarResult = document.getElementById("jarResult");
+    const oxygenFeedback = document.getElementById("oxygenFeedback");
+
+    function setGas(g){
+      jarGas = g;
+      state.oxygen.gas = g;
+      jarGasTag.textContent = "Gas: " + g;
+      jarResult.textContent = "Result: —";
+      splintTag.textContent = "Splint: Not inserted";
+      oxygenFeedback.textContent = "Select a gas, then insert the glowing splint.";
+      save();
+    }
+
+    document.getElementById("gasAir").onclick = ()=>setGas("Air");
+    document.getElementById("gasO2").onclick = ()=>setGas("Oxygen");
+    document.getElementById("gasCO2").onclick = ()=>setGas("Carbon Dioxide");
+
+    document.getElementById("insertSplint").onclick = ()=>{
+      state.oxygen.tried = true;
+      splintTag.textContent = "Splint: Inserted";
+
+      if(jarGas === "Oxygen"){
+        jarResult.textContent = "Result: Re-lights ✅";
+        oxygenFeedback.textContent = "✅ Oxygen supports burning. The glowing splint re-lights.";
+        addScore(15, "oxygenTest");
+      } else if(jarGas === "Carbon Dioxide"){
+        jarResult.textContent = "Result: Goes out ❌";
+        oxygenFeedback.textContent = "❌ Carbon dioxide does not support burning. The splint goes out.";
+        addScore(8, "oxygenTry");
+      } else {
+        jarResult.textContent = "Result: Weak / No change";
+        oxygenFeedback.textContent = "Air has oxygen but not concentrated; the splint may not re-light strongly.";
+        addScore(5, "oxygenAir");
+      }
+      save();
+    };
+
+    document.getElementById("resetO2").onclick = ()=>{
+      setGas("Air");
+    };
+
+    // ---------- CO2 Limewater Test ----------
+    let source = state.co2.source || "Air";
+    const tubeA = document.getElementById("tubeA");
+    const tubeB = document.getElementById("tubeB");
+    const bubblesA = document.getElementById("bubblesA");
+    const co2Fill = document.getElementById("co2Fill");
+    const co2Tag = document.getElementById("co2Tag");
+    const co2Feedback = document.getElementById("co2Feedback");
+
+    function setSource(s){
+      source = s;
+      state.co2.source = s;
+
+      if(s==="Air"){ state.co2.level = 15; }
+      if(s==="Exhaled Air"){ state.co2.level = 55; }
+      if(s==="CO₂"){ state.co2.level = 90; }
+
+      state.co2.milky = false;
+      tubeA.classList.remove("milky");
+      tubeB.classList.remove("milky");
+
+      co2Tag.textContent = "CO₂ level: " + (state.co2.level < 30 ? "Low" : state.co2.level < 75 ? "Medium" : "High");
+      co2Fill.style.width = state.co2.level + "%";
+      co2Feedback.textContent = "Now press Bubble Gas to test limewater.";
+      save();
+    }
+
+    document.getElementById("srcAir").onclick = ()=>setSource("Air");
+    document.getElementById("srcExhale").onclick = ()=>setSource("Exhaled Air");
+    document.getElementById("srcCO2").onclick = ()=>setSource("CO₂");
+
+    function spawnBubbles(container, count){
+      for(let i=0;i<count;i++){
+        const b = document.createElement("div");
+        b.className = "bubble";
+        b.style.left = (5 + Math.random()*90) + "%";
+        b.style.bottom = (5 + Math.random()*10) + "px";
+        b.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
+        b.style.width = (8 + Math.random()*8) + "px";
+        b.style.height = b.style.width;
+        container.appendChild(b);
+        setTimeout(()=>b.remove(), 2500);
+      }
+    }
+
+    document.getElementById("bubbleBtn").onclick = ()=>{
+      spawnBubbles(bubblesA, 18);
+
+      const level = state.co2.level || 15;
+      if(level >= 50){
+        tubeA.classList.add("milky");
+        state.co2.milky = true;
+        co2Feedback.textContent = "✅ Limewater turned milky — CO₂ is present.";
+        addScore(level >= 80 ? 20 : 15, "co2Milky");
+      } else {
+        tubeA.classList.remove("milky");
+        state.co2.milky = false;
+        co2Feedback.textContent = "No milky change yet — CO₂ level is low.";
+        addScore(5, "co2Low");
+      }
+      save();
+    };
+
+    document.getElementById("resetCO2").onclick = ()=>{
+      setSource("Air");
+      co2Feedback.textContent = "Reset complete. Choose a gas source and bubble again.";
+    };
+
+    // ---------- Quiz ----------
+    const QUIZ = [
+      {id:"q1", q:"Breathing is the ______ process of moving air in and out.", opts:["physical","chemical","magnetic"], correct:0, exp:"Breathing is a physical process."},
+      {id:"q2", q:"Respiration is the ______ reactions in living cells that release energy.", opts:["chemical","physical","electrical"], correct:0, exp:"Respiration is chemical reactions in cells."},
+      {id:"q3", q:"Which gas makes a glowing splint re-light?", opts:["Oxygen","Nitrogen","Carbon dioxide"], correct:0, exp:"Oxygen supports burning."},
+      {id:"q4", q:"Limewater turns milky when ______ is present.", opts:["CO₂","O₂","N₂"], correct:0, exp:"CO₂ turns limewater milky."},
+      {id:"q5", q:"Air is mainly made of ______.", opts:["Nitrogen","Oxygen","Carbon dioxide"], correct:0, exp:"Air is mainly nitrogen (~78%)."}
+    ];
+
+    const quizList = document.getElementById("quizList");
+    const quizFeedback = document.getElementById("quizFeedback");
+
+    function renderQuiz(){
+      quizList.innerHTML = "";
+      QUIZ.forEach((x,i)=>{
+        const val = state.quiz[x.id];
+        const row = document.createElement("div");
+        row.className = "qItem";
+        row.innerHTML = `
+          <div style="min-width:0">
+            <b>${i+1}. ${x.q}</b>
+            <small>Select one answer</small>
+          </div>
+          <div>
+            <select data-q="${x.id}">
+              <option value="" ${val==null ? "selected":""}>-- choose --</option>
+              ${x.opts.map((o,idx)=>`<option value="${idx}" ${String(val)===String(idx)?"selected":""}>${o}</option>`).join("")}
+            </select>
+          </div>
+        `;
+        quizList.appendChild(row);
+      });
+
+      quizList.querySelectorAll("select[data-q]").forEach(sel=>{
+        sel.onchange = ()=>{
+          const id = sel.getAttribute("data-q");
+          state.quiz[id] = sel.value==="" ? null : Number(sel.value);
+          save();
+        };
+      });
+    }
+
+    document.getElementById("markQuiz").onclick = ()=>{
+      let answered=0, correct=0;
+      QUIZ.forEach(x=>{
+        const a = state.quiz[x.id];
+        if(a==null) return;
+        answered++;
+        if(a===x.correct) correct++;
+      });
+
+      if(answered < QUIZ.length){
+        quizFeedback.textContent = `Answered ${answered}/${QUIZ.length}. Finish all questions then mark.`;
+        return;
+      }
+
+      const score = Math.round((correct/QUIZ.length)*30);
+      addScore(score, "quizScore");
+
+      let msg = `Quiz Results:\nCorrect: ${correct}/${QUIZ.length}\nQuiz Score Added: ${score}/30\n\n`;
+      QUIZ.forEach((x,idx)=>{
+        const ok = state.quiz[x.id] === x.correct;
+        msg += `${idx+1}) ${ok?"✅":"❌"} ${x.exp}\n`;
+      });
+      quizFeedback.textContent = msg;
+      save();
+    };
+
+    document.getElementById("resetQuiz").onclick = ()=>{
+      state.quiz = {};
+      quizFeedback.textContent = "Quiz reset. Answer again.";
+      renderQuiz();
+      save();
+    };
+
+    // ---------- Score helper (prevents double awarding) ----------
+    function addScore(points, key){
+      state._awards = state._awards || {};
+      if(state._awards[key]) return;
+      state._awards[key] = true;
+      state.score = (state.score||0) + points;
+    }
+
+    // INIT
+    function init(){
+      renderTabs();
+      showView();
+      renderScore();
+
+      // restore widgets
+      jarGasTag.textContent = "Gas: " + jarGas;
+      co2Fill.style.width = (state.co2.level||15) + "%";
+      co2Tag.textContent = "CO₂ level: " + ((state.co2.level||15) < 30 ? "Low" : (state.co2.level||15) < 75 ? "Medium" : "High");
+      renderQuiz();
+
+      // if saved CO2 result
+      if(state.co2.milky) tubeA.classList.add("milky");
+      save();
+    }
+    init();
+  </script>
+</body>
+</html>
