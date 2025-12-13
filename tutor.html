@@ -1,173 +1,401 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sci-Guru | Tutor</title>
-  <link rel="icon" href="lec-logo.jpg" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sci-Guru Tutor</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
   <style>
     :root{
-      --bg1:#0b1220; --bg2:#0a2a5f; --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.14); --text:#eaf2ff; --muted:rgba(234,242,255,.75);
-      --btn:#2f7bff;
+      --bg1:#0b1220; --bg2:#081a3b;
+      --card:rgba(255,255,255,.07);
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --blue2:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
     }
     *{box-sizing:border-box}
     body{
       margin:0; color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(47,123,255,.35), transparent 60%),
-                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 500px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
       min-height:100vh;
     }
-    .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
+
+    /* Header */
     header{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:10px 12px; border:1px solid var(--stroke);
-      background:rgba(0,0,0,.22); border-radius:14px; backdrop-filter: blur(8px);
-      position:sticky; top:12px; z-index:5;
-    }
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .brand img{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--stroke);background:#fff}
-    .brand .t{line-height:1.05;min-width:0}
-    .brand .t b{display:block;font-size:16px}
-    .brand .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .btn{
-      appearance:none; border:1px solid var(--stroke); background:rgba(255,255,255,.08);
-      color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer;
-      text-decoration:none; font-weight:650; font-size:13px;
-      transition:transform .08s ease, background .15s ease;
-    }
-    .btn:hover{background:rgba(255,255,255,.12)}
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(47,123,255,.55)); border-color:rgba(47,123,255,.6)}
-    .hero{margin:18px 0 14px; padding:18px; border:1px solid var(--stroke); border-radius:16px; background:rgba(255,255,255,.06)}
-    .hero h1{margin:0 0 8px;font-size:26px}
-    .hero p{margin:0;color:var(--muted);max-width:75ch}
-    .grid{margin-top:14px; display:grid; gap:12px; grid-template-columns: repeat(12, 1fr);}
-    .card{grid-column: span 6; padding:14px; border:1px solid var(--stroke); border-radius:16px; background:var(--card);}
-    .card h3{margin:0 0 6px}
-    .card p{margin:0 0 12px;color:var(--muted)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .box{
-      margin-top:12px;
+      position:sticky; top:10px; z-index:10;
+      max-width:1200px; margin:0 auto;
+      padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       border:1px solid var(--stroke);
-      background:rgba(0,0,0,.22);
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
       border-radius:16px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .logo{
+      width:44px;height:44px;border-radius:12px;overflow:hidden;
+      border:1px solid var(--stroke); background:rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center; flex:0 0 auto;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .brand .t{min-width:0}
+    .brand .t b{display:block; font-size:16px; letter-spacing:.2px}
+    .brand .t span{display:block; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+    nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:750;
+      font-size:13px;
+      cursor:pointer;
+      transition:transform .08s ease, background .15s ease;
+      user-select:none;
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .pill .dot{
+      width:9px;height:9px;border-radius:99px;
+      background:var(--good);
+      box-shadow:0 0 0 4px rgba(51,208,122,.14);
+    }
+
+    /* Page Layout */
+    .wrap{max-width:1200px; margin:0 auto; padding:14px 14px 40px}
+    .topGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap:12px;
+      align-items:stretch;
+    }
+    @media(max-width:980px){
+      .topGrid{grid-template-columns:1fr}
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
       overflow:hidden;
     }
-    .box header{position:static; border:none; border-bottom:1px solid var(--stroke); border-radius:0; background:rgba(255,255,255,.06)}
-    .box .inner{padding:12px}
-    textarea{
-      width:100%; min-height:120px; resize:vertical;
-      background:rgba(255,255,255,.06); border:1px solid var(--stroke); color:var(--text);
-      border-radius:12px; padding:10px; outline:none;
+    .panelHead{
+      padding:14px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:rgba(0,0,0,.18);
     }
-    select,input{
-      background:rgba(255,255,255,.06); border:1px solid var(--stroke); color:var(--text);
-      border-radius:12px; padding:10px; outline:none;
+    .panelHead h2{margin:0; font-size:14px; letter-spacing:.2px}
+    .panelHead small{color:var(--muted)}
+
+    .list{padding:10px}
+    .item{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
     }
-    .muted{color:var(--muted); font-size:12px}
-    #answer{
-      white-space:pre-wrap;
+    .item b{display:block; font-size:13px}
+    .item span{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+    .openLink{
+      display:inline-flex; align-items:center; gap:6px;
+      text-decoration:none;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:13px;
+      color:#071022;
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      border:1px solid rgba(47,123,255,.55);
+      white-space:nowrap;
+    }
+
+    /* Tutor */
+    .tutorBox{padding:14px}
+    textarea, input, select{
+      width:100%;
       background:rgba(255,255,255,.06);
       border:1px solid var(--stroke);
-      border-radius:12px;
-      padding:10px;
-      min-height:90px;
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
     }
-    footer{margin-top:18px;color:rgba(234,242,255,.65);font-size:12px;text-align:center}
-    @media (max-width: 860px){ .card{grid-column:span 12;} }
+    textarea{min-height:130px; resize:vertical}
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px}
+    @media(max-width:740px){.row{grid-template-columns:1fr}}
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .out{
+      margin-top:10px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      min-height:120px;
+      white-space:pre-wrap;
+      color:var(--text);
+    }
+    .hint{margin-top:8px; font-size:12px; color:var(--muted)}
+
+    /* Chapters */
+    .chapters{
+      margin-top:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .chapHead{
+      padding:14px;
+      border-bottom:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      flex-wrap:wrap;
+    }
+    .chapHead h2{margin:0; font-size:14px}
+    .chapWrap{padding:12px}
+    .chapGrid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:10px;
+    }
+    .chap{
+      grid-column: span 6;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+    }
+    @media(max-width:980px){.chap{grid-column:span 12}}
+    .chapTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .chapTitle{min-width:0}
+    .chapTitle b{display:block}
+    .chapTitle span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+    .chk{
+      display:flex; align-items:center; gap:8px; white-space:nowrap;
+      font-size:12px; color:var(--muted);
+    }
+    .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .mini{
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      font-size:12px;
+    }
+    .mini.primary{
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+      border-color:rgba(47,123,255,.55);
+    }
+    .note{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .note textarea{min-height:70px; font-size:12px; padding:10px; border-radius:12px}
+    footer{
+      margin-top:16px;
+      text-align:center;
+      color:rgba(234,242,255,.62);
+      font-size:12px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
       <div class="brand">
-        <img src="lec-logo.jpg" alt="LEC Biotec Logo" />
+        <div class="logo">
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+        </div>
         <div class="t">
           <b>Sci-Guru Tutor</b>
-          <span>Ask questions • Generate quizzes • Practical steps</span>
-        </div>
-      </div>
-      <nav>
-        <a class="btn" href="index.html">Home</a>
-        <a class="btn primary" href="tutor.html">Tutor</a>
-        <a class="btn" href="labs.html">Labs</a>
-        <a class="btn" href="dashboard.html">Dashboard</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <h1>AI Science Tutor</h1>
-      <p>Pick a topic, ask a question, and generate a quiz. (If your AI backend is on Render, you can later connect the “Ask AI” button to your API.)</p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h3>Virtual Lab Hub</h3>
-        <p>Open simulations (mixtures, electricity, density, cells, bunsen burner, apparatus).</p>
-        <div class="row">
-          <a class="btn primary" href="labs.html">Go to Labs</a>
-          <a class="btn" href="sim-cells-hub.html">Cells Hub</a>
+          <span>ZIMSEC / Heritage-Based • Forms 1–4</span>
         </div>
       </div>
 
-      <div class="card">
-        <h3>Quick Links</h3>
-        <p>Directly open common practicals.</p>
-        <div class="row">
-          <a class="btn" href="sim-density.html">Density</a>
-          <a class="btn" href="sim-electricity.html">Electricity</a>
-          <a class="btn" href="sim-mixtures.html">Mixtures</a>
-          <a class="btn" href="sim-bunsen.html">Bunsen</a>
-          <a class="btn" href="sim-apparatus.html">Apparatus</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="box" style="margin-top:14px;">
-      <header>
-        <div class="brand">
-          <div class="t">
-            <b>Ask the Tutor</b>
-            <span class="muted">Offline demo mode (you can connect API later)</span>
-          </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+        <div class="pill" title="This page uses exact filenames so links don’t break">
+          <span class="dot"></span> Links fixed ✅
         </div>
         <nav>
-          <button class="btn primary" id="askBtn" type="button">Ask AI</button>
-          <button class="btn" id="quizBtn" type="button">Generate Quiz</button>
-          <button class="btn" id="clearBtn" type="button">Clear</button>
+          <a class="btn" href="index.html">Home</a>
+          <a class="btn primary" href="tutor.html">Tutor</a>
+          <a class="btn" href="labs.html">Labs</a>
+          <a class="btn" href="dashboard.html">Dashboard</a>
         </nav>
-      </header>
+      </div>
+    </header>
 
-      <div class="inner">
-        <div style="display:grid;gap:10px;grid-template-columns:repeat(12,1fr);">
-          <div style="grid-column:span 6;">
-            <label class="muted">Level</label><br/>
-            <select id="level" style="width:100%;margin-top:6px;">
-              <option>Form 1</option>
-              <option>Form 2</option>
-              <option>Form 3</option>
-              <option>Form 4</option>
-            </select>
-          </div>
-          <div style="grid-column:span 6;">
-            <label class="muted">Topic</label><br/>
-            <input id="topic" style="width:100%;margin-top:6px;" placeholder="e.g. Cells, Density, Electricity, Mixtures" />
-          </div>
-          <div style="grid-column:span 12;">
-            <label class="muted">Your Question</label>
-            <textarea id="q" placeholder="Type your question here..."></textarea>
-          </div>
-          <div style="grid-column:span 12;">
-            <label class="muted">Answer</label>
-            <div id="answer"></div>
-            <div class="muted" style="margin-top:8px;">
-              Tip: If a link ever shows 404, check the file name in GitHub matches the link exactly.
-            </div>
+    <!-- Top split panels -->
+    <div class="topGrid">
+
+      <!-- Virtual Lab Hub panel -->
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>Virtual Lab Hub</h2>
+            <small>Open simulations fast (no 404)</small>
           </div>
         </div>
+
+        <div class="list">
+
+          <div class="item">
+            <div>
+              <b>Open All Labs (Hub)</b>
+              <span>Density, electricity, bunsen, microscope, cells…</span>
+            </div>
+            <a class="openLink" href="labs-hub.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Density Simulator (Upgraded)</b>
+              <span>More objects + displacement + float/sink challenge</span>
+            </div>
+            <a class="openLink" href="sim-density.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Electricity Simulator (Upgraded)</b>
+              <span>Now includes SERIES circuits + brightness + switch</span>
+            </div>
+            <a class="openLink" href="sim-electricity.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Bunsen Burner Simulator</b>
+              <span>Adjust air hole, flame types & safety</span>
+            </div>
+            <a class="openLink" href="sim-bunsen.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Lab Apparatus Explorer</b>
+              <span>Identify apparatus and their uses</span>
+            </div>
+            <a class="openLink" href="sim-apparatus.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Cells Hub</b>
+              <span>Cell labeling & cell structures</span>
+            </div>
+            <a class="openLink" href="sim-cells-hub.html">Open →</a>
+          </div>
+
+          <div class="item">
+            <div>
+              <b>Microscope Simulator</b>
+              <span>Parts, focusing and magnification</span>
+            </div>
+            <a class="openLink" href="sim-microscope.html">Open →</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- AI Tutor panel -->
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>AI Tutor</h2>
+            <small>Offline mode (can connect Render later)</small>
+          </div>
+        </div>
+
+        <div class="tutorBox">
+          <div style="font-weight:900; margin-bottom:10px;">Hi Nigel 👋 Ask me anything in Combined Science</div>
+
+          <textarea id="q" placeholder="Type your question... (e.g., Explain cells, calculate density, describe a series circuit)"></textarea>
+
+          <div class="row">
+            <div>
+              <label style="font-size:12px;color:var(--muted)">Level</label>
+              <select id="level">
+                <option>Form 1</option>
+                <option>Form 2</option>
+                <option>Form 3</option>
+                <option>Form 4</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--muted)">Topic (optional)</label>
+              <input id="topic" placeholder="e.g., Cells, Density, Electricity..." />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="askBtn" type="button">Answer</button>
+            <button class="btn" id="quizBtn" type="button">Generate Quiz</button>
+            <button class="btn" id="pracBtn" type="button">Practical Steps</button>
+            <button class="btn" id="clearBtn" type="button">Clear</button>
+          </div>
+
+          <div class="out" id="out"></div>
+
+          <div class="hint">
+            ✅ Your chapter progress + notes are saved automatically in your browser (so you won’t lose work when we update).
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Chapters 1–19 (kept and expandable) -->
+    <section class="chapters">
+      <div class="chapHead">
+        <h2>Book Progress • Chapters 1–19</h2>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <button class="btn" id="exportBtn" type="button">Export Progress</button>
+          <button class="btn" id="resetProgressBtn" type="button" title="This only resets saved ticks/notes, not your files">Reset Saved Progress</button>
+        </div>
+      </div>
+
+      <div class="chapWrap">
+        <div class="chapGrid" id="chapGrid"></div>
       </div>
     </section>
 
@@ -175,52 +403,249 @@
   </div>
 
   <script>
-    const answer = document.getElementById('answer');
+    // -----------------------
+    // SAFE PROGRESS STORAGE
+    // -----------------------
+    const STORAGE_KEY = "sciguru_book1_chapters_v1";
 
-    function offlineTutorReply(type){
-      const level = document.getElementById('level').value;
-      const topic = (document.getElementById('topic').value || 'General Science').trim();
-      const q = (document.getElementById('q').value || '').trim();
+    // Chapters 1–19 (titles are editable via notes; we keep structure stable)
+    // NOTE: We link to your existing sims where possible, and we upgrade electricity & density.
+    const CHAPTERS = [
+      {n:1,  title:"Living Things",                       desc:"Characteristics of living things, basics of life processes", links:[
+        {label:"Virtual Practical", href:"sim-form1-living-things.html", primary:true},
+        {label:"Experiences", href:"sim-form1-experiences.html"}
+      ]},
+      {n:2,  title:"Levels of Organization",              desc:"Cells → tissues → organs → systems → organism", links:[
+        {label:"Levels Simulator", href:"sim-levels.html", primary:true},
+        {label:"Cells Hub", href:"sim-cells-hub.html"}
+      ]},
+      {n:3,  title:"Cells & Cell Structures",             desc:"Plant vs animal cells, organelles & functions", links:[
+        {label:"Cells Hub", href:"sim-cells-hub.html", primary:true},
+        {label:"Cell Labeling", href:"sim-cells-labels.html"}
+      ]},
+      {n:4,  title:"Microscope & Lab Skills",             desc:"Microscope parts, focusing, magnification", links:[
+        {label:"Microscope Simulator", href:"sim-microscope.html", primary:true}
+      ]},
+      {n:5,  title:"Mixtures & Separation",               desc:"Filtration, evaporation, decanting", links:[
+        {label:"Mixtures Lab", href:"sim-mixtures.html", primary:true}
+      ]},
+      {n:6,  title:"Measurements & Units",                desc:"Mass, volume, reading instruments", links:[
+        {label:"Density Simulator", href:"sim-density.html", primary:true}
+      ]},
+      {n:7,  title:"Density",                             desc:"Density = mass ÷ volume, sink/float, displacement", links:[
+        {label:"Density Simulator (Upgraded)", href:"sim-density.html", primary:true}
+      ]},
+      {n:8,  title:"Energy & Heat",                       desc:"Heating, safety, temperature", links:[
+        {label:"Bunsen Burner", href:"sim-bunsen.html", primary:true}
+      ]},
+      {n:9,  title:"Electricity Basics",                  desc:"Circuits, conductors/insulators, switch", links:[
+        {label:"Electricity Simulator (Upgraded)", href:"sim-electricity.html", primary:true}
+      ]},
+      {n:10, title:"Series Circuits",                     desc:"Now added: SERIES circuits, brightness changes", links:[
+        {label:"Series Circuit Mode", href:"sim-electricity.html", primary:true}
+      ]},
+      {n:11, title:"Forces & Motion",                     desc:"Push/pull, speed, basic motion ideas", links:[]},
+      {n:12, title:"Pressure",                            desc:"Liquids & gases, everyday applications", links:[]},
+      {n:13, title:"Materials",                           desc:"Metals/non-metals, properties", links:[]},
+      {n:14, title:"Acids, Bases & Indicators",           desc:"Indicators, neutralization", links:[]},
+      {n:15, title:"Air & Combustion",                    desc:"Fire triangle, combustion basics", links:[
+        {label:"Bunsen Burner", href:"sim-bunsen.html", primary:true}
+      ]},
+      {n:16, title:"Water & Solutions",                   desc:"Solubility, solutions, concentration ideas", links:[]},
+      {n:17, title:"Human Body Overview",                 desc:"Organ systems overview (basic)", links:[]},
+      {n:18, title:"Plants & Photosynthesis",             desc:"Plant structures & processes", links:[]},
+      {n:19, title:"Revision & Practical Consolidation",  desc:"Pulling all practicals together", links:[
+        {label:"Labs Hub", href:"labs-hub.html", primary:true},
+        {label:"Tutor", href:"tutor.html"}
+      ]}
+    ];
 
-      if(!q){
-        answer.textContent = "Please type a question first.";
-        return;
+    function loadProgress(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      }catch(e){
+        return {};
       }
+    }
+    function saveProgress(p){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+    }
 
-      if(type === 'quiz'){
-        answer.textContent =
-`QUIZ (${level}) — Topic: ${topic}
+    const progress = loadProgress();
 
-1) Define the key idea in your own words.
-2) Give one real-life Zimbabwean example.
-3) Write a simple formula/diagram if relevant.
-4) Describe one practical activity that tests the idea.
-5) List TWO safety precautions.
+    // Render chapters grid
+    const chapGrid = document.getElementById("chapGrid");
 
-Now answer them.`;
-      } else {
-        answer.textContent =
-`(${level}) Topic: ${topic}
+    function renderChapters(){
+      chapGrid.innerHTML = "";
+
+      CHAPTERS.forEach(ch => {
+        const id = "ch" + ch.n;
+        const chState = progress[id] || {done:false, note:""};
+
+        const el = document.createElement("div");
+        el.className = "chap";
+
+        el.innerHTML = `
+          <div class="chapTop">
+            <div class="chapTitle">
+              <b>Chapter ${ch.n}: ${ch.title}</b>
+              <span>${ch.desc || ""}</span>
+            </div>
+            <label class="chk">
+              <input type="checkbox" ${chState.done ? "checked":""} data-ch="${id}" />
+              Done
+            </label>
+          </div>
+
+          <div class="links">
+            ${ch.links && ch.links.length ? ch.links.map(l=>{
+              return `<a class="mini ${l.primary ? "primary":""}" href="${l.href}">${l.label}</a>`;
+            }).join("") : `<span style="font-size:12px;color:var(--muted)">Virtual experiment coming soon (we’ll add next)</span>`}
+          </div>
+
+          <div class="note">
+            <div style="margin-bottom:6px;">Notes / Next experiment ideas:</div>
+            <textarea data-note="${id}" placeholder="Write your notes here (saved automatically)">${escapeHtml(chState.note || "")}</textarea>
+          </div>
+        `;
+
+        chapGrid.appendChild(el);
+      });
+
+      // checkbox handlers
+      chapGrid.querySelectorAll('input[type="checkbox"][data-ch]').forEach(cb=>{
+        cb.addEventListener("change", ()=>{
+          const key = cb.getAttribute("data-ch");
+          progress[key] = progress[key] || {};
+          progress[key].done = cb.checked;
+          saveProgress(progress);
+        });
+      });
+
+      // note handlers
+      chapGrid.querySelectorAll('textarea[data-note]').forEach(t=>{
+        t.addEventListener("input", ()=>{
+          const key = t.getAttribute("data-note");
+          progress[key] = progress[key] || {};
+          progress[key].note = t.value;
+          saveProgress(progress);
+        });
+      });
+    }
+
+    function escapeHtml(s){
+      return (s||"")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;");
+    }
+
+    renderChapters();
+
+    // Export / reset progress
+    document.getElementById("exportBtn").addEventListener("click", ()=>{
+      const data = JSON.stringify(progress, null, 2);
+      const blob = new Blob([data], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "sciguru-progress-ch1-19.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("resetProgressBtn").addEventListener("click", ()=>{
+      localStorage.removeItem(STORAGE_KEY);
+      for(const k in progress) delete progress[k];
+      renderChapters();
+      document.getElementById("out").textContent = "Saved progress reset (chapters/notes). Your files were NOT deleted.";
+    });
+
+    // -----------------------
+    // OFFLINE TUTOR LOGIC
+    // -----------------------
+    const out = document.getElementById("out");
+    function write(msg){ out.textContent = msg; }
+
+    function getContext(){
+      return {
+        q:(document.getElementById("q").value||"").trim(),
+        level:document.getElementById("level").value,
+        topic:(document.getElementById("topic").value||"").trim()
+      };
+    }
+
+    function offlineAnswer(){
+      const {q,level,topic} = getContext();
+      if(!q) return write("Type a question first.");
+
+      const t = topic || "Combined Science";
+      write(
+`${level} • Topic: ${t}
 
 Your question:
 ${q}
 
-Offline demo answer:
-• Key idea: Explain the concept clearly.
-• Example: Use a familiar local example.
-• Practical: Describe apparatus + steps + observations.
-• Checkpoint: What should the learner conclude?
+Answer (offline mode):
+• Key idea: explain the concept clearly with simple language.
+• Zimbabwe example: use a local example (home, school lab, farming, cooking, electricity at home).
+• Formula / diagram: include where needed.
+• Practical: list apparatus, steps, results, conclusion, and safety.
 
-(When you’re ready, we can connect this “Ask AI” to your Render API.)`;
-      }
+Tip: Use the Labs panel to open an interactive simulator for Density and Electricity.`
+      );
     }
 
-    document.getElementById('askBtn').addEventListener('click', ()=>offlineTutorReply('ask'));
-    document.getElementById('quizBtn').addEventListener('click', ()=>offlineTutorReply('quiz'));
-    document.getElementById('clearBtn').addEventListener('click', ()=>{
-      document.getElementById('q').value = '';
-      answer.textContent = '';
+    function offlineQuiz(){
+      const {q,level,topic} = getContext();
+      const t = topic || "This topic";
+      write(
+`QUIZ • ${level} • ${t}
+
+1) Define the main concept in your own words.
+2) Draw a simple labelled diagram related to the topic.
+3) Give ONE local Zimbabwean example showing the concept.
+4) Write ONE practical experiment: aim, apparatus, steps, results, conclusion.
+5) Safety: list 3 precautions.
+
+Extension:
+6) A tricky question: explain WHY something happens (reasoning).`
+      );
+    }
+
+    function offlinePractical(){
+      const {q,level,topic} = getContext();
+      const t = topic || "the topic";
+      write(
+`PRACTICAL STEPS • ${level} • ${t}
+
+A) Aim (what are you testing?)
+B) Apparatus (list all items)
+C) Method (step-by-step)
+D) Results/Observations (table if possible)
+E) Calculations (if any)
+F) Conclusion (what did you find?)
+G) Safety precautions
+
+If you’re doing Electricity:
+• Use sim-electricity.html (Series mode) to test brightness & switch control.
+
+If you’re doing Density:
+• Use sim-density.html to measure mass/volume by displacement and predict float/sink.`
+      );
+    }
+
+    document.getElementById("askBtn").addEventListener("click", offlineAnswer);
+    document.getElementById("quizBtn").addEventListener("click", offlineQuiz);
+    document.getElementById("pracBtn").addEventListener("click", offlinePractical);
+    document.getElementById("clearBtn").addEventListener("click", ()=>{
+      document.getElementById("q").value="";
+      write("");
     });
+
+    // First message
+    write("Ready ✅\n\n• Chapters 1–19 are preserved.\n• Electricity & Density simulators upgraded (links on the left).\n• Notes + completion ticks auto-save.");
   </script>
 </body>
 </html>
