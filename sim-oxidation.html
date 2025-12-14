@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 12: Oxidation (Rusting)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:760px){.two{grid-template-columns:1fr}}
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+    .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+    select,input[type="range"]{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    input[type="range"]{padding:0;height:40px}
+
+    .tubeArea{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:18px;
+      padding:12px;
+      min-height:240px;
+    }
+    .tubeRow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+    .tubeWrap{width:170px;flex:0 0 auto;text-align:center}
+    .tube{
+      width:150px;height:180px;border-radius:18px 18px 26px 26px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.04);
+      position:relative;overflow:hidden;margin:0 auto;
+    }
+    .water{
+      position:absolute;left:0;right:0;bottom:0;height:58%;
+      background:rgba(47,123,255,.18);
+      border-top:1px solid rgba(255,255,255,.14);
+      transition:height .2s ease, opacity .2s ease;
+      opacity:0;
+    }
+    .air{
+      position:absolute;left:0;right:0;top:0;bottom:0;
+      background:linear-gradient(to bottom, rgba(255,255,255,.03), rgba(0,0,0,.18));
+      opacity:1;
+    }
+    .nail{
+      position:absolute;left:58px;top:25px;width:34px;height:120px;
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(230,240,255,.65), rgba(170,190,220,.25));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:inset 0 0 0 2px rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+    .rust{
+      position:absolute;left:0;right:0;bottom:0;height:0%;
+      background:linear-gradient(180deg, rgba(160,70,25,.10), rgba(160,70,25,.85));
+      transition:height .25s ease;
+    }
+    .label{margin-top:8px;font-size:12px;color:var(--muted);font-weight:900}
+    .feedback{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:95px;white-space:pre-wrap
+    }
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 12 • Oxidation (Rusting) — Virtual Lab</b>
+        <span>Rusting needs iron + oxygen + water • Prevention methods</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-oxidation.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Investigate Conditions Needed for Rusting</h1>
+      <p>Set up 3 test tubes like a real lab. Slide time forward (days) and observe which nail rusts most. Then apply prevention methods.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Experiment Station</h2><small>Choose conditions and observe rust</small></div>
+      </div>
+      <div class="panelBody">
+
+        <div class="two">
+          <div class="card">
+            <h3>Step 1: Choose tube conditions</h3>
+            <p>Rusting is fastest when <b>oxygen + water</b> are both present. Salt water speeds rusting.</p>
+
+            <div class="kpis">
+              <span class="tag">Time: <b id="dayLabel">3</b> days</span>
+              <span class="tag">Score: <b id="score">0</b></span>
+              <span class="tag">Badge: <b id="badge">Starter</b></span>
+            </div>
+
+            <label class="tag" style="margin-top:10px;display:inline-flex">Days forward</label>
+            <input id="days" type="range" min="0" max="14" value="3"/>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="runBtn">Run Observation</button>
+              <button class="miniBtn" id="checkBtn">Check Understanding</button>
+              <button class="miniBtn bad" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="feedback" id="feedback">Pick a condition for each tube, move days forward, then press Run Observation.</div>
+          </div>
+
+          <div class="card">
+            <h3>Step 2: Prevention methods</h3>
+            <p>Choose a protection method for Tube 1 nail, then observe how rust changes.</p>
+
+            <select id="protect">
+              <option value="none">No protection</option>
+              <option value="paint">Painting</option>
+              <option value="oil">Oil/Grease coating</option>
+              <option value="galv">Galvanising (zinc coat)</option>
+              <option value="plate">Electroplating (chrome/silver coat)</option>
+            </select>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="applyProtect">Apply</button>
+            </div>
+
+            <div class="feedback" id="protectFeedback">Protection works by stopping iron from contacting air (oxygen) and water.</div>
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Visual: 3 Test Tubes</h3>
+          <div class="tubeArea">
+            <div class="tubeRow">
+
+              <div class="tubeWrap">
+                <div class="tube">
+                  <div class="air"></div>
+                  <div class="water" id="w1"></div>
+                  <div class="nail"><div class="rust" id="r1"></div></div>
+                </div>
+                <div class="label">Tube 1</div>
+                <select id="c1">
+                  <option value="air+water">Air + Water (tap water)</option>
+                  <option value="air_only">Air only (dry)</option>
+                  <option value="water_no_air">Boiled water + oil layer (no oxygen)</option>
+                  <option value="saltwater">Air + Salt water (faster rust)</option>
+                </select>
+                <div class="kpis"><span class="tag">Rust: <b id="t1Rust">—</b></span></div>
+              </div>
+
+              <div class="tubeWrap">
+                <div class="tube">
+                  <div class="air"></div>
+                  <div class="water" id="w2"></div>
+                  <div class="nail"><div class="rust" id="r2"></div></div>
+                </div>
+                <div class="label">Tube 2</div>
+                <select id="c2">
+                  <option value="air_only">Air only (dry)</option>
+                  <option value="air+water">Air + Water (tap water)</option>
+                  <option value="water_no_air">Boiled water + oil layer (no oxygen)</option>
+                  <option value="saltwater">Air + Salt water (faster rust)</option>
+                </select>
+                <div class="kpis"><span class="tag">Rust: <b id="t2Rust">—</b></span></div>
+              </div>
+
+              <div class="tubeWrap">
+                <div class="tube">
+                  <div class="air"></div>
+                  <div class="water" id="w3"></div>
+                  <div class="nail"><div class="rust" id="r3"></div></div>
+                </div>
+                <div class="label">Tube 3</div>
+                <select id="c3">
+                  <option value="water_no_air">Boiled water + oil layer (no oxygen)</option>
+                  <option value="air+water">Air + Water (tap water)</option>
+                  <option value="air_only">Air only (dry)</option>
+                  <option value="saltwater">Air + Salt water (faster rust)</option>
+                </select>
+                <div class="kpis"><span class="tag">Rust: <b id="t3Rust">—</b></span></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Key Notes</h2><small>Remember</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <p>
+            <b>Oxidation</b> = adding oxygen to a substance.<br/><br/>
+            <b>Rusting</b> happens when iron reacts with <b>oxygen + water</b> to form iron oxide (rust).<br/><br/>
+            Rusting is reduced if you remove oxygen or remove water, or coat the metal to block contact.
+          </p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Prevention</h3>
+          <p>
+            • Painting<br/>
+            • Oil/grease coating<br/>
+            • Galvanising (zinc coat)<br/>
+            • Electroplating (chrome/silver coat)
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY="sciguru_topic12_oxidation_v1";
+  const S = load() || {
+    score:0, awards:{},
+    days:3,
+    c1:"air+water", c2:"air_only", c3:"water_no_air",
+    protect:"none"
+  };
+
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null} }
+  function save(){ localStorage.setItem(KEY, JSON.stringify(S)); renderScore(); }
+
+  function award(pts,id){
+    S.awards=S.awards||{};
+    if(S.awards[id]) return;
+    S.awards[id]=true;
+    S.score += pts;
+  }
+  function badgeFromScore(s){
+    if(s>=60) return "Rusting Expert";
+    if(s>=30) return "Oxidation Learner";
+    if(s>=10) return "Getting It";
+    return "Starter";
+  }
+  function renderScore(){
+    document.getElementById("score").textContent = S.score||0;
+    document.getElementById("badge").textContent = badgeFromScore(S.score||0);
+  }
+
+  const daysEl=document.getElementById("days");
+  const dayLabel=document.getElementById("dayLabel");
+  const c1=document.getElementById("c1");
+  const c2=document.getElementById("c2");
+  const c3=document.getElementById("c3");
+  const protect=document.getElementById("protect");
+
+  const w1=document.getElementById("w1"), w2=document.getElementById("w2"), w3=document.getElementById("w3");
+  const r1=document.getElementById("r1"), r2=document.getElementById("r2"), r3=document.getElementById("r3");
+  const t1Rust=document.getElementById("t1Rust"), t2Rust=document.getElementById("t2Rust"), t3Rust=document.getElementById("t3Rust");
+
+  const feedback=document.getElementById("feedback");
+  const protectFeedback=document.getElementById("protectFeedback");
+
+  function rustRate(cond){
+    // base rust per day (%)
+    if(cond==="saltwater") return 7.5;
+    if(cond==="air+water") return 5.0;
+    if(cond==="air_only") return 0.2;
+    if(cond==="water_no_air") return 0.2;
+    return 1.0;
+  }
+
+  function hasWater(cond){ return (cond==="air+water" || cond==="saltwater" || cond==="water_no_air"); }
+  function showWater(el, cond){
+    el.style.opacity = hasWater(cond) ? 1 : 0;
+    el.style.height = (cond==="water_no_air") ? "62%" : "58%";
+  }
+
+  function protectionFactor(p){
+    // reduces rust if oxygen/water contact is blocked
+    if(p==="paint") return 0.25;
+    if(p==="oil") return 0.35;
+    if(p==="galv") return 0.18;
+    if(p==="plate") return 0.22;
+    return 1.0;
+  }
+
+  function computeRust(cond, days, isTube1){
+    let rate = rustRate(cond);
+    // if tube 1 protected, reduce rate strongly
+    if(isTube1){
+      rate = rate * protectionFactor(S.protect);
+    }
+    // rust only meaningful when both oxygen + water exist; else tiny.
+    // (we already made those tiny with 0.2/day)
+    const rust = Math.min(100, Math.max(0, Math.round(rate * days)));
+    return rust;
+  }
+
+  function render(){
+    dayLabel.textContent = S.days;
+
+    c1.value=S.c1; c2.value=S.c2; c3.value=S.c3;
+    protect.value=S.protect;
+
+    showWater(w1,S.c1); showWater(w2,S.c2); showWater(w3,S.c3);
+
+    // rust levels
+    const a = computeRust(S.c1,S.days,true);
+    const b = computeRust(S.c2,S.days,false);
+    const c = computeRust(S.c3,S.days,false);
+
+    r1.style.height = a + "%";
+    r2.style.height = b + "%";
+    r3.style.height = c + "%";
+
+    t1Rust.textContent = a + "%";
+    t2Rust.textContent = b + "%";
+    t3Rust.textContent = c + "%";
+
+    renderScore();
+  }
+
+  function runObservation(){
+    render();
+
+    // give learning feedback
+    const sorted = [
+      {tube:"Tube 1", rust: Number(t1Rust.textContent.replace("%",""))},
+      {tube:"Tube 2", rust: Number(t2Rust.textContent.replace("%",""))},
+      {tube:"Tube 3", rust: Number(t3Rust.textContent.replace("%",""))}
+    ].sort((x,y)=>y.rust-x.rust);
+
+    award(10,"ran_obs");
+    feedback.textContent =
+      `Observation after ${S.days} days:\n` +
+      `Most rust: ${sorted[0].tube} (${sorted[0].rust}%)\n` +
+      `Least rust: ${sorted[2].tube} (${sorted[2].rust}%)\n\n` +
+      `Remember: Rusting needs iron + oxygen + water.\nSalt water speeds rusting.\n(+10 points once)`;
+
+    save();
+  }
+
+  function checkUnderstanding(){
+    // Expect a "classic" correct setup: one tube air+water, one air only, one water_no_air.
+    const set = new Set([S.c1,S.c2,S.c3]);
+
+    const hasBoth = set.has("air+water") || set.has("saltwater");
+    const hasDry  = set.has("air_only");
+    const hasNoO2 = set.has("water_no_air");
+
+    if(hasBoth && hasDry && hasNoO2){
+      award(20,"setup_correct");
+      feedback.textContent =
+        "✅ Great setup! You included:\n" +
+        "• Air + water (rust)\n" +
+        "• Air only (no water)\n" +
+        "• Water but no oxygen (boiled water + oil)\n\n" +
+        "This shows rusting needs both oxygen and water.\n(+20 points once)";
+    }else{
+      award(5,"setup_try");
+      feedback.textContent =
+        "Almost. To prove rusting conditions, try to include these 3 different tubes:\n" +
+        "1) Air + Water\n" +
+        "2) Air only (dry)\n" +
+        "3) Boiled water + oil layer (no oxygen)\n\n(+5 points once)";
+    }
+    save();
+  }
+
+  function applyProtect(){
+    render();
+    let msg="Protection applied.\n";
+    if(S.protect==="none") msg += "No coating: rust can happen if oxygen + water reach the iron.";
+    if(S.protect==="paint") msg += "Painting blocks air and water from touching the iron.";
+    if(S.protect==="oil") msg += "Oil/grease forms a barrier that keeps out water and oxygen.";
+    if(S.protect==="galv") msg += "Galvanising coats iron with zinc to prevent rusting.";
+    if(S.protect==="plate") msg += "Electroplating coats iron with a non-corroding metal (e.g., chrome).";
+
+    award(10,"used_protection_"+S.protect);
+    protectFeedback.textContent = msg + "\n(+points once per option)";
+    save();
+  }
+
+  // events
+  daysEl.oninput = ()=>{
+    S.days = Number(daysEl.value);
+    dayLabel.textContent = S.days;
+    save();
+  };
+  c1.onchange=()=>{S.c1=c1.value; save();};
+  c2.onchange=()=>{S.c2=c2.value; save();};
+  c3.onchange=()=>{S.c3=c3.value; save();};
+  protect.onchange=()=>{S.protect=protect.value; save();};
+
+  document.getElementById("runBtn").onclick=runObservation;
+  document.getElementById("checkBtn").onclick=checkUnderstanding;
+  document.getElementById("applyProtect").onclick=applyProtect;
+
+  document.getElementById("resetBtn").onclick=()=>{
+    if(!confirm("Reset Topic 12 experiment progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  };
+
+  // init
+  daysEl.value = S.days ?? 3;
+  c1.value=S.c1 || "air+water";
+  c2.value=S.c2 || "air_only";
+  c3.value=S.c3 || "water_no_air";
+  protect.value=S.protect || "none";
+  render();
+  save();
+</script>
+</body>
+</html>

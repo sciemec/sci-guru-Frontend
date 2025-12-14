@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 10: Acids, Bases & Salts</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:740px){.two{grid-template-columns:1fr}}
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    select,input[type="range"],input[type="number"]{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    input[type="range"]{padding:0;height:40px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+
+    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+
+    .tubeArea{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:18px;
+      padding:12px;
+      min-height:220px;
+    }
+    .tubeRow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+    .tube{
+      width:120px;
+      height:170px;
+      border-radius:18px 18px 26px 26px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.04);
+      position:relative;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .liquid{
+      position:absolute;left:0;right:0;bottom:0;
+      height:62%;
+      background:rgba(47,123,255,.25);
+      border-top:1px solid rgba(255,255,255,.14);
+      transition:background .25s ease, height .2s ease;
+    }
+    .label{
+      margin-top:8px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+    .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .feedback{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:90px;white-space:pre-wrap
+    }
+    .barWrap{margin-top:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;height:14px}
+    .bar{height:100%;width:0%;background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55))}
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 10 • Acids, Bases & Salts (Virtual Lab)</b>
+        <span>Indicators • pH scale • Neutralisation → salt + water</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-acids-bases.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Test Unknown Solutions Like a Real Lab</h1>
+      <p>Choose an unknown solution, add an indicator (litmus / universal indicator), read pH, then mix acid and base to form salt + water.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Experiment Station</h2><small>Follow steps below</small></div>
+      </div>
+      <div class="panelBody">
+
+        <div class="two">
+          <div class="card">
+            <h3>Step 1: Choose unknown solution</h3>
+            <select id="unknownSel">
+              <option value="hcl">Hydrochloric acid (acid)</option>
+              <option value="vinegar">Vinegar (weak acid)</option>
+              <option value="water">Distilled water (neutral)</option>
+              <option value="soap">Soapy water (base)</option>
+              <option value="naoh">Sodium hydroxide (strong base)</option>
+            </select>
+            <div class="kpis">
+              <span class="tag">pH: <b id="phVal">7</b></span>
+              <span class="tag">Type: <b id="typeVal">Neutral</b></span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Step 2: Add indicator</h3>
+            <select id="indicatorSel">
+              <option value="none">None</option>
+              <option value="blueLitmus">Blue litmus paper</option>
+              <option value="redLitmus">Red litmus paper</option>
+              <option value="universal">Universal indicator</option>
+            </select>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="testBtn">Test</button>
+              <button class="miniBtn" id="resetTest">Reset</button>
+            </div>
+
+            <div class="feedback" id="testFeedback">Pick an unknown solution, choose an indicator, then press Test.</div>
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Visual: Test tubes</h3>
+          <p>Left tube = your unknown + indicator result. Right tube = neutralisation mix (acid + base).</p>
+          <div class="tubeArea">
+            <div class="tubeRow">
+              <div style="text-align:center">
+                <div class="tube"><div class="liquid" id="tubeUnknown"></div></div>
+                <div class="label">Unknown</div>
+              </div>
+
+              <div style="text-align:center">
+                <div class="tube"><div class="liquid" id="tubeMix"></div></div>
+                <div class="label">Neutralisation Mix</div>
+              </div>
+            </div>
+
+            <div class="kpis">
+              <span class="tag">Unknown colour: <b id="uColorName">—</b></span>
+              <span class="tag">Mix pH: <b id="mixPh">—</b></span>
+              <span class="tag">Salt formed: <b id="saltName">—</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="two">
+          <div class="card">
+            <h3>Step 3: Neutralisation simulator</h3>
+            <p>Mix an acid and a base. If amounts are balanced, the mix becomes near neutral (pH ≈ 7) and forms a salt + water.</p>
+
+            <label class="tag" style="margin-top:10px;display:inline-flex">Acid volume (mL): <b id="acidMlVal">10</b></label>
+            <input id="acidMl" type="range" min="0" max="20" value="10"/>
+
+            <div style="height:8px"></div>
+
+            <label class="tag" style="display:inline-flex">Base volume (mL): <b id="baseMlVal">10</b></label>
+            <input id="baseMl" type="range" min="0" max="20" value="10"/>
+
+            <div class="controls">
+              <button class="miniBtn primary" id="mixBtn">Mix Now</button>
+              <button class="miniBtn" id="resetMix">Reset Mix</button>
+            </div>
+
+            <div class="barWrap"><div class="bar" id="balanceBar"></div></div>
+            <div class="feedback" id="mixFeedback">Adjust acid/base volumes then press Mix Now.</div>
+          </div>
+
+          <div class="card">
+            <h3>Score</h3>
+            <p style="font-size:28px;font-weight:900;margin:6px 0 0" id="score">0</p>
+            <p class="tag" style="margin-top:8px">Badge: <b id="badge">Starter</b></p>
+
+            <div style="height:10px"></div>
+            <h3>Rules</h3>
+            <p>
+              • Acids: sour, turn <b>blue litmus red</b><br/>
+              • Bases: bitter/soapy, turn <b>red litmus blue</b><br/>
+              • Neutralisation: <b>acid + base → salt + water</b>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Quick pH Guide</h2><small>Universal indicator colours</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <p>
+            <b>pH 0–3</b>: strong acid (red)<br/>
+            <b>pH 4–6</b>: weak acid (orange/yellow)<br/>
+            <b>pH 7</b>: neutral (green)<br/>
+            <b>pH 8–10</b>: weak base (blue-green)<br/>
+            <b>pH 11–14</b>: strong base (purple)
+          </p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Salt examples</h3>
+          <p>
+            Hydrochloric acid + sodium hydroxide → <b>sodium chloride</b> + water<br/>
+            (Table salt is a common salt.)
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  // ------- Save state -------
+  const KEY="sciguru_topic10_acidsbases_v1";
+  const S = load() || {score:0,awards:{},unknown:"water",indicator:"none",acidMl:10,baseMl:10};
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+  function save(){localStorage.setItem(KEY, JSON.stringify(S)); renderScore();}
+  function award(pts, id){
+    S.awards=S.awards||{};
+    if(S.awards[id]) return;
+    S.awards[id]=true;
+    S.score += pts;
+  }
+  function badgeFromScore(s){
+    if(s>=60) return "Neutralisation Pro";
+    if(s>=30) return "Indicator Expert";
+    if(s>=10) return "Learning";
+    return "Starter";
+  }
+  function renderScore(){
+    document.getElementById("score").textContent = S.score||0;
+    document.getElementById("badge").textContent = badgeFromScore(S.score||0);
+  }
+
+  // ------- Data -------
+  const UNKNOWN = {
+    hcl:     {ph:1,  type:"Acid",  uni:"red",        uniName:"Red",        blueLitmus:"turns red", redLitmus:"no change"},
+    vinegar: {ph:4,  type:"Acid",  uni:"orange",     uniName:"Orange",     blueLitmus:"turns red", redLitmus:"no change"},
+    water:   {ph:7,  type:"Neutral",uni:"green",     uniName:"Green",      blueLitmus:"no change", redLitmus:"no change"},
+    soap:    {ph:9,  type:"Base",  uni:"#2fb8ff",    uniName:"Blue-green", blueLitmus:"no change", redLitmus:"turns blue"},
+    naoh:    {ph:13, type:"Base",  uni:"#8a4bff",    uniName:"Purple",     blueLitmus:"no change", redLitmus:"turns blue"}
+  };
+
+  // ------- Elements -------
+  const unknownSel = document.getElementById("unknownSel");
+  const indicatorSel = document.getElementById("indicatorSel");
+  const phVal = document.getElementById("phVal");
+  const typeVal = document.getElementById("typeVal");
+  const testFeedback = document.getElementById("testFeedback");
+  const tubeUnknown = document.getElementById("tubeUnknown");
+  const tubeMix = document.getElementById("tubeMix");
+  const uColorName = document.getElementById("uColorName");
+  const mixPh = document.getElementById("mixPh");
+  const saltName = document.getElementById("saltName");
+
+  const acidMl = document.getElementById("acidMl");
+  const baseMl = document.getElementById("baseMl");
+  const acidMlVal = document.getElementById("acidMlVal");
+  const baseMlVal = document.getElementById("baseMlVal");
+  const balanceBar = document.getElementById("balanceBar");
+  const mixFeedback = document.getElementById("mixFeedback");
+
+  // ------- Helpers -------
+  function setUnknown(u){
+    const info = UNKNOWN[u];
+    phVal.textContent = info.ph;
+    typeVal.textContent = info.type;
+    // default tube colour (before indicator)
+    tubeUnknown.style.background = "rgba(47,123,255,.25)";
+    uColorName.textContent = "—";
+    S.unknown = u;
+    save();
+  }
+
+  function applyIndicator(){
+    const u = S.unknown;
+    const ind = S.indicator;
+    const info = UNKNOWN[u];
+
+    let colour = "rgba(47,123,255,.25)";
+    let colourName = "—";
+    let msg = "";
+
+    if(ind === "none"){
+      msg = "No indicator selected. Choose an indicator to see a colour change.";
+    } else if(ind === "universal"){
+      colour = info.uni;
+      colourName = info.uniName;
+      msg = `Universal indicator shows pH = ${info.ph}.\nThis is a(n) ${info.type}.`;
+      award(10, "used_universal");
+    } else if(ind === "blueLitmus"){
+      msg = `Blue litmus: ${info.blueLitmus}.\nSo the solution is likely ${info.type === "Acid" ? "acidic" : (info.type==="Base" ? "basic" : "neutral")}.`;
+      colour = (info.type==="Acid") ? "#ff5a6b" : "rgba(47,123,255,.25)";
+      colourName = (info.type==="Acid") ? "Red (litmus turned red)" : "No change";
+      award(5, "used_bluelitmus");
+    } else if(ind === "redLitmus"){
+      msg = `Red litmus: ${info.redLitmus}.\nSo the solution is likely ${info.type === "Base" ? "basic" : (info.type==="Acid" ? "acidic" : "neutral")}.`;
+      colour = (info.type==="Base") ? "#2fb8ff" : "rgba(47,123,255,.25)";
+      colourName = (info.type==="Base") ? "Blue (litmus turned blue)" : "No change";
+      award(5, "used_redlitmus");
+    }
+
+    tubeUnknown.style.background = colour;
+    uColorName.textContent = colourName;
+    testFeedback.textContent = msg + "\n(+points once)";
+    save();
+  }
+
+  function mix(){
+    // Simple model: stronger effect if volumes unbalanced.
+    const a = Number(S.acidMl);
+    const b = Number(S.baseMl);
+
+    // balance 0..1 (1 means perfectly balanced)
+    const total = Math.max(1, a+b);
+    const diff = Math.abs(a-b);
+    const balance = Math.max(0, 1 - (diff/total)); // 1 best
+    balanceBar.style.width = Math.round(balance*100) + "%";
+
+    // estimate pH: start near 7 then shift based on which is more
+    let ph = 7;
+    if(a>b){
+      // more acid → lower pH
+      ph = Math.max(1, 7 - Math.round((a-b)*0.6));
+    }else if(b>a){
+      // more base → higher pH
+      ph = Math.min(13, 7 + Math.round((b-a)*0.6));
+    }
+
+    // mix tube colour like universal indicator
+    let colour = "green";
+    let colourName = "Green";
+    if(ph<=3){ colour="#ff5a6b"; colourName="Red"; }
+    else if(ph<=6){ colour="#ffcc66"; colourName="Orange/Yellow"; }
+    else if(ph===7){ colour="green"; colourName="Green"; }
+    else if(ph<=10){ colour="#2fb8ff"; colourName="Blue-green"; }
+    else { colour="#8a4bff"; colourName="Purple"; }
+
+    tubeMix.style.background = colour;
+    mixPh.textContent = ph;
+
+    let salt = "—";
+    // assume HCl + NaOH system for learning
+    if(a>0 && b>0) salt = "Sodium chloride (example)";
+    saltName.textContent = salt;
+
+    if(balance >= 0.95 && a>0 && b>0){
+      award(15, "perfect_neutralisation");
+      mixFeedback.textContent =
+        `✅ Great! Your acid and base are balanced.\nNeutralisation happened: acid + base → salt + water.\nMix pH ≈ ${ph} (near neutral).\n(+15 points once)`;
+    } else if(a===0 && b===0){
+      mixFeedback.textContent = "Add some acid and base first.";
+    } else {
+      mixFeedback.textContent =
+        `You mixed acid (${a} mL) and base (${b} mL).\nThe mix is ${ph<7 ? "acidic" : (ph>7 ? "basic" : "neutral")} (pH ${ph}).\nTry to balance volumes for neutralisation.`;
+      award(5, "tried_mix");
+    }
+
+    save();
+  }
+
+  // ------- Wire events -------
+  unknownSel.onchange = ()=> setUnknown(unknownSel.value);
+  indicatorSel.onchange = ()=>{ S.indicator = indicatorSel.value; save(); };
+
+  document.getElementById("testBtn").onclick = ()=>{
+    S.unknown = unknownSel.value;
+    S.indicator = indicatorSel.value;
+    save();
+    applyIndicator();
+  };
+
+  document.getElementById("resetTest").onclick = ()=>{
+    indicatorSel.value="none";
+    S.indicator="none";
+    tubeUnknown.style.background="rgba(47,123,255,.25)";
+    uColorName.textContent="—";
+    testFeedback.textContent="Reset. Pick an indicator and press Test.";
+    save();
+  };
+
+  acidMl.oninput = ()=>{
+    S.acidMl = Number(acidMl.value);
+    acidMlVal.textContent = S.acidMl;
+    save();
+  };
+  baseMl.oninput = ()=>{
+    S.baseMl = Number(baseMl.value);
+    baseMlVal.textContent = S.baseMl;
+    save();
+  };
+
+  document.getElementById("mixBtn").onclick = mix;
+
+  document.getElementById("resetMix").onclick = ()=>{
+    acidMl.value=10; baseMl.value=10;
+    S.acidMl=10; S.baseMl=10;
+    acidMlVal.textContent=10; baseMlVal.textContent=10;
+    tubeMix.style.background="rgba(47,123,255,.25)";
+    mixPh.textContent="—";
+    saltName.textContent="—";
+    balanceBar.style.width="0%";
+    mixFeedback.textContent="Reset. Adjust acid/base volumes then press Mix Now.";
+    save();
+  };
+
+  // ------- Init -------
+  function init(){
+    unknownSel.value = S.unknown || "water";
+    indicatorSel.value = S.indicator || "none";
+    acidMl.value = S.acidMl ?? 10;
+    baseMl.value = S.baseMl ?? 10;
+    acidMlVal.textContent = acidMl.value;
+    baseMlVal.textContent = baseMl.value;
+    setUnknown(unknownSel.value);
+    renderScore();
+    save();
+  }
+  init();
+</script>
+</body>
+</html>
