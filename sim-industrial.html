@@ -3,590 +3,250 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Sci-Guru • Topic 11: Industrial Processes</title>
+  <title>Sci-Guru • Topic 10 Acids & Bases</title>
   <link rel="icon" href="lec-logo.jpg"/>
-
   <style>
-    :root{
-      --bg1:#0b1220; --bg2:#081a3b;
-      --stroke:rgba(255,255,255,.12);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.72);
-      --blue:#2f7bff;
-      --purple:#7c5cff;
-      --good:#33d07a;
-      --warn:#ffcc66;
-      --bad:#ff5a6b;
-      --card:rgba(255,255,255,.05);
-    }
+    :root{--bg1:#0b1220;--bg2:#081a3b;--stroke:rgba(255,255,255,.12);--text:#eaf2ff;--muted:rgba(234,242,255,.72);--blue:#2f7bff;--purple:#7c5cff;--good:#33d07a;--warn:#ffcc66;--bad:#ff5a6b;--card:rgba(255,255,255,.05);}
     *{box-sizing:border-box}
-    body{
-      margin:0;color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
-        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
-    header{
-      position:sticky;top:10px;z-index:10;
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      padding:12px 14px;border:1px solid var(--stroke);
-      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
-      border-radius:16px;
-    }
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+      radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 36px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--stroke);background:rgba(0,0,0,.25);backdrop-filter:blur(10px);border-radius:16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
     .logo img{width:100%;height:100%;object-fit:cover}
-    .t b{display:block;font-size:16px}
-    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{
-      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
-      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
-      font-weight:900;font-size:13px;cursor:pointer;
-      display:inline-flex;align-items:center;gap:8px;
-    }
+    .btn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:12px;font-weight:900;font-size:13px;cursor:pointer}
+    .btn:hover{background:rgba(255,255,255,.10)}
     .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .hero{
-      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
-      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
-    }
+    .hero{margin-top:12px;border:1px solid var(--stroke);background:var(--card);border-radius:18px;padding:14px}
     .hero h1{margin:0;font-size:18px}
-    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
-    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
-    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
-
-    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
-    @media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
-    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
-    .panelHead h2{margin:0;font-size:14px}
-    .panelHead small{color:var(--muted)}
-    .panelBody{padding:12px}
-
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:760px){.two{grid-template-columns:1fr}}
-
-    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
-    .card h3{margin:0 0 8px;font-size:13px}
-    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
-
-    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
-    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
-    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
-
-    .tag{
-      display:inline-flex;align-items:center;gap:6px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      padding:7px 9px;border-radius:999px;
-      font-size:12px;color:var(--muted)
-    }
-    .tag b{color:var(--text)}
-    .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-
-    .list{display:grid;gap:8px;margin-top:10px}
-    .step{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      border-radius:14px;
-      padding:10px;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      cursor:grab;
-      user-select:none;
-    }
-    .step:active{cursor:grabbing}
-    .step b{font-size:13px}
-    .step small{display:block;color:var(--muted);font-size:12px;margin-top:3px;line-height:1.4}
-    .slot{
-      border:1px dashed rgba(255,255,255,.22);
-      background:rgba(0,0,0,.18);
-      border-radius:14px;
-      padding:10px;
-      min-height:54px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-    }
-    .slot .hint{color:rgba(234,242,255,.55);font-size:12px}
-    .ok{border-color:rgba(51,208,122,.55)}
-    .bad{border-color:rgba(255,90,107,.55)}
-
-    select,input[type="range"]{
-      width:100%;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px;
-      outline:none;
-      font-size:14px;
-    }
-    input[type="range"]{padding:0;height:40px}
-
-    .barWrap{margin-top:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;height:14px}
-    .bar{height:100%;width:0%;background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55))}
-    .feedback{
-      margin-top:10px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:90px;white-space:pre-wrap
-    }
-
-    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+    .grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;padding:12px}
+    .card h2{margin:0 0 8px;font-size:14px}
+    .small{color:var(--muted);font-size:12px;line-height:1.5}
+    select,input{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.20);color:var(--text);outline:none}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .chip{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);border-radius:999px;padding:8px 10px;font-size:12px;color:rgba(234,242,255,.85)}
+    .status{margin-top:10px;border:1px dashed rgba(255,255,255,.18);border-radius:16px;padding:10px;background:rgba(0,0,0,.12);font-size:12px;line-height:1.55}
+    .ok{color:var(--good);font-weight:900}
+    .bad{color:var(--bad);font-weight:900}
+    .tube{height:190px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);position:relative;overflow:hidden}
+    .liq{position:absolute;left:0;right:0;bottom:0;height:58%;transition:all .35s ease;background:rgba(150,200,255,.18)}
+    .tag{position:absolute;top:10px;left:10px;font-size:12px;font-weight:900}
   </style>
 </head>
-
 <body>
 <div class="wrap">
   <header>
     <div class="brand">
-      <div class="logo">
-        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
-      </div>
-      <div class="t">
-        <b>Topic 11 • Industrial Processes (Peanut Butter & Oil)</b>
-        <span>Order the steps • Choose machines • Extract oil</span>
+      <div class="logo"><img src="lec-logo.jpg" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='SG';"></div>
+      <div>
+        <div style="font-weight:900">Topic 10 • Acids, Bases & Salts</div>
+        <div class="small">Indicators • properties • neutralisation (acid + base → salt + water)</div>
       </div>
     </div>
-    <nav>
-      <a class="btn" href="tutor.html">← Back to Tutor</a>
-      <a class="btn" href="labs-hub.html">Labs Hub</a>
-      <a class="btn primary" href="sim-industrial.html">Refresh</a>
-    </nav>
+    <div class="row">
+      <a class="btn" href="sim-chemistry-hub.html">← Chemistry Hub</a>
+      <a class="btn" href="labs-hub.html">Lab Hub</a>
+      <a class="btn" href="tutor.html">Tutor</a>
+      <a class="btn primary" href="sim-acids-bases.html">Refresh</a>
+    </div>
   </header>
 
   <section class="hero">
-    <div>
-      <h1>Run a Mini Factory Simulation</h1>
-      <p>Arrange the peanut butter process correctly, then simulate peanut oil extraction and quality control.</p>
-    </div>
-    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+    <h1>Indicators & Neutralisation Simulator</h1>
+    <p>
+      Use litmus/indicator to decide if a solution is acidic or basic, then run a simple neutralisation.
+    </p>
   </section>
 
   <div class="grid">
-    <section class="panel">
-      <div class="panelHead">
-        <div><h2>Factory Tasks</h2><small>Do them in order</small></div>
+    <div class="card">
+      <h2>Activity A — Indicator test</h2>
+      <div class="small">Choose a solution and indicator, then test.</div><br/>
+
+      <label class="small"><b>Solution</b></label>
+      <select id="sol">
+        <option value="acid">Vinegar (acid)</option>
+        <option value="base">Soapy water (base)</option>
+        <option value="neutral">Salt water (neutral)</option>
+      </select>
+
+      <label class="small" style="margin-top:8px;display:block"><b>Indicator</b></label>
+      <select id="ind">
+        <option value="litmus">Litmus paper</option>
+        <option value="universal">Universal indicator</option>
+      </select>
+
+      <div class="row">
+        <button class="btn primary" onclick="test()">Test</button>
+        <button class="btn" onclick="resetA()">Reset</button>
+        <span class="chip">Result: <b id="res">—</b></span>
       </div>
-      <div class="panelBody">
 
-        <div class="two">
-          <div class="card">
-            <h3>Task A: Peanut Butter — Arrange the steps</h3>
-            <p>Drag a step into each slot (1–7). Then press <b>Check Order</b>.</p>
-
-            <div class="list" id="slots"></div>
-
-            <div class="controls">
-              <button class="miniBtn primary" id="checkOrder">Check Order</button>
-              <button class="miniBtn" id="shuffle">Shuffle Steps</button>
-              <button class="miniBtn bad" id="resetA">Reset Task</button>
-            </div>
-
-            <div class="barWrap"><div class="bar" id="orderBar"></div></div>
-            <div class="feedback" id="orderFeedback">Drag steps into the slots, then check your order.</div>
-          </div>
-
-          <div class="card">
-            <h3>Task B: Machines & Purpose</h3>
-            <p>Choose the correct machine for each job.</p>
-
-            <div class="list">
-              <div class="slot">
-                <div>
-                  <b>Remove shells</b>
-                  <div class="hint">Machine:</div>
-                </div>
-                <select id="m1">
-                  <option value="">-- choose --</option>
-                  <option value="press">Oil press</option>
-                  <option value="roaster">Roaster</option>
-                  <option value="sheller">Sheller</option>
-                  <option value="grinder">Grinder</option>
-                </select>
-              </div>
-
-              <div class="slot">
-                <div>
-                  <b>Extract oil</b>
-                  <div class="hint">Machine:</div>
-                </div>
-                <select id="m2">
-                  <option value="">-- choose --</option>
-                  <option value="press">Oil press</option>
-                  <option value="roaster">Roaster</option>
-                  <option value="sheller">Sheller</option>
-                  <option value="grinder">Grinder</option>
-                </select>
-              </div>
-
-              <div class="slot">
-                <div>
-                  <b>Make smooth paste</b>
-                  <div class="hint">Machine:</div>
-                </div>
-                <select id="m3">
-                  <option value="">-- choose --</option>
-                  <option value="press">Oil press</option>
-                  <option value="roaster">Roaster</option>
-                  <option value="sheller">Sheller</option>
-                  <option value="grinder">Grinder</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="controls">
-              <button class="miniBtn primary" id="checkMachines">Check Machines</button>
-              <button class="miniBtn" id="resetB">Reset</button>
-            </div>
-
-            <div class="feedback" id="machineFeedback">Pick machines then press Check Machines.</div>
-          </div>
-        </div>
-
-        <div style="height:10px"></div>
-
-        <div class="two">
-          <div class="card">
-            <h3>Task C: Peanut Oil — Separation & Decanting</h3>
-            <p>Adjust pressing force and settling time. Then decant oil carefully.</p>
-
-            <label class="tag" style="margin-top:10px;display:inline-flex">Pressing force: <b id="forceVal">50</b>%</label>
-            <input id="force" type="range" min="0" max="100" value="50"/>
-
-            <div style="height:8px"></div>
-
-            <label class="tag" style="display:inline-flex">Settling time: <b id="timeVal">30</b> min</label>
-            <input id="time" type="range" min="0" max="60" value="30"/>
-
-            <div class="controls">
-              <button class="miniBtn primary" id="runOil">Run Extraction</button>
-              <button class="miniBtn" id="decant">Decant Oil</button>
-              <button class="miniBtn bad" id="resetC">Reset</button>
-            </div>
-
-            <div class="kpis">
-              <span class="tag">Oil layer: <b id="oilLayer">—</b></span>
-              <span class="tag">Impurities: <b id="imp">—</b></span>
-              <span class="tag">Yield: <b id="yield">—</b></span>
-            </div>
-
-            <div class="feedback" id="oilFeedback">Run extraction first, then decant to separate clean oil.</div>
-          </div>
-
-          <div class="card">
-            <h3>Score</h3>
-            <p style="font-size:28px;font-weight:900;margin:6px 0 0" id="score">0</p>
-            <p class="tag" style="margin-top:8px">Badge: <b id="badge">Starter</b></p>
-
-            <div style="height:10px"></div>
-            <h3>Key Ideas</h3>
-            <p>
-              • Roasting improves flavour + destroys enzymes<br/>
-              • Blanching removes skin<br/>
-              • Grinding makes smooth paste<br/>
-              • Oil can be extracted by pressing and separated by settling/decanting
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <aside class="panel">
-      <div class="panelHead">
-        <div><h2>Steps Reference</h2><small>For learning</small></div>
-      </div>
-      <div class="panelBody">
-        <div class="card">
-          <p>
-            A typical peanut butter process:<br/>
-            1) Cleaning<br/>
-            2) Shelling<br/>
-            3) Grading<br/>
-            4) Roasting<br/>
-            5) Blanching<br/>
-            6) Grinding<br/>
-            7) Packaging
-          </p>
+      <div class="row" style="margin-top:12px">
+        <div class="tube" style="flex:1">
+          <div class="tag">Beaker</div>
+          <div class="liq" id="liq"></div>
         </div>
       </div>
-    </aside>
+
+      <div class="status" id="msgA">Press Test.</div>
+    </div>
+
+    <div class="card">
+      <h2>Activity B — Neutralisation</h2>
+      <div class="small">Mix an acid and base and see the outcome (concept).</div><br/>
+
+      <label class="small"><b>Acid amount (mL)</b></label>
+      <input id="acidAmt" type="number" placeholder="e.g. 50">
+
+      <label class="small" style="margin-top:8px;display:block"><b>Base amount (mL)</b></label>
+      <input id="baseAmt" type="number" placeholder="e.g. 50">
+
+      <div class="row">
+        <button class="btn primary" onclick="mix()">Mix</button>
+        <button class="btn" onclick="resetB()">Reset</button>
+      </div>
+
+      <div class="status" id="msgB">
+        Neutralisation: <b>acid + base → salt + water</b>.
+        If amounts are close, mixture becomes near neutral.
+      </div>
+    </div>
+
+    <div class="card" style="grid-column:1/-1">
+      <h2>Quick Quiz (4)</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="margin:0">
+          <div class="small"><b>1)</b> Acids turn blue litmus…</div>
+          <select id="q1">
+            <option value="">Choose…</option>
+            <option value="ok">Red</option>
+            <option value="no">Blue</option>
+          </select>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="small"><b>2)</b> Bases feel…</div>
+          <select id="q2">
+            <option value="">Choose…</option>
+            <option value="ok">Soapy/slippery</option>
+            <option value="no">Always sour</option>
+          </select>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="small"><b>3)</b> Neutralisation forms…</div>
+          <select id="q3">
+            <option value="">Choose…</option>
+            <option value="ok">Salt and water</option>
+            <option value="no">Oxygen and hydrogen</option>
+          </select>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="small"><b>4)</b> Bases turn red litmus…</div>
+          <select id="q4">
+            <option value="">Choose…</option>
+            <option value="ok">Blue</option>
+            <option value="no">Red</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn primary" onclick="mark()">Mark</button>
+        <span class="chip">Score: <b id="score">0</b>/4</span>
+      </div>
+      <div class="status" id="qmsg">Press Mark.</div>
+    </div>
   </div>
 
-  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+  <footer style="margin-top:14px;text-align:center;color:rgba(234,242,255,.62);font-size:12px">
+    © 2025 LEC Biotec • Sci-Guru Virtual Labs
+  </footer>
 </div>
 
 <script>
-  const KEY="sciguru_topic11_industrial_v1";
-  const S = load() || {
-    score:0, awards:{},
-    slots:{}, // slotIndex -> stepId
-    machine:{m1:"",m2:"",m3:""},
-    oil:{force:50,time:30,ran:false,decanted:false,layer:"—",imp:"—",yield:"—"}
-  };
-
-  function load(){ try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null} }
-  function save(){ localStorage.setItem(KEY, JSON.stringify(S)); renderScore(); }
-  function award(pts, id){
-    S.awards=S.awards||{};
-    if(S.awards[id]) return;
-    S.awards[id]=true;
-    S.score += pts;
-  }
-  function badgeFromScore(s){
-    if(s>=80) return "Factory Pro";
-    if(s>=45) return "Process Master";
-    if(s>=15) return "Improving";
-    return "Starter";
-  }
-  function renderScore(){
-    document.getElementById("score").textContent = S.score||0;
-    document.getElementById("badge").textContent = badgeFromScore(S.score||0);
-  }
-
-  // ----- Task A: Drag order -----
-  const STEPS = [
-    {id:"clean",  title:"Cleaning",  tip:"Remove stones, dirt, spoiled nuts"},
-    {id:"shell",  title:"Shelling",  tip:"Remove shells to get kernels"},
-    {id:"grade",  title:"Grading",   tip:"Sort by quality/size"},
-    {id:"roast",  title:"Roasting",  tip:"Improves flavour; destroys enzymes"},
-    {id:"blanch", title:"Blanching", tip:"Remove outer skin"},
-    {id:"grind",  title:"Grinding",  tip:"Make smooth paste"},
-    {id:"pack",   title:"Packaging", tip:"Fill, label, seal containers"}
-  ];
-  const CORRECT = ["clean","shell","grade","roast","blanch","grind","pack"];
-
-  const slotsEl = document.getElementById("slots");
-  const orderFeedback = document.getElementById("orderFeedback");
-  const orderBar = document.getElementById("orderBar");
-
-  function makeStepChip(step){
-    const div=document.createElement("div");
-    div.className="step";
-    div.draggable=true;
-    div.dataset.step=step.id;
-    div.innerHTML=`<div style="min-width:0"><b>${step.title}</b><small>${step.tip}</small></div><span class="tag">drag</span>`;
-    div.addEventListener("dragstart", (e)=>{
-      e.dataTransfer.setData("text/plain", step.id);
-    });
-    return div;
-  }
-
-  function renderSlots(){
-    slotsEl.innerHTML="";
-    for(let i=0;i<7;i++){
-      const slot=document.createElement("div");
-      slot.className="slot";
-      slot.dataset.slot=String(i);
-      const chosenId = S.slots[String(i)];
-      const chosen = STEPS.find(x=>x.id===chosenId);
-
-      slot.innerHTML = `
-        <div style="min-width:0">
-          <b>Slot ${i+1}</b>
-          <div class="hint">${chosen ? (chosen.title) : "Drop a step here"}</div>
-        </div>
-        <div></div>
-      `;
-
-      if(chosen){
-        const chip = makeStepChip(chosen);
-        chip.style.cursor="pointer";
-        chip.querySelector(".tag").innerHTML="<b>remove</b>";
-        chip.addEventListener("click", ()=>{
-          delete S.slots[String(i)];
-          save(); renderSlots();
-        });
-        slot.lastElementChild.appendChild(chip);
-      }
-
-      slot.addEventListener("dragover",(e)=>e.preventDefault());
-      slot.addEventListener("drop",(e)=>{
-        e.preventDefault();
-        const stepId = e.dataTransfer.getData("text/plain");
-        if(!stepId) return;
-
-        // Remove step from any other slot
-        Object.keys(S.slots).forEach(k=>{
-          if(S.slots[k]===stepId) delete S.slots[k];
-        });
-
-        S.slots[String(i)] = stepId;
-        save(); renderSlots();
-      });
-
-      slotsEl.appendChild(slot);
-    }
-  }
-
-  function checkOrder(){
-    let correct=0;
-    for(let i=0;i<7;i++){
-      if(S.slots[String(i)]===CORRECT[i]) correct++;
-    }
-    const pct = Math.round((correct/7)*100);
-    orderBar.style.width = pct + "%";
-
-    // visual mark
-    [...slotsEl.children].forEach((slot,i)=>{
-      slot.classList.remove("ok","bad");
-      const got = S.slots[String(i)];
-      if(!got) return;
-      if(got===CORRECT[i]) slot.classList.add("ok");
-      else slot.classList.add("bad");
-    });
-
-    if(correct===7){
-      award(25,"order_perfect");
-      orderFeedback.textContent = `✅ Perfect! You arranged all 7 steps correctly.\n(+25 points once)`;
+  function setColor(type, indicator){
+    const liq = document.getElementById("liq");
+    if(indicator==="litmus"){
+      if(type==="acid") liq.style.background="rgba(255,80,110,.25)";    // red-ish
+      if(type==="base") liq.style.background="rgba(60,150,255,.25)";    // blue-ish
+      if(type==="neutral") liq.style.background="rgba(220,220,220,.18)";// grey
     }else{
-      award(5,"order_try");
-      orderFeedback.textContent = `You got ${correct}/7 correct.\nTip: Roasting comes before blanching and grinding.\n(+5 points once)`;
+      // universal indicator simplified
+      if(type==="acid") liq.style.background="rgba(255,140,60,.22)";    // orange
+      if(type==="base") liq.style.background="rgba(70,220,140,.22)";    // green-ish
+      if(type==="neutral") liq.style.background="rgba(80,180,255,.18)"; // teal-ish
     }
-    save();
   }
 
-  function shuffleSteps(){
-    // Clears slots and gives a hint message (shuffle for learner; steps are always available in reference panel)
-    S.slots = {};
-    orderBar.style.width="0%";
-    orderFeedback.textContent="Shuffled (cleared). Now rebuild the process by dragging steps into slots.";
-    save(); renderSlots();
-  }
+  function test(){
+    const sol = document.getElementById("sol").value;
+    const ind = document.getElementById("ind").value;
+    const msg = document.getElementById("msgA");
+    const res = document.getElementById("res");
 
-  // ----- Task B: Machines -----
-  const m1=document.getElementById("m1");
-  const m2=document.getElementById("m2");
-  const m3=document.getElementById("m3");
-  const machineFeedback=document.getElementById("machineFeedback");
+    setColor(sol, ind);
 
-  function checkMachines(){
-    const a = m1.value, b = m2.value, c = m3.value;
-    let ok=0;
-    if(a==="sheller") ok++;
-    if(b==="press") ok++;
-    if(c==="grinder") ok++;
-
-    if(ok===3){
-      award(15,"machines_perfect");
-      machineFeedback.textContent="✅ Correct! Sheller removes shells, oil press extracts oil, grinder makes paste.\n(+15 points once)";
+    if(ind==="litmus"){
+      if(sol==="acid"){ res.textContent="Acidic"; msg.innerHTML="<span class='ok'>Blue litmus → red ✅</span> Acid detected."; }
+      if(sol==="base"){ res.textContent="Basic"; msg.innerHTML="<span class='ok'>Red litmus → blue ✅</span> Base detected."; }
+      if(sol==="neutral"){ res.textContent="Neutral"; msg.innerHTML="No litmus change → likely neutral."; }
     }else{
-      award(5,"machines_try");
-      machineFeedback.textContent=`You got ${ok}/3 correct.\nTry again.\n(+5 points once)`;
+      if(sol==="acid"){ res.textContent="Acidic"; msg.innerHTML="<span class='ok'>Universal indicator shows acidic colour ✅</span>"; }
+      if(sol==="base"){ res.textContent="Basic"; msg.innerHTML="<span class='ok'>Universal indicator shows basic colour ✅</span>"; }
+      if(sol==="neutral"){ res.textContent="Neutral"; msg.innerHTML="<span class='ok'>Universal indicator near green/neutral ✅</span>"; }
     }
-    save();
   }
 
-  // ----- Task C: Oil extraction -----
-  const force=document.getElementById("force");
-  const time=document.getElementById("time");
-  const forceVal=document.getElementById("forceVal");
-  const timeVal=document.getElementById("timeVal");
-  const oilLayer=document.getElementById("oilLayer");
-  const imp=document.getElementById("imp");
-  const yld=document.getElementById("yield");
-  const oilFeedback=document.getElementById("oilFeedback");
-
-  function runOil(){
-    const f = Number(force.value);
-    const t = Number(time.value);
-
-    // Yield increases with force; impurities decrease with settling time.
-    const yieldPct = Math.max(0, Math.min(100, Math.round(35 + (f*0.55) - (t*0.10))));
-    const impPct   = Math.max(0, Math.min(100, Math.round(70 - (t*1.0) + (100-f)*0.25)));
-
-    const layer = (t>=25) ? "Clear top oil layer formed" : "Layer not clear yet";
-
-    S.oil.force=f; S.oil.time=t; S.oil.ran=true; S.oil.decanted=false;
-    S.oil.layer=layer;
-    S.oil.imp = impPct + "%";
-    S.oil.yield = yieldPct + "%";
-
-    oilLayer.textContent = S.oil.layer;
-    imp.textContent = S.oil.imp;
-    yld.textContent = S.oil.yield;
-
-    award(10,"ran_oil");
-    oilFeedback.textContent =
-      `Extraction run complete.\nYield: ${S.oil.yield}\nImpurities: ${S.oil.imp}\nNext: press Decant Oil to separate the top oil carefully.\n(+10 points once)`;
-    save();
+  function resetA(){
+    document.getElementById("sol").value="acid";
+    document.getElementById("ind").value="litmus";
+    document.getElementById("res").textContent="—";
+    document.getElementById("msgA").textContent="Press Test.";
+    document.getElementById("liq").style.background="rgba(150,200,255,.18)";
   }
 
-  function decantOil(){
-    if(!S.oil.ran){
-      oilFeedback.textContent="Run Extraction first, then decant.";
+  function mix(){
+    const a = Number(document.getElementById("acidAmt").value);
+    const b = Number(document.getElementById("baseAmt").value);
+    const msg = document.getElementById("msgB");
+
+    if(!a || !b){
+      msg.innerHTML="<span class='bad'>Enter both acid and base amounts.</span>";
       return;
     }
-    const t = Number(S.oil.time);
-    if(t<25){
-      award(5,"decant_early");
-      oilFeedback.textContent="You decanted too early. The oil layer was not clear.\nTip: wait longer for settling.\n(+5 points once)";
+
+    const ratio = a/b;
+    if(ratio>1.3){
+      msg.innerHTML="<span class='warn'>More acid than base.</span> Mixture will remain acidic. Products form, but extra acid remains.";
+    }else if(ratio<0.77){
+      msg.innerHTML="<span class='warn'>More base than acid.</span> Mixture will remain basic. Products form, but extra base remains.";
     }else{
-      award(15,"decant_good");
-      S.oil.decanted=true;
-      oilFeedback.textContent="✅ Well done! You decanted after settling, so the oil is cleaner.\n(+15 points once)";
+      msg.innerHTML="<span class='ok'>Near neutral ✅</span> Acid and base amounts are close → mixture becomes near neutral (salt + water).";
     }
-    save();
   }
 
-  // ----- Init / events -----
-  document.getElementById("checkOrder").onclick=checkOrder;
-  document.getElementById("shuffle").onclick=shuffleSteps;
-  document.getElementById("resetA").onclick=()=>{
-    S.slots={};
-    orderBar.style.width="0%";
-    orderFeedback.textContent="Task A reset. Drag steps into slots.";
-    save(); renderSlots();
-  };
-
-  document.getElementById("checkMachines").onclick=checkMachines;
-  document.getElementById("resetB").onclick=()=>{
-    m1.value="";m2.value="";m3.value="";
-    machineFeedback.textContent="Reset. Pick machines then check.";
-    S.machine={m1:"",m2:"",m3:""};
-    save();
-  };
-
-  force.oninput=()=>{ forceVal.textContent=force.value; S.oil.force=Number(force.value); save(); };
-  time.oninput=()=>{ timeVal.textContent=time.value; S.oil.time=Number(time.value); save(); };
-  document.getElementById("runOil").onclick=runOil;
-  document.getElementById("decant").onclick=decantOil;
-  document.getElementById("resetC").onclick=()=>{
-    force.value=50; time.value=30;
-    forceVal.textContent=50; timeVal.textContent=30;
-    S.oil={force:50,time:30,ran:false,decanted:false,layer:"—",imp:"—",yield:"—"};
-    oilLayer.textContent="—"; imp.textContent="—"; yld.textContent="—";
-    oilFeedback.textContent="Reset. Run extraction then decant.";
-    save();
-  };
-
-  function init(){
-    renderScore();
-    renderSlots();
-
-    // restore machine selections
-    m1.value = S.machine?.m1 || "";
-    m2.value = S.machine?.m2 || "";
-    m3.value = S.machine?.m3 || "";
-
-    m1.onchange=()=>{ S.machine.m1=m1.value; save(); };
-    m2.onchange=()=>{ S.machine.m2=m2.value; save(); };
-    m3.onchange=()=>{ S.machine.m3=m3.value; save(); };
-
-    // restore oil
-    force.value = S.oil?.force ?? 50;
-    time.value  = S.oil?.time ?? 30;
-    forceVal.textContent = force.value;
-    timeVal.textContent  = time.value;
-    oilLayer.textContent = S.oil?.layer ?? "—";
-    imp.textContent      = S.oil?.imp ?? "—";
-    yld.textContent      = S.oil?.yield ?? "—";
-    save();
+  function resetB(){
+    document.getElementById("acidAmt").value="";
+    document.getElementById("baseAmt").value="";
+    document.getElementById("msgB").innerHTML="Neutralisation: <b>acid + base → salt + water</b>. If amounts are close, mixture becomes near neutral.";
   }
-  init();
+
+  function mark(){
+    const ids=["q1","q2","q3","q4"];
+    let s=0;
+    ids.forEach(id=>{ if(document.getElementById(id).value==="ok") s++; });
+    document.getElementById("score").textContent=s;
+    document.getElementById("qmsg").innerHTML = (s===4)
+      ? "<span class='ok'>Excellent ✅</span>"
+      : "<span class='bad'>Try again ❌</span> You got "+s+"/4.";
+  }
 </script>
 </body>
 </html>
