@@ -9,683 +9,962 @@
   <style>
     :root{
       --bg1:#0b1220; --bg2:#081a3b;
+      --card:rgba(255,255,255,.05);
       --stroke:rgba(255,255,255,.12);
       --text:#eaf2ff;
       --muted:rgba(234,242,255,.72);
       --blue:#2f7bff;
       --purple:#7c5cff;
       --good:#33d07a;
+      --warn:#ffcc66;
       --bad:#ff5a6b;
+      --shadow: 0 18px 60px rgba(0,0,0,.25);
+      --radius:18px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;color:var(--text);
+      margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
       background:
         radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
         radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
+        linear-gradient(135deg,var(--bg1),var(--bg2));
       min-height:100vh;
     }
-    a{color:inherit}
-    .wrap{max-width:1280px;margin:0 auto;padding:14px 14px 36px}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 28px}
+
+    /* Header */
     header{
-      position:sticky; top:10px; z-index:10;
-      display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
       padding:12px 14px;
       border:1px solid var(--stroke);
       background:rgba(0,0,0,.25);
       backdrop-filter: blur(10px);
-      border-radius:16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .brand{display:flex;align-items:center;gap:10px}
     .logo{
-      width:44px;height:44px;border-radius:12px;overflow:hidden;
-      border:1px solid var(--stroke); background:rgba(255,255,255,.06);
-      display:flex;align-items:center;justify-content:center; flex:0 0 auto;
-    }
-    .logo img{width:100%;height:100%;object-fit:cover}
-    .t{min-width:0}
-    .t b{display:block;font-size:16px}
-    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-    .topActions{display:flex; gap:8px; flex-wrap:wrap}
-    .sg-btn{
+      width:40px;height:40px;border-radius:12px;overflow:hidden;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      text-decoration:none;
+      display:flex;align-items:center;justify-content:center;
       font-weight:900;
-      font-size:13px;
-      cursor:pointer;
-      user-select:none;
-      transition:transform .08s ease, background .15s ease;
-      display:inline-flex; align-items:center; gap:8px;
     }
-    .sg-btn:hover{background:rgba(255,255,255,.10)}
-    .sg-btn:active{transform:translateY(1px)}
-    .sg-primary{
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .brandTitle{font-weight:900}
+    .brandSub{font-size:12px;color:var(--muted);margin-top:2px}
+    .topActions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      padding:10px 12px;border-radius:12px;
+      font-weight:900;font-size:13px;
+      cursor:pointer;
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn.primary{
       border-color:rgba(47,123,255,.55);
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
       color:#071022;
     }
-    .sg-danger{
-      border-color:rgba(255,90,107,.55);
-      background:rgba(255,90,107,.18);
-    }
 
-    .hero{
+    /* Banner */
+    .banner{
       margin-top:12px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
-      border-radius:18px;
       padding:14px;
-      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-    }
-    .hero h1{margin:0;font-size:18px}
-    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
+      background:var(--card);
+      border-radius: var(--radius);
     }
-    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+    .banner h1{margin:0;font-size:18px}
+    .banner p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+    .hint{margin-top:8px;font-size:12px;color:rgba(234,242,255,.62)}
 
+    /* Layout */
     .layout{
       margin-top:12px;
       display:grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 280px 1fr;
       gap:12px;
-      align-items:start;
     }
-    @media(max-width:980px){.layout{grid-template-columns:1fr}}
+    @media(max-width:980px){ .layout{grid-template-columns:1fr} }
 
-    .panel{
+    /* Sidebar */
+    .sidebar{
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.05);
-      border-radius:18px;
-      overflow:hidden;
-    }
-    .panelHead{
-      padding:14px;
-      border-bottom:1px solid var(--stroke);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      background:rgba(0,0,0,.18);
-      flex-wrap:wrap;
-    }
-    .panelHead h2{margin:0;font-size:14px}
-    .panelHead small{color:var(--muted)}
-    .panelBody{padding:12px}
-
-    .topicList{display:grid; gap:8px}
-    .topicLink{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      border-radius:14px;
-      padding:10px 10px;
-      text-decoration:none;
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-    }
-    .topicLink b{font-size:13px}
-    .topicLink span{font-size:12px;color:var(--muted)}
-    .topicLink:hover{background:rgba(255,255,255,.08)}
-    .miniLinks{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-    .sg-link{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      padding:9px 10px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:900;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .sg-link:hover{background:rgba(255,255,255,.08); color:var(--text)}
-
-    .sg-panel{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
-      border-radius:18px;
-      overflow:hidden;
-      margin-bottom:12px;
-    }
-    .sg-panelHead{
-      padding:14px;
-      border-bottom:1px solid var(--stroke);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background:rgba(0,0,0,.18);
-      flex-wrap:wrap;
-    }
-    .sg-panelHead h2{margin:0;font-size:14px}
-    .sg-panelHead small{color:var(--muted)}
-    .sg-panelBody{padding:12px}
-
-    .sg-actions{display:flex; gap:8px; flex-wrap:wrap}
-    .sg-two{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
-    @media(max-width:740px){.sg-two{grid-template-columns:1fr}}
-
-    .sg-card{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      border-radius:16px;
+      border-radius: var(--radius);
       padding:12px;
+      box-shadow: var(--shadow);
     }
-    .sg-card h3{margin:0 0 8px; font-size:13px}
-    .sg-card p{margin:0; color:var(--muted); font-size:12px; line-height:1.5}
-
-    .sg-scoreBox{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:14px;
-      background:rgba(0,0,0,.18);
-    }
-
-    .sg-list{display:grid; gap:10px}
-    .sg-item{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      border-radius:14px;
-      padding:10px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-    }
-    .sg-item b{display:block; font-size:13px}
-    .sg-item small{display:block; margin-top:4px; color:var(--muted); font-size:12px; line-height:1.4}
-
-    .sg-select{
+    .sidebarTitle{font-weight:900;margin:0 0 8px}
+    .sidebarSub{font-size:12px;color:var(--muted);margin:0 0 10px}
+    .topicBtn{
       width:100%;
-      max-width:360px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--text);
+      display:flex;justify-content:space-between;align-items:center;
+      padding:10px 12px;
       border-radius:14px;
-      padding:12px;
-      outline:none;
-      font-size:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      color:rgba(234,242,255,.9);
+      font-weight:900;
+      cursor:pointer;
+      margin-bottom:8px;
+    }
+    .topicBtn:hover{background:rgba(255,255,255,.06)}
+    .topicBtn.active{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.28), rgba(124,92,255,.18));
+    }
+    .topicTag{
+      font-size:12px;
+      color:rgba(234,242,255,.75);
+      font-weight:800;
+    }
+    .miniRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .pill{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:900;
+      color:rgba(234,242,255,.85);
     }
 
-    .sg-feedback{
-      margin-top:10px;
+    /* Main content split */
+    .mainGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media(max-width:980px){ .mainGrid{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.05);
+      border-radius: var(--radius);
+      padding:12px;
+      box-shadow: var(--shadow);
+    }
+    .card h2{margin:0 0 8px;font-size:14px}
+    .small{font-size:12px;color:var(--muted);line-height:1.5}
+    .divider{height:1px;background:rgba(255,255,255,.10);margin:10px 0}
+
+    /* Labs list */
+    .labItem{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
+      background:rgba(0,0,0,.14);
+      border-radius:16px;
+      padding:10px 12px;
+      margin-top:10px;
+    }
+    .labName{font-weight:900}
+    .openLink{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.14);
+      padding:9px 10px;border-radius:12px;
+      font-weight:900;font-size:13px;cursor:pointer;
+      white-space:nowrap;
+    }
+    .openLink:hover{background:rgba(255,255,255,.08)}
+    .statusOk{color:var(--good);font-weight:900}
+    .statusBad{color:var(--bad);font-weight:900}
+
+    /* Quiz */
+    .quizBox{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
       border-radius:16px;
       padding:12px;
-      min-height:70px;
-      white-space:pre-wrap;
-      color:rgba(234,242,255,.86);
+      margin-top:10px;
+    }
+    .qRow{margin:10px 0}
+    select,input[type="text"]{
+      width:100%;
+      padding:10px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.20);
+      color:var(--text);
+      outline:none;
+    }
+    .rowBtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .scoreBox{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+    .bigScore{font-size:24px;font-weight:1000;margin-top:6px}
+    .msgBox{
+      margin-top:10px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(0,0,0,.12);
+      font-size:12px;line-height:1.55;
     }
 
-    .divider{height:10px}
-    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+    footer{
+      margin-top:14px;
+      text-align:center;
+      color:rgba(234,242,255,.62);
+      font-size:12px;
+    }
+
+    /* ===========================================================
+       AI WIDGET CSS (scoped: DOES NOT touch your tutor layout)
+       =========================================================== */
+    #sg-ai-widget{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      overflow:hidden;
+      margin-top:10px;
+    }
+    #sg-ai-widget .sgw-head{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+    #sg-ai-widget .sgw-title{display:flex;align-items:center;gap:10px;font-weight:900}
+    #sg-ai-widget .sgw-dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--bad);
+      box-shadow:0 0 12px rgba(255,90,107,.35);
+    }
+    #sg-ai-widget .sgw-dot.ok{
+      background: var(--good);
+      box-shadow:0 0 12px rgba(51,208,122,.35);
+    }
+    #sg-ai-widget .sgw-sub{font-size:12px;color:rgba(234,242,255,.72);font-weight:700;margin-top:2px}
+    #sg-ai-widget .sgw-actions{display:flex;gap:8px;flex-wrap:wrap}
+    #sg-ai-widget .sgw-btn{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:8px 10px;border-radius:12px;
+      font-weight:900;font-size:12px;cursor:pointer;
+    }
+    #sg-ai-widget .sgw-btn:hover{background:rgba(255,255,255,.10)}
+    #sg-ai-widget .sgw-body{padding:10px 12px;display:flex;flex-direction:column;gap:10px}
+    #sg-ai-widget .sgw-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    #sg-ai-widget .sgw-mini{flex:1;min-width:160px}
+    #sg-ai-widget .sgw-chat{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(0,0,0,.14);
+      height:280px;overflow:auto;padding:10px;
+    }
+    #sg-ai-widget .sgw-msg{margin:0 0 10px;display:flex}
+    #sg-ai-widget .sgw-msg.user{justify-content:flex-end}
+    #sg-ai-widget .sgw-bubble{
+      max-width:86%;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:10px 12px;
+      font-size:13px;
+      line-height:1.5;
+      background:rgba(255,255,255,.06);
+      white-space:pre-wrap;
+    }
+    #sg-ai-widget .sgw-msg.user .sgw-bubble{
+      background:linear-gradient(135deg, rgba(47,123,255,.45), rgba(124,92,255,.28));
+      border-color:rgba(47,123,255,.35);
+    }
+    #sg-ai-widget .sgw-compose{display:flex;gap:8px;align-items:center}
+    #sg-ai-widget .sgw-send{
+      border:1px solid rgba(47,123,255,.45);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+      padding:10px 12px;border-radius:12px;
+      font-weight:1000;font-size:13px;cursor:pointer;
+    }
+    #sg-ai-widget .sgw-send:disabled{opacity:.55;cursor:not-allowed}
+    #sg-ai-widget .sgw-hint{font-size:12px;color:rgba(234,242,255,.72)}
+    #sg-ai-widget .sgw-chips{display:flex;gap:8px;flex-wrap:wrap}
+    #sg-ai-widget .sgw-chip{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      color:rgba(234,242,255,.85);
+      padding:7px 10px;border-radius:999px;
+      font-size:12px;font-weight:900;cursor:pointer;
+    }
+    #sg-ai-widget .sgw-chip:hover{background:rgba(255,255,255,.08)}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">
-          <img src="lec-logo.jpg" alt="LEC Biotec Logo"
-               onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
-        </div>
-        <div class="t">
-          <b>Sci-Guru • Form 1 Combined Science Tutor</b>
-          <span>Inline quizzes updated up to Topic 19 • Virtual Lab links</span>
-        </div>
-      </div>
+<div class="wrap">
 
-      <div class="topActions">
-        <a class="sg-btn" href="index.html">Home</a>
-        <a class="sg-btn sg-primary" href="labs-hub.html">Virtual Lab Hub</a>
-        <button class="sg-btn sg-danger" type="button" id="resetTutorAll">Reset Tutor Progress</button>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="logo"
+             onerror="this.style.display='none';this.parentElement.textContent='SG';">
       </div>
-    </header>
-
-    <section class="hero">
       <div>
-        <h1>Continue from your progress</h1>
-        <p>If any lab shows 404: the filename on GitHub/Render does not match the link (uppercase vs lowercase).</p>
+        <div class="brandTitle">Sci-Guru • Form 1 Combined Science Tutor</div>
+        <div class="brandSub">ZIMSEC / Heritage-Based • Forms 1–4 (Form 1 content)</div>
       </div>
-      <div class="pill"><span class="dot"></span> Auto-save ON</div>
-    </section>
-
-    <div class="layout">
-      <aside class="panel">
-        <div class="panelHead">
-          <div><h2>Form 1 Topics</h2><small>Click to jump</small></div>
-        </div>
-        <div class="panelBody">
-          <div class="topicList">
-            <a class="topicLink" href="#topic1"><b>Topic 1</b><span>Lab safety</span></a>
-            <a class="topicLink" href="#topic2"><b>Topic 2</b><span>Cells</span></a>
-            <a class="topicLink" href="#topic3"><b>Topic 3</b><span>Nutrition</span></a>
-            <a class="topicLink" href="#topic4"><b>Topic 4</b><span>Respiratory</span></a>
-            <a class="topicLink" href="#topic5"><b>Topic 5</b><span>Transport</span></a>
-            <a class="topicLink" href="#topic6"><b>Topic 6</b><span>Reproduction</span></a>
-            <a class="topicLink" href="#topic7"><b>Topic 7</b><span>Health</span></a>
-            <a class="topicLink" href="#topic8"><b>Topic 8</b><span>Separation</span></a>
-            <a class="topicLink" href="#topic9"><b>Topic 9</b><span>Matter</span></a>
-            <a class="topicLink" href="#topic10"><b>Topic 10</b><span>Acids/Bases</span></a>
-            <a class="topicLink" href="#topic11"><b>Topic 11</b><span>Industry</span></a>
-            <a class="topicLink" href="#topic12"><b>Topic 12</b><span>Oxidation</span></a>
-            <a class="topicLink" href="#topic13"><b>Topic 13</b><span>Organic</span></a>
-            <a class="topicLink" href="#topic14"><b>Topic 14</b><span>Data</span></a>
-            <a class="topicLink" href="#topic15"><b>Topic 15</b><span>Measurements</span></a>
-            <a class="topicLink" href="#topic16"><b>Topic 16</b><span>Force</span></a>
-            <a class="topicLink" href="#topic17"><b>Topic 17</b><span>Energy</span></a>
-            <a class="topicLink" href="#topic18"><b>Topic 18</b><span>Magnetism</span></a>
-            <a class="topicLink" href="#topic19"><b>Topic 19</b><span>Electricity</span></a>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="sg-card">
-            <h3>Quick Lab Links</h3>
-            <div class="miniLinks">
-              <a class="sg-link" href="sim-cells-hub.html">Cells Hub</a>
-              <a class="sg-link" href="sim-cells-labels.html">Cell Labelling</a>
-              <a class="sg-link" href="sim-separation.html">Separation Lab</a>
-              <a class="sg-link" href="sim-measurements.html">Measurements Lab</a>
-              <a class="sg-link" href="sim-force.html">Force Lab</a>
-              <a class="sg-link" href="sim-energy.html">Energy Lab</a>
-              <a class="sg-link" href="sim-magnetism.html">Magnetism Lab</a>
-              <a class="sg-link" href="sim-electricity.html">Electricity Lab</a>
-            </div>
-            <p style="margin-top:10px;color:var(--muted);font-size:12px;line-height:1.5">
-              Filenames must match exactly (lowercase) to avoid 404.
-            </p>
-          </div>
-        </div>
-      </aside>
-
-      <main>
-        <section class="sg-panel" id="topic1">
-          <div class="sg-panelHead">
-            <div><h2>Topic 1 • Laboratory Safety & Apparatus</h2><small>Inline quiz later</small></div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-card"><h3>Reminder</h3><p>Safety rules + apparatus use. (We can build Topic 1 quiz later.)</p></div>
-          </div>
-        </section>
-
-        <!-- Topic 15 -->
-        <section class="sg-panel" id="topic15">
-          <div class="sg-panelHead">
-            <div><h2>Topic 15 • Measurements — Inline Quiz</h2><small>SI units • instruments • errors</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t15">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t15">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t15">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-measurements.html">Open Measurements Lab</a></div></div>
-              <div class="sg-card"><h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t15Score">0</b></div>
-                  <div><span style="color:var(--muted)">Status</span><br/><b id="t15Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t15List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t15Feedback">Click <b>Start / Resume</b> to load the Topic 15 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 16 -->
-        <section class="sg-panel" id="topic16">
-          <div class="sg-panelHead">
-            <div><h2>Topic 16 • Force — Inline Quiz</h2><small>contact vs non-contact • newton (N) • weight • friction</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t16">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t16">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t16">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-force.html">Open Force Lab</a></div></div>
-              <div class="sg-card"><h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t16Score">0</b></div>
-                  <div><span style="color:var(--muted)">Status</span><br/><b id="t16Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t16List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t16Feedback">Click <b>Start / Resume</b> to load the Topic 16 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 17 -->
-        <section class="sg-panel" id="topic17">
-          <div class="sg-panelHead">
-            <div><h2>Topic 17 • Energy — Inline Quiz</h2><small>forms • sources • conversions • energy chains</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t17">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t17">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t17">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-energy.html">Open Energy Lab</a></div></div>
-              <div class="sg-card"><h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t17Score">0</b></div>
-                  <div><span style="color:var(--muted)">Status</span><br/><b id="t17Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t17List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t17Feedback">Click <b>Start / Resume</b> to load the Topic 17 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 18 -->
-        <section class="sg-panel" id="topic18">
-          <div class="sg-panelHead">
-            <div><h2>Topic 18 • Magnetism — Inline Quiz</h2><small>poles • magnetic materials • electromagnets • compass</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t18">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t18">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t18">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-magnetism.html">Open Magnetism Lab</a></div></div>
-              <div class="sg-card"><h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t18Score">0</b></div>
-                  <div><span style="color:var(--muted)">Status</span><br/><b id="t18Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t18List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t18Feedback">Click <b>Start / Resume</b> to load the Topic 18 quiz.</div>
-          </div>
-        </section>
-
-        <!-- ✅ Topic 19 (NEW) -->
-        <section class="sg-panel" id="topic19">
-          <div class="sg-panelHead">
-            <div><h2>Topic 19 • Electricity — Inline Quiz</h2><small>charges • conductors • circuit parts • series circuits</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t19">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t19">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t19">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Virtual Experiment</h3>
-                <div class="miniLinks">
-                  <a class="sg-link" href="sim-electricity.html">Open Electricity Lab (Series)</a>
-                </div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t19Score">0</b></div>
-                  <div><span style="color:var(--muted)">Status</span><br/><b id="t19Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t19List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t19Feedback">Click <b>Start / Resume</b> to load the Topic 19 quiz.</div>
-          </div>
-        </section>
-      </main>
     </div>
 
-    <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
-  </div>
+    <div class="topActions">
+      <a class="btn" href="index.html">Home</a>
+      <a class="btn primary" href="labs-hub.html">Virtual Lab Hub</a>
+    </div>
+  </header>
 
-  <script>
-    const TUTOR_KEYS = [
-      "sciguru_tutor_t2_cells_quiz_v1",
-      "sciguru_tutor_t3_nutrition_quiz_v1",
-      "sciguru_tutor_t4_respiratory_quiz_v1",
-      "sciguru_tutor_t5_transport_quiz_v1",
-      "sciguru_tutor_t6_reproduction_quiz_v1",
-      "sciguru_tutor_t7_health_quiz_v1",
-      "sciguru_tutor_t8_separation_quiz_v1",
-      "sciguru_tutor_t9_matter_quiz_v1",
-      "sciguru_tutor_t10_acidsbases_quiz_v1",
-      "sciguru_tutor_t11_industrial_quiz_v1",
-      "sciguru_tutor_t12_oxidation_quiz_v1",
-      "sciguru_tutor_t13_organic_quiz_v1",
-      "sciguru_tutor_t14_data_quiz_v1",
-      "sciguru_tutor_t15_measurements_quiz_v1",
-      "sciguru_tutor_t16_force_quiz_v1",
-      "sciguru_tutor_t17_energy_quiz_v1",
-      "sciguru_tutor_t18_magnetism_quiz_v1",
-      "sciguru_tutor_t19_electricity_quiz_v1"
-    ];
+  <section class="banner">
+    <h1>Continue from your progress</h1>
+    <p>
+      Your scores and progress are saved on this device. If you see a 404, it usually means the
+      filename in GitHub does not match the link (uppercase vs lowercase).
+    </p>
+    <div class="hint">Tip: Keep all filenames lowercase (example: <b>sim-cells-labels.html</b> not SIM-Cells-Labels.html)</div>
+  </section>
 
-    document.getElementById("resetTutorAll").addEventListener("click", ()=>{
-      if(!confirm("Reset ALL tutor quizzes (Topic 2–19) on this device?")) return;
-      TUTOR_KEYS.forEach(k=>localStorage.removeItem(k));
-      location.reload();
-    });
+  <section class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebarTitle">Form 1 Topics</div>
+      <div class="sidebarSub">Click to jump</div>
 
-    function makeInlineQuiz(cfg){
-      const KEY = cfg.key;
-      const listEl = document.getElementById(cfg.listId);
-      const feedbackEl = document.getElementById(cfg.feedbackId);
-      const scoreEl = document.getElementById(cfg.scoreId);
-      const statusEl = document.getElementById(cfg.statusId);
+      <div id="topicList"></div>
 
-      function load(){
-        try{ return JSON.parse(localStorage.getItem(KEY)) || { ans:{}, score:0, status:"Not started" }; }
-        catch(e){ return { ans:{}, score:0, status:"Not started" }; }
-      }
-      const state = load();
+      <div class="miniRow">
+        <span class="pill">Saved Progress ✓</span>
+        <span class="pill" id="linkStatus">Links: checking…</span>
+      </div>
+    </aside>
 
-      function save(){
-        localStorage.setItem(KEY, JSON.stringify(state));
-        scoreEl.textContent = state.score || 0;
-        statusEl.textContent = state.status || "Not started";
-      }
+    <!-- Main -->
+    <main class="mainGrid">
 
-      function renderQuiz(){
-        listEl.innerHTML = "";
-        cfg.quiz.forEach((q, i)=>{
-          const val = state.ans[q.id];
-          const row = document.createElement("div");
-          row.className = "sg-item";
-          row.innerHTML = `
-            <div style="min-width:0">
-              <b>${i+1}. ${q.q}</b>
-              <small>Select one answer</small>
-            </div>
-            <div>
-              <select class="sg-select" data-q="${q.id}">
-                <option value="" ${val==null ? "selected":""}>-- choose --</option>
-                ${q.opts.map((o,idx)=>`<option value="${idx}" ${String(val)===String(idx)?"selected":""}>${o}</option>`).join("")}
-              </select>
-            </div>
-          `;
-          listEl.appendChild(row);
-        });
+      <!-- Middle: Topic + Labs + Quiz -->
+      <section class="card" id="topicCard">
+        <h2 id="topicTitle">Topic</h2>
+        <div class="small" id="topicDesc"></div>
 
-        listEl.querySelectorAll("select[data-q]").forEach(sel=>{
-          sel.addEventListener("change", ()=>{
-            const id = sel.getAttribute("data-q");
-            state.ans[id] = sel.value==="" ? null : Number(sel.value);
-            state.status = "In progress";
-            save();
-          });
-        });
+        <div class="divider"></div>
 
-        save();
-      }
+        <h2>Virtual Experiment</h2>
+        <div class="small">Open the correct lab for this topic.</div>
 
-      function markQuiz(){
-        let answered = 0, correct = 0;
-        cfg.quiz.forEach(q=>{
-          const a = state.ans[q.id];
-          if(a==null) return;
-          answered++;
-          if(a === q.correct) correct++;
-        });
+        <div id="labList"></div>
 
-        if(answered < cfg.quiz.length){
-          feedbackEl.textContent = `Answered ${answered}/${cfg.quiz.length}.\nFinish all questions then press Mark Quiz.`;
-          state.status = "In progress";
-          save();
-          return;
-        }
+        <div class="divider"></div>
 
-        const score = Math.round((correct / cfg.quiz.length) * cfg.outOf);
-        state.score = score;
-        state.status = "Completed ✅";
+        <h2 id="quizTitle">Inline Quiz</h2>
+        <div class="small" id="quizDesc">Click Start/Resume to load the quiz.</div>
 
-        let msg = `${cfg.title} Results:\nCorrect: ${correct}/${cfg.quiz.length}\nScore: ${score}/${cfg.outOf}\n\n`;
-        cfg.quiz.forEach((q, idx)=>{
-          const ok = (state.ans[q.id] === q.correct);
-          msg += `${idx+1}) ${ok ? "✅" : "❌"} ${q.exp}\n`;
-        });
+        <div class="quizBox" id="quizBox">
+          <div class="small" id="quizIntro">Click <b>Start / Resume</b> to load this topic quiz.</div>
 
-        feedbackEl.textContent = msg;
-        save();
-      }
+          <div id="quizQuestions" style="display:none;"></div>
 
-      function resetQuiz(){
-        state.ans = {};
-        state.score = 0;
-        state.status = "Not started";
-        feedbackEl.textContent = "Reset complete. Click Start / Resume to load the quiz again.";
-        save();
-        renderQuiz();
-      }
+          <div class="rowBtns">
+            <button class="btn primary" id="startBtn">Start / Resume</button>
+            <button class="btn" id="submitBtn" style="display:none;">Submit</button>
+            <button class="btn" id="resetBtn">Reset Topic Score</button>
+          </div>
 
-      const startBtn = document.querySelector(`[data-start="${cfg.code}"]`);
-      const markBtn  = document.querySelector(`[data-mark="${cfg.code}"]`);
-      const resetBtn = document.querySelector(`[data-reset="${cfg.code}"]`);
+          <div class="msgBox" id="quizMsg">Ready.</div>
+        </div>
 
-      if(startBtn) startBtn.addEventListener("click", ()=>{
-        renderQuiz();
-        feedbackEl.textContent = "Quiz loaded. Answer all questions then press Mark Quiz.";
-        state.status = Object.keys(state.ans||{}).length ? "In progress" : "Not started";
-        save();
+        <div class="scoreBox">
+          <div style="font-weight:900">Your Score</div>
+          <div class="small">Quiz Score</div>
+          <div class="bigScore" id="scoreValue">0</div>
+        </div>
+      </section>
+
+      <!-- Right: AI Tutor Widget -->
+      <section class="card">
+        <h2>AI Tutor</h2>
+        <div class="small">
+          Students can ask Sci-Guru questions by Form and Topic. This uses your Render backend.
+        </div>
+
+        <!-- AI Widget mounts here -->
+        <div id="sg-ai-widget"></div>
+
+        <div class="divider"></div>
+
+        <div class="small">
+          If you still get “Not connected”, set your backend URL inside this file (near the bottom):
+          <b>window.SG_BACKEND_URL</b>.
+        </div>
+      </section>
+
+    </main>
+  </section>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+/* ===========================================================
+   CONFIG: Put your Render backend URL here (NO trailing slash)
+   =========================================================== */
+window.SG_BACKEND_URL = "https://YOUR-RENDER-APP.onrender.com";
+
+/* ===========================================================
+   TOPICS + LAB LINKS (filenames MUST match your repo root)
+   =========================================================== */
+const TOPICS = [
+  { id: 1,  name:"Laboratory Safety & Apparatus",
+    desc:"Rules, safety symbols, apparatus identification, measuring cylinder meniscus.",
+    labs:[{name:"Lab Apparatus Explorer", file:"sim-apparatus.html"}],
+    quiz:null
+  },
+  { id: 2,  name:"Cells & Levels of Organisation",
+    desc:"Plant vs animal cells, organelles, levels of organisation (cells → tissues → organs → systems).",
+    labs:[
+      {name:"Cells Hub", file:"sim-cells-hub.html"},
+      {name:"Cell Labeling", file:"sim-cells-labels.html"},
+      {name:"Levels of Organisation", file:"sim-levels.html"},
+      {name:"Microscope Simulator", file:"sim-microscope.html"}
+    ],
+    quiz:{
+      title:"Topic 2 • Cells (Inline Quiz)",
+      intro:"Answer the questions then Submit.",
+      questions:[
+        {q:"Which structure controls cell activities?", type:"mc", options:["Cytoplasm","Nucleus","Cell membrane","Cell wall"], a:1},
+        {q:"Which cell part is found in plant cells but NOT in animal cells?", type:"mc", options:["Nucleus","Cytoplasm","Cell wall","Cell membrane"], a:2},
+        {q:"Chloroplasts are mainly responsible for…", type:"mc", options:["Respiration","Photosynthesis","Diffusion","Osmosis"], a:1},
+        {q:"Correct order of organisation is…", type:"mc", options:["Organs → Cells → Tissues","Cells → Tissues → Organs","Tissues → Cells → Organs","Systems → Organs → Cells"], a:1},
+      ]
+    }
+  },
+  { id: 3,  name:"Nutrition",
+    desc:"Balanced diet, nutrients (carbs, fats, proteins, vitamins, minerals, fibre, water).",
+    labs:[{name:"(Lab coming) Balanced Diet Builder", file:"labs-hub.html"}],
+    quiz:{
+      title:"Topic 3 • Nutrition (Inline Quiz)",
+      intro:"Answer and Submit.",
+      questions:[
+        {q:"Which nutrient is mainly for growth and repair?", type:"mc", options:["Carbohydrates","Proteins","Fats","Fibre"], a:1},
+        {q:"Which nutrient helps food move through the digestive system?", type:"mc", options:["Fibre","Vitamins","Minerals","Protein"], a:0},
+        {q:"Which provides the MAIN energy supply?", type:"mc", options:["Carbohydrates","Vitamins","Mineral salts","Water"], a:0},
+        {q:"A balanced diet means…", type:"mc", options:["Eating only fruits","Eating correct types and amounts of nutrients","Eating only meat","Skipping meals"], a:1},
+      ]
+    }
+  },
+  { id: 4,  name:"Respiratory System",
+    desc:"Breathing vs respiration, composition of air, tests for oxygen (glowing splint) and CO₂ (limewater).",
+    labs:[{name:"(Lab coming) Gas Tests", file:"labs-hub.html"}],
+    quiz:{
+      title:"Topic 4 • Respiratory (Inline Quiz)",
+      intro:"Answer and Submit.",
+      questions:[
+        {q:"Air is mostly…", type:"mc", options:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"], a:1},
+        {q:"Limewater turns cloudy when…", type:"mc", options:["Oxygen is present","Carbon dioxide is present","Nitrogen is present","Water vapour is present"], a:1},
+        {q:"Breathing is…", type:"mc", options:["Chemical reaction in cells","Physical movement of air in/out","Only happens in plants","The same as photosynthesis"], a:1},
+        {q:"Respiration produces…", type:"mc", options:["Glucose + oxygen","Energy + carbon dioxide","Chlorophyll","Only water"], a:1},
+      ]
+    }
+  },
+  { id: 5,  name:"Transport Systems",
+    desc:"Diffusion, osmosis, blood components (plasma, RBCs, WBCs, platelets).",
+    labs:[{name:"(Lab coming) Diffusion & Osmosis", file:"labs-hub.html"}],
+    quiz:{
+      title:"Topic 5 • Transport (Inline Quiz)",
+      intro:"Answer and Submit.",
+      questions:[
+        {q:"Diffusion is movement of particles from…", type:"mc", options:["Low to high concentration","High to low concentration","Cold to hot","Large to small"], a:1},
+        {q:"Osmosis is movement of…", type:"mc", options:["Salt","Water through a partially permeable membrane","Oxygen","Blood cells"], a:1},
+        {q:"Red blood cells mainly transport…", type:"mc", options:["Oxygen","Food","Platelets","Hormones"], a:0},
+        {q:"Platelets help with…", type:"mc", options:["Digestion","Blood clotting","Breathing","Photosynthesis"], a:1},
+      ]
+    }
+  },
+  { id: 6,  name:"Reproductive Systems",
+    desc:"Flower parts, pollination, fertilisation, puberty changes in humans.",
+    labs:[{name:"(Lab coming) Flower Dissection", file:"labs-hub.html"}],
+    quiz:{
+      title:"Topic 6 • Reproduction (Inline Quiz)",
+      intro:"Answer and Submit.",
+      questions:[
+        {q:"Male part of a flower is the…", type:"mc", options:["Stigma","Stamen","Ovary","Carpel"], a:1},
+        {q:"Pollination is…", type:"mc", options:["Fusion of gametes","Transfer of pollen to stigma","Seed formation","Fruit formation"], a:1},
+        {q:"Fertilisation forms a…", type:"mc", options:["Zygote","Spore","Leaf","Root"], a:0},
+        {q:"Puberty is…", type:"mc", options:["Time body prepares for reproduction","A disease","A type of fertiliser","A food group"], a:0},
+      ]
+    }
+  },
+  { id: 7,  name:"Health & Diseases",
+    desc:"Personal/food/environmental hygiene, waste disposal, infectious diseases & transmission.",
+    labs:[{name:"(Lab coming) Hygiene Decision Game", file:"labs-hub.html"}],
+    quiz:{
+      title:"Topic 7 • Health (Inline Quiz)",
+      intro:"Answer and Submit.",
+      questions:[
+        {q:"Cholera is commonly spread through…", type:"mc", options:["Clean water","Contaminated water/food","Air only","Sunlight"], a:1},
+        {q:"Malaria is transmitted by…", type:"mc", options:["Snails","Mosquitoes","Flies","Dogs"], a:1},
+        {q:"Recycling is done to…", type:"mc", options:["Increase waste","Reduce waste","Spread disease","Stop breathing"], a:1},
+        {q:"Personal hygiene means…", type:"mc", options:["Keeping yourself clean","Only washing clothes","Only cleaning the yard","Only cooking food"], a:0},
+      ]
+    }
+  },
+
+  /* Chemistry + Physics Topics (keep them visible — you already reached 19) */
+  { id: 8,  name:"Separation", desc:"Filtration, magnetism, decanting, evaporation, winnowing.", labs:[{name:"Separation Lab", file:"sim-separation.html"}], quiz:null },
+  { id: 9,  name:"Matter", desc:"States of matter, kinetic theory, changes of state, solubility.", labs:[{name:"(Lab coming) Matter Lab", file:"labs-hub.html"}], quiz:null },
+  { id: 10, name:"Acids, Bases & Salts", desc:"Indicators, properties, neutralisation.", labs:[{name:"(Lab coming) Acids/Bases", file:"labs-hub.html"}], quiz:null },
+  { id: 11, name:"Industrial Processes", desc:"Peanut butter/oil processing steps.", labs:[{name:"(Lab coming) Industrial", file:"labs-hub.html"}], quiz:null },
+  { id: 12, name:"Oxidation", desc:"Rusting & prevention (painting, galvanising, electroplating).", labs:[{name:"(Lab coming) Rusting", file:"labs-hub.html"}], quiz:null },
+  { id: 13, name:"Organic Chemistry", desc:"Fuels, combustion, fuel efficiency.", labs:[{name:"(Lab coming) Fuels", file:"labs-hub.html"}], quiz:null },
+  { id: 14, name:"Data Presentation", desc:"Tables, tallies, bar graphs.", labs:[{name:"(Lab coming) Chart Builder", file:"labs-hub.html"}], quiz:null },
+  { id: 15, name:"Measurements", desc:"SI units, instruments, errors.", labs:[{name:"Open Measurements Lab", file:"sim-apparatus.html"}], quiz:null },
+  { id: 16, name:"Force", desc:"Types of forces, weight, newton, friction.", labs:[{name:"(Lab coming) Forces", file:"labs-hub.html"}], quiz:null },
+  { id: 17, name:"Energy", desc:"Forms of energy, conversions, sources.", labs:[{name:"(Lab coming) Energy", file:"labs-hub.html"}], quiz:null },
+  { id: 18, name:"Magnetism", desc:"Poles, magnetic field, electromagnets.", labs:[{name:"(Lab coming) Magnetism", file:"labs-hub.html"}], quiz:null },
+  { id: 19, name:"Electricity", desc:"Static vs current, conductors/insulators, circuit components & symbols.", labs:[{name:"Electricity Simulator", file:"sim-electricity.html"}], quiz:null },
+];
+
+const LS_SELECTED_TOPIC = "sg_selected_topic";
+const LS_SCORE_PREFIX = "sg_topic_score_";
+
+/* ===========================================================
+   RENDER TOPIC LIST
+   =========================================================== */
+const topicListEl = document.getElementById("topicList");
+
+function renderTopicList(activeId){
+  topicListEl.innerHTML = "";
+  TOPICS.forEach(t=>{
+    const btn = document.createElement("button");
+    btn.className = "topicBtn" + (t.id===activeId ? " active" : "");
+    btn.innerHTML = `<span>Topic ${t.id}</span><span class="topicTag">${t.name.split(" ")[0]}</span>`;
+    btn.onclick = ()=>selectTopic(t.id);
+    topicListEl.appendChild(btn);
+  });
+}
+
+/* ===========================================================
+   TOPIC CARD + LABS + QUIZ
+   =========================================================== */
+const topicTitleEl = document.getElementById("topicTitle");
+const topicDescEl  = document.getElementById("topicDesc");
+const labListEl    = document.getElementById("labList");
+const quizTitleEl  = document.getElementById("quizTitle");
+const quizDescEl   = document.getElementById("quizDesc");
+const quizIntroEl  = document.getElementById("quizIntro");
+const quizQuestionsEl = document.getElementById("quizQuestions");
+const quizMsgEl    = document.getElementById("quizMsg");
+const scoreValueEl = document.getElementById("scoreValue");
+const startBtn     = document.getElementById("startBtn");
+const submitBtn    = document.getElementById("submitBtn");
+const resetBtn     = document.getElementById("resetBtn");
+
+let currentTopicId = Number(localStorage.getItem(LS_SELECTED_TOPIC)) || 1;
+let quizLoaded = false;
+
+function getTopic(id){ return TOPICS.find(t=>t.id===id); }
+function scoreKey(id){ return LS_SCORE_PREFIX + id; }
+
+function setScore(id, val){
+  localStorage.setItem(scoreKey(id), String(val));
+  scoreValueEl.textContent = String(val);
+}
+function getScore(id){
+  return Number(localStorage.getItem(scoreKey(id)) || "0");
+}
+
+function renderLabs(topic){
+  labListEl.innerHTML = "";
+  (topic.labs||[]).forEach(l=>{
+    const item = document.createElement("div");
+    item.className = "labItem";
+    item.innerHTML = `
+      <div>
+        <div class="labName">${l.name}</div>
+        <div class="small">File: <b>${l.file}</b></div>
+      </div>
+      <button class="openLink" onclick="location.href='${l.file}'">Open →</button>
+    `;
+    labListEl.appendChild(item);
+  });
+}
+
+function buildQuizUI(topic){
+  quizQuestionsEl.innerHTML = "";
+  quizLoaded = false;
+
+  if(!topic.quiz){
+    quizTitleEl.textContent = `Topic ${topic.id} • ${topic.name} — Inline Quiz`;
+    quizDescEl.textContent  = "Quiz coming (your progress is not erased).";
+    quizIntroEl.innerHTML   = "No quiz file yet for this topic. You can still use the labs and AI Tutor.";
+    quizQuestionsEl.style.display = "none";
+    submitBtn.style.display = "none";
+    return;
+  }
+
+  quizTitleEl.textContent = topic.quiz.title || `Topic ${topic.id} Quiz`;
+  quizDescEl.textContent  = topic.quiz.intro || "Answer and submit.";
+
+  // Build questions (MC only here to keep it clean)
+  topic.quiz.questions.forEach((qq, idx)=>{
+    const qWrap = document.createElement("div");
+    qWrap.className = "qRow";
+    const selectId = `q_${topic.id}_${idx}`;
+    qWrap.innerHTML = `
+      <div class="small"><b>${idx+1})</b> ${qq.q}</div>
+      <select id="${selectId}">
+        <option value="">Choose…</option>
+        ${qq.options.map((o,i)=>`<option value="${i}">${o}</option>`).join("")}
+      </select>
+    `;
+    quizQuestionsEl.appendChild(qWrap);
+  });
+
+  quizIntroEl.innerHTML = "Click <b>Start / Resume</b> to load this topic quiz.";
+  quizQuestionsEl.style.display = "none";
+  submitBtn.style.display = "none";
+}
+
+function selectTopic(id){
+  const topic = getTopic(id);
+  if(!topic) return;
+
+  currentTopicId = id;
+  localStorage.setItem(LS_SELECTED_TOPIC, String(id));
+  renderTopicList(id);
+
+  topicTitleEl.textContent = `Topic ${topic.id} • ${topic.name}`;
+  topicDescEl.textContent  = topic.desc || "";
+
+  renderLabs(topic);
+  buildQuizUI(topic);
+
+  setScore(topic.id, getScore(topic.id));
+
+  quizMsgEl.textContent = "Ready.";
+}
+
+startBtn.onclick = ()=>{
+  const topic = getTopic(currentTopicId);
+  if(!topic) return;
+
+  if(!topic.quiz){
+    quizMsgEl.innerHTML = `<span class="statusBad">No quiz yet</span> for Topic ${topic.id}. Use labs + AI Tutor.`;
+    return;
+  }
+
+  quizLoaded = true;
+  quizQuestionsEl.style.display = "";
+  submitBtn.style.display = "";
+  quizIntroEl.innerHTML = `<span class="statusOk">Quiz loaded ✓</span> Answer and press Submit.`;
+  quizMsgEl.textContent = "Answer all questions.";
+};
+
+submitBtn.onclick = ()=>{
+  const topic = getTopic(currentTopicId);
+  if(!topic || !topic.quiz) return;
+
+  let score = 0;
+  let total = topic.quiz.questions.length;
+
+  topic.quiz.questions.forEach((qq, idx)=>{
+    const sel = document.getElementById(`q_${topic.id}_${idx}`);
+    const v = sel ? sel.value : "";
+    if(v !== "" && Number(v) === qq.a) score++;
+  });
+
+  setScore(topic.id, score);
+  const pct = Math.round((score/total)*100);
+  quizMsgEl.innerHTML = (score===total)
+    ? `<span class="statusOk">Excellent ✅</span> You got ${score}/${total} (${pct}%).`
+    : `<span class="statusBad">Try again ❌</span> You got ${score}/${total} (${pct}%).`;
+};
+
+resetBtn.onclick = ()=>{
+  setScore(currentTopicId, 0);
+  quizMsgEl.textContent = "Score reset for this topic.";
+};
+
+/* ===========================================================
+   LINK CHECK (best-effort)
+   =========================================================== */
+const linkStatusEl = document.getElementById("linkStatus");
+async function checkLink(file){
+  try{
+    const res = await fetch(file, {method:"GET", cache:"no-store"});
+    return res.ok;
+  }catch(e){ return false; }
+}
+async function checkAllLinks(){
+  const files = new Set();
+  TOPICS.forEach(t => (t.labs||[]).forEach(l => files.add(l.file)));
+  let okCount = 0;
+  let total = files.size;
+  for(const f of files){
+    const ok = await checkLink(f);
+    if(ok) okCount++;
+  }
+  linkStatusEl.textContent = (okCount===total)
+    ? "Links: OK ✓"
+    : `Links: ${okCount}/${total} OK`;
+}
+checkAllLinks();
+
+/* ===========================================================
+   INIT
+   =========================================================== */
+selectTopic(currentTopicId);
+
+/* ===========================================================
+   ===========================================================
+   SCI-GURU AI WIDGET (INCLUDED INSIDE tutor.html)
+   ===========================================================
+   =========================================================== */
+(function(){
+  const DEFAULT_BACKEND = "";
+  const BACKEND_URL = (window.SG_BACKEND_URL || DEFAULT_BACKEND || "").replace(/\/+$/,"");
+  const ENDPOINTS = ["/api/chat", "/chat"];
+  const LS_KEY = "sg_chat_history_v1";
+
+  const mountEl = document.getElementById("sg-ai-widget");
+  if(!mountEl) return;
+
+  mountEl.innerHTML = `
+    <div class="sgw-head">
+      <div>
+        <div class="sgw-title">
+          <span class="sgw-dot" id="sgwDot"></span>
+          <div>
+            Sci-Guru Tutor Chat
+            <div class="sgw-sub" id="sgwStatus">Not connected</div>
+          </div>
+        </div>
+      </div>
+      <div class="sgw-actions">
+        <button class="sgw-btn" id="sgwClear">Clear</button>
+        <button class="sgw-btn" id="sgwTest">Test</button>
+      </div>
+    </div>
+
+    <div class="sgw-body">
+      <div class="sgw-row">
+        <div class="sgw-mini">
+          <div class="small" style="margin-bottom:6px"><b>Form</b></div>
+          <select id="sgwForm">
+            <option value="Form 1" selected>Form 1</option>
+            <option value="Form 2">Form 2</option>
+            <option value="Form 3">Form 3</option>
+            <option value="Form 4">Form 4</option>
+          </select>
+        </div>
+        <div class="sgw-mini">
+          <div class="small" style="margin-bottom:6px"><b>Topic</b> (auto from left)</div>
+          <input id="sgwTopic" placeholder="e.g., Nutrition, Respiration, Electricity"/>
+        </div>
+      </div>
+
+      <div class="sgw-chips">
+        <button class="sgw-chip" data-q="Explain this topic simply.">Explain simply</button>
+        <button class="sgw-chip" data-q="Give me 5 revision questions with answers.">Revision Qs</button>
+        <button class="sgw-chip" data-q="Give me a practical experiment I can do at school.">Practical</button>
+        <button class="sgw-chip" data-q="Make a 10-question quiz.">Quiz</button>
+      </div>
+
+      <div class="sgw-chat" id="sgwChat"></div>
+
+      <div class="sgw-compose">
+        <input id="sgwInput" placeholder="Type your question… (Press Enter to send)"/>
+        <button class="sgw-send" id="sgwSend">Send</button>
+      </div>
+
+      <div class="sgw-hint">
+        Backend: <b>${BACKEND_URL ? BACKEND_URL : "NOT SET"}</b>
+      </div>
+    </div>
+  `;
+
+  const dot = document.getElementById("sgwDot");
+  const statusEl = document.getElementById("sgwStatus");
+  const chatEl = document.getElementById("sgwChat");
+  const formEl = document.getElementById("sgwForm");
+  const topicEl = document.getElementById("sgwTopic");
+  const inputEl = document.getElementById("sgwInput");
+  const sendBtn = document.getElementById("sgwSend");
+  const clearBtn = document.getElementById("sgwClear");
+  const testBtn = document.getElementById("sgwTest");
+
+  function nowTime(){
+    return new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+  }
+  function safeParse(json, fallback){
+    try{return JSON.parse(json);}catch(e){return fallback;}
+  }
+  function loadHistory(){
+    const data = safeParse(localStorage.getItem(LS_KEY), []);
+    return Array.isArray(data) ? data : [];
+  }
+  function saveHistory(arr){
+    localStorage.setItem(LS_KEY, JSON.stringify(arr.slice(-40)));
+  }
+  function addMsg(role, text, t=nowTime(), save=true){
+    const wrap = document.createElement("div");
+    wrap.className = "sgw-msg " + (role==="user" ? "user" : "bot");
+    wrap.innerHTML = `<div class="sgw-bubble"><b style="font-size:12px;opacity:.75">${role==="user"?"You":"Sci-Guru"} • ${t}</b><br>${(text||"").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</div>`;
+    chatEl.appendChild(wrap);
+    chatEl.scrollTop = chatEl.scrollHeight;
+
+    if(save){
+      const hist = loadHistory();
+      hist.push({role, text, time:t});
+      saveHistory(hist);
+    }
+  }
+
+  // Load saved chat
+  loadHistory().forEach(m => addMsg(m.role, m.text, m.time, false));
+  chatEl.scrollTop = chatEl.scrollHeight;
+
+  // Keep topic field synced with selected topic
+  function syncTopic(){
+    const t = getTopic(currentTopicId);
+    if(t) topicEl.value = t.name;
+  }
+  syncTopic();
+
+  // When user clicks topic, update widget topic too
+  const originalSelectTopic = selectTopic;
+  window.selectTopic = function(id){
+    originalSelectTopic(id);
+    syncTopic();
+  };
+
+  async function detectEndpoint(){
+    if(!BACKEND_URL) return null;
+    for(const ep of ENDPOINTS){
+      try{
+        const res = await fetch(BACKEND_URL + ep, {method:"OPTIONS"});
+        if(res) return ep; // if it responds, we assume endpoint exists
+      }catch(e){}
+    }
+    // fallback: try first endpoint anyway
+    return ENDPOINTS[0];
+  }
+
+  let chosenEndpoint = null;
+
+  async function setConnected(ok, msg){
+    if(ok){
+      dot.classList.add("ok");
+      statusEl.textContent = msg || "Connected";
+    }else{
+      dot.classList.remove("ok");
+      statusEl.textContent = msg || "Not connected";
+    }
+  }
+
+  async function testConnection(){
+    if(!BACKEND_URL){
+      setConnected(false, "Backend URL not set");
+      return;
+    }
+    chosenEndpoint = await detectEndpoint();
+    // quick ping by sending a tiny message
+    try{
+      const payload = { message:"ping", form: formEl.value, topic: topicEl.value };
+      const res = await fetch(BACKEND_URL + chosenEndpoint, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
       });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      setConnected(true, "Connected ✓");
+    }catch(e){
+      setConnected(false, "Backend not reachable");
+    }
+  }
 
-      if(markBtn) markBtn.addEventListener("click", markQuiz);
-      if(resetBtn) resetBtn.addEventListener("click", resetQuiz);
+  async function send(){
+    const text = (inputEl.value || "").trim();
+    if(!text) return;
 
-      if(Object.keys(state.ans||{}).some(k => state.ans[k] != null)){
-        renderQuiz();
-        feedbackEl.textContent = "Resumed your saved answers. Finish then press Mark Quiz.";
-        state.status = "In progress";
-        save();
-      } else {
-        save();
-      }
+    addMsg("user", text);
+    inputEl.value = "";
+    sendBtn.disabled = true;
+
+    // If backend not set: offline fallback
+    if(!BACKEND_URL){
+      addMsg("bot", "Backend URL is not set. Ask your teacher/admin to set window.SG_BACKEND_URL to your Render link.");
+      sendBtn.disabled = false;
+      return;
     }
 
-    // Topic 15
-    makeInlineQuiz({
-      code:"t15", key:"sciguru_tutor_t15_measurements_quiz_v1",
-      title:"Topic 15 (Measurements) Quiz", outOf:30,
-      listId:"t15List", feedbackId:"t15Feedback", scoreId:"t15Score", statusId:"t15Status",
-      quiz:[
-        {id:"q1", q:"The SI unit for length is ____.", opts:["metre (m)","centimetre (cm)","kilometre (km)"], correct:0, exp:"SI unit of length is metre (m)."},
-        {id:"q2", q:"The SI unit for mass is ____.", opts:["gram (g)","kilogram (kg)","tonne (t)"], correct:1, exp:"SI unit of mass is kilogram (kg)."},
-        {id:"q3", q:"The SI unit for time is ____.", opts:["minute (min)","hour (h)","second (s)"], correct:2, exp:"SI unit of time is second (s)."},
-        {id:"q4", q:"The SI unit for temperature is ____.", opts:["degree Celsius (°C)","kelvin (K)","fahrenheit (°F)"], correct:1, exp:"SI unit of temperature is kelvin (K)."},
-        {id:"q5", q:"Parallax error happens when you ____.", opts:["read a scale from the wrong angle","use a balance","heat a liquid"], correct:0, exp:"Parallax error is caused by reading from the wrong angle."},
-        {id:"q6", q:"Zero error means the instrument ____.", opts:["does not read zero when it should","is always correct","cannot measure temperature"], correct:0, exp:"Zero error: instrument is not at zero when it should be."}
-      ]
-    });
+    if(!chosenEndpoint) chosenEndpoint = ENDPOINTS[0];
 
-    // Topic 16
-    makeInlineQuiz({
-      code:"t16", key:"sciguru_tutor_t16_force_quiz_v1",
-      title:"Topic 16 (Force) Quiz", outOf:40,
-      listId:"t16List", feedbackId:"t16Feedback", scoreId:"t16Score", statusId:"t16Status",
-      quiz:[
-        {id:"q1", q:"A force is best described as ____.", opts:["a push or a pull","only gravity","only friction"], correct:0, exp:"A force is a push or a pull."},
-        {id:"q2", q:"The SI unit of force is ____.", opts:["joule (J)","newton (N)","watt (W)"], correct:1, exp:"Force is measured in newton (N)."},
-        {id:"q3", q:"A force can change an object's ____.", opts:["speed/direction/shape/position","colour only","temperature only"], correct:0, exp:"Force can change motion and shape."},
-        {id:"q4", q:"Which is a non-contact force?", opts:["friction","tension in a rope","gravity"], correct:2, exp:"Gravity acts at a distance (non-contact)."},
-        {id:"q5", q:"Friction is a ____ force.", opts:["non-contact","contact","imaginary"], correct:1, exp:"Friction needs contact between surfaces."},
-        {id:"q6", q:"Weight is the force due to ____.", opts:["magnetism","gravity","light"], correct:1, exp:"Weight is gravitational force."},
-        {id:"q7", q:"Force is commonly measured using a ____.", opts:["thermometer","spring balance/force meter","measuring cylinder"], correct:1, exp:"A spring balance/force meter measures force."},
-        {id:"q8", q:"The SI unit for weight is ____.", opts:["kilogram (kg)","newton (N)","metre (m)"], correct:1, exp:"Weight is a force, so it is measured in newtons (N)."}
-      ]
-    });
+    const payload = {
+      message: text,
+      form: formEl.value,
+      topic: topicEl.value || (getTopic(currentTopicId)?.name || "")
+    };
 
-    // Topic 17
-    makeInlineQuiz({
-      code:"t17", key:"sciguru_tutor_t17_energy_quiz_v1",
-      title:"Topic 17 (Energy) Quiz", outOf:40,
-      listId:"t17List", feedbackId:"t17Feedback", scoreId:"t17Score", statusId:"t17Status",
-      quiz:[
-        {id:"q1", q:"Energy is best defined as ____.", opts:["ability to do work","a type of force","a type of mass"], correct:0, exp:"Energy is the ability to do work."},
-        {id:"q2", q:"Which is an example of kinetic energy?", opts:["a moving car","a stretched spring","a rock on a hill"], correct:0, exp:"Kinetic energy is energy of movement."},
-        {id:"q3", q:"Which is a renewable energy source?", opts:["coal","solar","petrol"], correct:1, exp:"Solar is renewable."},
-        {id:"q4", q:"Which is non-renewable?", opts:["wind","hydropower","natural gas"], correct:2, exp:"Natural gas is non-renewable."},
-        {id:"q5", q:"A falling object converts ____ to ____.", opts:["kinetic → gravitational potential","gravitational potential → kinetic","sound → light"], correct:1, exp:"As it falls, GPE changes to KE."},
-        {id:"q6", q:"A light bulb mainly converts ____ to ____.", opts:["electrical → light (and some heat)","chemical → electrical","heat → sound"], correct:0, exp:"Bulbs convert electrical energy to light (and heat)."},
-        {id:"q7", q:"A battery stores mostly ____ energy.", opts:["sound","chemical","light"], correct:1, exp:"Batteries store chemical potential energy."},
-        {id:"q8", q:"Energy changing form is called ____.", opts:["diffusion","energy conversion","rusting"], correct:1, exp:"Energy conversion/transformation."}
-      ]
-    });
+    try{
+      const res = await fetch(BACKEND_URL + chosenEndpoint, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    // Topic 18
-    makeInlineQuiz({
-      code:"t18", key:"sciguru_tutor_t18_magnetism_quiz_v1",
-      title:"Topic 18 (Magnetism) Quiz", outOf:40,
-      listId:"t18List", feedbackId:"t18Feedback", scoreId:"t18Score", statusId:"t18Status",
-      quiz:[
-        {id:"q1", q:"A magnet has ____ poles.", opts:["one","two","three"], correct:1, exp:"Magnets have two poles: North and South."},
-        {id:"q2", q:"Like poles ____.", opts:["attract","repel","do nothing"], correct:1, exp:"Like poles repel (N–N, S–S)."},
-        {id:"q3", q:"Unlike poles ____.", opts:["attract","repel","explode"], correct:0, exp:"Unlike poles attract (N–S)."},
-        {id:"q4", q:"Which material is magnetic?", opts:["plastic","iron","glass"], correct:1, exp:"Iron is magnetic (also steel, nickel, cobalt)."},
-        {id:"q5", q:"An electromagnet is made by ____.", opts:["heating iron","running current through a coil","shaking a magnet"], correct:1, exp:"Current in a coil makes an electromagnet (stronger with iron core)."},
-        {id:"q6", q:"The magnetic field is ____.", opts:["area around a magnet where it exerts force","the colour of the magnet","a type of chemical"], correct:0, exp:"Field = region where magnetic force acts."},
-        {id:"q7", q:"A compass works because ____.", opts:["Earth is a magnet","wind pushes it","it is powered by batteries"], correct:0, exp:"Earth behaves like a magnet; compass aligns with its field."},
-        {id:"q8", q:"Magnetic force is strongest at the ____.", opts:["middle of the magnet","poles","paint"], correct:1, exp:"Magnetic force is strongest at the poles."}
-      ]
-    });
+      if(!res.ok) throw new Error("HTTP " + res.status);
 
-    // ✅ Topic 19 (NEW)
-    makeInlineQuiz({
-      code:"t19", key:"sciguru_tutor_t19_electricity_quiz_v1",
-      title:"Topic 19 (Electricity) Quiz", outOf:40,
-      listId:"t19List", feedbackId:"t19Feedback", scoreId:"t19Score", statusId:"t19Status",
-      quiz:[
-        {id:"q1", q:"A positive charge is due to ____.", opts:["extra protons","extra electrons","extra neutrons"], correct:0, exp:"Positive charge is associated with protons."},
-        {id:"q2", q:"Static electricity is ____.", opts:["flow of charge in a circuit","build-up of charge on an object","always caused by magnets"], correct:1, exp:"Static electricity is a build-up of charge."},
-        {id:"q3", q:"Current electricity is ____.", opts:["flow of charge in a conductor","build-up of charge on plastic","only found in batteries"], correct:0, exp:"Current electricity is the flow of charge."},
-        {id:"q4", q:"Which is a conductor?", opts:["rubber","plastic","copper"], correct:2, exp:"Copper allows current to flow (conductor)."},
-        {id:"q5", q:"Which is an insulator?", opts:["iron","aluminium","plastic"], correct:2, exp:"Plastic does not allow current to flow (insulator)."},
-        {id:"q6", q:"A simple d.c. circuit must have ____.", opts:["a complete path (closed loop)","only a bulb","only a switch"], correct:0, exp:"A circuit needs a complete path for current to flow."},
-        {id:"q7", q:"In a series circuit, the current is ____.", opts:["different in each component","the same everywhere","zero always"], correct:1, exp:"Current is the same at all points in a series circuit."},
-        {id:"q8", q:"If you add more bulbs in series (same cells), bulbs become ____ because current ____.", opts:["brighter; increases","dimmer; decreases","brighter; decreases"], correct:1, exp:"Adding bulbs increases total resistance so current decreases → bulbs dim."}
-      ]
+      const ct = res.headers.get("content-type") || "";
+      let replyText = "";
+      if(ct.includes("application/json")){
+        const data = await res.json();
+        replyText =
+          data.reply || data.answer || data.message || data.response ||
+          (typeof data === "string" ? data : JSON.stringify(data, null, 2));
+      }else{
+        replyText = await res.text();
+      }
+
+      setConnected(true, "Connected ✓");
+      addMsg("bot", replyText || "OK");
+    }catch(e){
+      setConnected(false, "Backend not reachable");
+      addMsg("bot", "I could not reach the AI server. Check your Render URL and endpoint (/api/chat or /chat).");
+    }finally{
+      sendBtn.disabled = false;
+    }
+  }
+
+  // Chips
+  document.querySelectorAll("#sg-ai-widget .sgw-chip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      inputEl.value = btn.getAttribute("data-q") || "";
+      inputEl.focus();
     });
-  </script>
+  });
+
+  // Buttons
+  sendBtn.addEventListener("click", send);
+  inputEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter") send(); });
+
+  clearBtn.addEventListener("click", ()=>{
+    localStorage.removeItem(LS_KEY);
+    chatEl.innerHTML = "";
+    addMsg("bot", "Chat cleared. Ask a new question anytime.", nowTime(), false);
+  });
+
+  testBtn.addEventListener("click", testConnection);
+
+  // Start with a sync + optional test
+  setConnected(false, BACKEND_URL ? "Click Test" : "Backend URL not set");
+})();
+</script>
+
 </body>
-        </html>
+</html>
