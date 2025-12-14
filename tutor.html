@@ -10,14 +10,11 @@
     :root{
       --bg1:#0b1220; --bg2:#081a3b;
       --stroke:rgba(255,255,255,.12);
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(0,0,0,.18);
       --text:#eaf2ff;
       --muted:rgba(234,242,255,.72);
       --blue:#2f7bff;
       --purple:#7c5cff;
       --good:#33d07a;
-      --warn:#ffcc66;
       --bad:#ff5a6b;
     }
     *{box-sizing:border-box}
@@ -197,7 +194,6 @@
       border-radius:14px;
       background:rgba(0,0,0,.18);
     }
-    .sg-muted{color:var(--muted)}
 
     .sg-list{display:grid; gap:10px}
     .sg-item{
@@ -237,13 +233,7 @@
     }
 
     .divider{height:10px}
-
-    footer{
-      margin-top:16px;
-      text-align:center;
-      color:rgba(234,242,255,.62);
-      font-size:12px;
-    }
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
   </style>
 </head>
 
@@ -257,7 +247,7 @@
         </div>
         <div class="t">
           <b>Sci-Guru • Form 1 Combined Science Tutor</b>
-          <span>Inline quizzes updated up to Topic 8 • Virtual Lab links</span>
+          <span>Inline quizzes updated up to Topic 19 • Virtual Lab links</span>
         </div>
       </div>
 
@@ -271,10 +261,7 @@
     <section class="hero">
       <div>
         <h1>Continue from your progress</h1>
-        <p>
-          Quizzes save automatically in your browser. If any lab shows 404, the file name on GitHub/Render
-          is not matching the link (uppercase vs lowercase).
-        </p>
+        <p>If any lab shows 404: the filename on GitHub/Render does not match the link (uppercase vs lowercase).</p>
       </div>
       <div class="pill"><span class="dot"></span> Auto-save ON</div>
     </section>
@@ -282,10 +269,7 @@
     <div class="layout">
       <aside class="panel">
         <div class="panelHead">
-          <div>
-            <h2>Form 1 Topics</h2>
-            <small>Click to jump</small>
-          </div>
+          <div><h2>Form 1 Topics</h2><small>Click to jump</small></div>
         </div>
         <div class="panelBody">
           <div class="topicList">
@@ -297,9 +281,6 @@
             <a class="topicLink" href="#topic6"><b>Topic 6</b><span>Reproduction</span></a>
             <a class="topicLink" href="#topic7"><b>Topic 7</b><span>Health</span></a>
             <a class="topicLink" href="#topic8"><b>Topic 8</b><span>Separation</span></a>
-
-            <div class="divider"></div>
-
             <a class="topicLink" href="#topic9"><b>Topic 9</b><span>Matter</span></a>
             <a class="topicLink" href="#topic10"><b>Topic 10</b><span>Acids/Bases</span></a>
             <a class="topicLink" href="#topic11"><b>Topic 11</b><span>Industry</span></a>
@@ -320,15 +301,15 @@
             <div class="miniLinks">
               <a class="sg-link" href="sim-cells-hub.html">Cells Hub</a>
               <a class="sg-link" href="sim-cells-labels.html">Cell Labelling</a>
-              <a class="sg-link" href="sim-nutrition.html">Nutrition Lab</a>
-              <a class="sg-link" href="sim-respiratory.html">Respiratory Lab</a>
-              <a class="sg-link" href="sim-transport.html">Transport Lab</a>
-              <a class="sg-link" href="sim-reproduction.html">Reproduction Lab</a>
-              <a class="sg-link" href="sim-health.html">Health Lab</a>
               <a class="sg-link" href="sim-separation.html">Separation Lab</a>
+              <a class="sg-link" href="sim-measurements.html">Measurements Lab</a>
+              <a class="sg-link" href="sim-force.html">Force Lab</a>
+              <a class="sg-link" href="sim-energy.html">Energy Lab</a>
+              <a class="sg-link" href="sim-magnetism.html">Magnetism Lab</a>
+              <a class="sg-link" href="sim-electricity.html">Electricity Lab</a>
             </div>
-            <p class="sg-muted" style="margin-top:10px">
-              Make sure the file names match exactly (lowercase) to avoid 404.
+            <p style="margin-top:10px;color:var(--muted);font-size:12px;line-height:1.5">
+              Filenames must match exactly (lowercase) to avoid 404.
             </p>
           </div>
         </div>
@@ -337,270 +318,143 @@
       <main>
         <section class="sg-panel" id="topic1">
           <div class="sg-panelHead">
-            <div>
-              <h2>Topic 1 • Laboratory Safety & Apparatus</h2>
-              <small>Inline quiz not added here yet</small>
-            </div>
+            <div><h2>Topic 1 • Laboratory Safety & Apparatus</h2><small>Inline quiz later</small></div>
           </div>
           <div class="sg-panelBody">
-            <div class="sg-card">
-              <h3>Reminder</h3>
-              <p>Safety rules + apparatus use. (We can build Topic 1 quiz next if you want.)</p>
-            </div>
+            <div class="sg-card"><h3>Reminder</h3><p>Safety rules + apparatus use. (We can build Topic 1 quiz later.)</p></div>
           </div>
         </section>
 
-        <!-- Topic 2–7 remain the same from your previous tutor code -->
-        <!-- (kept unchanged, only Topic 8 added below) -->
-
-        <!-- =========================
-             TOPIC 2 • CELLS
-        ========================= -->
-        <section class="sg-panel" id="topic2">
+        <!-- Topic 15 -->
+        <section class="sg-panel" id="topic15">
           <div class="sg-panelHead">
-            <div>
-              <h2>Topic 2 • Cells & Levels of Organisation — Inline Quiz</h2>
-              <small>Plant vs animal cells • Organelles • Functions</small>
-            </div>
+            <div><h2>Topic 15 • Measurements — Inline Quiz</h2><small>SI units • instruments • errors</small></div>
             <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t2">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t2">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t2">Reset</button>
+              <button class="sg-btn sg-primary" type="button" data-start="t15">Start / Resume</button>
+              <button class="sg-btn" type="button" data-mark="t15">Mark Quiz</button>
+              <button class="sg-btn" type="button" data-reset="t15">Reset</button>
+            </div>
+          </div>
+          <div class="sg-panelBody">
+            <div class="sg-two">
+              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-measurements.html">Open Measurements Lab</a></div></div>
+              <div class="sg-card"><h3>Your Score</h3>
+                <div class="sg-scoreBox">
+                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t15Score">0</b></div>
+                  <div><span style="color:var(--muted)">Status</span><br/><b id="t15Status">Not started</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-list" id="t15List" style="margin-top:12px;"></div>
+            <div class="sg-feedback" id="t15Feedback">Click <b>Start / Resume</b> to load the Topic 15 quiz.</div>
+          </div>
+        </section>
+
+        <!-- Topic 16 -->
+        <section class="sg-panel" id="topic16">
+          <div class="sg-panelHead">
+            <div><h2>Topic 16 • Force — Inline Quiz</h2><small>contact vs non-contact • newton (N) • weight • friction</small></div>
+            <div class="sg-actions">
+              <button class="sg-btn sg-primary" type="button" data-start="t16">Start / Resume</button>
+              <button class="sg-btn" type="button" data-mark="t16">Mark Quiz</button>
+              <button class="sg-btn" type="button" data-reset="t16">Reset</button>
+            </div>
+          </div>
+          <div class="sg-panelBody">
+            <div class="sg-two">
+              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-force.html">Open Force Lab</a></div></div>
+              <div class="sg-card"><h3>Your Score</h3>
+                <div class="sg-scoreBox">
+                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t16Score">0</b></div>
+                  <div><span style="color:var(--muted)">Status</span><br/><b id="t16Status">Not started</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-list" id="t16List" style="margin-top:12px;"></div>
+            <div class="sg-feedback" id="t16Feedback">Click <b>Start / Resume</b> to load the Topic 16 quiz.</div>
+          </div>
+        </section>
+
+        <!-- Topic 17 -->
+        <section class="sg-panel" id="topic17">
+          <div class="sg-panelHead">
+            <div><h2>Topic 17 • Energy — Inline Quiz</h2><small>forms • sources • conversions • energy chains</small></div>
+            <div class="sg-actions">
+              <button class="sg-btn sg-primary" type="button" data-start="t17">Start / Resume</button>
+              <button class="sg-btn" type="button" data-mark="t17">Mark Quiz</button>
+              <button class="sg-btn" type="button" data-reset="t17">Reset</button>
+            </div>
+          </div>
+          <div class="sg-panelBody">
+            <div class="sg-two">
+              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-energy.html">Open Energy Lab</a></div></div>
+              <div class="sg-card"><h3>Your Score</h3>
+                <div class="sg-scoreBox">
+                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t17Score">0</b></div>
+                  <div><span style="color:var(--muted)">Status</span><br/><b id="t17Status">Not started</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-list" id="t17List" style="margin-top:12px;"></div>
+            <div class="sg-feedback" id="t17Feedback">Click <b>Start / Resume</b> to load the Topic 17 quiz.</div>
+          </div>
+        </section>
+
+        <!-- Topic 18 -->
+        <section class="sg-panel" id="topic18">
+          <div class="sg-panelHead">
+            <div><h2>Topic 18 • Magnetism — Inline Quiz</h2><small>poles • magnetic materials • electromagnets • compass</small></div>
+            <div class="sg-actions">
+              <button class="sg-btn sg-primary" type="button" data-start="t18">Start / Resume</button>
+              <button class="sg-btn" type="button" data-mark="t18">Mark Quiz</button>
+              <button class="sg-btn" type="button" data-reset="t18">Reset</button>
+            </div>
+          </div>
+          <div class="sg-panelBody">
+            <div class="sg-two">
+              <div class="sg-card"><h3>Virtual Experiment</h3><div class="miniLinks"><a class="sg-link" href="sim-magnetism.html">Open Magnetism Lab</a></div></div>
+              <div class="sg-card"><h3>Your Score</h3>
+                <div class="sg-scoreBox">
+                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t18Score">0</b></div>
+                  <div><span style="color:var(--muted)">Status</span><br/><b id="t18Status">Not started</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-list" id="t18List" style="margin-top:12px;"></div>
+            <div class="sg-feedback" id="t18Feedback">Click <b>Start / Resume</b> to load the Topic 18 quiz.</div>
+          </div>
+        </section>
+
+        <!-- ✅ Topic 19 (NEW) -->
+        <section class="sg-panel" id="topic19">
+          <div class="sg-panelHead">
+            <div><h2>Topic 19 • Electricity — Inline Quiz</h2><small>charges • conductors • circuit parts • series circuits</small></div>
+            <div class="sg-actions">
+              <button class="sg-btn sg-primary" type="button" data-start="t19">Start / Resume</button>
+              <button class="sg-btn" type="button" data-mark="t19">Mark Quiz</button>
+              <button class="sg-btn" type="button" data-reset="t19">Reset</button>
             </div>
           </div>
           <div class="sg-panelBody">
             <div class="sg-two">
               <div class="sg-card">
-                <h3>Virtual Experiments</h3>
+                <h3>Virtual Experiment</h3>
                 <div class="miniLinks">
-                  <a class="sg-link" href="sim-cells-hub.html">Open Cells Hub</a>
-                  <a class="sg-link" href="sim-cells-labels.html">Open Cell Labelling</a>
+                  <a class="sg-link" href="sim-electricity.html">Open Electricity Lab (Series)</a>
                 </div>
-                <p class="sg-muted" style="margin-top:10px">
-                  IMPORTANT: filenames must be exactly <b>sim-cells-hub.html</b> and <b>sim-cells-labels.html</b>.
-                </p>
               </div>
               <div class="sg-card">
                 <h3>Your Score</h3>
                 <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t2Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t2Status">Not started</b></div>
+                  <div><span style="color:var(--muted)">Quiz Score</span><br/><b style="font-size:22px" id="t19Score">0</b></div>
+                  <div><span style="color:var(--muted)">Status</span><br/><b id="t19Status">Not started</b></div>
                 </div>
               </div>
             </div>
-            <div class="sg-list" id="t2List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t2Feedback">Click <b>Start / Resume</b> to load the Topic 2 quiz.</div>
+            <div class="sg-list" id="t19List" style="margin-top:12px;"></div>
+            <div class="sg-feedback" id="t19Feedback">Click <b>Start / Resume</b> to load the Topic 19 quiz.</div>
           </div>
         </section>
-
-        <!-- Topic 3 -->
-        <section class="sg-panel" id="topic3">
-          <div class="sg-panelHead">
-            <div><h2>Topic 3 • Nutrition — Inline Quiz</h2><small>Balanced diet • Nutrients • Functions</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t3">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t3">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t3">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>• Carbs & fats: energy • Proteins: growth/repair • Vitamins/minerals: health • Fibre: digestion • Water: reactions</p>
-                <div class="miniLinks"><a class="sg-link" href="sim-nutrition.html">Open Nutrition Lab</a></div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t3Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t3Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t3List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t3Feedback">Click <b>Start / Resume</b> to load the Topic 3 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 4 -->
-        <section class="sg-panel" id="topic4">
-          <div class="sg-panelHead">
-            <div><h2>Topic 4 • Respiratory System — Inline Quiz</h2><small>Breathing vs respiration • Tests</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t4">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t4">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t4">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>Breathing = physical. Respiration = chemical energy release. Oxygen relights glowing splint. CO₂ turns limewater milky.</p>
-                <div class="miniLinks"><a class="sg-link" href="sim-respiratory.html">Open Respiratory Lab</a></div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t4Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t4Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t4List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t4Feedback">Click <b>Start / Resume</b> to load the Topic 4 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 5 -->
-        <section class="sg-panel" id="topic5">
-          <div class="sg-panelHead">
-            <div><h2>Topic 5 • Transport Systems — Inline Quiz</h2><small>Diffusion • Osmosis • Blood</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t5">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t5">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t5">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>Diffusion high→low. Osmosis water across membrane. Plasma liquid. RBC oxygen. WBC defense. Platelets clot.</p>
-                <div class="miniLinks"><a class="sg-link" href="sim-transport.html">Open Transport Lab</a></div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t5Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t5Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t5List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t5Feedback">Click <b>Start / Resume</b> to load the Topic 5 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 6 -->
-        <section class="sg-panel" id="topic6">
-          <div class="sg-panelHead">
-            <div><h2>Topic 6 • Reproductive Systems — Inline Quiz</h2><small>Flower parts • Pollination • Fertilisation</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t6">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t6">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t6">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>Stamen male. Carpel female. Pollination anther→stigma. Fertilisation in ovule. Ovule→seed, Ovary→fruit.</p>
-                <div class="miniLinks"><a class="sg-link" href="sim-reproduction.html">Open Reproduction Lab</a></div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t6Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t6Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t6List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t6Feedback">Click <b>Start / Resume</b> to load the Topic 6 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Topic 7 -->
-        <section class="sg-panel" id="topic7">
-          <div class="sg-panelHead">
-            <div><h2>Topic 7 • Health & Diseases — Inline Quiz</h2><small>Hygiene • Waste • Transmission</small></div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t7">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t7">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t7">Reset</button>
-            </div>
-          </div>
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>Hygiene prevents disease. Waste: landfill/burning/recycling. Malaria mosquito. Bilharzia snail + water contact.</p>
-                <div class="miniLinks"><a class="sg-link" href="sim-health.html">Open Health Lab</a></div>
-              </div>
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t7Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t7Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-            <div class="sg-list" id="t7List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t7Feedback">Click <b>Start / Resume</b> to load the Topic 7 quiz.</div>
-          </div>
-        </section>
-
-        <!-- =========================
-             TOPIC 8 • SEPARATION (NEW)
-        ========================= -->
-        <section class="sg-panel" id="topic8">
-          <div class="sg-panelHead">
-            <div>
-              <h2>Topic 8 • Separation — Inline Quiz</h2>
-              <small>Filtration • Magnetism • Decanting • Evaporation • Winnowing</small>
-            </div>
-            <div class="sg-actions">
-              <button class="sg-btn sg-primary" type="button" data-start="t8">Start / Resume</button>
-              <button class="sg-btn" type="button" data-mark="t8">Mark Quiz</button>
-              <button class="sg-btn" type="button" data-reset="t8">Reset</button>
-            </div>
-          </div>
-
-          <div class="sg-panelBody">
-            <div class="sg-two">
-              <div class="sg-card">
-                <h3>Quick Notes</h3>
-                <p>
-                  • Filtration: insoluble solid + liquid<br/>
-                  • Magnetism: remove iron filings<br/>
-                  • Winnowing: wind separates light/heavy solids<br/>
-                  • Decanting: layers/different densities (oil + water)<br/>
-                  • Evaporation: recover dissolved solute (salt crystals)
-                </p>
-                <div class="miniLinks">
-                  <a class="sg-link" href="sim-separation.html">Open Separation Lab</a>
-                </div>
-              </div>
-
-              <div class="sg-card">
-                <h3>Your Score</h3>
-                <div class="sg-scoreBox">
-                  <div><span class="sg-muted">Quiz Score</span><br/><b style="font-size:22px" id="t8Score">0</b></div>
-                  <div><span class="sg-muted">Status</span><br/><b id="t8Status">Not started</b></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sg-list" id="t8List" style="margin-top:12px;"></div>
-            <div class="sg-feedback" id="t8Feedback">Click <b>Start / Resume</b> to load the Topic 8 quiz.</div>
-          </div>
-        </section>
-
-        <!-- Placeholders unchanged -->
-        <section class="sg-panel" id="topic9"><div class="sg-panelHead"><div><h2>Topic 9 • Matter</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic10"><div class="sg-panelHead"><div><h2>Topic 10 • Acids, Bases & Salts</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic11"><div class="sg-panelHead"><div><h2>Topic 11 • Industrial Processes</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic12"><div class="sg-panelHead"><div><h2>Topic 12 • Oxidation</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic13"><div class="sg-panelHead"><div><h2>Topic 13 • Organic Chemistry</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic14"><div class="sg-panelHead"><div><h2>Topic 14 • Data Presentation</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic15"><div class="sg-panelHead"><div><h2>Topic 15 • Measurements</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic16"><div class="sg-panelHead"><div><h2>Topic 16 • Force</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic17"><div class="sg-panelHead"><div><h2>Topic 17 • Energy</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic18"><div class="sg-panelHead"><div><h2>Topic 18 • Magnetism</h2><small>Inline quiz coming next</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
-        <section class="sg-panel" id="topic19"><div class="sg-panelHead"><div><h2>Topic 19 • Electricity</h2><small>Inline quiz later (we will add series circuits)</small></div></div><div class="sg-panelBody"><div class="sg-card"><p>Placeholder.</p></div></div></section>
       </main>
     </div>
 
@@ -615,11 +469,22 @@
       "sciguru_tutor_t5_transport_quiz_v1",
       "sciguru_tutor_t6_reproduction_quiz_v1",
       "sciguru_tutor_t7_health_quiz_v1",
-      "sciguru_tutor_t8_separation_quiz_v1"
+      "sciguru_tutor_t8_separation_quiz_v1",
+      "sciguru_tutor_t9_matter_quiz_v1",
+      "sciguru_tutor_t10_acidsbases_quiz_v1",
+      "sciguru_tutor_t11_industrial_quiz_v1",
+      "sciguru_tutor_t12_oxidation_quiz_v1",
+      "sciguru_tutor_t13_organic_quiz_v1",
+      "sciguru_tutor_t14_data_quiz_v1",
+      "sciguru_tutor_t15_measurements_quiz_v1",
+      "sciguru_tutor_t16_force_quiz_v1",
+      "sciguru_tutor_t17_energy_quiz_v1",
+      "sciguru_tutor_t18_magnetism_quiz_v1",
+      "sciguru_tutor_t19_electricity_quiz_v1"
     ];
 
     document.getElementById("resetTutorAll").addEventListener("click", ()=>{
-      if(!confirm("Reset ALL tutor quizzes (Topic 2–8) on this device?")) return;
+      if(!confirm("Reset ALL tutor quizzes (Topic 2–19) on this device?")) return;
       TUTOR_KEYS.forEach(k=>localStorage.removeItem(k));
       location.reload();
     });
@@ -632,11 +497,8 @@
       const statusEl = document.getElementById(cfg.statusId);
 
       function load(){
-        try{
-          return JSON.parse(localStorage.getItem(KEY)) || { ans:{}, score:0, status:"Not started" };
-        }catch(e){
-          return { ans:{}, score:0, status:"Not started" };
-        }
+        try{ return JSON.parse(localStorage.getItem(KEY)) || { ans:{}, score:0, status:"Not started" }; }
+        catch(e){ return { ans:{}, score:0, status:"Not started" }; }
       }
       const state = load();
 
@@ -680,9 +542,7 @@
       }
 
       function markQuiz(){
-        let answered = 0;
-        let correct = 0;
-
+        let answered = 0, correct = 0;
         cfg.quiz.forEach(q=>{
           const a = state.ans[q.id];
           if(a==null) return;
@@ -720,15 +580,19 @@
         renderQuiz();
       }
 
-      document.querySelector(`[data-start="${cfg.code}"]`).addEventListener("click", ()=>{
+      const startBtn = document.querySelector(`[data-start="${cfg.code}"]`);
+      const markBtn  = document.querySelector(`[data-mark="${cfg.code}"]`);
+      const resetBtn = document.querySelector(`[data-reset="${cfg.code}"]`);
+
+      if(startBtn) startBtn.addEventListener("click", ()=>{
         renderQuiz();
         feedbackEl.textContent = "Quiz loaded. Answer all questions then press Mark Quiz.";
         state.status = Object.keys(state.ans||{}).length ? "In progress" : "Not started";
         save();
       });
 
-      document.querySelector(`[data-mark="${cfg.code}"]`).addEventListener("click", markQuiz);
-      document.querySelector(`[data-reset="${cfg.code}"]`).addEventListener("click", resetQuiz);
+      if(markBtn) markBtn.addEventListener("click", markQuiz);
+      if(resetBtn) resetBtn.addEventListener("click", resetQuiz);
 
       if(Object.keys(state.ans||{}).some(k => state.ans[k] != null)){
         renderQuiz();
@@ -740,98 +604,88 @@
       }
     }
 
-    // Topic 2–7 same quizzes as before
+    // Topic 15
     makeInlineQuiz({
-      code:"t2", key:"sciguru_tutor_t2_cells_quiz_v1", title:"Topic 2 (Cells) Quiz", outOf:30,
-      listId:"t2List", feedbackId:"t2Feedback", scoreId:"t2Score", statusId:"t2Status",
+      code:"t15", key:"sciguru_tutor_t15_measurements_quiz_v1",
+      title:"Topic 15 (Measurements) Quiz", outOf:30,
+      listId:"t15List", feedbackId:"t15Feedback", scoreId:"t15Score", statusId:"t15Status",
       quiz:[
-        {id:"q1", q:"Which structure is present in plant cells but NOT in animal cells?", opts:["Cell wall","Nucleus","Cytoplasm"], correct:0, exp:"Plant cells have a cell wall; animal cells do not."},
-        {id:"q2", q:"Which organelle contains chlorophyll for photosynthesis?", opts:["Chloroplast","Nucleus","Cell membrane"], correct:0, exp:"Chloroplasts make food by photosynthesis."},
-        {id:"q3", q:"The nucleus mainly ____.", opts:["controls cell activities","makes the cell wall","stores starch"], correct:0, exp:"The nucleus is the control centre of the cell."},
-        {id:"q4", q:"The cell membrane ____.", opts:["controls what enters/leaves the cell","makes food","is only in plants"], correct:0, exp:"Cell membrane controls entry/exit of substances."},
-        {id:"q5", q:"A large permanent vacuole is typical of ____.", opts:["plant cells","animal cells","bacteria only"], correct:0, exp:"Plant cells usually have a large permanent vacuole with cell sap."},
-        {id:"q6", q:"Both plant and animal cells contain ____.", opts:["cytoplasm","chloroplasts","cell wall"], correct:0, exp:"All cells have cytoplasm."}
+        {id:"q1", q:"The SI unit for length is ____.", opts:["metre (m)","centimetre (cm)","kilometre (km)"], correct:0, exp:"SI unit of length is metre (m)."},
+        {id:"q2", q:"The SI unit for mass is ____.", opts:["gram (g)","kilogram (kg)","tonne (t)"], correct:1, exp:"SI unit of mass is kilogram (kg)."},
+        {id:"q3", q:"The SI unit for time is ____.", opts:["minute (min)","hour (h)","second (s)"], correct:2, exp:"SI unit of time is second (s)."},
+        {id:"q4", q:"The SI unit for temperature is ____.", opts:["degree Celsius (°C)","kelvin (K)","fahrenheit (°F)"], correct:1, exp:"SI unit of temperature is kelvin (K)."},
+        {id:"q5", q:"Parallax error happens when you ____.", opts:["read a scale from the wrong angle","use a balance","heat a liquid"], correct:0, exp:"Parallax error is caused by reading from the wrong angle."},
+        {id:"q6", q:"Zero error means the instrument ____.", opts:["does not read zero when it should","is always correct","cannot measure temperature"], correct:0, exp:"Zero error: instrument is not at zero when it should be."}
       ]
     });
 
+    // Topic 16
     makeInlineQuiz({
-      code:"t3", key:"sciguru_tutor_t3_nutrition_quiz_v1", title:"Topic 3 (Nutrition) Quiz", outOf:30,
-      listId:"t3List", feedbackId:"t3Feedback", scoreId:"t3Score", statusId:"t3Status",
+      code:"t16", key:"sciguru_tutor_t16_force_quiz_v1",
+      title:"Topic 16 (Force) Quiz", outOf:40,
+      listId:"t16List", feedbackId:"t16Feedback", scoreId:"t16Score", statusId:"t16Status",
       quiz:[
-        {id:"q1", q:"A balanced diet means ____.", opts:["correct types and amounts of nutrients","eating only meat","eating only vegetables"], correct:0, exp:"Balanced diet = correct amounts and types of nutrients."},
-        {id:"q2", q:"Which nutrient is mainly for growth and repair?", opts:["Proteins","Fats","Water"], correct:0, exp:"Proteins are needed for growth and repair."},
-        {id:"q3", q:"Carbohydrates are mainly used for ____.", opts:["energy","clotting","hearing"], correct:0, exp:"Carbohydrates provide energy."},
-        {id:"q4", q:"Fibre helps by ____.", opts:["moving food through digestive system","making blood blue","making bones soft"], correct:0, exp:"Fibre helps digestion movement."},
-        {id:"q5", q:"Vitamins and minerals mainly ____.", opts:["keep us healthy and support growth","replace oxygen in air","stop diffusion"], correct:0, exp:"Vitamins/minerals keep us healthy."},
-        {id:"q6", q:"Water is important because it ____.", opts:["is needed for chemical reactions","is only for taste","is a vitamin"], correct:0, exp:"Water supports chemical reactions."}
+        {id:"q1", q:"A force is best described as ____.", opts:["a push or a pull","only gravity","only friction"], correct:0, exp:"A force is a push or a pull."},
+        {id:"q2", q:"The SI unit of force is ____.", opts:["joule (J)","newton (N)","watt (W)"], correct:1, exp:"Force is measured in newton (N)."},
+        {id:"q3", q:"A force can change an object's ____.", opts:["speed/direction/shape/position","colour only","temperature only"], correct:0, exp:"Force can change motion and shape."},
+        {id:"q4", q:"Which is a non-contact force?", opts:["friction","tension in a rope","gravity"], correct:2, exp:"Gravity acts at a distance (non-contact)."},
+        {id:"q5", q:"Friction is a ____ force.", opts:["non-contact","contact","imaginary"], correct:1, exp:"Friction needs contact between surfaces."},
+        {id:"q6", q:"Weight is the force due to ____.", opts:["magnetism","gravity","light"], correct:1, exp:"Weight is gravitational force."},
+        {id:"q7", q:"Force is commonly measured using a ____.", opts:["thermometer","spring balance/force meter","measuring cylinder"], correct:1, exp:"A spring balance/force meter measures force."},
+        {id:"q8", q:"The SI unit for weight is ____.", opts:["kilogram (kg)","newton (N)","metre (m)"], correct:1, exp:"Weight is a force, so it is measured in newtons (N)."}
       ]
     });
 
+    // Topic 17
     makeInlineQuiz({
-      code:"t4", key:"sciguru_tutor_t4_respiratory_quiz_v1", title:"Topic 4 (Respiratory) Quiz", outOf:30,
-      listId:"t4List", feedbackId:"t4Feedback", scoreId:"t4Score", statusId:"t4Status",
+      code:"t17", key:"sciguru_tutor_t17_energy_quiz_v1",
+      title:"Topic 17 (Energy) Quiz", outOf:40,
+      listId:"t17List", feedbackId:"t17Feedback", scoreId:"t17Score", statusId:"t17Status",
       quiz:[
-        {id:"q1", q:"Breathing is the ____ process of moving air in and out.", opts:["physical","chemical","magnetic"], correct:0, exp:"Breathing is physical."},
-        {id:"q2", q:"Respiration is ____ reactions in living cells that release energy.", opts:["chemical","physical","electrical"], correct:0, exp:"Respiration is chemical."},
-        {id:"q3", q:"A glowing splint re-lights strongly in ____.", opts:["oxygen","nitrogen","carbon dioxide"], correct:0, exp:"Oxygen supports burning."},
-        {id:"q4", q:"Limewater turns milky when ____ is present.", opts:["carbon dioxide","oxygen","nitrogen"], correct:0, exp:"CO₂ turns limewater milky."},
-        {id:"q5", q:"Air is mainly ____.", opts:["nitrogen","oxygen","carbon dioxide"], correct:0, exp:"Air is mainly nitrogen."},
-        {id:"q6", q:"Exhaled air has ____ carbon dioxide than inhaled air.", opts:["more","less","none"], correct:0, exp:"Exhaled air contains more CO₂."}
+        {id:"q1", q:"Energy is best defined as ____.", opts:["ability to do work","a type of force","a type of mass"], correct:0, exp:"Energy is the ability to do work."},
+        {id:"q2", q:"Which is an example of kinetic energy?", opts:["a moving car","a stretched spring","a rock on a hill"], correct:0, exp:"Kinetic energy is energy of movement."},
+        {id:"q3", q:"Which is a renewable energy source?", opts:["coal","solar","petrol"], correct:1, exp:"Solar is renewable."},
+        {id:"q4", q:"Which is non-renewable?", opts:["wind","hydropower","natural gas"], correct:2, exp:"Natural gas is non-renewable."},
+        {id:"q5", q:"A falling object converts ____ to ____.", opts:["kinetic → gravitational potential","gravitational potential → kinetic","sound → light"], correct:1, exp:"As it falls, GPE changes to KE."},
+        {id:"q6", q:"A light bulb mainly converts ____ to ____.", opts:["electrical → light (and some heat)","chemical → electrical","heat → sound"], correct:0, exp:"Bulbs convert electrical energy to light (and heat)."},
+        {id:"q7", q:"A battery stores mostly ____ energy.", opts:["sound","chemical","light"], correct:1, exp:"Batteries store chemical potential energy."},
+        {id:"q8", q:"Energy changing form is called ____.", opts:["diffusion","energy conversion","rusting"], correct:1, exp:"Energy conversion/transformation."}
       ]
     });
 
+    // Topic 18
     makeInlineQuiz({
-      code:"t5", key:"sciguru_tutor_t5_transport_quiz_v1", title:"Topic 5 (Transport) Quiz", outOf:30,
-      listId:"t5List", feedbackId:"t5Feedback", scoreId:"t5Score", statusId:"t5Status",
+      code:"t18", key:"sciguru_tutor_t18_magnetism_quiz_v1",
+      title:"Topic 18 (Magnetism) Quiz", outOf:40,
+      listId:"t18List", feedbackId:"t18Feedback", scoreId:"t18Score", statusId:"t18Status",
       quiz:[
-        {id:"q1", q:"Diffusion is movement from ____ concentration to ____ concentration.", opts:["low→high","high→low","equal→high"], correct:1, exp:"Diffusion: high to low."},
-        {id:"q2", q:"Osmosis is the movement of ____ through a partially permeable membrane.", opts:["salt","water","proteins"], correct:1, exp:"Osmosis is movement of water."},
-        {id:"q3", q:"Red blood cells carry ____ using haemoglobin.", opts:["oxygen","chlorophyll","starch"], correct:0, exp:"RBC carry oxygen."},
-        {id:"q4", q:"White blood cells mainly ____.", opts:["defend the body","carry oxygen","make food"], correct:0, exp:"WBC defend body."},
-        {id:"q5", q:"Platelets are important for ____.", opts:["clotting","photosynthesis","evaporation"], correct:0, exp:"Platelets help clotting."},
-        {id:"q6", q:"Plasma is mainly ____.", opts:["the liquid part of blood","a bone","a lung"], correct:0, exp:"Plasma is the liquid part."}
+        {id:"q1", q:"A magnet has ____ poles.", opts:["one","two","three"], correct:1, exp:"Magnets have two poles: North and South."},
+        {id:"q2", q:"Like poles ____.", opts:["attract","repel","do nothing"], correct:1, exp:"Like poles repel (N–N, S–S)."},
+        {id:"q3", q:"Unlike poles ____.", opts:["attract","repel","explode"], correct:0, exp:"Unlike poles attract (N–S)."},
+        {id:"q4", q:"Which material is magnetic?", opts:["plastic","iron","glass"], correct:1, exp:"Iron is magnetic (also steel, nickel, cobalt)."},
+        {id:"q5", q:"An electromagnet is made by ____.", opts:["heating iron","running current through a coil","shaking a magnet"], correct:1, exp:"Current in a coil makes an electromagnet (stronger with iron core)."},
+        {id:"q6", q:"The magnetic field is ____.", opts:["area around a magnet where it exerts force","the colour of the magnet","a type of chemical"], correct:0, exp:"Field = region where magnetic force acts."},
+        {id:"q7", q:"A compass works because ____.", opts:["Earth is a magnet","wind pushes it","it is powered by batteries"], correct:0, exp:"Earth behaves like a magnet; compass aligns with its field."},
+        {id:"q8", q:"Magnetic force is strongest at the ____.", opts:["middle of the magnet","poles","paint"], correct:1, exp:"Magnetic force is strongest at the poles."}
       ]
     });
 
+    // ✅ Topic 19 (NEW)
     makeInlineQuiz({
-      code:"t6", key:"sciguru_tutor_t6_reproduction_quiz_v1", title:"Topic 6 (Reproduction) Quiz", outOf:30,
-      listId:"t6List", feedbackId:"t6Feedback", scoreId:"t6Score", statusId:"t6Status",
+      code:"t19", key:"sciguru_tutor_t19_electricity_quiz_v1",
+      title:"Topic 19 (Electricity) Quiz", outOf:40,
+      listId:"t19List", feedbackId:"t19Feedback", scoreId:"t19Score", statusId:"t19Status",
       quiz:[
-        {id:"q1", q:"The male part of a flower is the ____.", opts:["stamen","carpel","petal"], correct:0, exp:"Stamen = male part."},
-        {id:"q2", q:"The female part of a flower is the ____.", opts:["carpel","sepal","filament"], correct:0, exp:"Carpel = female part."},
-        {id:"q3", q:"Pollination is transfer of pollen from ____ to ____.", opts:["stigma→anther","anther→stigma","ovary→petal"], correct:1, exp:"Anther → stigma."},
-        {id:"q4", q:"Fertilisation happens inside the ____.", opts:["ovule","petal","sepal"], correct:0, exp:"Fertilisation occurs inside ovule."},
-        {id:"q5", q:"After fertilisation, the ovule becomes the ____.", opts:["seed","leaf","stamen"], correct:0, exp:"Ovule becomes seed."},
-        {id:"q6", q:"Puberty is when the body prepares for ____.", opts:["reproduction","hibernation","photosynthesis"], correct:0, exp:"Puberty prepares for reproduction."}
-      ]
-    });
-
-    makeInlineQuiz({
-      code:"t7", key:"sciguru_tutor_t7_health_quiz_v1", title:"Topic 7 (Health & Diseases) Quiz", outOf:30,
-      listId:"t7List", feedbackId:"t7Feedback", scoreId:"t7Score", statusId:"t7Status",
-      quiz:[
-        {id:"q1", q:"Personal hygiene means ____.", opts:["keeping yourself clean","burning rubbish","planting maize"], correct:0, exp:"Personal hygiene = keeping yourself clean."},
-        {id:"q2", q:"Food hygiene is about ____.", opts:["safe handling and preparation of food","making magnets","charging a battery"], correct:0, exp:"Food hygiene prevents food-borne diseases."},
-        {id:"q3", q:"Recycling helps to ____.", opts:["reduce waste","increase disease spread","remove oxygen from air"], correct:0, exp:"Recycling reduces waste."},
-        {id:"q4", q:"Malaria is carried by ____.", opts:["mosquitoes","snails","fish"], correct:0, exp:"Malaria is transmitted by mosquitoes."},
-        {id:"q5", q:"Cholera and typhoid are often spread through ____.", opts:["contaminated water/food","sound waves","sunlight"], correct:0, exp:"Often spread by contaminated water/food."},
-        {id:"q6", q:"Bilharzia is linked to ____.", opts:["snails/water contact","dry sand only","electricity"], correct:0, exp:"Linked to snail and water contact."}
-      ]
-    });
-
-    // ✅ Topic 8 quiz (NEW)
-    makeInlineQuiz({
-      code:"t8", key:"sciguru_tutor_t8_separation_quiz_v1", title:"Topic 8 (Separation) Quiz", outOf:30,
-      listId:"t8List", feedbackId:"t8Feedback", scoreId:"t8Score", statusId:"t8Status",
-      quiz:[
-        {id:"q1", q:"Which method separates sand and water?", opts:["Evaporation","Filtration","Winnowing"], correct:1, exp:"Filtration separates insoluble solid from liquid."},
-        {id:"q2", q:"Which method is best for iron filings and sulfur?", opts:["Magnetism","Decanting","Evaporation"], correct:0, exp:"Magnetism removes iron filings."},
-        {id:"q3", q:"Which method recovers salt from salt water?", opts:["Evaporation","Filtration","Winnowing"], correct:0, exp:"Evaporation leaves salt crystals."},
-        {id:"q4", q:"Decanting works best when substances have different ____.", opts:["densities","colors","smells"], correct:0, exp:"Decanting uses density/layer differences."},
-        {id:"q5", q:"Winnowing uses ____ to separate light and heavy solids.", opts:["wind/air","magnet","filter paper"], correct:0, exp:"Winnowing uses wind/air."},
-        {id:"q6", q:"Filtration uses ____ to trap insoluble solids.", opts:["filter paper","magnet","battery"], correct:0, exp:"Filter paper traps insoluble solids."}
+        {id:"q1", q:"A positive charge is due to ____.", opts:["extra protons","extra electrons","extra neutrons"], correct:0, exp:"Positive charge is associated with protons."},
+        {id:"q2", q:"Static electricity is ____.", opts:["flow of charge in a circuit","build-up of charge on an object","always caused by magnets"], correct:1, exp:"Static electricity is a build-up of charge."},
+        {id:"q3", q:"Current electricity is ____.", opts:["flow of charge in a conductor","build-up of charge on plastic","only found in batteries"], correct:0, exp:"Current electricity is the flow of charge."},
+        {id:"q4", q:"Which is a conductor?", opts:["rubber","plastic","copper"], correct:2, exp:"Copper allows current to flow (conductor)."},
+        {id:"q5", q:"Which is an insulator?", opts:["iron","aluminium","plastic"], correct:2, exp:"Plastic does not allow current to flow (insulator)."},
+        {id:"q6", q:"A simple d.c. circuit must have ____.", opts:["a complete path (closed loop)","only a bulb","only a switch"], correct:0, exp:"A circuit needs a complete path for current to flow."},
+        {id:"q7", q:"In a series circuit, the current is ____.", opts:["different in each component","the same everywhere","zero always"], correct:1, exp:"Current is the same at all points in a series circuit."},
+        {id:"q8", q:"If you add more bulbs in series (same cells), bulbs become ____ because current ____.", opts:["brighter; increases","dimmer; decreases","brighter; decreases"], correct:1, exp:"Adding bulbs increases total resistance so current decreases → bulbs dim."}
       ]
     });
   </script>
 </body>
-  </html>
+        </html>
