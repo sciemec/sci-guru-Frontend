@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 17: Energy (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      user-select:none;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      padding:10px 12px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .tab.active{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    input, select{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    .row{display:grid;grid-template-columns:1fr 1fr .45fr;gap:8px;align-items:center}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 17 • Energy (Virtual Lab)</b>
+        <span>Forms • Renewable vs Non-renewable • Conversions • KE & GPE</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-energy.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Practice energy ideas with mini-experiments</h1>
+      <p>Use the tabs. Your Topic 17 progress is saved automatically on this device.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Energy Stations</h2><small>Pick one station</small></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="forms">Forms Match</button>
+          <button class="tab" data-tab="sources">Energy Sources</button>
+          <button class="tab" data-tab="chains">Energy Conversions</button>
+          <button class="tab" data-tab="calc">Calculations</button>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <!-- FORMS -->
+        <div class="card tabPane" id="pane-forms">
+          <h3>Identify the form of energy</h3>
+          <p>Select the best energy form for the scenario.</p>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Score: <b id="fScore">0</b></span>
+            <span class="tag">Correct: <b id="fCorrect">0</b></span>
+            <span class="tag">Attempts: <b id="fAttempts">0</b></span>
+          </div>
+
+          <div class="note" id="fQ">Press “New Scenario”</div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <select id="fPick">
+                <option value="">-- choose energy form --</option>
+                <option value="kinetic">Kinetic (movement)</option>
+                <option value="gravitational">Gravitational potential</option>
+                <option value="elastic">Elastic potential</option>
+                <option value="chemical">Chemical potential</option>
+                <option value="electrical">Electrical</option>
+                <option value="light">Light</option>
+                <option value="heat">Heat (thermal)</option>
+                <option value="sound">Sound</option>
+              </select>
+            </div>
+            <div><button class="miniBtn primary" id="fCheck">Check</button></div>
+            <div><button class="miniBtn" id="fNew">New Scenario</button></div>
+          </div>
+
+          <div class="controls">
+            <button class="miniBtn bad" id="resetAll">Reset Topic 17 Progress</button>
+          </div>
+
+          <div class="note" id="fNote">Tip: Kinetic = moving. Potential = stored (height/spring/chemical).</div>
+        </div>
+
+        <!-- SOURCES -->
+        <div class="card tabPane" id="pane-sources" style="display:none">
+          <h3>Renewable vs Non-renewable</h3>
+          <p>Classify the energy source.</p>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Score: <b id="sScore">0</b></span>
+            <span class="tag">Correct: <b id="sCorrect">0</b></span>
+            <span class="tag">Attempts: <b id="sAttempts">0</b></span>
+          </div>
+
+          <div class="note" id="sQ">Press “New Source”</div>
+
+          <div class="controls">
+            <button class="miniBtn" id="sNew">New Source</button>
+            <button class="miniBtn primary" id="sRen">Renewable</button>
+            <button class="miniBtn primary" id="sNon">Non-renewable</button>
+          </div>
+
+          <div class="note" id="sNote">Renewable: solar, wind, hydropower, biomass. Non-renewable: coal, oil, gas, uranium.</div>
+        </div>
+
+        <!-- CHAINS -->
+        <div class="card tabPane" id="pane-chains" style="display:none">
+          <h3>Energy conversions (energy chains)</h3>
+          <p>Choose the correct conversion for the scenario.</p>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Score: <b id="cScore">0</b></span>
+            <span class="tag">Correct: <b id="cCorrect">0</b></span>
+            <span class="tag">Attempts: <b id="cAttempts">0</b></span>
+          </div>
+
+          <div class="note" id="cQ">Press “New Conversion”</div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <select id="cPick">
+                <option value="">-- choose conversion --</option>
+                <option value="chemical->heat">Chemical → Heat</option>
+                <option value="chemical->electrical">Chemical → Electrical</option>
+                <option value="electrical->light">Electrical → Light</option>
+                <option value="electrical->heat">Electrical → Heat</option>
+                <option value="electrical->sound">Electrical → Sound</option>
+                <option value="gravitational->kinetic">Gravitational potential → Kinetic</option>
+                <option value="elastic->kinetic">Elastic potential → Kinetic</option>
+                <option value="wind->electrical">Wind → Electrical</option>
+                <option value="light->electrical">Light → Electrical</option>
+                <option value="kinetic->heat">Kinetic → Heat (friction)</option>
+              </select>
+            </div>
+            <div><button class="miniBtn primary" id="cCheck">Check</button></div>
+            <div><button class="miniBtn" id="cNew">New Conversion</button></div>
+          </div>
+
+          <div class="note" id="cNote">Remember: energy can change from one form to another.</div>
+        </div>
+
+        <!-- CALC -->
+        <div class="card tabPane" id="pane-calc" style="display:none">
+          <h3>Energy calculations (Form 1 level)</h3>
+          <p>Use simple formulas (school approximation).</p>
+
+          <div class="card" style="margin-top:10px">
+            <h3>1) Kinetic Energy (KE)</h3>
+            <p>KE = ½ m v²</p>
+
+            <div class="row" style="margin-top:10px">
+              <div><input id="keM" placeholder="Mass m (kg) e.g. 2"></div>
+              <div><input id="keV" placeholder="Speed v (m/s) e.g. 3"></div>
+              <div><button class="miniBtn primary" id="keCalc">Calc</button></div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">KE: <b id="keOut">—</b></span>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:10px">
+            <h3>2) Gravitational Potential Energy (GPE)</h3>
+            <p>GPE = m g h (use g ≈ 10 N/kg)</p>
+
+            <div class="row" style="margin-top:10px">
+              <div><input id="gpeM" placeholder="Mass m (kg) e.g. 2"></div>
+              <div><input id="gpeH" placeholder="Height h (m) e.g. 5"></div>
+              <div><button class="miniBtn primary" id="gpeCalc">Calc</button></div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">GPE: <b id="gpeOut">—</b></span>
+            </div>
+          </div>
+
+          <div class="note" id="kNote">Energy is measured in joules (J). This station is for practice.</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Key Points</h2><small>Topic 17 summary</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Definition</h3>
+          <p>Energy is the <b>ability to do work</b>. We may not see it, but we see its effects.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Forms</h3>
+          <p>Kinetic, potential (gravitational/elastic), chemical, electrical, light, heat, sound.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Sources</h3>
+          <p><b>Renewable</b>: solar, wind, hydro, biomass.<br><b>Non-renewable</b>: coal, oil, gas, nuclear.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Conversions</h3>
+          <p>Energy changes from one form to another (energy chains).</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Auto-save</h3>
+          <p>Saved on this device only (localStorage).</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY = "sciguru_topic17_energy_lab_v1";
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch(e){ return null; }
+  }
+  function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+
+  const S = load() || {
+    forms:{score:0, correct:0, attempts:0, current:null},
+    sources:{score:0, correct:0, attempts:0, current:null},
+    chains:{score:0, correct:0, attempts:0, current:null}
+  };
+
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tabPane").forEach(p=>p.style.display="none");
+      document.getElementById("pane-"+t).style.display="block";
+      save(S);
+    });
+  });
+
+  // Reset
+  document.getElementById("resetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 17 lab progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // ===== FORMS MATCH =====
+  const formsItems = [
+    {q:"A moving bicycle.", a:"kinetic", exp:"Movement = kinetic energy."},
+    {q:"A rock on top of a hill.", a:"gravitational", exp:"Height stores gravitational potential energy."},
+    {q:"A stretched slingshot rubber band.", a:"elastic", exp:"Stretched/ compressed objects store elastic potential energy."},
+    {q:"Food in your body.", a:"chemical", exp:"Food stores chemical potential energy."},
+    {q:"A battery powering a circuit.", a:"electrical", exp:"A circuit uses electrical energy."},
+    {q:"Sunlight shining on plants.", a:"light", exp:"Sunlight is light energy."},
+    {q:"Boiling water on a stove.", a:"heat", exp:"Hot objects have thermal (heat) energy."},
+    {q:"A loud drum beating.", a:"sound", exp:"Vibrations produce sound energy."}
+  ];
+
+  const fScore = document.getElementById("fScore");
+  const fCorrect = document.getElementById("fCorrect");
+  const fAttempts = document.getElementById("fAttempts");
+  const fQ = document.getElementById("fQ");
+  const fPick = document.getElementById("fPick");
+  const fNote = document.getElementById("fNote");
+
+  function renderForms(){
+    fScore.textContent = S.forms.score;
+    fCorrect.textContent = S.forms.correct;
+    fAttempts.textContent = S.forms.attempts;
+    save(S);
+  }
+
+  function newFormScenario(){
+    const it = formsItems[Math.floor(Math.random()*formsItems.length)];
+    S.forms.current = it;
+    fQ.textContent = "Scenario: " + it.q;
+    fNote.textContent = "Pick the best energy form, then Check.";
+    fPick.value = "";
+    renderForms();
+  }
+
+  document.getElementById("fNew").addEventListener("click", newFormScenario);
+
+  document.getElementById("fCheck").addEventListener("click", ()=>{
+    if(!S.forms.current){
+      fNote.textContent = "Press “New Scenario” first.";
+      return;
+    }
+    const ans = fPick.value;
+    if(!ans){
+      fNote.textContent = "Choose an energy form first.";
+      return;
+    }
+    S.forms.attempts++;
+    const ok = (ans === S.forms.current.a);
+    if(ok){
+      S.forms.correct++;
+      S.forms.score += 5;
+      fNote.textContent = "✅ Correct! " + S.forms.current.exp;
+    } else {
+      fNote.textContent = "❌ Not quite. " + S.forms.current.exp;
+    }
+    renderForms();
+  });
+
+  // restore current
+  if(S.forms.current){ fQ.textContent = "Scenario: " + S.forms.current.q; }
+  renderForms();
+
+  // ===== SOURCES =====
+  const sourceItems = [
+    {q:"Solar panels", a:"renewable", exp:"Solar energy is renewable."},
+    {q:"Coal", a:"non", exp:"Coal is a fossil fuel (non-renewable)."},
+    {q:"Wind turbines", a:"renewable", exp:"Wind is renewable."},
+    {q:"Hydropower (dam)", a:"renewable", exp:"Moving water can be renewed (renewable)."},
+    {q:"Petrol (oil)", a:"non", exp:"Oil is non-renewable."},
+    {q:"Natural gas", a:"non", exp:"Natural gas is non-renewable."},
+    {q:"Firewood/biomass", a:"renewable", exp:"Biomass can be renewable if replanted."},
+    {q:"Uranium (nuclear)", a:"non", exp:"Uranium is finite (non-renewable)."}
+  ];
+
+  const sScore = document.getElementById("sScore");
+  const sCorrect = document.getElementById("sCorrect");
+  const sAttempts = document.getElementById("sAttempts");
+  const sQ = document.getElementById("sQ");
+  const sNote = document.getElementById("sNote");
+
+  function renderSources(){
+    sScore.textContent = S.sources.score;
+    sCorrect.textContent = S.sources.correct;
+    sAttempts.textContent = S.sources.attempts;
+    save(S);
+  }
+
+  function newSource(){
+    const it = sourceItems[Math.floor(Math.random()*sourceItems.length)];
+    S.sources.current = it;
+    sQ.textContent = "Source: " + it.q;
+    sNote.textContent = "Choose Renewable or Non-renewable.";
+    renderSources();
+  }
+
+  function answerSource(ans){
+    if(!S.sources.current){
+      sNote.textContent = "Press “New Source” first.";
+      return;
+    }
+    S.sources.attempts++;
+    const ok = (ans === S.sources.current.a);
+    if(ok){
+      S.sources.correct++;
+      S.sources.score += 5;
+      sNote.textContent = "✅ Correct! " + S.sources.current.exp;
+    } else {
+      sNote.textContent = "❌ Not quite. " + S.sources.current.exp;
+    }
+    renderSources();
+  }
+
+  document.getElementById("sNew").addEventListener("click", newSource);
+  document.getElementById("sRen").addEventListener("click", ()=>answerSource("renewable"));
+  document.getElementById("sNon").addEventListener("click", ()=>answerSource("non"));
+  if(S.sources.current){ sQ.textContent = "Source: " + S.sources.current.q; }
+  renderSources();
+
+  // ===== CHAINS =====
+  const chainItems = [
+    {q:"A torch (battery → bulb).", a:"chemical->electrical", exp:"Battery chemical energy becomes electrical energy in circuit."},
+    {q:"A light bulb shining.", a:"electrical->light", exp:"Electrical energy → light energy (also some heat)."},
+    {q:"An electric kettle heating water.", a:"electrical->heat", exp:"Electrical energy → heat energy."},
+    {q:"A radio producing music.", a:"electrical->sound", exp:"Electrical energy → sound energy."},
+    {q:"A falling stone.", a:"gravitational->kinetic", exp:"GPE → KE as it falls."},
+    {q:"A catapult releasing a stone.", a:"elastic->kinetic", exp:"Elastic PE → kinetic energy."},
+    {q:"Burning firewood.", a:"chemical->heat", exp:"Chemical energy → heat (and light)."},
+    {q:"Car brakes stopping a car.", a:"kinetic->heat", exp:"KE → heat by friction."},
+    {q:"Wind turbine powering a house.", a:"wind->electrical", exp:"Wind energy → electrical energy."},
+    {q:"Solar panel charging a device.", a:"light->electrical", exp:"Light energy → electrical energy."}
+  ];
+
+  const cScore = document.getElementById("cScore");
+  const cCorrect = document.getElementById("cCorrect");
+  const cAttempts = document.getElementById("cAttempts");
+  const cQ = document.getElementById("cQ");
+  const cPick = document.getElementById("cPick");
+  const cNote = document.getElementById("cNote");
+
+  function renderChains(){
+    cScore.textContent = S.chains.score;
+    cCorrect.textContent = S.chains.correct;
+    cAttempts.textContent = S.chains.attempts;
+    save(S);
+  }
+
+  function newChain(){
+    const it = chainItems[Math.floor(Math.random()*chainItems.length)];
+    S.chains.current = it;
+    cQ.textContent = "Scenario: " + it.q;
+    cPick.value = "";
+    cNote.textContent = "Choose the best conversion and press Check.";
+    renderChains();
+  }
+
+  document.getElementById("cNew").addEventListener("click", newChain);
+
+  document.getElementById("cCheck").addEventListener("click", ()=>{
+    if(!S.chains.current){
+      cNote.textContent = "Press “New Conversion” first.";
+      return;
+    }
+    const ans = cPick.value;
+    if(!ans){
+      cNote.textContent = "Choose a conversion first.";
+      return;
+    }
+    S.chains.attempts++;
+    const ok = (ans === S.chains.current.a);
+    if(ok){
+      S.chains.correct++;
+      S.chains.score += 5;
+      cNote.textContent = "✅ Correct! " + S.chains.current.exp;
+    } else {
+      cNote.textContent = "❌ Not quite. " + S.chains.current.exp;
+    }
+    renderChains();
+  });
+
+  if(S.chains.current){ cQ.textContent = "Scenario: " + S.chains.current.q; }
+  renderChains();
+
+  // ===== CALCULATIONS =====
+  const keOut = document.getElementById("keOut");
+  const gpeOut = document.getElementById("gpeOut");
+  const kNote = document.getElementById("kNote");
+
+  document.getElementById("keCalc").addEventListener("click", ()=>{
+    const m = Number((document.getElementById("keM").value||"").trim());
+    const v = Number((document.getElementById("keV").value||"").trim());
+    if(!isFinite(m) || m<=0 || !isFinite(v) || v<0){
+      kNote.textContent = "❌ Enter valid m (kg) and v (m/s).";
+      return;
+    }
+    const KE = 0.5*m*v*v;
+    keOut.textContent = KE.toFixed(2) + " J";
+    kNote.textContent = `✅ KE = ½mv² = 0.5 × ${m} × ${v}² = ${KE.toFixed(2)} J`;
+  });
+
+  document.getElementById("gpeCalc").addEventListener("click", ()=>{
+    const m = Number((document.getElementById("gpeM").value||"").trim());
+    const h = Number((document.getElementById("gpeH").value||"").trim());
+    const g = 10; // Form 1 approximation
+    if(!isFinite(m) || m<=0 || !isFinite(h) || h<0){
+      kNote.textContent = "❌ Enter valid m (kg) and h (m).";
+      return;
+    }
+    const GPE = m*g*h;
+    gpeOut.textContent = GPE.toFixed(2) + " J";
+    kNote.textContent = `✅ GPE = mgh = ${m} × ${g} × ${h} = ${GPE.toFixed(2)} J`;
+  });
+</script>
+</body>
+</html>

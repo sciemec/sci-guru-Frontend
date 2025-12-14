@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 15: Measurements (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+      --dark:rgba(0,0,0,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .btn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:940px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      padding:10px 12px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .tab.active{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+    .row{display:grid;grid-template-columns:1fr .55fr .35fr;gap:8px;align-items:center}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    input, select{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+    .viz{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+
+    /* RULER */
+    .rulerBox{position:relative;height:74px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);overflow:hidden}
+    .rulerScale{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(to right, rgba(234,242,255,.22) 1px, transparent 1px) 0 0 / 10px 100%,
+        linear-gradient(to right, rgba(234,242,255,.38) 2px, transparent 2px) 0 0 / 50px 100%;
+      opacity:.85;
+    }
+    .rulerLabel{position:absolute;left:10px;top:10px;font-size:12px;color:rgba(234,242,255,.82)}
+    .pointer{
+      position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.9);
+      box-shadow:0 0 0 5px rgba(47,123,255,.14);
+    }
+    .objectEnd{
+      position:absolute;top:42px;height:10px;width:10px;border-radius:99px;background:rgba(255,204,102,.9);
+      box-shadow:0 0 0 6px rgba(255,204,102,.16);
+    }
+
+    /* THERMOMETER */
+    .thermoWrap{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center}
+    @media(max-width:540px){.thermoWrap{grid-template-columns:1fr}}
+    .thermo{
+      height:220px;width:90px;border-radius:18px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);position:relative;overflow:hidden;
+      display:flex;align-items:flex-end;justify-content:center;padding:10px;
+    }
+    .thermoTube{
+      width:22px;height:100%;border-radius:999px;border:1px solid rgba(255,255,255,.20);
+      background:rgba(0,0,0,.22);position:relative;overflow:hidden;
+    }
+    .thermoFill{
+      position:absolute;left:0;right:0;bottom:0;height:40%;
+      background:rgba(255,90,107,.85);
+    }
+    .thermoMarks{
+      position:absolute;inset:8px 6px 8px auto;width:28px;
+      color:rgba(234,242,255,.75);font-size:11px;line-height:1.1;text-align:left;
+    }
+
+    /* BALANCE */
+    .balance{
+      border-radius:16px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .screen{
+      min-width:220px;
+      border-radius:14px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.30);
+      padding:10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing:1px;
+    }
+    .screen b{font-size:22px}
+    .switch{
+      display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;
+      padding:10px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.05);
+    }
+    .switch input{width:auto}
+
+    /* STOPWATCH */
+    .stopwatch{
+      border-radius:16px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .timeDisp{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 12px;background:rgba(0,0,0,.30);
+      min-width:220px;
+    }
+    .timeDisp b{font-size:22px}
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 15 • Measurements (Virtual Lab)</b>
+        <span>Length • Mass • Time • Temperature • Parallax & Zero error</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-measurements.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Practice accurate measurement + common errors</h1>
+      <p>Select a station below. Read the instrument, enter your answer, and check. Your score is saved automatically.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Measurement Stations</h2><small>Pick one station</small></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="ruler">Ruler</button>
+          <button class="tab" data-tab="thermo">Thermometer</button>
+          <button class="tab" data-tab="balance">Balance</button>
+          <button class="tab" data-tab="stopwatch">Stopwatch</button>
+          <button class="tab" data-tab="units">SI Units</button>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <!-- RULER -->
+        <div class="card tabPane" id="pane-ruler">
+          <h3>Length (metre rule / ruler)</h3>
+          <p>Read the length of the object. The yellow dot marks the end of the object from 0 cm. Avoid parallax error: read at eye level.</p>
+
+          <div class="viz">
+            <div class="rulerBox" id="rulerBox">
+              <div class="rulerScale"></div>
+              <div class="rulerLabel">0 cm → 30 cm</div>
+              <div class="pointer" id="rulerPointer" style="left:50%"></div>
+              <div class="objectEnd" id="rulerEnd" style="left:50%"></div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">True length: <b id="rulerTrue">—</b></span>
+              <span class="tag">Your correct streak: <b id="rulerStreak">0</b></span>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div>
+                <input id="rulerAns" placeholder="Enter length in cm (e.g. 12.4)" />
+              </div>
+              <div>
+                <select id="rulerUnit">
+                  <option value="cm" selected>cm</option>
+                  <option value="mm">mm</option>
+                  <option value="m">m</option>
+                </select>
+              </div>
+              <div>
+                <button class="miniBtn primary" id="rulerCheck">Check</button>
+              </div>
+            </div>
+
+            <div class="controls">
+              <button class="miniBtn" id="rulerNew">New Reading</button>
+            </div>
+
+            <div class="note" id="rulerNote">Press “New Reading”, then enter the reading and press “Check”.</div>
+          </div>
+        </div>
+
+        <!-- THERMOMETER -->
+        <div class="card tabPane" id="pane-thermo" style="display:none">
+          <h3>Temperature (thermometer)</h3>
+          <p>Read the temperature in °C. Note: SI unit of temperature is Kelvin (K), but we often measure in °C.</p>
+
+          <div class="viz thermoWrap">
+            <div class="thermo">
+              <div class="thermoTube">
+                <div class="thermoFill" id="thermoFill"></div>
+              </div>
+              <div class="thermoMarks">
+                40°C<br><br>35<br><br>30<br><br>25<br><br>20<br><br>15<br><br>10
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="tag">True temp: <b id="thermoTrue">—</b></span>
+                <span class="tag">Correct streak: <b id="thermoStreak">0</b></span>
+              </div>
+
+              <div class="row" style="margin-top:10px">
+                <div>
+                  <input id="thermoAns" placeholder="Enter temperature in °C (e.g. 28)" />
+                </div>
+                <div>
+                  <select id="thermoUnit">
+                    <option value="c" selected>°C</option>
+                    <option value="k">K</option>
+                  </select>
+                </div>
+                <div>
+                  <button class="miniBtn primary" id="thermoCheck">Check</button>
+                </div>
+              </div>
+
+              <div class="controls">
+                <button class="miniBtn" id="thermoNew">New Reading</button>
+              </div>
+
+              <div class="note" id="thermoNote">Press “New Reading”, then enter the reading and press “Check”.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BALANCE -->
+        <div class="card tabPane" id="pane-balance" style="display:none">
+          <h3>Mass (balance)</h3>
+          <p>Read the mass. Then correct for zero error if given. Example: if balance reads 52 g and zero error is +2 g, true mass = 52 − 2 = 50 g.</p>
+
+          <div class="viz">
+            <div class="balance">
+              <div class="screen">
+                <div style="color:rgba(234,242,255,.72);font-size:12px">DIGITAL BALANCE</div>
+                <b id="balDisplay">0.00 g</b>
+                <div style="color:rgba(234,242,255,.62);font-size:12px;margin-top:6px">Zero error: <span id="balZeroText">0.00 g</span></div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="balZeroOn"/>
+                Apply zero error scenario
+              </label>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="miniBtn" id="balNew">New Mass</button>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">True mass: <b id="balTrue">—</b></span>
+              <span class="tag">Correct streak: <b id="balStreak">0</b></span>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div>
+                <input id="balAns" placeholder="Enter TRUE mass (g) after correcting zero error" />
+              </div>
+              <div>
+                <select id="balUnit">
+                  <option value="g" selected>g</option>
+                  <option value="kg">kg</option>
+                </select>
+              </div>
+              <div>
+                <button class="miniBtn primary" id="balCheck">Check</button>
+              </div>
+            </div>
+
+            <div class="note" id="balNote">Press “New Mass”, then read the screen and correct for zero error if shown.</div>
+          </div>
+        </div>
+
+        <!-- STOPWATCH -->
+        <div class="card tabPane" id="pane-stopwatch" style="display:none">
+          <h3>Time (stopwatch)</h3>
+          <p>Use the stopwatch to measure time. Practice reading seconds accurately. SI unit of time is the second (s).</p>
+
+          <div class="viz">
+            <div class="stopwatch">
+              <div class="timeDisp">
+                <div style="color:rgba(234,242,255,.72);font-size:12px">STOPWATCH</div>
+                <b id="swDisplay">00:00.0</b>
+                <div style="color:rgba(234,242,255,.62);font-size:12px;margin-top:6px">Target: stop near <b id="swTarget">7.0 s</b></div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="miniBtn primary" id="swStart">Start</button>
+                <button class="miniBtn" id="swStop">Stop</button>
+                <button class="miniBtn" id="swReset">Reset</button>
+                <button class="miniBtn" id="swNew">New Target</button>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">Last stop: <b id="swLast">—</b></span>
+              <span class="tag">Within ±0.3 s: <b id="swHits">0</b></span>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div>
+                <input id="swAns" placeholder="Enter your stopped time in seconds (e.g. 6.9)" />
+              </div>
+              <div>
+                <select id="swUnit">
+                  <option value="s" selected>s</option>
+                  <option value="min">min</option>
+                </select>
+              </div>
+              <div>
+                <button class="miniBtn primary" id="swCheck">Check</button>
+              </div>
+            </div>
+
+            <div class="note" id="swNote">Try to stop near the target time. Then type the time you stopped and press Check.</div>
+          </div>
+        </div>
+
+        <!-- UNITS -->
+        <div class="card tabPane" id="pane-units" style="display:none">
+          <h3>SI Units Quick Practice</h3>
+          <p>Match each quantity with its SI unit and best instrument.</p>
+
+          <div class="viz">
+            <div class="row">
+              <div>
+                <select id="uQ"></select>
+              </div>
+              <div>
+                <select id="uA"></select>
+              </div>
+              <div>
+                <button class="miniBtn primary" id="uCheck">Check</button>
+              </div>
+            </div>
+
+            <div class="controls">
+              <button class="miniBtn" id="uNew">New Question</button>
+              <button class="miniBtn bad" id="resetAll">Reset Topic 15 Progress</button>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">Score: <b id="uScore">0</b></span>
+              <span class="tag">Correct: <b id="uCorrect">0</b></span>
+              <span class="tag">Attempts: <b id="uAttempts">0</b></span>
+            </div>
+
+            <div class="note" id="uNote">Press “New Question”. Then choose the correct unit/instrument and Check.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Measurement Errors</h2><small>Common mistakes</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Parallax error</h3>
+          <p>Occurs when you read a scale from the wrong angle. Always place your eye level with the mark (straight line of sight).</p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Zero error</h3>
+          <p>If the instrument does not read zero when it should, subtract or add the zero error when recording the true value.</p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>SI units (remember)</h3>
+          <p>
+            Length → metre (m)<br>
+            Mass → kilogram (kg)<br>
+            Time → second (s)<br>
+            Temperature → kelvin (K)
+          </p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Auto-save</h3>
+          <p>Your Topic 15 progress is stored on this device only (localStorage).</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY = "sciguru_topic15_measurements_v1";
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch(e){ return null; }
+  }
+  function save(state){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  const S = load() || {
+    ruler:{trueCm:0, streak:0},
+    thermo:{trueC:0, streak:0},
+    bal:{trueG:0, displayG:0, zeroG:0, zeroOn:false, streak:0},
+    sw:{target:7.0, last:null, hits:0},
+    units:{score:0, correct:0, attempts:0, current:null}
+  };
+
+  // tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tabPane").forEach(p=>p.style.display="none");
+      document.getElementById("pane-"+t).style.display="block";
+      save(S);
+    });
+  });
+
+  // helpers
+  const clamp = (v,min,max)=>Math.max(min, Math.min(max, v));
+  const round1 = v=>Math.round(v*10)/10;
+  const round2 = v=>Math.round(v*100)/100;
+
+  // ====== RULER ======
+  const rulerPointer = document.getElementById("rulerPointer");
+  const rulerEnd = document.getElementById("rulerEnd");
+  const rulerTrue = document.getElementById("rulerTrue");
+  const rulerStreak = document.getElementById("rulerStreak");
+  const rulerNote = document.getElementById("rulerNote");
+
+  function newRuler(){
+    // true length 1.2cm to 28.8cm (one decimal)
+    S.ruler.trueCm = round1( (Math.random()*27.6) + 1.2 );
+    const pct = (S.ruler.trueCm / 30) * 100;
+    rulerPointer.style.left = pct + "%";
+    rulerEnd.style.left = pct + "%";
+    rulerTrue.textContent = "—";
+    rulerStreak.textContent = S.ruler.streak;
+    rulerNote.textContent = "Read the pointer position on the ruler. Enter your answer then Check.";
+    save(S);
+  }
+
+  document.getElementById("rulerNew").addEventListener("click", newRuler);
+
+  document.getElementById("rulerCheck").addEventListener("click", ()=>{
+    const raw = (document.getElementById("rulerAns").value || "").trim();
+    const unit = document.getElementById("rulerUnit").value;
+
+    let v = Number(raw);
+    if(!isFinite(v)){
+      rulerNote.textContent = "❌ Enter a number (example: 12.4).";
+      return;
+    }
+
+    // convert to cm for checking
+    if(unit==="mm") v = v/10;
+    if(unit==="m") v = v*100;
+
+    const trueCm = S.ruler.trueCm;
+    const ok = Math.abs(v - trueCm) <= 0.15;
+
+    rulerTrue.textContent = trueCm.toFixed(1) + " cm";
+
+    if(ok){
+      S.ruler.streak++;
+      rulerNote.textContent = `✅ Correct! True length = ${trueCm.toFixed(1)} cm.\nTip: Read at eye level to avoid parallax error.`;
+    } else {
+      S.ruler.streak = 0;
+      rulerNote.textContent = `❌ Not quite.\nTrue length = ${trueCm.toFixed(1)} cm.\nYou entered = ${round2(v)} cm.\nCheck the scale carefully (small divisions).`;
+    }
+    rulerStreak.textContent = S.ruler.streak;
+    save(S);
+  });
+
+  // ====== THERMOMETER ======
+  const thermoFill = document.getElementById("thermoFill");
+  const thermoTrue = document.getElementById("thermoTrue");
+  const thermoStreak = document.getElementById("thermoStreak");
+  const thermoNote = document.getElementById("thermoNote");
+
+  function newThermo(){
+    // 10 to 40 C (integer)
+    S.thermo.trueC = Math.floor(Math.random()*31) + 10;
+    // fill height: map 10-40 => 8%-92%
+    const pct = ((S.thermo.trueC - 10) / 30) * 84 + 8;
+    thermoFill.style.height = pct + "%";
+    thermoTrue.textContent = "—";
+    thermoStreak.textContent = S.thermo.streak;
+    thermoNote.textContent = "Read the thermometer. Enter the temperature and Check.";
+    save(S);
+  }
+
+  document.getElementById("thermoNew").addEventListener("click", newThermo);
+
+  document.getElementById("thermoCheck").addEventListener("click", ()=>{
+    const raw = (document.getElementById("thermoAns").value || "").trim();
+    const unit = document.getElementById("thermoUnit").value;
+
+    let v = Number(raw);
+    if(!isFinite(v)){
+      thermoNote.textContent = "❌ Enter a number (example: 28).";
+      return;
+    }
+
+    let vC = v;
+    if(unit==="k"){
+      // K = C + 273 (approx)
+      vC = v - 273;
+    }
+
+    const trueC = S.thermo.trueC;
+    const ok = Math.abs(vC - trueC) <= 1;
+
+    thermoTrue.textContent = trueC + " °C";
+
+    if(ok){
+      S.thermo.streak++;
+      thermoNote.textContent = `✅ Correct! True temperature = ${trueC} °C.\nReminder: SI unit is Kelvin (K).`;
+    } else {
+      S.thermo.streak = 0;
+      thermoNote.textContent = `❌ Not quite.\nTrue = ${trueC} °C.\nYou entered ≈ ${Math.round(vC)} °C.\nCheck the liquid level and the scale.`;
+    }
+    thermoStreak.textContent = S.thermo.streak;
+    save(S);
+  });
+
+  // ====== BALANCE ======
+  const balDisplay = document.getElementById("balDisplay");
+  const balZeroText = document.getElementById("balZeroText");
+  const balTrue = document.getElementById("balTrue");
+  const balStreak = document.getElementById("balStreak");
+  const balNote = document.getElementById("balNote");
+  const balZeroOn = document.getElementById("balZeroOn");
+
+  function newBalance(){
+    // true 10g to 500g, 1 decimal
+    S.bal.trueG = round1((Math.random()*490)+10);
+    S.bal.zeroOn = !!balZeroOn.checked;
+
+    // zero error between -5.0 and +5.0 step 0.5 when enabled
+    S.bal.zeroG = S.bal.zeroOn ? round1((Math.floor(Math.random()*21)-10)*0.5) : 0;
+
+    // display is true + zeroError
+    S.bal.displayG = round1(S.bal.trueG + S.bal.zeroG);
+
+    balDisplay.textContent = S.bal.displayG.toFixed(1) + " g";
+    balZeroText.textContent = (S.bal.zeroOn ? (S.bal.zeroG>=0?"+":"") + S.bal.zeroG.toFixed(1) : "0.0") + " g";
+    balTrue.textContent = "—";
+    balStreak.textContent = S.bal.streak;
+
+    if(S.bal.zeroOn){
+      balNote.textContent = "Zero error is ON. Correct the reading: true = displayed − zero error.";
+    } else {
+      balNote.textContent = "Zero error is OFF. True mass equals the displayed mass.";
+    }
+    save(S);
+  }
+
+  balZeroOn.addEventListener("change", ()=>{
+    S.bal.zeroOn = !!balZeroOn.checked;
+    save(S);
+  });
+
+  document.getElementById("balNew").addEventListener("click", newBalance);
+
+  document.getElementById("balCheck").addEventListener("click", ()=>{
+    const raw = (document.getElementById("balAns").value || "").trim();
+    const unit = document.getElementById("balUnit").value;
+
+    let v = Number(raw);
+    if(!isFinite(v)){
+      balNote.textContent = "❌ Enter a number (example: 50.0).";
+      return;
+    }
+
+    // convert to g
+    if(unit==="kg") v = v*1000;
+
+    const trueG = S.bal.trueG;
+    const ok = Math.abs(v - trueG) <= 0.6;
+
+    balTrue.textContent = trueG.toFixed(1) + " g";
+
+    if(ok){
+      S.bal.streak++;
+      balNote.textContent = `✅ Correct! True mass = ${trueG.toFixed(1)} g.\nDisplayed = ${S.bal.displayG.toFixed(1)} g, Zero error = ${S.bal.zeroG>=0?"+":""}${S.bal.zeroG.toFixed(1)} g`;
+    } else {
+      S.bal.streak = 0;
+      balNote.textContent = `❌ Not quite.\nTrue mass = ${trueG.toFixed(1)} g.\nYou entered = ${round1(v)} g.\nRemember: true = displayed − zero error (if zero error is +2 g, subtract 2 g).`;
+    }
+    balStreak.textContent = S.bal.streak;
+    save(S);
+  });
+
+  // ====== STOPWATCH ======
+  const swDisplay = document.getElementById("swDisplay");
+  const swTargetEl = document.getElementById("swTarget");
+  const swLastEl = document.getElementById("swLast");
+  const swHitsEl = document.getElementById("swHits");
+  const swNote = document.getElementById("swNote");
+
+  let swTimer = null;
+  let swStartAt = 0;
+  let swElapsed = 0;
+
+  function fmt(ms){
+    const t = ms/1000;
+    const m = Math.floor(t/60);
+    const s = t - m*60;
+    return String(m).padStart(2,"0")+":"+String(Math.floor(s)).padStart(2,"0")+"."+String(Math.floor((s%1)*10));
+  }
+
+  function renderSW(){
+    swDisplay.textContent = fmt(swElapsed);
+  }
+
+  function newTarget(){
+    S.sw.target = round1((Math.random()*8)+4); // 4.0 to 12.0
+    swTargetEl.textContent = S.sw.target.toFixed(1) + " s";
+    save(S);
+  }
+
+  document.getElementById("swStart").addEventListener("click", ()=>{
+    if(swTimer) return;
+    swStartAt = performance.now() - swElapsed;
+    swTimer = setInterval(()=>{
+      swElapsed = performance.now() - swStartAt;
+      renderSW();
+    }, 60);
+    swNote.textContent = "Stop near the target time, then type your stopped time and press Check.";
+  });
+
+  document.getElementById("swStop").addEventListener("click", ()=>{
+    if(!swTimer) return;
+    clearInterval(swTimer);
+    swTimer = null;
+    S.sw.last = round1(swElapsed/1000);
+    swLastEl.textContent = S.sw.last.toFixed(1) + " s";
+    save(S);
+  });
+
+  document.getElementById("swReset").addEventListener("click", ()=>{
+    if(swTimer){ clearInterval(swTimer); swTimer=null; }
+    swElapsed = 0;
+    renderSW();
+    swNote.textContent = "Reset done. Press Start.";
+  });
+
+  document.getElementById("swNew").addEventListener("click", ()=>{
+    newTarget();
+    swNote.textContent = "New target set. Press Start and stop near the target.";
+  });
+
+  document.getElementById("swCheck").addEventListener("click", ()=>{
+    const raw = (document.getElementById("swAns").value || "").trim();
+    const unit = document.getElementById("swUnit").value;
+
+    let v = Number(raw);
+    if(!isFinite(v)){
+      swNote.textContent = "❌ Enter a number (example: 6.9).";
+      return;
+    }
+
+    // convert to seconds
+    if(unit==="min") v = v*60;
+
+    if(S.sw.last==null){
+      swNote.textContent = "⚠️ Stop the stopwatch first, then check your answer.";
+      return;
+    }
+
+    const okRead = Math.abs(v - S.sw.last) <= 0.2;
+    const okTarget = Math.abs(S.sw.last - S.sw.target) <= 0.3;
+
+    if(okRead && okTarget){
+      S.sw.hits++;
+      swNote.textContent = `✅ Great! You stopped at ${S.sw.last.toFixed(1)} s (target ${S.sw.target.toFixed(1)} s).\nYou also read/entered it correctly.`;
+    } else if(okRead && !okTarget){
+      swNote.textContent = `✅ Correct reading (${S.sw.last.toFixed(1)} s), but you missed the target.\nTry again and stop closer to ${S.sw.target.toFixed(1)} s (±0.3 s).`;
+    } else {
+      swNote.textContent = `❌ Your entered value doesn't match your stopped time.\nStopped: ${S.sw.last.toFixed(1)} s, You entered: ${round1(v)} s.\nRead the display carefully.`;
+    }
+    swHitsEl.textContent = S.sw.hits;
+    save(S);
+  });
+
+  // ====== UNITS QUIZ ======
+  const uQ = document.getElementById("uQ");
+  const uA = document.getElementById("uA");
+  const uScore = document.getElementById("uScore");
+  const uCorrect = document.getElementById("uCorrect");
+  const uAttempts = document.getElementById("uAttempts");
+  const uNote = document.getElementById("uNote");
+
+  const unitItems = [
+    {q:"Length", a:"metre (m) — metre rule/ruler"},
+    {q:"Mass", a:"kilogram (kg) — balance"},
+    {q:"Time", a:"second (s) — stopwatch"},
+    {q:"Temperature", a:"kelvin (K) — thermometer"},
+    {q:"Parallax error is caused by…", a:"reading scale from wrong angle"},
+    {q:"Zero error means…", a:"instrument not reading zero when it should"}
+  ];
+
+  const answersPool = [
+    "metre (m) — metre rule/ruler",
+    "kilogram (kg) — balance",
+    "second (s) — stopwatch",
+    "kelvin (K) — thermometer",
+    "reading scale from wrong angle",
+    "instrument not reading zero when it should",
+    "newton (N) — force meter",
+    "litre (L) — measuring cylinder",
+    "degree Celsius (°C) — thermometer (common, not SI)"
+  ];
+
+  function renderUnitStats(){
+    uScore.textContent = S.units.score;
+    uCorrect.textContent = S.units.correct;
+    uAttempts.textContent = S.units.attempts;
+  }
+
+  function newUnitQuestion(){
+    const idx = Math.floor(Math.random()*unitItems.length);
+    S.units.current = unitItems[idx];
+
+    uQ.innerHTML = "";
+    unitItems.forEach((it)=>{
+      const opt = document.createElement("option");
+      opt.value = it.q;
+      opt.textContent = it.q;
+      uQ.appendChild(opt);
+    });
+    uQ.value = S.units.current.q;
+
+    uA.innerHTML = "";
+    // shuffle answersPool
+    const arr = answersPool.slice().sort(()=>Math.random()-0.5);
+    arr.forEach(a=>{
+      const opt = document.createElement("option");
+      opt.value = a;
+      opt.textContent = a;
+      uA.appendChild(opt);
+    });
+    uA.value = "";
+
+    uNote.textContent = "Choose the correct answer for the selected quantity.";
+    save(S);
+    renderUnitStats();
+  }
+
+  document.getElementById("uNew").addEventListener("click", newUnitQuestion);
+
+  document.getElementById("uCheck").addEventListener("click", ()=>{
+    if(!S.units.current){
+      uNote.textContent = "Press New Question first.";
+      return;
+    }
+    const q = uQ.value;
+    const chosen = uA.value;
+
+    const correct = unitItems.find(x=>x.q===q)?.a;
+
+    S.units.attempts++;
+
+    if(chosen === correct){
+      S.units.correct++;
+      S.units.score += 5;
+      uNote.textContent = `✅ Correct!\n${q} → ${correct}`;
+    } else {
+      uNote.textContent = `❌ Not correct.\nCorrect answer: ${q} → ${correct}`;
+    }
+    save(S);
+    renderUnitStats();
+  });
+
+  document.getElementById("resetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 15 lab progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // init display
+  function init(){
+    // ruler from saved or create
+    if(!S.ruler.trueCm || S.ruler.trueCm<=0) newRuler();
+    else{
+      const pct = (S.ruler.trueCm / 30) * 100;
+      rulerPointer.style.left = pct + "%";
+      rulerEnd.style.left = pct + "%";
+      rulerStreak.textContent = S.ruler.streak;
+      rulerTrue.textContent = "—";
+    }
+
+    if(!S.thermo.trueC || S.thermo.trueC<=0) newThermo();
+    else{
+      const pct = ((S.thermo.trueC - 10) / 30) * 84 + 8;
+      thermoFill.style.height = pct + "%";
+      thermoStreak.textContent = S.thermo.streak;
+      thermoTrue.textContent = "—";
+    }
+
+    balZeroOn.checked = !!S.bal.zeroOn;
+    if(!S.bal.displayG || S.bal.displayG<=0) newBalance();
+    else{
+      balDisplay.textContent = Number(S.bal.displayG).toFixed(1) + " g";
+      balZeroText.textContent = (S.bal.zeroOn ? (S.bal.zeroG>=0?"+":"") + Number(S.bal.zeroG).toFixed(1) : "0.0") + " g";
+      balStreak.textContent = S.bal.streak;
+      balTrue.textContent = "—";
+    }
+
+    // stopwatch
+    swHitsEl.textContent = S.sw.hits || 0;
+    swLastEl.textContent = (S.sw.last==null) ? "—" : S.sw.last.toFixed(1) + " s";
+    if(!S.sw.target) newTarget();
+    swTargetEl.textContent = Number(S.sw.target).toFixed(1) + " s";
+    renderSW();
+
+    // units
+    renderUnitStats();
+    if(!S.units.current) newUnitQuestion();
+
+    save(S);
+  }
+
+  init();
+</script>
+</body>
+</html>

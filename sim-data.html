@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 14: Data Presentation (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+      --dark:rgba(0,0,0,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:940px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    .row{display:grid;grid-template-columns:1.2fr .6fr .25fr;gap:8px;align-items:center}
+    .row + .row{margin-top:8px}
+    input{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    input[type="number"]{padding:12px}
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:84px;white-space:pre-wrap
+    }
+
+    table{width:100%;border-collapse:separate;border-spacing:0;margin-top:10px;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.12)}
+    th,td{padding:10px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.10)}
+    th{background:rgba(0,0,0,.18);text-align:left}
+    tr:last-child td{border-bottom:none}
+    .tally{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing:1px;
+      color:rgba(234,242,255,.88);
+    }
+
+    canvas{
+      width:100%;
+      height:300px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      display:block;
+    }
+
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 14 • Data Presentation (Virtual Lab)</b>
+        <span>Tallies • Tables • Bar graphs • Interpreting results</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-data.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Turn raw results into a table and a bar graph</h1>
+      <p>Enter categories and frequencies (how many). Generate tally marks, a clean table, and then draw a bar graph. Everything auto-saves.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Data Builder</h2><small>Step 1: Enter data</small></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="miniBtn" id="addRowBtn" type="button">+ Add Row</button>
+          <button class="miniBtn primary" id="makeBtn" type="button">Generate</button>
+          <button class="miniBtn" id="drawBtn" type="button">Draw Bar Graph</button>
+          <button class="miniBtn bad" id="resetBtn" type="button">Reset</button>
+        </div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Enter categories and frequency</h3>
+          <p>Example: “Apples = 12”, “Bananas = 7”… Frequency is the number of times it occurred.</p>
+
+          <div id="rows"></div>
+
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Rows: <b id="rowCount">0</b></span>
+            <span class="tag">Total frequency: <b id="totalFreq">0</b></span>
+          </div>
+
+          <div class="note" id="feedback">Tip: Use short category names. Press Generate.</div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <h3>Table Output</h3>
+          <div id="tableArea">
+            <p style="color:var(--muted);font-size:12px;margin:0">Generate to view a table (Category | Tally | Frequency).</p>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <h3>Bar Graph</h3>
+          <p>Bar graphs show frequencies using bar heights. Categories on the x-axis, frequency on the y-axis.</p>
+          <canvas id="chart" width="900" height="360"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Interpretation Practice</h2><small>Step 2: Read the data</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Quick Questions</h3>
+          <p>
+            After you generate your table/graph, answer these:
+            <br/>1) Which category has the highest frequency?
+            <br/>2) Which category has the lowest frequency?
+            <br/>3) What is the total frequency?
+            <br/>4) What is the difference between highest and lowest?
+          </p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Key Notes</h3>
+          <p>
+            • <b>Tally</b>: record frequency using groups of five.
+            <br/>• <b>Table</b>: rows + columns.
+            <br/>• <b>Bar graph</b>: categories on x-axis; frequency on y-axis.
+            <br/>• Always label your axes and include a title.
+          </p>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="card">
+          <h3>Auto-save</h3>
+          <p>Your rows are saved in your browser. If you reset, only this device loses the Topic 14 data.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY = "sciguru_topic14_data_v1";
+
+  function load(){
+    try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}
+  }
+  function save(state){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  // default sample
+  const S = load() || {
+    rows: [
+      {name:"Apples", freq:12},
+      {name:"Bananas", freq:7},
+      {name:"Oranges", freq:10},
+      {name:"Mangoes", freq:5}
+    ]
+  };
+
+  const rowsEl = document.getElementById("rows");
+  const rowCountEl = document.getElementById("rowCount");
+  const totalFreqEl = document.getElementById("totalFreq");
+  const feedbackEl = document.getElementById("feedback");
+  const tableArea = document.getElementById("tableArea");
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+
+  function tallyMarks(n){
+    // 5 = "||||/" then remainder "|"
+    n = Math.max(0, Math.floor(Number(n)||0));
+    const groups = Math.floor(n/5);
+    const rem = n%5;
+    let s = "";
+    for(let g=0; g<groups; g++) s += "||||/ ";
+    for(let r=0; r<rem; r++) s += "|";
+    return s.trim();
+  }
+
+  function cleanRows(){
+    // remove empty names, clamp freq
+    const out = [];
+    S.rows.forEach(r=>{
+      const name = (r.name||"").trim();
+      const freq = Math.max(0, Math.floor(Number(r.freq)||0));
+      if(name) out.push({name, freq});
+    });
+    S.rows = out;
+    save(S);
+  }
+
+  function updateMeta(){
+    rowCountEl.textContent = S.rows.length;
+    const total = S.rows.reduce((a,r)=>a+(Number(r.freq)||0),0);
+    totalFreqEl.textContent = total;
+  }
+
+  function renderRows(){
+    rowsEl.innerHTML = "";
+    S.rows.forEach((r, idx)=>{
+      const wrap = document.createElement("div");
+      wrap.className = "row";
+      wrap.innerHTML = `
+        <input type="text" placeholder="Category (e.g. Apples)" value="${escapeHtml(r.name||"")}" data-name="${idx}">
+        <input type="number" min="0" step="1" placeholder="Frequency" value="${Number(r.freq)||0}" data-freq="${idx}">
+        <button class="miniBtn bad" type="button" data-del="${idx}">✕</button>
+      `;
+      rowsEl.appendChild(wrap);
+    });
+
+    rowsEl.querySelectorAll("input[data-name]").forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        const i = Number(inp.getAttribute("data-name"));
+        S.rows[i].name = inp.value;
+        save(S);
+        updateMeta();
+      });
+    });
+    rowsEl.querySelectorAll("input[data-freq]").forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        const i = Number(inp.getAttribute("data-freq"));
+        S.rows[i].freq = Math.max(0, Math.floor(Number(inp.value)||0));
+        save(S);
+        updateMeta();
+      });
+    });
+    rowsEl.querySelectorAll("button[data-del]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const i = Number(btn.getAttribute("data-del"));
+        S.rows.splice(i,1);
+        save(S);
+        renderRows();
+        updateMeta();
+      });
+    });
+
+    updateMeta();
+  }
+
+  function generateTable(){
+    cleanRows();
+    if(S.rows.length===0){
+      tableArea.innerHTML = `<p style="color:rgba(234,242,255,.72);font-size:12px;margin:0">Add at least one row.</p>`;
+      feedbackEl.textContent = "Add at least one category, then Generate.";
+      return;
+    }
+
+    let html = `
+      <table>
+        <thead>
+          <tr><th>Category</th><th>Tally</th><th>Frequency</th></tr>
+        </thead>
+        <tbody>
+    `;
+    S.rows.forEach(r=>{
+      html += `
+        <tr>
+          <td>${escapeHtml(r.name)}</td>
+          <td class="tally">${escapeHtml(tallyMarks(r.freq))}</td>
+          <td>${Number(r.freq)||0}</td>
+        </tr>
+      `;
+    });
+    const total = S.rows.reduce((a,r)=>a+(Number(r.freq)||0),0);
+    html += `
+        <tr>
+          <td><b>Total</b></td>
+          <td class="tally">—</td>
+          <td><b>${total}</b></td>
+        </tr>
+      </tbody></table>
+    `;
+    tableArea.innerHTML = html;
+
+    feedbackEl.textContent =
+      "✅ Generated table + tally marks.\nNow press “Draw Bar Graph” to visualise the frequencies.";
+  }
+
+  function drawBarGraph(){
+    cleanRows();
+    if(S.rows.length===0){
+      feedbackEl.textContent = "Add rows first, then Draw Bar Graph.";
+      clearCanvas();
+      return;
+    }
+
+    const W = canvas.width, H = canvas.height;
+    clearCanvas();
+
+    // margins
+    const padL = 60, padR = 20, padT = 30, padB = 60;
+    const plotW = W - padL - padR;
+    const plotH = H - padT - padB;
+
+    const maxV = Math.max(...S.rows.map(r=>Number(r.freq)||0), 1);
+
+    // axes
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(234,242,255,.75)";
+    ctx.beginPath();
+    ctx.moveTo(padL, padT);
+    ctx.lineTo(padL, padT + plotH);
+    ctx.lineTo(padL + plotW, padT + plotH);
+    ctx.stroke();
+
+    // title
+    ctx.fillStyle = "rgba(234,242,255,.90)";
+    ctx.font = "bold 16px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    ctx.fillText("Bar Graph: Frequency by Category", padL, 20);
+
+    // y ticks (0, 1/2, max)
+    ctx.fillStyle = "rgba(234,242,255,.80)";
+    ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+    const ticks = [0, Math.round(maxV/2), maxV];
+    ticks.forEach(t=>{
+      const y = padT + plotH - (t/maxV)*plotH;
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = "rgba(234,242,255,.55)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + plotW, y);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.fillText(String(t), 18, y+4);
+    });
+
+    // bars
+    const n = S.rows.length;
+    const gap = Math.max(10, Math.round(plotW * 0.03));
+    const barW = Math.max(18, Math.floor((plotW - gap*(n+1))/n));
+    let x = padL + gap;
+
+    S.rows.forEach(r=>{
+      const v = Number(r.freq)||0;
+      const h = (v/maxV) * plotH;
+      const y = padT + plotH - h;
+
+      // bar
+      ctx.globalAlpha = 0.95;
+      ctx.fillStyle = "rgba(47,123,255,.85)";
+      ctx.fillRect(x, y, barW, h);
+
+      // label
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "rgba(234,242,255,.85)";
+      ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      const label = r.name.length>10 ? r.name.slice(0,10)+"…" : r.name;
+      ctx.save();
+      ctx.translate(x + barW/2, padT + plotH + 18);
+      ctx.textAlign = "center";
+      ctx.fillText(label, 0, 0);
+      ctx.restore();
+
+      // value
+      ctx.textAlign = "center";
+      ctx.fillText(String(v), x + barW/2, y - 6);
+
+      x += barW + gap;
+    });
+
+    feedbackEl.textContent =
+      "✅ Bar graph drawn.\nNow answer: highest? lowest? total? difference?";
+  }
+
+  function clearCanvas(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    // faint grid background
+    ctx.fillStyle = "rgba(0,0,0,.18)";
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  document.getElementById("addRowBtn").addEventListener("click", ()=>{
+    S.rows.push({name:"", freq:0});
+    save(S);
+    renderRows();
+    feedbackEl.textContent = "Added a row. Enter a category and frequency, then Generate.";
+  });
+
+  document.getElementById("makeBtn").addEventListener("click", ()=>{
+    generateTable();
+    drawBarGraph();
+    save(S);
+  });
+
+  document.getElementById("drawBtn").addEventListener("click", ()=>{
+    drawBarGraph();
+    save(S);
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 14 data on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // init
+  renderRows();
+  clearCanvas();
+  generateTable();
+  drawBarGraph();
+  save(S);
+</script>
+</body>
+</html>

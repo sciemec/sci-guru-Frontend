@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 18: Magnetism (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      user-select:none;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      padding:10px 12px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .tab.active{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    input, select{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    .row{display:grid;grid-template-columns:1fr 1fr .45fr;gap:8px;align-items:center}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+
+    /* visuals */
+    .magArea{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+    .barMag{
+      width:100%;
+      max-width:520px;
+      height:70px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(90deg, rgba(255,90,107,.55), rgba(255,90,107,.18), rgba(47,123,255,.18), rgba(47,123,255,.55));
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 14px;
+      font-weight:1000;
+      letter-spacing:.5px;
+      margin:10px 0;
+    }
+    .pole{
+      display:flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      font-size:12px;
+    }
+    .spark{
+      width:8px;height:8px;border-radius:99px;background:var(--warn);box-shadow:0 0 0 5px rgba(255,204,102,.15);
+      display:inline-block;
+    }
+    .fieldBox{
+      border:1px dashed rgba(255,255,255,.20);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(0,0,0,.14);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color:rgba(234,242,255,.86);
+      line-height:1.35;
+      white-space:pre;
+      overflow:auto;
+      max-height:220px;
+    }
+
+    /* electromagnet */
+    .coil{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      align-items:start;
+    }
+    @media(max-width:860px){.coil{grid-template-columns:1fr}}
+
+    .meter{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+    }
+    .bar{
+      height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+      margin-top:8px;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, rgba(47,123,255,.85), rgba(124,92,255,.55));
+    }
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 18 • Magnetism (Virtual Lab)</b>
+        <span>Poles • Magnetic materials • Fields • Electromagnets</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-magnetism.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Explore magnets with mini-activities</h1>
+      <p>Use the tabs. Your Topic 18 progress is saved automatically on this device.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Magnetism Stations</h2><small>Pick one station</small></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="poles">Poles & Attraction</button>
+          <button class="tab" data-tab="materials">Magnetic Materials</button>
+          <button class="tab" data-tab="fields">Magnetic Field</button>
+          <button class="tab" data-tab="electro">Electromagnet</button>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <!-- POLES -->
+        <div class="card tabPane" id="pane-poles">
+          <h3>Attraction and repulsion</h3>
+          <p>Like poles repel (N–N or S–S). Unlike poles attract (N–S).</p>
+
+          <div class="magArea">
+            <div class="barMag">
+              <div class="pole"><span class="spark"></span> LEFT: <b id="mLeft">N</b></div>
+              <div class="pole">RIGHT: <b id="mRight">S</b> <span class="spark"></span></div>
+            </div>
+
+            <div class="row">
+              <div>
+                <select id="pTest">
+                  <option value="">-- choose test magnet --</option>
+                  <option value="N">Test pole = N</option>
+                  <option value="S">Test pole = S</option>
+                </select>
+              </div>
+              <div>
+                <select id="pSide">
+                  <option value="">-- bring to which side? --</option>
+                  <option value="left">Near LEFT pole</option>
+                  <option value="right">Near RIGHT pole</option>
+                </select>
+              </div>
+              <div><button class="miniBtn primary" id="pCheck">Test</button></div>
+            </div>
+
+            <div class="controls">
+              <button class="miniBtn" id="pFlip">Flip Magnet</button>
+              <button class="miniBtn bad" id="resetAll">Reset Topic 18 Progress</button>
+            </div>
+
+            <div class="note" id="pNote">Tip: Like poles repel, unlike poles attract.</div>
+          </div>
+        </div>
+
+        <!-- MATERIALS -->
+        <div class="card tabPane" id="pane-materials" style="display:none">
+          <h3>Which materials are magnetic?</h3>
+          <p>Classify the object: magnetic or non-magnetic.</p>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Score: <b id="matScore">0</b></span>
+            <span class="tag">Correct: <b id="matCorrect">0</b></span>
+            <span class="tag">Attempts: <b id="matAttempts">0</b></span>
+          </div>
+
+          <div class="note" id="matQ">Press “New Object”</div>
+
+          <div class="controls">
+            <button class="miniBtn" id="matNew">New Object</button>
+            <button class="miniBtn primary" id="matMag">Magnetic</button>
+            <button class="miniBtn primary" id="matNon">Non-magnetic</button>
+          </div>
+
+          <div class="note" id="matNote">Magnetic materials: iron, steel, nickel, cobalt. (Not aluminium, copper, wood, plastic.)</div>
+        </div>
+
+        <!-- FIELDS -->
+        <div class="card tabPane" id="pane-fields" style="display:none">
+          <h3>Magnetic field lines</h3>
+          <p>Field lines go from <b>N</b> to <b>S</b> around the magnet. They are closest where the force is strongest (near poles).</p>
+
+          <div class="magArea">
+            <div class="barMag" style="max-width:560px">
+              <div class="pole"><span class="spark"></span> N</div>
+              <div class="pole">S <span class="spark"></span></div>
+            </div>
+
+            <div class="fieldBox" id="fieldBox"></div>
+
+            <div class="controls">
+              <button class="miniBtn" id="fieldDense">Stronger field (dense lines)</button>
+              <button class="miniBtn" id="fieldLight">Weaker field (fewer lines)</button>
+            </div>
+
+            <div class="note" id="fieldNote">Closer field lines = stronger magnetic field near poles.</div>
+          </div>
+        </div>
+
+        <!-- ELECTROMAGNET -->
+        <div class="card tabPane" id="pane-electro" style="display:none">
+          <h3>Make an electromagnet</h3>
+          <p>An electromagnet is made by passing current through a coil around an iron core (like a nail). More turns or more current gives a stronger electromagnet.</p>
+
+          <div class="coil">
+            <div class="card">
+              <h3>Controls</h3>
+              <div style="display:grid;gap:8px">
+                <label style="color:var(--muted);font-size:12px">Number of turns (coils)</label>
+                <input type="range" id="eTurns" min="10" max="120" value="40">
+                <label style="color:var(--muted);font-size:12px">Battery cells (current)</label>
+                <input type="range" id="eCells" min="1" max="4" value="1">
+                <label style="color:var(--muted);font-size:12px">Iron core</label>
+                <select id="eCore">
+                  <option value="iron" selected>Iron nail (strong)</option>
+                  <option value="none">No iron core (weak)</option>
+                </select>
+
+                <div class="controls" style="margin-top:2px">
+                  <button class="miniBtn primary" id="eBuild">Build</button>
+                  <button class="miniBtn" id="eRandom">Random setup</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="meter">
+              <h3 style="margin:0 0 8px;font-size:13px">Electromagnet Strength</h3>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="tag">Turns: <b id="eTurnsOut">40</b></span>
+                <span class="tag">Cells: <b id="eCellsOut">1</b></span>
+                <span class="tag">Core: <b id="eCoreOut">iron</b></span>
+              </div>
+
+              <div class="bar"><div class="fill" id="eFill"></div></div>
+              <div class="note" id="eNote" style="margin-top:10px">Press Build to see the effect.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Key Points</h2><small>Topic 18 summary</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Poles</h3>
+          <p>Every magnet has a <b>North</b> and <b>South</b> pole. Force is strongest at the poles.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Rules</h3>
+          <p><b>Like poles repel</b> (N–N, S–S). <b>Unlike poles attract</b> (N–S).</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Magnetic materials</h3>
+          <p>Iron and steel are magnetic (also nickel, cobalt).</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Electromagnet</h3>
+          <p>Coil + current + iron core → electromagnet. More turns/current = stronger.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY = "sciguru_topic18_magnetism_lab_v1";
+  const clamp = (v,min,max)=>Math.max(min, Math.min(max, v));
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch(e){ return null; }
+  }
+  function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+
+  const S = load() || {
+    poles:{left:"N", right:"S"},
+    materials:{score:0, correct:0, attempts:0, current:null},
+    fields:{mode:"dense"},
+    electro:{turns:40, cells:1, core:"iron"}
+  };
+
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tabPane").forEach(p=>p.style.display="none");
+      document.getElementById("pane-"+t).style.display="block";
+      save(S);
+    });
+  });
+
+  // Reset all
+  document.getElementById("resetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 18 lab progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // ===== Poles =====
+  const mLeft = document.getElementById("mLeft");
+  const mRight = document.getElementById("mRight");
+  const pTest = document.getElementById("pTest");
+  const pSide = document.getElementById("pSide");
+  const pNote = document.getElementById("pNote");
+
+  function renderMag(){
+    mLeft.textContent = S.poles.left;
+    mRight.textContent = S.poles.right;
+    save(S);
+  }
+  renderMag();
+
+  document.getElementById("pFlip").addEventListener("click", ()=>{
+    const tmp = S.poles.left;
+    S.poles.left = S.poles.right;
+    S.poles.right = tmp;
+    pNote.textContent = "Magnet flipped. Now test again.";
+    pTest.value = "";
+    pSide.value = "";
+    renderMag();
+  });
+
+  document.getElementById("pCheck").addEventListener("click", ()=>{
+    const t = pTest.value;
+    const side = pSide.value;
+    if(!t || !side){
+      pNote.textContent = "Choose a test pole and a side first.";
+      return;
+    }
+    const nearPole = (side==="left") ? S.poles.left : S.poles.right;
+    if(t === nearPole){
+      pNote.textContent = `❌ Like poles repel: ${t} near ${nearPole} → REPULSION.`;
+    } else {
+      pNote.textContent = `✅ Unlike poles attract: ${t} near ${nearPole} → ATTRACTION.`;
+    }
+  });
+
+  // ===== Materials =====
+  const materialsItems = [
+    {q:"Iron nail", a:"mag", exp:"Iron is magnetic."},
+    {q:"Steel paper clip", a:"mag", exp:"Steel is magnetic."},
+    {q:"Copper wire", a:"non", exp:"Copper is non-magnetic."},
+    {q:"Aluminium spoon", a:"non", exp:"Aluminium is non-magnetic."},
+    {q:"Wooden stick", a:"non", exp:"Wood is non-magnetic."},
+    {q:"Plastic ruler", a:"non", exp:"Plastic is non-magnetic."},
+    {q:"Nickel coin (nickel)", a:"mag", exp:"Nickel is magnetic."},
+    {q:"Cobalt piece", a:"mag", exp:"Cobalt is magnetic."},
+    {q:"Glass cup", a:"non", exp:"Glass is non-magnetic."}
+  ];
+
+  const matScore = document.getElementById("matScore");
+  const matCorrect = document.getElementById("matCorrect");
+  const matAttempts = document.getElementById("matAttempts");
+  const matQ = document.getElementById("matQ");
+  const matNote = document.getElementById("matNote");
+
+  function renderMat(){
+    matScore.textContent = S.materials.score;
+    matCorrect.textContent = S.materials.correct;
+    matAttempts.textContent = S.materials.attempts;
+    save(S);
+  }
+  renderMat();
+
+  function newObj(){
+    const it = materialsItems[Math.floor(Math.random()*materialsItems.length)];
+    S.materials.current = it;
+    matQ.textContent = "Object: " + it.q;
+    matNote.textContent = "Magnetic or Non-magnetic?";
+    renderMat();
+  }
+  document.getElementById("matNew").addEventListener("click", newObj);
+
+  function answerMat(ans){
+    if(!S.materials.current){
+      matNote.textContent = "Press “New Object” first.";
+      return;
+    }
+    S.materials.attempts++;
+    const ok = (ans === S.materials.current.a);
+    if(ok){
+      S.materials.correct++;
+      S.materials.score += 5;
+      matNote.textContent = "✅ Correct! " + S.materials.current.exp;
+    } else {
+      matNote.textContent = "❌ Not quite. " + S.materials.current.exp;
+    }
+    renderMat();
+  }
+  document.getElementById("matMag").addEventListener("click", ()=>answerMat("mag"));
+  document.getElementById("matNon").addEventListener("click", ()=>answerMat("non"));
+  if(S.materials.current){ matQ.textContent = "Object: " + S.materials.current.q; }
+
+  // ===== Fields =====
+  const fieldBox = document.getElementById("fieldBox");
+  const fieldNote = document.getElementById("fieldNote");
+
+  function drawField(mode){
+    const dense = (mode==="dense");
+    const lines = dense ? 10 : 6;
+    let out = "";
+    out += "N  →→→→→→→→→→  S\n";
+    out += "   ) ) ) ) ) ) ) )\n";
+    out += "  ) ) ) ) ) ) ) ) )\n";
+    for(let i=0;i<lines;i++){
+      out += dense ? " ) ) ) ) ) ) ) ) ) )\n" : "  ) ) ) ) ) )\n";
+    }
+    out += "  ( ( ( ( ( ( ( ( (\n";
+    out += "   ( ( ( ( ( ( ( (\n";
+    out += "N  ←←←←←←←←←←  S\n";
+    fieldBox.textContent = out;
+    fieldNote.textContent = dense
+      ? "✅ Stronger field: lines are closer (dense), strongest near poles."
+      : "✅ Weaker field: fewer lines shown.";
+    S.fields.mode = mode;
+    save(S);
+  }
+  document.getElementById("fieldDense").addEventListener("click", ()=>drawField("dense"));
+  document.getElementById("fieldLight").addEventListener("click", ()=>drawField("light"));
+  drawField(S.fields.mode || "dense");
+
+  // ===== Electromagnet =====
+  const eTurns = document.getElementById("eTurns");
+  const eCells = document.getElementById("eCells");
+  const eCore = document.getElementById("eCore");
+  const eFill = document.getElementById("eFill");
+  const eNote = document.getElementById("eNote");
+  const eTurnsOut = document.getElementById("eTurnsOut");
+  const eCellsOut = document.getElementById("eCellsOut");
+  const eCoreOut = document.getElementById("eCoreOut");
+
+  function renderElectro(){
+    eTurns.value = S.electro.turns;
+    eCells.value = S.electro.cells;
+    eCore.value = S.electro.core;
+    eTurnsOut.textContent = S.electro.turns;
+    eCellsOut.textContent = S.electro.cells;
+    eCoreOut.textContent = S.electro.core;
+
+    // strength model (simple)
+    let strength = (Number(S.electro.turns) / 120) * (Number(S.electro.cells) / 4);
+    if(S.electro.core === "iron") strength *= 1.8;
+    else strength *= 0.7;
+
+    const pct = clamp(Math.round(strength * 100), 0, 100);
+    eFill.style.width = pct + "%";
+
+    if(pct < 35) eNote.textContent = `Weak electromagnet (${pct}%). Add turns, add cells, or use iron core.`;
+    else if(pct < 70) eNote.textContent = `Medium electromagnet (${pct}%). More turns/current increases strength.`;
+    else eNote.textContent = `Strong electromagnet (${pct}%). Be careful: strong current can heat the wire in real life.`;
+
+    save(S);
+  }
+
+  document.getElementById("eBuild").addEventListener("click", ()=>{
+    S.electro.turns = Number(eTurns.value);
+    S.electro.cells = Number(eCells.value);
+    S.electro.core = eCore.value;
+    renderElectro();
+  });
+
+  document.getElementById("eRandom").addEventListener("click", ()=>{
+    S.electro.turns = 10 + Math.floor(Math.random()*111);
+    S.electro.cells = 1 + Math.floor(Math.random()*4);
+    S.electro.core = (Math.random() < 0.8) ? "iron" : "none";
+    renderElectro();
+  });
+
+  renderElectro();
+</script>
+</body>
+</html>

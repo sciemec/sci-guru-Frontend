@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 16: Force (Virtual Lab)</title>
+  <link rel="icon" href="lec-logo.jpg"/>
+
+  <style>
+    :root{
+      --bg1:#0b1220; --bg2:#081a3b;
+      --stroke:rgba(255,255,255,.12);
+      --text:#eaf2ff;
+      --muted:rgba(234,242,255,.72);
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    header{
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+      border-radius:16px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      user-select:none;
+    }
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      padding:10px 12px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .tab.active{
+      border-color:rgba(47,123,255,.55);
+      background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
+      color:#071022;
+    }
+
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    input, select{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px;
+      outline:none;
+      font-size:14px;
+    }
+    .row{display:grid;grid-template-columns:1fr .5fr .35fr;gap:8px;align-items:center}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+    .viz{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+    }
+
+    /* spring balance */
+    .sb{
+      display:grid;grid-template-columns:240px 1fr;gap:12px;align-items:start;
+    }
+    @media(max-width:800px){.sb{grid-template-columns:1fr}}
+    .sbBox{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:12px;
+      position:relative;
+      height:320px;
+      overflow:hidden;
+    }
+    .tube{
+      position:absolute;left:50%;top:10px;transform:translateX(-50%);
+      width:96px;height:280px;border-radius:20px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.22);
+      padding:10px;
+    }
+    .scale{
+      position:absolute;left:14px;top:12px;bottom:12px;width:26px;
+      color:rgba(234,242,255,.7);font-size:11px;line-height:1.05;
+    }
+    .needle{
+      position:absolute;left:48px;top:0;
+      width:34px;height:4px;border-radius:999px;
+      background:rgba(255,204,102,.92);
+      box-shadow:0 0 0 6px rgba(255,204,102,.16);
+      transform:translateY(20px);
+    }
+    .hook{
+      position:absolute;left:50%;bottom:24px;transform:translateX(-50%);
+      width:36px;height:36px;border-radius:999px;border:2px solid rgba(234,242,255,.55);
+      background:rgba(0,0,0,.22);
+    }
+    .sbRead{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.30);
+      border-radius:14px;
+      padding:10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      min-width:220px;
+    }
+    .sbRead b{font-size:22px}
+
+    /* friction track */
+    .track{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:12px;
+    }
+    .lane{
+      border:1px dashed rgba(255,255,255,.20);
+      border-radius:14px;
+      height:72px;
+      position:relative;
+      overflow:hidden;
+      background:rgba(0,0,0,.18);
+    }
+    .block{
+      position:absolute;left:12px;top:14px;
+      width:54px;height:44px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(47,123,255,.30);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;font-size:12px;color:rgba(234,242,255,.9);
+    }
+    .finish{
+      position:absolute;right:12px;top:10px;
+      width:12px;height:52px;border-radius:999px;background:rgba(51,208,122,.7);
+      box-shadow:0 0 0 6px rgba(51,208,122,.12);
+    }
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 16 • Force (Virtual Lab)</b>
+        <span>Push/Pull • Contact vs Non-contact • Newton (N) • Friction • Weight</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-force.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Practice force ideas with mini-experiments</h1>
+      <p>Use the tabs below. Your Topic 16 progress is saved automatically on this device.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Force Stations</h2><small>Pick one station</small></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="classify">Classify Forces</button>
+          <button class="tab" data-tab="spring">Spring Balance</button>
+          <button class="tab" data-tab="friction">Friction</button>
+          <button class="tab" data-tab="weight">Weight</button>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <!-- CLASSIFY -->
+        <div class="card tabPane" id="pane-classify">
+          <h3>Contact vs Non-contact forces</h3>
+          <p>Choose whether the scenario is mainly a contact force or a non-contact force.</p>
+
+          <div class="viz">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="tag">Score: <b id="cScore">0</b></span>
+              <span class="tag">Correct: <b id="cCorrect">0</b></span>
+              <span class="tag">Attempts: <b id="cAttempts">0</b></span>
+            </div>
+
+            <div class="note" id="cQ">Press “New Scenario”</div>
+
+            <div class="controls">
+              <button class="miniBtn" id="cNew">New Scenario</button>
+              <button class="miniBtn primary" id="cContact">Contact</button>
+              <button class="miniBtn primary" id="cNon">Non-contact</button>
+              <button class="miniBtn bad" id="resetAll">Reset Topic 16 Progress</button>
+            </div>
+
+            <div class="note" id="cNote">Tip: Contact forces need touching (friction, push, tension). Non-contact forces act at a distance (gravity, magnetism, electrostatic).</div>
+          </div>
+        </div>
+
+        <!-- SPRING BALANCE -->
+        <div class="card tabPane" id="pane-spring" style="display:none">
+          <h3>Measure force using a spring balance</h3>
+          <p>Pull the slider to apply a force. Read the spring balance and enter the force in newtons (N).</p>
+
+          <div class="viz sb">
+            <div class="sbBox">
+              <div class="tube">
+                <div class="scale" id="sbScale"></div>
+                <div class="needle" id="sbNeedle"></div>
+              </div>
+              <div class="hook"></div>
+            </div>
+
+            <div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <div class="sbRead">
+                  <div style="color:rgba(234,242,255,.72);font-size:12px">SPRING BALANCE</div>
+                  <b id="sbDisplay">0.0 N</b>
+                  <div style="color:rgba(234,242,255,.62);font-size:12px;margin-top:6px">True force: <span id="sbTrue">—</span></div>
+                </div>
+                <span class="tag">Streak: <b id="sbStreak">0</b></span>
+              </div>
+
+              <div style="margin-top:10px">
+                <label style="color:var(--muted);font-size:12px">Pull (force)</label>
+                <input type="range" id="sbPull" min="0" max="50" value="0"/>
+              </div>
+
+              <div class="row" style="margin-top:10px">
+                <div><input id="sbAns" placeholder="Enter force in N (e.g. 12.5)"/></div>
+                <div>
+                  <select id="sbUnit">
+                    <option value="N" selected>N</option>
+                    <option value="kN">kN</option>
+                  </select>
+                </div>
+                <div><button class="miniBtn primary" id="sbCheck">Check</button></div>
+              </div>
+
+              <div class="controls">
+                <button class="miniBtn" id="sbNew">New Reading</button>
+              </div>
+
+              <div class="note" id="sbNote">Move the slider, then read the scale. Unit of force is newton (N).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FRICTION -->
+        <div class="card tabPane" id="pane-friction" style="display:none">
+          <h3>Friction experiment</h3>
+          <p>Change surface + mass, then pull. Friction is a contact force that opposes motion.</p>
+
+          <div class="viz">
+            <div class="row">
+              <div>
+                <select id="fSurface">
+                  <option value="smooth">Smooth cardboard (low friction)</option>
+                  <option value="rough">Rough/corrugated cardboard (high friction)</option>
+                </select>
+              </div>
+              <div>
+                <select id="fMass">
+                  <option value="1">1 kg block</option>
+                  <option value="2">2 kg block</option>
+                  <option value="3">3 kg block</option>
+                </select>
+              </div>
+              <div>
+                <button class="miniBtn primary" id="fNew">Set Up</button>
+              </div>
+            </div>
+
+            <div class="track" style="margin-top:10px">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                <span class="tag">Estimated friction: <b id="fFric">—</b></span>
+                <span class="tag">Your pulls: <b id="fPulls">0</b></span>
+              </div>
+
+              <div class="lane" id="fLane">
+                <div class="block" id="fBlock">BLOCK</div>
+                <div class="finish"></div>
+              </div>
+
+              <div style="margin-top:10px">
+                <label style="color:var(--muted);font-size:12px">Pulling force (N)</label>
+                <input type="range" id="fPull" min="0" max="60" value="0"/>
+              </div>
+
+              <div class="controls">
+                <button class="miniBtn primary" id="fTry">Try Pull</button>
+                <button class="miniBtn" id="fResetPos">Reset Position</button>
+              </div>
+
+              <div class="note" id="fNote">If your pull is greater than friction, the block starts moving.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEIGHT -->
+        <div class="card tabPane" id="pane-weight" style="display:none">
+          <h3>Weight = gravitational force</h3>
+          <p>Weight depends on gravity. We use W = m × g. On Earth g ≈ 10 N/kg (approx for school).</p>
+
+          <div class="viz">
+            <div class="row">
+              <div><input id="wMass" placeholder="Enter mass in kg (e.g. 2.5)"></div>
+              <div>
+                <select id="wG">
+                  <option value="10" selected>Earth (g ≈ 10 N/kg)</option>
+                  <option value="9.8">Earth (g = 9.8 N/kg)</option>
+                  <option value="1.6">Moon (g ≈ 1.6 N/kg)</option>
+                </select>
+              </div>
+              <div><button class="miniBtn primary" id="wCalc">Calculate</button></div>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span class="tag">Weight (N): <b id="wOut">—</b></span>
+              <span class="tag">Attempts: <b id="wAtt">0</b></span>
+            </div>
+
+            <div class="note" id="wNote">Weight is a force measured in newtons (N). Mass is measured in kilograms (kg).</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Key Points</h2><small>Topic 16 summary</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Definition</h3>
+          <p>A force is a <b>push</b> or a <b>pull</b>. It can change shape, speed, direction or position.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Types</h3>
+          <p><b>Contact</b>: friction, tension, push/pull, air resistance.<br><b>Non-contact</b>: gravity, magnetic, electrostatic.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Unit + instrument</h3>
+          <p>SI unit of force is <b>newton (N)</b>. Force can be measured using a <b>spring balance/force meter</b>.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Auto-save</h3>
+          <p>Your progress is stored on this device only (localStorage).</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
+
+<script>
+  const KEY = "sciguru_topic16_force_lab_v1";
+  const clamp = (v,min,max)=>Math.max(min, Math.min(max, v));
+  const round1 = v=>Math.round(v*10)/10;
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch(e){ return null; }
+  }
+  function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+
+  const S = load() || {
+    classify:{score:0, correct:0, attempts:0, current:null},
+    spring:{trueN:0, streak:0},
+    friction:{surface:"smooth", mass:1, mu:0.25, fricN:0, pulls:0, pos:12},
+    weight:{attempts:0}
+  };
+
+  // tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tabPane").forEach(p=>p.style.display="none");
+      document.getElementById("pane-"+t).style.display="block";
+      save(S);
+    });
+  });
+
+  // reset
+  document.getElementById("resetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 16 lab progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // ====== CLASSIFY ======
+  const classifyItems = [
+    {q:"A student pushes a desk across the floor.", a:"contact", exp:"Push is a contact force."},
+    {q:"A magnet attracts iron nails.", a:"non", exp:"Magnetic force is non-contact."},
+    {q:"A book falls to the ground.", a:"non", exp:"Gravity is non-contact."},
+    {q:"Friction slows a moving bicycle.", a:"contact", exp:"Friction requires contact."},
+    {q:"A charged comb attracts small paper pieces.", a:"non", exp:"Electrostatic force is non-contact."},
+    {q:"A rope pulls a bucket up from a well.", a:"contact", exp:"Tension is a contact force through the rope."},
+    {q:"Air resistance slows a parachute.", a:"contact", exp:"Air resistance acts through contact with air."},
+    {q:"A shoe grips the ground while walking.", a:"contact", exp:"Friction is contact."}
+  ];
+
+  const cScore = document.getElementById("cScore");
+  const cCorrect = document.getElementById("cCorrect");
+  const cAttempts = document.getElementById("cAttempts");
+  const cQ = document.getElementById("cQ");
+  const cNote = document.getElementById("cNote");
+
+  function renderClassifyStats(){
+    cScore.textContent = S.classify.score;
+    cCorrect.textContent = S.classify.correct;
+    cAttempts.textContent = S.classify.attempts;
+  }
+
+  function newScenario(){
+    const it = classifyItems[Math.floor(Math.random()*classifyItems.length)];
+    S.classify.current = it;
+    cQ.textContent = "Scenario: " + it.q;
+    cNote.textContent = "Choose Contact or Non-contact.";
+    save(S);
+    renderClassifyStats();
+  }
+
+  function answerScenario(ans){
+    if(!S.classify.current){
+      cNote.textContent = "Press “New Scenario” first.";
+      return;
+    }
+    S.classify.attempts++;
+    const ok = (ans === S.classify.current.a);
+    if(ok){
+      S.classify.correct++;
+      S.classify.score += 5;
+      cNote.textContent = "✅ Correct! " + S.classify.current.exp;
+    } else {
+      cNote.textContent = "❌ Not quite. " + S.classify.current.exp;
+    }
+    save(S);
+    renderClassifyStats();
+  }
+
+  document.getElementById("cNew").addEventListener("click", newScenario);
+  document.getElementById("cContact").addEventListener("click", ()=>answerScenario("contact"));
+  document.getElementById("cNon").addEventListener("click", ()=>answerScenario("non"));
+  renderClassifyStats();
+
+  // ====== SPRING BALANCE ======
+  const sbScale = document.getElementById("sbScale");
+  const sbNeedle = document.getElementById("sbNeedle");
+  const sbPull = document.getElementById("sbPull");
+  const sbDisplay = document.getElementById("sbDisplay");
+  const sbTrue = document.getElementById("sbTrue");
+  const sbStreak = document.getElementById("sbStreak");
+  const sbNote = document.getElementById("sbNote");
+
+  // draw scale 0..10 N (marks)
+  (function(){
+    let html = "";
+    for(let i=10;i>=0;i--){
+      html += (i===10? "10 N" : (i===0? "0" : i)) + "<br><br>";
+    }
+    sbScale.innerHTML = html;
+  })();
+
+  function newSpring(){
+    // true force 0.5 to 10.0 N
+    S.spring.trueN = round1((Math.random()*9.5)+0.5);
+    // map 0..10 N to needle position 22..248 px
+    const y = 22 + (10 - S.spring.trueN) * 22.6; // higher N => lower needle
+    sbNeedle.style.transform = "translateY(" + y + "px)";
+    sbDisplay.textContent = "—";
+    sbTrue.textContent = "—";
+    sbStreak.textContent = S.spring.streak;
+    sbPull.value = Math.round(S.spring.trueN * 5);
+    sbNote.textContent = "Read the scale and enter the force in N. Then Check.";
+    save(S);
+  }
+
+  // slider just moves needle (visual practice)
+  sbPull.addEventListener("input", ()=>{
+    const approxN = (Number(sbPull.value)/5);
+    const y = 22 + (10 - approxN) * 22.6;
+    sbNeedle.style.transform = "translateY(" + y + "px)";
+    sbDisplay.textContent = approxN.toFixed(1) + " N (approx)";
+    sbTrue.textContent = "—";
+  });
+
+  document.getElementById("sbNew").addEventListener("click", newSpring);
+
+  document.getElementById("sbCheck").addEventListener("click", ()=>{
+    const raw = (document.getElementById("sbAns").value || "").trim();
+    const unit = document.getElementById("sbUnit").value;
+    let v = Number(raw);
+    if(!isFinite(v)){
+      sbNote.textContent = "❌ Enter a number (example: 7.5).";
+      return;
+    }
+    if(unit==="kN") v = v*1000;
+    const trueN = S.spring.trueN || 0;
+    const ok = Math.abs(v - trueN) <= 0.2;
+
+    sbTrue.textContent = trueN.toFixed(1) + " N";
+    sbDisplay.textContent = round1(v).toFixed(1) + " N";
+
+    if(ok){
+      S.spring.streak++;
+      sbNote.textContent = "✅ Correct! SI unit of force is newton (N).";
+    } else {
+      S.spring.streak = 0;
+      sbNote.textContent = `❌ Not quite.\nTrue force = ${trueN.toFixed(1)} N. You entered = ${round1(v).toFixed(1)} N.\nRead carefully at eye level.`;
+    }
+    sbStreak.textContent = S.spring.streak;
+    save(S);
+  });
+
+  // ====== FRICTION ======
+  const fSurface = document.getElementById("fSurface");
+  const fMass = document.getElementById("fMass");
+  const fFric = document.getElementById("fFric");
+  const fPull = document.getElementById("fPull");
+  const fPulls = document.getElementById("fPulls");
+  const fNote = document.getElementById("fNote");
+  const fBlock = document.getElementById("fBlock");
+
+  function setupFriction(){
+    const surface = fSurface.value;
+    const mass = Number(fMass.value);
+
+    S.friction.surface = surface;
+    S.friction.mass = mass;
+
+    // simple coefficients
+    S.friction.mu = (surface==="smooth") ? 0.25 : 0.55;
+
+    // normal force N = m*g (g≈10)
+    const N = mass*10;
+
+    // friction force
+    S.friction.fricN = round1(S.friction.mu * N);
+
+    fFric.textContent = S.friction.fricN.toFixed(1) + " N";
+    fPulls.textContent = S.friction.pulls;
+    fNote.textContent = "Increase pull until it beats friction. Then the block moves.";
+    save(S);
+  }
+
+  function resetPos(){
+    S.friction.pos = 12;
+    fBlock.style.left = S.friction.pos + "px";
+    save(S);
+  }
+
+  document.getElementById("fNew").addEventListener("click", ()=>{
+    setupFriction();
+    resetPos();
+  });
+
+  document.getElementById("fResetPos").addEventListener("click", resetPos);
+
+  document.getElementById("fTry").addEventListener("click", ()=>{
+    if(!S.friction.fricN) setupFriction();
+    const pullN = Number(fPull.value);
+    S.friction.pulls++;
+    fPulls.textContent = S.friction.pulls;
+
+    if(pullN > S.friction.fricN){
+      // move block forward
+      S.friction.pos = clamp(S.friction.pos + 26, 12, 520);
+      fBlock.style.left = S.friction.pos + "px";
+      fNote.textContent = `✅ It moves! Pull (${pullN} N) > friction (${S.friction.fricN.toFixed(1)} N).`;
+    } else {
+      fNote.textContent = `❌ Too small. Pull (${pullN} N) ≤ friction (${S.friction.fricN.toFixed(1)} N). Increase pull.`;
+    }
+    save(S);
+  });
+
+  // ====== WEIGHT ======
+  const wOut = document.getElementById("wOut");
+  const wAtt = document.getElementById("wAtt");
+  const wNote = document.getElementById("wNote");
+
+  document.getElementById("wCalc").addEventListener("click", ()=>{
+    const m = Number((document.getElementById("wMass").value||"").trim());
+    const g = Number(document.getElementById("wG").value);
+    if(!isFinite(m) || m<=0){
+      wNote.textContent = "❌ Enter a valid mass in kg (example: 2.5).";
+      return;
+    }
+    const W = m*g;
+    S.weight.attempts++;
+    wAtt.textContent = S.weight.attempts;
+    wOut.textContent = W.toFixed(1) + " N";
+    wNote.textContent = `✅ Weight W = m × g = ${m} × ${g} = ${W.toFixed(1)} N.\nMass is kg. Weight is a force in newtons (N).`;
+    save(S);
+  });
+
+  // init from saved
+  function init(){
+    renderClassifyStats();
+    if(S.classify.current){ cQ.textContent = "Scenario: " + S.classify.current.q; }
+    sbStreak.textContent = S.spring.streak || 0;
+
+    fSurface.value = S.friction.surface || "smooth";
+    fMass.value = String(S.friction.mass || 1);
+    setupFriction();
+    fPulls.textContent = S.friction.pulls || 0;
+    fBlock.style.left = (S.friction.pos || 12) + "px";
+
+    wAtt.textContent = S.weight.attempts || 0;
+    save(S);
+  }
+  init();
+</script>
+</body>
+</html>
