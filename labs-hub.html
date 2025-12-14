@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Sci-Guru • Virtual Lab Hub</title>
   <link rel="icon" href="lec-logo.jpg"/>
 
@@ -14,10 +14,14 @@
       --muted:rgba(234,242,255,.72);
       --blue:#2f7bff;
       --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
     }
     *{box-sizing:border-box}
     body{
-      margin:0; color:var(--text);
+      margin:0;color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
         radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
@@ -25,10 +29,12 @@
         linear-gradient(135deg, var(--bg1), var(--bg2));
       min-height:100vh;
     }
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
+    a{color:inherit}
+    .wrap{max-width:1280px;margin:0 auto;padding:14px 14px 36px}
+
     header{
       position:sticky; top:10px; z-index:10;
-      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
       padding:12px 14px;
       border:1px solid var(--stroke);
       background:rgba(0,0,0,.25);
@@ -45,7 +51,8 @@
     .t{min-width:0}
     .t b{display:block;font-size:16px}
     .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
     .btn{
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.06);
@@ -56,7 +63,12 @@
       font-weight:900;
       font-size:13px;
       cursor:pointer;
+      user-select:none;
+      display:inline-flex; align-items:center; gap:8px;
+      transition:transform .08s ease, background .15s ease;
     }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:translateY(1px)}
     .btn.primary{
       border-color:rgba(47,123,255,.55);
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
@@ -66,83 +78,121 @@
     .hero{
       margin-top:12px;
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
+      background:var(--card);
       border-radius:18px;
       padding:14px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
     }
     .hero h1{margin:0;font-size:18px}
-    .hero p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.5}
-
-    .row{
-      margin-top:12px;
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
-    input{
-      flex:1;
-      min-width:240px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--stroke);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px;
-      outline:none;
-      font-size:14px;
-    }
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
     .pill{
+      display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,.06);
-      padding:10px 12px;
-      border-radius:14px;
-      color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
       font-size:12px;
+      color:var(--muted);
       white-space:nowrap;
     }
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
 
     .grid{
       margin-top:12px;
       display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:10px;
+      grid-template-columns: 1fr;
+      gap:12px;
     }
-    .card{
-      grid-column: span 6;
+
+    .panel{
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.05);
-      border-radius:16px;
+      background:var(--card);
+      border-radius:18px;
       overflow:hidden;
     }
-    @media(max-width:980px){.card{grid-column: span 12}}
-    .cardTop{
-      padding:12px;
-      background:rgba(0,0,0,.16);
+    .panelHead{
+      padding:14px;
       border-bottom:1px solid var(--stroke);
-      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:rgba(0,0,0,.18);
+      flex-wrap:wrap;
     }
-    .cardTop b{display:block}
-    .cardTop span{display:block;margin-top:4px;font-size:12px;color:var(--muted);line-height:1.4}
-    .cardBody{padding:12px}
-    .links{display:flex; gap:8px; flex-wrap:wrap}
-    .mini{
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    @media(max-width:980px){ .cards{grid-template-columns: repeat(2, 1fr);} }
+    @media(max-width:640px){ .cards{grid-template-columns: 1fr;} }
+
+    .card{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:150px;
+    }
+    .cardTop{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    }
+    .cardTop b{font-size:13px}
+    .badge{
+      font-size:11px;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .badge.good{border-color:rgba(51,208,122,.35); background:rgba(51,208,122,.12); color:rgba(234,242,255,.92)}
+    .badge.warn{border-color:rgba(255,204,102,.35); background:rgba(255,204,102,.12); color:rgba(234,242,255,.92)}
+    .badge.bad{border-color:rgba(255,90,107,.35); background:rgba(255,90,107,.12); color:rgba(234,242,255,.92)}
+
+    .desc{color:var(--muted); font-size:12px; line-height:1.5; margin:0}
+    .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:auto}
+    .linkBtn{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
       padding:9px 10px;
       border-radius:12px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
       text-decoration:none;
       font-weight:900;
       font-size:12px;
+      display:inline-flex; align-items:center; gap:8px;
     }
-    .mini.primary{
+    .linkBtn:hover{background:rgba(255,255,255,.08)}
+    .linkBtn.primary{
+      border-color:rgba(47,123,255,.55);
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
       color:#071022;
-      border-color:rgba(47,123,255,.55);
     }
-    footer{
-      margin-top:16px;
-      text-align:center;
-      color:rgba(234,242,255,.62);
+    .fileTip{
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(0,0,0,.14);
+      border-radius:16px;
+      padding:12px;
+      color:rgba(234,242,255,.82);
       font-size:12px;
+      line-height:1.6;
+      white-space:pre-wrap;
     }
+    code{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      padding:2px 6px;
+      border-radius:8px;
+      color:rgba(234,242,255,.92);
+    }
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
   </style>
 </head>
 
@@ -151,135 +201,204 @@
     <header>
       <div class="brand">
         <div class="logo">
-          <img src="lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
+          <img src="lec-logo.jpg" alt="LEC Biotec Logo"
+               onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
         </div>
         <div class="t">
           <b>Virtual Lab Hub</b>
-          <span>Open simulations • avoid 404 by matching filenames exactly</span>
+          <span>Open experiments for Form 1 Combined Science (Topics 1–19)</span>
         </div>
       </div>
 
-      <nav>
+      <div class="actions">
+        <a class="btn" href="tutor.html">← Back to Tutor</a>
         <a class="btn" href="index.html">Home</a>
-        <a class="btn" href="tutor.html">Tutor</a>
-        <a class="btn primary" href="labs-hub.html">Labs</a>
-        <a class="btn" href="dashboard.html">Dashboard</a>
-      </nav>
+        <a class="btn primary" href="labs-hub.html">Refresh</a>
+      </div>
     </header>
 
     <section class="hero">
-      <h1>Choose a Virtual Experiment</h1>
-      <p>
-        If you get <b>404</b>, it usually means the file is missing or the name doesn’t match exactly
-        (GitHub Pages is case-sensitive).
-      </p>
-
-      <div class="row">
-        <input id="search" placeholder="Search labs (e.g., safety, cells, labeling, density, electricity, bunsen)"/>
-        <div class="pill">Tip: keep file names lowercase (recommended)</div>
+      <div>
+        <h1>Pick a lab and start experimenting</h1>
+        <p>
+          If you see <b>404 Not Found</b>, it means the file name on GitHub/Render does NOT match the link.
+          Use lowercase filenames exactly like <code>sim-cells-labels.html</code>.
+        </p>
       </div>
+      <div class="pill"><span class="dot"></span> Hub updated</div>
     </section>
 
-    <div class="grid" id="grid"></div>
+    <div class="grid">
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>✅ Available Labs</h2>
+            <small>These links should work once the files are uploaded with exact names</small>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="cards">
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 2 • Cells Hub</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Access cell experiments from one place (hub page).</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-cells-hub.html">Open Cells Hub</a>
+                <a class="linkBtn" href="sim-cells-labels.html">Cell Labelling</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 8 • Separation of Mixtures</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Filtration, evaporation, magnetism, and separation methods practice.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-separation.html">Open Separation Lab</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 15 • Measurements</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Units, instruments, errors (parallax/zero), and measurement practice.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-measurements.html">Open Measurements Lab</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 16 • Force</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Contact vs non-contact forces, friction investigation, and force meter ideas.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-force.html">Open Force Lab</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 17 • Energy</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Energy types, conversions, and energy chains.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-energy.html">Open Energy Lab</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 18 • Magnetism</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Poles, magnetic materials, electromagnets, and compass direction.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-magnetism.html">Open Magnetism Lab</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardTop">
+                <b>Topic 19 • Electricity (Series Circuits)</b>
+                <span class="badge good">Ready</span>
+              </div>
+              <p class="desc">Series circuit builder + meters + conductors/insulators station.</p>
+              <div class="links">
+                <a class="linkBtn primary" href="sim-electricity.html">Open Electricity Lab</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHead">
+          <div>
+            <h2>🧱 Coming Next (placeholders)</h2>
+            <small>We can build these labs next without breaking your current progress</small>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="cards">
+            <div class="card">
+              <div class="cardTop"><b>Topic 1 • Lab Safety & Apparatus</b><span class="badge warn">Next</span></div>
+              <p class="desc">Safety symbols, apparatus identification, measuring cylinder meniscus.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 3 • Nutrition</b><span class="badge warn">Next</span></div>
+              <p class="desc">Balanced diet builder, nutrients matching game, food label mini-lab.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 4 • Respiratory System</b><span class="badge warn">Next</span></div>
+              <p class="desc">Gas tests: glowing splint (oxygen) and limewater (carbon dioxide).</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 5 • Transport</b><span class="badge warn">Next</span></div>
+              <p class="desc">Diffusion + osmosis simulations, blood components matching lab.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 6 • Reproduction</b><span class="badge warn">Next</span></div>
+              <p class="desc">Flower dissection virtual lab, pollination/fertilisation pathways.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 7 • Health & Diseases</b><span class="badge warn">Next</span></div>
+              <p class="desc">Hygiene decision game, disease transmission simulation.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 9–13 • Chemistry Labs</b><span class="badge warn">Next</span></div>
+              <p class="desc">Matter, acids/bases, industrial processes, oxidation/rusting, fuels.</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+            <div class="card">
+              <div class="cardTop"><b>Topic 14 • Data Presentation</b><span class="badge warn">Next</span></div>
+              <p class="desc">Build tables + bar graphs from investigations (simple chart builder).</p>
+              <div class="links"><span class="badge">No file yet</span></div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="fileTip">
+✅ 404 FIX (Most common causes)
+1) Uppercase vs lowercase filenames:
+   Your link might be: sim-cells-labels.html
+   But your file might be: Sim-Cells-Labels.html  (this will 404)
+
+2) File not in the same folder as tutor.html/labs-hub.html
+
+3) You edited code but didn’t commit/push (GitHub) or redeploy (Render)
+
+Required exact filenames used by this hub:
+- sim-cells-hub.html
+- sim-cells-labels.html
+- sim-separation.html
+- sim-measurements.html
+- sim-force.html
+- sim-energy.html
+- sim-magnetism.html
+- sim-electricity.html
+          </div>
+        </div>
+      </section>
+    </div>
 
     <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
   </div>
-
-  <script>
-    const LABS = [
-      {
-        group:"Biology • Topic 1",
-        title:"Lab Safety & Apparatus (Topic 1)",
-        desc:"Rules quiz + safety symbols match + apparatus uses + meniscus measurement mini-lab.",
-        links:[
-          {label:"Open Topic 1 Lab", href:"sim-safety-apparatus.html", primary:true},
-          {label:"Apparatus Explorer", href:"sim-apparatus.html"},
-          {label:"Bunsen Burner", href:"sim-bunsen.html"}
-        ]
-      },
-      {
-        group:"Biology • Topic 2",
-        title:"Cells Hub (Topic 2)",
-        desc:"Cell learning hub + plant/animal cell labeling (and upgrades coming).",
-        links:[
-          {label:"Cells Hub", href:"sim-cells-hub.html", primary:true},
-          {label:"Cell Labeling", href:"sim-cells-labels.html"}
-        ]
-      },
-      {
-        group:"Physics • Topic 19",
-        title:"Electricity Simulator (Series)",
-        desc:"Build circuits, add series bulbs, switch, cell, wires (we keep improving).",
-        links:[
-          {label:"Open Electricity", href:"sim-electricity.html", primary:true}
-        ]
-      },
-      {
-        group:"Physics • Topic 16/15",
-        title:"Density Simulator",
-        desc:"Density practical: mass, volume, float/sink (upgrade planned).",
-        links:[
-          {label:"Open Density", href:"sim-density.html", primary:true}
-        ]
-      },
-      {
-        group:"Tools",
-        title:"Microscope Simulator",
-        desc:"Microscope viewing and focusing practice (if you have this file).",
-        links:[
-          {label:"Open Microscope", href:"sim-microscope.html", primary:true}
-        ]
-      }
-    ];
-
-    const grid = document.getElementById("grid");
-    const search = document.getElementById("search");
-
-    function esc(s){
-      return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
-
-    function render(){
-      const q = (search.value||"").trim().toLowerCase();
-      grid.innerHTML = "";
-
-      LABS
-        .filter(l=>{
-          if(!q) return true;
-          const hay = (l.group+" "+l.title+" "+l.desc+" "+l.links.map(x=>x.label+" "+x.href).join(" ")).toLowerCase();
-          return hay.includes(q);
-        })
-        .forEach(l=>{
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <div class="cardTop">
-              <div>
-                <b>${esc(l.title)}</b>
-                <span>${esc(l.group)} • ${esc(l.desc)}</span>
-              </div>
-            </div>
-            <div class="cardBody">
-              <div class="links">
-                ${l.links.map(x=>`<a class="mini ${x.primary?'primary':''}" href="${x.href}">${esc(x.label)}</a>`).join("")}
-              </div>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
-
-      if(!grid.children.length){
-        grid.innerHTML = `<div class="card" style="grid-column:span 12">
-          <div class="cardTop"><b>No labs found</b><span>Try another keyword.</span></div>
-          <div class="cardBody"><div class="links">
-            <a class="mini primary" href="tutor.html">Back to Tutor</a>
-          </div></div>
-        </div>`;
-      }
-    }
-
-    search.addEventListener("input", render);
-    render();
-  </script>
 </body>
-</html>
+        </html>
