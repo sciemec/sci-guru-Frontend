@@ -3,625 +3,238 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Sci-Guru • Topic 9: Matter</title>
+  <title>Sci-Guru • Topic 9 Matter (Solutions)</title>
   <link rel="icon" href="lec-logo.jpg"/>
-
   <style>
-    :root{
-      --bg1:#0b1220; --bg2:#081a3b;
-      --stroke:rgba(255,255,255,.12);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.72);
-      --blue:#2f7bff;
-      --purple:#7c5cff;
-      --good:#33d07a;
-      --warn:#ffcc66;
-      --bad:#ff5a6b;
-      --card:rgba(255,255,255,.06);
-    }
+    :root{--bg1:#0b1220;--bg2:#081a3b;--stroke:rgba(255,255,255,.12);--text:#eaf2ff;--muted:rgba(234,242,255,.72);--blue:#2f7bff;--purple:#7c5cff;--good:#33d07a;--warn:#ffcc66;--bad:#ff5a6b;--card:rgba(255,255,255,.05);}
     *{box-sizing:border-box}
-    body{
-      margin:0;color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
-        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
-    header{
-      position:sticky;top:10px;z-index:10;
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      padding:12px 14px;border:1px solid var(--stroke);
-      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
-      border-radius:16px;
-    }
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+      radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 36px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);background:rgba(0,0,0,.25);backdrop-filter:blur(10px);border-radius:16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
     .logo img{width:100%;height:100%;object-fit:cover}
-    .t b{display:block;font-size:16px}
-    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{
-      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
-      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
-      font-weight:900;font-size:13px;cursor:pointer;
-      display:inline-flex;align-items:center;gap:8px;
-    }
+    .btn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:12px;font-weight:900;font-size:13px;cursor:pointer}
+    .btn:hover{background:rgba(255,255,255,.10)}
     .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .hero{
-      margin-top:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);
-      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
-    }
+    .hero{margin-top:12px;border:1px solid var(--stroke);background:var(--card);border-radius:18px;padding:14px}
     .hero h1{margin:0;font-size:18px}
-    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:900px}
-    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
-    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
-    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
-    @media(max-width:980px){.grid{grid-template-columns:1fr}}
-    .panel{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;overflow:hidden}
-    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
-    .panelHead h2{margin:0;font-size:14px}
-    .panelHead small{color:var(--muted)}
-    .panelBody{padding:12px}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--muted);font-weight:900;font-size:12px;cursor:pointer}
-    .tab.active{color:#071022;border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55))}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:740px){.two{grid-template-columns:1fr}}
-    .card{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
-    .card h3{margin:0 0 8px;font-size:13px}
-    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
-    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
-    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
-    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .feedback{margin-top:10px;border:1px solid var(--stroke);background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:90px;white-space:pre-wrap}
-    select,input[type="range"]{
-      width:100%;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px;
-      outline:none;
-      font-size:14px;
-    }
-    input[type="range"]{padding:0;height:40px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .kpi{display:flex;gap:10px;flex-wrap:wrap}
-    .kpi .pill{border-color:rgba(255,255,255,.12)}
-    .barWrap{margin-top:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;height:14px}
-    .bar{height:100%;width:0%;background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55))}
-    canvas{width:100%;height:320px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18)}
-    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+    .grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;padding:12px}
+    .card h2{margin:0 0 8px;font-size:14px}
+    .small{color:var(--muted);font-size:12px;line-height:1.5}
+    input,select{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.20);color:var(--text);outline:none}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .chip{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);border-radius:999px;padding:8px 10px;font-size:12px;color:rgba(234,242,255,.85)}
+    .status{margin-top:10px;border:1px dashed rgba(255,255,255,.18);border-radius:16px;padding:10px;background:rgba(0,0,0,.12);font-size:12px;line-height:1.55}
+    .ok{color:var(--good);font-weight:900}
+    .bad{color:var(--bad);font-weight:900}
+    .warn{color:var(--warn);font-weight:900}
   </style>
 </head>
-
 <body>
 <div class="wrap">
   <header>
     <div class="brand">
-      <div class="logo">
-        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
-      </div>
-      <div class="t">
-        <b>Topic 9 • Matter (Virtual Lab)</b>
-        <span>Particles • States of matter • Changes of state • Dissolving factors</span>
+      <div class="logo"><img src="lec-logo.jpg" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='SG';"></div>
+      <div>
+        <div style="font-weight:900">Topic 9 • Matter (Solutions)</div>
+        <div class="small">Concentration • dilution • simple practice questions</div>
       </div>
     </div>
-    <nav>
-      <a class="btn" href="tutor.html">← Back to Tutor</a>
-      <a class="btn" href="labs-hub.html">Labs Hub</a>
+    <div class="row">
+      <a class="btn" href="sim-chemistry-hub.html">← Chemistry Hub</a>
+      <a class="btn" href="labs-hub.html">Lab Hub</a>
+      <a class="btn" href="tutor.html">Tutor</a>
       <a class="btn primary" href="sim-matter.html">Refresh</a>
-    </nav>
+    </div>
   </header>
 
   <section class="hero">
-    <div>
-      <h1>See Matter Using the Particle Model</h1>
-      <p>
-        Use the tabs to explore (1) particle arrangement and motion, (2) changes of state, and (3) why dissolving speeds up.
-      </p>
-    </div>
-    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+    <h1>Solution Concentration & Dilution Lab</h1>
+    <p>
+      Use these school-level formulas:
+      <br><b>Concentration</b> = amount of solute ÷ volume of solution
+      <br><b>Dilution</b>: adding more solvent lowers concentration (solute amount stays same).
+    </p>
   </section>
 
   <div class="grid">
-    <section class="panel">
-      <div class="panelHead">
-        <div><h2>Activities</h2><small>Switch tabs</small></div>
-        <div class="tabs" id="tabs"></div>
+    <div class="card">
+      <h2>Activity A — Concentration calculator</h2>
+      <div class="small">Enter solute and volume, choose units, then calculate.</div><br/>
+
+      <label class="small"><b>Solute amount</b></label>
+      <input id="solute" type="number" placeholder="e.g. 5">
+
+      <label class="small" style="margin-top:8px;display:block"><b>Solute unit</b></label>
+      <select id="soluteUnit">
+        <option value="g">grams (g)</option>
+        <option value="mg">milligrams (mg)</option>
+      </select>
+
+      <label class="small" style="margin-top:8px;display:block"><b>Volume of solution</b></label>
+      <input id="vol" type="number" placeholder="e.g. 250">
+
+      <label class="small" style="margin-top:8px;display:block"><b>Volume unit</b></label>
+      <select id="volUnit">
+        <option value="mL">mL</option>
+        <option value="L">L</option>
+      </select>
+
+      <div class="row">
+        <button class="btn primary" onclick="calcConc()">Calculate</button>
+        <button class="btn" onclick="resetConc()">Reset</button>
       </div>
 
-      <div class="panelBody">
-        <!-- VIEW 1: Particle simulator -->
-        <div class="view" id="view-particles">
-          <div class="two">
-            <div class="card">
-              <h3>Choose state</h3>
-              <select id="stateSel">
-                <option value="solid">Solid</option>
-                <option value="liquid">Liquid</option>
-                <option value="gas">Gas</option>
-              </select>
-              <p style="margin-top:8px" class="muted">
-                Solids: closely packed (vibrate). Liquids: close but slide. Gases: far apart and fast.
-              </p>
-              <div class="controls">
-                <button class="miniBtn primary" id="applyState">Apply</button>
-                <button class="miniBtn" id="randomize">Randomize</button>
-              </div>
-            </div>
+      <div class="status" id="cmsg">Result will appear here.</div>
+    </div>
 
-            <div class="card">
-              <h3>Particle energy</h3>
-              <div class="row">
-                <div style="flex:1;min-width:240px">
-                  <input id="energy" type="range" min="1" max="100" value="35"/>
-                </div>
-                <div class="kpi">
-                  <span class="pill">Energy: <b id="energyVal">35</b></span>
-                  <span class="pill">Speed: <b id="speedVal">Medium</b></span>
-                </div>
-              </div>
-              <p style="margin-top:8px;color:var(--muted);font-size:12px;line-height:1.5">
-                Higher energy → particles move faster and spread out more.
-              </p>
-            </div>
-          </div>
+    <div class="card">
+      <h2>Activity B — Dilution simulator</h2>
+      <div class="small">Start with a solution then add water (solvent). Watch concentration decrease.</div><br/>
 
-          <div style="margin-top:10px">
-            <canvas id="canvas" width="900" height="320"></canvas>
-            <div class="feedback" id="particleFeedback">Tip: set state to GAS and raise energy to see rapid random motion.</div>
-          </div>
-        </div>
+      <label class="small"><b>Starting concentration (g/L)</b></label>
+      <input id="c0" type="number" placeholder="e.g. 20">
 
-        <!-- VIEW 2: Changes of state -->
-        <div class="view" id="view-state" style="display:none">
-          <div class="two">
-            <div class="card">
-              <h3>Substance</h3>
-              <select id="subSel">
-                <option value="water">Water (ice ↔ water ↔ steam)</option>
-                <option value="wax">Candle wax (solid ↔ liquid)</option>
-                <option value="iodine">Iodine crystals (sublimation demo)</option>
-              </select>
-              <p style="margin-top:8px;color:var(--muted);font-size:12px;line-height:1.5">
-                These temperatures are classroom-friendly approximations (for learning).
-              </p>
-            </div>
+      <label class="small" style="margin-top:8px;display:block"><b>Starting volume (mL)</b></label>
+      <input id="v0" type="number" placeholder="e.g. 250">
 
-            <div class="card">
-              <h3>Temperature</h3>
-              <div class="row">
-                <div style="flex:1;min-width:240px">
-                  <input id="temp" type="range" min="-20" max="220" value="25"/>
-                </div>
-                <span class="pill">Temp: <b id="tempVal">25</b>°C</span>
-              </div>
+      <label class="small" style="margin-top:8px;display:block"><b>Add water (mL)</b></label>
+      <input id="add" type="number" placeholder="e.g. 250">
 
-              <div class="controls">
-                <button class="miniBtn primary" id="explainState">Explain</button>
-                <button class="miniBtn" id="resetTemp">Reset</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="feedback" id="stateFeedback">Move the temperature slider, then press Explain.</div>
-        </div>
-
-        <!-- VIEW 3: Dissolving factors -->
-        <div class="view" id="view-dissolve" style="display:none">
-          <div class="two">
-            <div class="card">
-              <h3>Solute particle size</h3>
-              <select id="sizeSel">
-                <option value="small">Small (powder)</option>
-                <option value="medium">Medium (granules)</option>
-                <option value="large">Large (lumps)</option>
-              </select>
-              <p style="margin-top:8px;color:var(--muted);font-size:12px;line-height:1.5">
-                Smaller pieces dissolve faster (larger surface area).
-              </p>
-            </div>
-
-            <div class="card">
-              <h3>Temperature & stirring</h3>
-              <div style="display:grid;gap:10px">
-                <div>
-                  <span class="pill">Water temperature: <b id="dTempVal">25</b>°C</span>
-                  <input id="dTemp" type="range" min="5" max="80" value="25"/>
-                </div>
-                <div>
-                  <span class="pill">Stirring: <b id="stirVal">Off</b></span>
-                  <select id="stirSel">
-                    <option value="off">Off</option>
-                    <option value="slow">Slow</option>
-                    <option value="fast">Fast</option>
-                  </select>
-                </div>
-              </div>
-              <div class="controls">
-                <button class="miniBtn primary" id="startDissolve">Start</button>
-                <button class="miniBtn" id="resetDissolve">Reset</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top:10px">
-            <h3>Dissolving progress</h3>
-            <div class="barWrap"><div class="bar" id="bar"></div></div>
-            <div class="feedback" id="dissolveFeedback">Choose settings then press Start.</div>
-          </div>
-        </div>
-
+      <div class="row">
+        <button class="btn primary" onclick="dilute()">Run dilution</button>
+        <button class="btn" onclick="resetDilution()">Reset</button>
       </div>
-    </section>
 
-    <aside class="panel">
-      <div class="panelHead"><div><h2>Progress</h2><small>Saved in your browser</small></div></div>
-      <div class="panelBody">
-        <div class="card">
-          <h3>Total Points</h3>
-          <p style="font-size:28px;font-weight:900;margin:6px 0 0" id="score">0</p>
-          <p class="pill" id="badge" style="margin-top:8px;">Badge: Starter</p>
+      <div class="status" id="dmsg">Result will appear here.</div>
+    </div>
+
+    <div class="card" style="grid-column:1/-1">
+      <h2>Quick Practice (3)</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="card" style="margin:0">
+          <div class="small"><b>1)</b> 10 g in 0.5 L → concentration?</div>
+          <select id="q1">
+            <option value="">Choose…</option>
+            <option value="ok">20 g/L</option>
+            <option value="no">5 g/L</option>
+            <option value="no">2 g/L</option>
+          </select>
         </div>
-
-        <div style="height:10px"></div>
-
-        <div class="card">
-          <h3>Quick Definitions</h3>
-          <p>
-            • <b>Solid</b>: fixed shape + volume<br/>
-            • <b>Liquid</b>: fixed volume, no fixed shape<br/>
-            • <b>Gas</b>: no fixed shape or volume<br/><br/>
-            • <b>Melting</b>: solid → liquid<br/>
-            • <b>Freezing</b>: liquid → solid<br/>
-            • <b>Evaporation/Boiling</b>: liquid → gas<br/>
-            • <b>Condensation</b>: gas → liquid<br/>
-            • <b>Sublimation</b>: solid → gas
-          </p>
+        <div class="card" style="margin:0">
+          <div class="small"><b>2)</b> Dilution means…</div>
+          <select id="q2">
+            <option value="">Choose…</option>
+            <option value="ok">Add solvent to reduce concentration</option>
+            <option value="no">Add solute to reduce concentration</option>
+            <option value="no">Remove solvent to reduce concentration</option>
+          </select>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="small"><b>3)</b> If you double the volume (same solute), concentration…</div>
+          <select id="q3">
+            <option value="">Choose…</option>
+            <option value="ok">Halves</option>
+            <option value="no">Doubles</option>
+            <option value="no">Stays same</option>
+          </select>
         </div>
       </div>
-    </aside>
+      <div class="row">
+        <button class="btn primary" onclick="mark()">Mark</button>
+        <span class="chip">Score: <b id="score">0</b>/3</span>
+      </div>
+      <div class="status" id="qmsg">Press Mark.</div>
+    </div>
   </div>
 
-  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+  <footer style="margin-top:14px;text-align:center;color:rgba(234,242,255,.62);font-size:12px">
+    © 2025 LEC Biotec • Sci-Guru Virtual Labs
+  </footer>
 </div>
 
 <script>
-  // ---------- Storage ----------
-  const KEY="sciguru_topic9_matter_v1";
-  const state = load() || {score:0,_awards:{},tab:"particles"};
-  function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
-  function save(){localStorage.setItem(KEY, JSON.stringify(state)); renderScore();}
-  function addScore(points, key){
-    state._awards = state._awards || {};
-    if(state._awards[key]) return;
-    state._awards[key] = true;
-    state.score += points;
-  }
-  function badgeFromScore(s){
-    if(s>=90) return "Matter Pro";
-    if(s>=55) return "Particle Master";
-    if(s>=25) return "Improving";
-    return "Starter";
-  }
-  function renderScore(){
-    document.getElementById("score").textContent = state.score || 0;
-    document.getElementById("badge").textContent = "Badge: " + badgeFromScore(state.score||0);
-  }
+  function calcConc(){
+    const sol = Number(document.getElementById("solute").value);
+    const su = document.getElementById("soluteUnit").value;
+    const vol = Number(document.getElementById("vol").value);
+    const vu = document.getElementById("volUnit").value;
 
-  // ---------- Tabs ----------
-  const TABS=[
-    {id:"particles", label:"1) Particles"},
-    {id:"state", label:"2) Changes of State"},
-    {id:"dissolve", label:"3) Dissolving Rate"}
-  ];
-  const tabsEl=document.getElementById("tabs");
-  let active = state.tab || "particles";
-
-  function renderTabs(){
-    tabsEl.innerHTML="";
-    TABS.forEach(t=>{
-      const b=document.createElement("button");
-      b.type="button";
-      b.className="tab"+(t.id===active?" active":"");
-      b.textContent=t.label;
-      b.onclick=()=>{
-        active=t.id; state.tab=active; showView(); renderTabs(); save();
-      };
-      tabsEl.appendChild(b);
-    });
-  }
-  function showView(){
-    document.getElementById("view-particles").style.display = active==="particles" ? "" : "none";
-    document.getElementById("view-state").style.display     = active==="state" ? "" : "none";
-    document.getElementById("view-dissolve").style.display  = active==="dissolve" ? "" : "none";
-  }
-
-  // ---------- Particle Simulator ----------
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  const stateSel = document.getElementById("stateSel");
-  const energy = document.getElementById("energy");
-  const energyVal = document.getElementById("energyVal");
-  const speedVal = document.getElementById("speedVal");
-  const particleFeedback = document.getElementById("particleFeedback");
-
-  let particles = [];
-  let simMode = "solid";
-  let simEnergy = 35;
-
-  function makeParticles(mode){
-    particles = [];
-    const W = canvas.width, H = canvas.height;
-    const n = 70;
-
-    if(mode === "solid"){
-      // grid-ish packed
-      const cols = 10;
-      const spacing = 28;
-      let x0 = 120, y0 = 70;
-      let idx = 0;
-      for(let r=0;r<7;r++){
-        for(let c=0;c<cols;c++){
-          if(idx>=n) break;
-          particles.push({
-            x:x0 + c*spacing,
-            y:y0 + r*spacing,
-            vx:(Math.random()-0.5)*0.2,
-            vy:(Math.random()-0.5)*0.2,
-            ox:x0 + c*spacing,
-            oy:y0 + r*spacing
-          });
-          idx++;
-        }
-      }
-    }else if(mode === "liquid"){
-      // close but random positions in a container region
-      for(let i=0;i<n;i++){
-        particles.push({
-          x: 110 + Math.random()*(W-220),
-          y: 90 + Math.random()*(H-160),
-          vx:(Math.random()-0.5)*1.2,
-          vy:(Math.random()-0.5)*1.2,
-          ox:null, oy:null
-        });
-      }
-    }else{
-      // gas: spread out everywhere
-      for(let i=0;i<n;i++){
-        particles.push({
-          x: 40 + Math.random()*(W-80),
-          y: 40 + Math.random()*(H-80),
-          vx:(Math.random()-0.5)*2.8,
-          vy:(Math.random()-0.5)*2.8,
-          ox:null, oy:null
-        });
-      }
-    }
-  }
-
-  function speedLabel(e){
-    if(e<30) return "Low";
-    if(e<60) return "Medium";
-    return "High";
-  }
-
-  function step(){
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0,0,W,H);
-
-    // container
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = "rgba(255,255,255,.18)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(18,18,W-36,H-36);
-
-    const eFactor = simEnergy / 35; // baseline at 35
-
-    for(const p of particles){
-      if(simMode === "solid"){
-        // vibrate around origin
-        const vib = 1.1 * eFactor;
-        p.x = p.ox + (Math.random()-0.5)*vib;
-        p.y = p.oy + (Math.random()-0.5)*vib;
-      }else{
-        const maxV = (simMode==="liquid" ? 2.0 : 4.0) * eFactor;
-        p.vx += (Math.random()-0.5)*0.06 * eFactor;
-        p.vy += (Math.random()-0.5)*0.06 * eFactor;
-
-        // clamp
-        p.vx = Math.max(-maxV, Math.min(maxV, p.vx));
-        p.vy = Math.max(-maxV, Math.min(maxV, p.vy));
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // bounce walls
-        if(p.x<28){p.x=28; p.vx*=-1}
-        if(p.x>W-28){p.x=W-28; p.vx*=-1}
-        if(p.y<28){p.y=28; p.vy*=-1}
-        if(p.y>H-28){p.y=H-28; p.vy*=-1}
-      }
-
-      // draw
-      ctx.fillStyle = "rgba(234,242,255,.85)";
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,5,0,Math.PI*2);
-      ctx.fill();
+    const msg = document.getElementById("cmsg");
+    if(!sol || !vol){
+      msg.innerHTML = "<span class='bad'>Enter solute and volume.</span>";
+      return;
     }
 
-    requestAnimationFrame(step);
-  }
+    let sol_g = (su==="mg") ? sol/1000 : sol;  // mg -> g
+    let vol_L = (vu==="mL") ? vol/1000 : vol;  // mL -> L
 
-  document.getElementById("applyState").onclick=()=>{
-    simMode = stateSel.value;
-    makeParticles(simMode);
-    addScore(10, "picked_state_"+simMode);
-    particleFeedback.textContent = "✅ State applied. Try changing energy too. (+10 points once per state)";
-    save();
-  };
-
-  document.getElementById("randomize").onclick=()=>{
-    makeParticles(simMode);
-    particleFeedback.textContent = "Particles randomized.";
-  };
-
-  energy.oninput = ()=>{
-    simEnergy = Number(energy.value);
-    energyVal.textContent = simEnergy;
-    speedVal.textContent = speedLabel(simEnergy);
-    if(simEnergy >= 70){
-      addScore(5, "high_energy");
-      save();
-    }
-  };
-
-  // ---------- Changes of State ----------
-  const subSel=document.getElementById("subSel");
-  const temp=document.getElementById("temp");
-  const tempVal=document.getElementById("tempVal");
-  const stateFeedback=document.getElementById("stateFeedback");
-
-  const SUBS = {
-    water: { mp: 0, bp: 100, note:"Water melts around 0°C and boils around 100°C." },
-    wax: { mp: 55, bp: 220, note:"Wax melts around 50–65°C. (Boiling is very high; classroom demo focuses on melting.)" },
-    iodine: { mp: 114, bp: 184, note:"Iodine can show sublimation (solid → gas) when heated." }
-  };
-
-  temp.oninput = ()=>{
-    tempVal.textContent = temp.value;
-  };
-
-  document.getElementById("resetTemp").onclick=()=>{
-    temp.value = 25; tempVal.textContent = 25;
-    stateFeedback.textContent = "Reset. Move the slider then press Explain.";
-  };
-
-  document.getElementById("explainState").onclick=()=>{
-    const s = subSel.value;
-    const T = Number(temp.value);
-    const info = SUBS[s];
-    let phase = "";
-    let process = "";
-
-    if(s === "iodine"){
-      // focus on sublimation demo: above ~160 show gas
-      if(T < info.mp){
-        phase="Solid (iodine crystals)";
-        process="Particles are close together and vibrate in place.";
-      } else if(T >= info.mp && T < info.bp){
-        phase="Liquid (rare in simple demo)";
-        process="Particles are close and slide past each other.";
-      } else {
-        phase="Gas (iodine vapour)";
-        process="Sublimation / boiling-range heating: particles spread out and move fast.";
-      }
-    } else {
-      if(T < info.mp){
-        phase="Solid";
-        process="Particles are closely packed and only vibrate.";
-      } else if(T >= info.mp && T < info.bp){
-        phase="Liquid";
-        process="Particles are close but can slide past one another.";
-      } else {
-        phase="Gas";
-        process="Particles are far apart and move rapidly in all directions.";
-      }
+    if(vol_L<=0){
+      msg.innerHTML = "<span class='bad'>Volume must be greater than 0.</span>";
+      return;
     }
 
-    let extra="";
-    if(s==="water"){
-      if(T===info.mp) extra="At 0°C, melting/freezing point.";
-      if(T===info.bp) extra="At 100°C, boiling/condensation point.";
+    const conc = sol_g / vol_L; // g/L
+    msg.innerHTML = "<span class='ok'>Concentration = </span><b>"+conc.toFixed(2)+" g/L</b>"
+      + "<br><span class='small'>("+sol_g.toFixed(3)+" g ÷ "+vol_L.toFixed(3)+" L)</span>";
+  }
+
+  function resetConc(){
+    ["solute","vol"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("soluteUnit").value="g";
+    document.getElementById("volUnit").value="mL";
+    document.getElementById("cmsg").textContent="Result will appear here.";
+  }
+
+  function dilute(){
+    const c0 = Number(document.getElementById("c0").value); // g/L
+    const v0 = Number(document.getElementById("v0").value); // mL
+    const add = Number(document.getElementById("add").value); // mL
+    const msg = document.getElementById("dmsg");
+
+    if(!c0 || !v0 || add<0){
+      msg.innerHTML="<span class='bad'>Enter valid starting concentration, starting volume, and added water.</span>";
+      return;
     }
 
-    addScore(10, "state_explain_"+s);
-    stateFeedback.textContent =
-      `Substance: ${s.toUpperCase()}\nTemperature: ${T}°C\nState: ${phase}\n\n${process}\n\nNote: ${info.note}\n${extra}\n(+10 points once per substance)`;
-    save();
-  };
+    const v1 = v0 + add; // mL
+    const v0L = v0/1000;
+    const v1L = v1/1000;
 
-  // ---------- Dissolving Rate ----------
-  const sizeSel=document.getElementById("sizeSel");
-  const dTemp=document.getElementById("dTemp");
-  const dTempVal=document.getElementById("dTempVal");
-  const stirSel=document.getElementById("stirSel");
-  const stirVal=document.getElementById("stirVal");
-  const bar=document.getElementById("bar");
-  const dissolveFeedback=document.getElementById("dissolveFeedback");
+    // solute amount stays the same:
+    const solute_g = c0 * v0L;
+    const c1 = solute_g / v1L;
 
-  let dissolving=false;
-  let prog=0;
-  let timer=null;
-
-  dTemp.oninput=()=>{ dTempVal.textContent = dTemp.value; };
-  stirSel.onchange=()=>{ stirVal.textContent = stirSel.value.toUpperCase(); };
-
-  function ratePerTick(){
-    // simple classroom model: smaller size + higher temp + stirring = faster
-    const size = sizeSel.value;
-    const tempC = Number(dTemp.value);
-    const stir = stirSel.value;
-
-    const sizeFactor = (size==="small") ? 1.4 : (size==="medium" ? 1.0 : 0.75);
-    const tempFactor = 0.6 + (tempC/80)*0.9; // 0.6..1.5
-    const stirFactor = (stir==="off") ? 0.8 : (stir==="slow" ? 1.1 : 1.35);
-
-    return 0.7 * sizeFactor * tempFactor * stirFactor; // progress per tick
+    msg.innerHTML =
+      "<span class='ok'>After dilution:</span> New volume = <b>"+v1.toFixed(0)+" mL</b>"
+      + "<br>Solute stays = <b>"+solute_g.toFixed(2)+" g</b>"
+      + "<br>New concentration = <b>"+c1.toFixed(2)+" g/L</b>"
+      + "<br><span class='warn'>More water → lower concentration</span>";
   }
 
-  function start(){
-    if(dissolving) return;
-    dissolving=true;
-    dissolveFeedback.textContent="Dissolving started… watch the progress bar.";
-    const r = ratePerTick();
-
-    timer=setInterval(()=>{
-      prog += r;
-      if(prog>=100){
-        prog=100;
-        bar.style.width = "100%";
-        clearInterval(timer);
-        dissolving=false;
-
-        addScore(15, "dissolve_complete");
-        dissolveFeedback.textContent =
-          `✅ Fully dissolved!\nYour settings made it dissolve faster/slower.\n(+15 points once)`;
-        save();
-        return;
-      }
-      bar.style.width = prog.toFixed(1) + "%";
-    }, 120);
+  function resetDilution(){
+    ["c0","v0","add"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("dmsg").textContent="Result will appear here.";
   }
 
-  document.getElementById("startDissolve").onclick=()=>{
-    start();
-  };
-
-  document.getElementById("resetDissolve").onclick=()=>{
-    clearInterval(timer);
-    dissolving=false;
-    prog=0;
-    bar.style.width="0%";
-    dissolveFeedback.textContent="Reset. Choose settings then press Start.";
-  };
-
-  // ---------- Init ----------
-  function init(){
-    renderTabs(); showView(); renderScore(); save();
-    makeParticles(simMode);
-    energyVal.textContent = energy.value;
-    speedVal.textContent = speedLabel(Number(energy.value));
-    tempVal.textContent = temp.value;
-    dTempVal.textContent = dTemp.value;
-    stirVal.textContent = stirSel.value.toUpperCase();
-    requestAnimationFrame(step);
+  function mark(){
+    const ids=["q1","q2","q3"];
+    let s=0;
+    ids.forEach(id=>{ if(document.getElementById(id).value==="ok") s++; });
+    document.getElementById("score").textContent=s;
+    document.getElementById("qmsg").innerHTML = (s===3)
+      ? "<span class='ok'>Excellent ✅</span>"
+      : "<span class='bad'>Try again ❌</span> You got "+s+"/3.";
   }
-  init();
 </script>
 </body>
 </html>
