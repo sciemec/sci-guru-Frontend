@@ -3,555 +3,203 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Sci-Guru • Topic 13: Organic Chemistry (Fuels & Combustion)</title>
+  <title>Sci-Guru • Topic 13 Organic Chemistry (Combustion)</title>
   <link rel="icon" href="lec-logo.jpg"/>
-
   <style>
-    :root{
-      --bg1:#0b1220; --bg2:#081a3b;
-      --stroke:rgba(255,255,255,.12);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.72);
-      --blue:#2f7bff;
-      --purple:#7c5cff;
-      --good:#33d07a;
-      --warn:#ffcc66;
-      --bad:#ff5a6b;
-      --card:rgba(255,255,255,.05);
-      --dark:rgba(0,0,0,.18);
-    }
+    :root{--bg1:#0b1220;--bg2:#081a3b;--stroke:rgba(255,255,255,.12);--text:#eaf2ff;--muted:rgba(234,242,255,.72);--blue:#2f7bff;--purple:#7c5cff;--good:#33d07a;--warn:#ffcc66;--bad:#ff5a6b;--card:rgba(255,255,255,.05);}
     *{box-sizing:border-box}
-    body{
-      margin:0;color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
-        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
-    header{
-      position:sticky;top:10px;z-index:10;
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      padding:12px 14px;border:1px solid var(--stroke);
-      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
-      border-radius:16px;
-    }
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
+    body{margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+      radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+      radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+      linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 36px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--stroke);background:rgba(0,0,0,.25);backdrop-filter:blur(10px);border-radius:16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
     .logo img{width:100%;height:100%;object-fit:cover}
-    .t b{display:block;font-size:16px}
-    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{
-      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
-      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
-      font-weight:900;font-size:13px;cursor:pointer;
-      display:inline-flex;align-items:center;gap:8px;
-    }
+    .btn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:12px;font-weight:900;font-size:13px;cursor:pointer}
+    .btn:hover{background:rgba(255,255,255,.10)}
     .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .hero{
-      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
-      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
-    }
+    .hero{margin-top:12px;border:1px solid var(--stroke);background:var(--card);border-radius:18px;padding:14px}
     .hero h1{margin:0;font-size:18px}
-    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
-    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
-    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
-
-    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
-    @media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
-    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
-    .panelHead h2{margin:0;font-size:14px}
-    .panelHead small{color:var(--muted)}
-    .panelBody{padding:12px}
-
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:760px){.two{grid-template-columns:1fr}}
-
-    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
-    .card h3{margin:0 0 8px;font-size:13px}
-    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
-
-    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
-    .miniBtn{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:9px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer}
-    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
-    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
-
-    .tag{
-      display:inline-flex;align-items:center;gap:6px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      padding:7px 9px;border-radius:999px;
-      font-size:12px;color:var(--muted)
-    }
-    .tag b{color:var(--text)}
-    .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-
-    select,input[type="range"]{
-      width:100%;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--text);
-      border-radius:14px;
-      padding:12px;
-      outline:none;
-      font-size:14px;
-    }
-    input[type="range"]{padding:0;height:40px}
-
-    .scene{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
-      border-radius:18px;
-      padding:12px;
-      min-height:260px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    /* simple burner + flame */
-    .bench{
-      position:absolute;left:0;right:0;bottom:0;height:62px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.30));
-      border-top:1px solid rgba(255,255,255,.10);
-    }
-    .burner{
-      position:absolute;left:50%;bottom:42px;transform:translateX(-50%);
-      width:120px;height:110px;
-    }
-    .base{
-      position:absolute;left:14px;right:14px;bottom:0;height:24px;border-radius:12px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .tube{
-      position:absolute;left:42px;right:42px;bottom:22px;height:70px;border-radius:16px 16px 10px 10px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .nozzle{
-      position:absolute;left:52px;right:52px;bottom:84px;height:18px;border-radius:10px;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-    }
-
-    .flame{
-      position:absolute;left:50%;bottom:100px;transform:translateX(-50%);
-      width:70px;height:105px;
-      filter: blur(.2px);
-      opacity:.98;
-    }
-    .flame::before{
-      content:"";
-      position:absolute;inset:0;
-      border-radius:60% 60% 70% 70%;
-      background: radial-gradient(circle at 50% 65%, rgba(255,255,255,.45), transparent 45%),
-                  radial-gradient(circle at 50% 55%, rgba(47,123,255,.55), transparent 55%),
-                  radial-gradient(circle at 50% 30%, rgba(255,204,102,.80), transparent 60%),
-                  radial-gradient(circle at 50% 10%, rgba(255,90,107,.55), transparent 70%);
-      transform: skewX(-2deg);
-      transition: all .2s ease;
-    }
-    .smoke{
-      position:absolute;left:50%;bottom:205px;transform:translateX(-50%);
-      width:140px;height:140px;
-      opacity:0;
-      transition: opacity .2s ease;
-    }
-    .smoke::before{
-      content:"";
-      position:absolute;inset:0;
-      background:
-        radial-gradient(circle at 30% 60%, rgba(0,0,0,.30), transparent 55%),
-        radial-gradient(circle at 60% 45%, rgba(0,0,0,.24), transparent 58%),
-        radial-gradient(circle at 50% 25%, rgba(0,0,0,.18), transparent 60%);
-      filter: blur(1px);
-    }
-    .soot{
-      position:absolute;left:50%;top:20px;transform:translateX(-50%);
-      width:210px;height:70px;border-radius:18px;
-      background:rgba(0,0,0,.0);
-      border:1px dashed rgba(255,255,255,.10);
-      display:flex;align-items:center;justify-content:center;
-      color:rgba(234,242,255,.55);
-      font-size:12px;font-weight:900;
-      transition: background .2s ease, color .2s ease;
-    }
-
-    .meters{
-      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px
-    }
-    @media(max-width:760px){.meters{grid-template-columns:1fr}}
-    .meter{
-      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);
-      border-radius:16px;padding:10px
-    }
-    .meter b{display:block;font-size:12px}
-    .bar{
-      margin-top:8px;height:12px;border-radius:999px;background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);overflow:hidden
-    }
-    .fill{height:100%;width:0%}
-    .note{
-      margin-top:10px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:95px;white-space:pre-wrap
-    }
-    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+    .grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid var(--stroke);background:rgba(255,255,255,.05);border-radius:18px;padding:12px}
+    .card h2{margin:0 0 8px;font-size:14px}
+    .small{color:var(--muted);font-size:12px;line-height:1.5}
+    select{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.20);color:var(--text);outline:none}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .chip{border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);border-radius:999px;padding:8px 10px;font-size:12px;color:rgba(234,242,255,.85)}
+    .status{margin-top:10px;border:1px dashed rgba(255,255,255,.18);border-radius:16px;padding:10px;background:rgba(0,0,0,.12);font-size:12px;line-height:1.55}
+    .ok{color:var(--good);font-weight:900}
+    .bad{color:var(--bad);font-weight:900}
+    .warn{color:var(--warn);font-weight:900}
   </style>
 </head>
-
 <body>
 <div class="wrap">
   <header>
     <div class="brand">
-      <div class="logo">
-        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
-      </div>
-      <div class="t">
-        <b>Topic 13 • Organic Chemistry — Fuels & Combustion (Virtual Lab)</b>
-        <span>Hydrocarbons • Fuel types • Complete vs Incomplete combustion • Efficiency</span>
+      <div class="logo"><img src="lec-logo.jpg" alt="logo" onerror="this.style.display='none';this.parentElement.textContent='SG';"></div>
+      <div>
+        <div style="font-weight:900">Topic 13 • Organic Chemistry (Combustion)</div>
+        <div class="small">Complete vs incomplete combustion • products • pollution effects</div>
       </div>
     </div>
-    <nav>
-      <a class="btn" href="tutor.html">← Back to Tutor</a>
-      <a class="btn" href="labs-hub.html">Labs Hub</a>
-      <a class="btn primary" href="sim-organic.html">Refresh</a>
-    </nav>
+    <div class="row">
+      <a class="btn" href="sim-chemistry-hub.html">← Chemistry Hub</a>
+      <a class="btn" href="labs-hub.html">Lab Hub</a>
+      <a class="btn" href="tutor.html">Tutor</a>
+      <a class="btn primary" href="sim-organic-combustion.html">Refresh</a>
+    </div>
   </header>
 
   <section class="hero">
-    <div>
-      <h1>Explore Fuels, Combustion & Pollution</h1>
-      <p>Select a fuel type, adjust oxygen supply, then observe the flame, soot, and gas outputs. Learn why some fuels are “more efficient”.</p>
-    </div>
-    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+    <h1>Combustion Simulator</h1>
+    <p>
+      Fuels (hydrocarbons) burn in oxygen:
+      <br><b>Complete combustion</b> → CO₂ + H₂O (cleaner)
+      <br><b>Incomplete combustion</b> → CO + soot + H₂O (dangerous)
+    </p>
   </section>
 
   <div class="grid">
-    <section class="panel">
-      <div class="panelHead">
-        <div><h2>Combustion Station</h2><small>Adjust and observe</small></div>
+    <div class="card">
+      <h2>Activity A — Choose oxygen supply</h2>
+      <div class="small">Select oxygen amount and fuel type, then “Burn”.</div><br/>
+
+      <label class="small"><b>Fuel</b></label>
+      <select id="fuel">
+        <option value="paraffin">Paraffin</option>
+        <option value="petrol">Petrol</option>
+        <option value="wood">Wood</option>
+      </select>
+
+      <label class="small" style="margin-top:8px;display:block"><b>Oxygen supply</b></label>
+      <select id="o2">
+        <option value="plenty">Plenty of oxygen</option>
+        <option value="low">Low oxygen</option>
+      </select>
+
+      <div class="row">
+        <button class="btn primary" onclick="burn()">Burn</button>
+        <button class="btn" onclick="reset()">Reset</button>
       </div>
-      <div class="panelBody">
 
-        <div class="two">
-          <div class="card">
-            <h3>Step 1: Choose a fuel</h3>
-            <p>Fuels are often <b>hydrocarbons</b> (contain carbon + hydrogen). They release heat energy when they burn in oxygen.</p>
+      <div class="status" id="msg">Press Burn.</div>
+    </div>
 
-            <select id="fuel">
-              <option value="wood">Wood (solid fuel)</option>
-              <option value="coal">Coal (solid fuel)</option>
-              <option value="paraffin">Paraffin/Kerosene (liquid fuel)</option>
-              <option value="petrol">Petrol (liquid fuel)</option>
-              <option value="diesel">Diesel (liquid fuel)</option>
-              <option value="lpg">LPG (gas fuel)</option>
-              <option value="naturalgas">Natural gas (gas fuel)</option>
-            </select>
+    <div class="card">
+      <h2>Activity B — Pollution impacts</h2>
+      <div class="small">Match the pollutant to the effect.</div><br/>
 
-            <div class="kpis">
-              <span class="tag">Mode: <b id="mode">Complete</b></span>
-              <span class="tag">Energy: <b id="energy">—</b></span>
-              <span class="tag">Score: <b id="score">0</b></span>
-            </div>
+      <div class="small"><b>Carbon monoxide (CO)</b></div>
+      <select id="m1">
+        <option value="">Choose…</option>
+        <option value="ok">Poisonous gas (can cause death)</option>
+        <option value="no">Makes plants grow faster</option>
+      </select><br/><br/>
 
-            <label class="tag" style="margin-top:10px;display:inline-flex">Oxygen supply</label>
-            <input id="oxygen" type="range" min="0" max="100" value="75"/>
-            <div class="kpis">
-              <span class="tag">O₂ Level: <b id="o2Label">75%</b></span>
-              <span class="tag">Smoke: <b id="smokeLabel">Low</b></span>
-            </div>
+      <div class="small"><b>Carbon dioxide (CO₂)</b></div>
+      <select id="m2">
+        <option value="">Choose…</option>
+        <option value="ok">Contributes to global warming</option>
+        <option value="no">Stops rusting</option>
+      </select><br/><br/>
 
-            <div class="controls">
-              <button class="miniBtn primary" id="observeBtn">Observe</button>
-              <button class="miniBtn" id="checkBtn">Check Understanding</button>
-              <button class="miniBtn bad" id="resetBtn">Reset</button>
-            </div>
+      <div class="small"><b>Soot/smoke</b></div>
+      <select id="m3">
+        <option value="">Choose…</option>
+        <option value="ok">Air pollution, breathing problems</option>
+        <option value="no">Cleans the air</option>
+      </select>
 
-            <div class="note" id="feedback">Choose fuel + oxygen, then press Observe.</div>
-          </div>
-
-          <div class="card">
-            <h3>Visual Scene</h3>
-            <p>Complete combustion → cleaner flame, more energy, less soot. Incomplete combustion → smoky flame, soot, carbon monoxide.</p>
-
-            <div class="scene" aria-label="Combustion scene">
-              <div class="soot" id="sootPlate">Soot Plate</div>
-              <div class="smoke" id="smoke"></div>
-              <div class="flame" id="flame"></div>
-              <div class="burner">
-                <div class="nozzle"></div>
-                <div class="tube"></div>
-                <div class="base"></div>
-              </div>
-              <div class="bench"></div>
-            </div>
-
-            <div class="meters">
-              <div class="meter">
-                <b>CO₂ Output</b>
-                <div class="bar"><div class="fill" id="co2Bar"></div></div>
-                <small style="color:var(--muted)">Higher in complete combustion</small>
-              </div>
-              <div class="meter">
-                <b>CO (Poisonous) Output</b>
-                <div class="bar"><div class="fill" id="coBar"></div></div>
-                <small style="color:var(--muted)">Higher in incomplete combustion</small>
-              </div>
-              <div class="meter">
-                <b>Soot Output</b>
-                <div class="bar"><div class="fill" id="sootBar"></div></div>
-                <small style="color:var(--muted)">Black smoke/particles</small>
-              </div>
-              <div class="meter">
-                <b>Heat Energy</b>
-                <div class="bar"><div class="fill" id="heatBar"></div></div>
-                <small style="color:var(--muted)">Fuel efficiency (simple model)</small>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
+      <div class="row">
+        <button class="btn primary" onclick="mark()">Mark</button>
+        <span class="chip">Score: <b id="score">0</b>/3</span>
       </div>
-    </section>
+      <div class="status" id="mmsg">Press Mark.</div>
+    </div>
 
-    <aside class="panel">
-      <div class="panelHead">
-        <div><h2>Key Notes</h2><small>Remember</small></div>
-      </div>
-      <div class="panelBody">
-        <div class="card">
-          <p>
-            <b>Organic chemistry</b> studies compounds containing carbon and hydrogen (hydrocarbons).<br/><br/>
-            <b>Combustion</b> = burning a fuel in oxygen, releasing heat energy.<br/><br/>
-            <b>Complete combustion</b> (enough oxygen) produces mainly <b>CO₂ + water</b>, cleaner flame, more energy.<br/><br/>
-            <b>Incomplete combustion</b> (not enough oxygen) produces <b>CO</b> and <b>soot</b> (smoke) and less energy.
-          </p>
+    <div class="card" style="grid-column:1/-1">
+      <h2>Quick Quiz (3)</h2>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="card" style="margin:0">
+          <div class="small"><b>1)</b> Complete combustion produces…</div>
+          <select id="q1">
+            <option value="">Choose…</option>
+            <option value="ok">CO₂ and water</option>
+            <option value="no">CO and soot only</option>
+          </select>
         </div>
-
-        <div style="height:10px"></div>
-
-        <div class="card">
-          <h3>Safety</h3>
-          <p>
-            Carbon monoxide (CO) is dangerous/poisonous. In real life, use good ventilation and never burn fuel in a closed room.
-          </p>
+        <div class="card" style="margin:0">
+          <div class="small"><b>2)</b> Incomplete combustion happens when…</div>
+          <select id="q2">
+            <option value="">Choose…</option>
+            <option value="ok">Oxygen is insufficient</option>
+            <option value="no">Oxygen is too much</option>
+          </select>
         </div>
-
-        <div style="height:10px"></div>
-
-        <div class="card">
-          <h3>Fuel Forms</h3>
-          <p>
-            • Solid fuels: wood, coal<br/>
-            • Liquid fuels: petrol, diesel, paraffin<br/>
-            • Gas fuels: LPG, natural gas
-          </p>
+        <div class="card" style="margin:0">
+          <div class="small"><b>3)</b> CO is dangerous because…</div>
+          <select id="q3">
+            <option value="">Choose…</option>
+            <option value="ok">It is poisonous</option>
+            <option value="no">It is a vitamin</option>
+          </select>
         </div>
       </div>
-    </aside>
+      <div class="row">
+        <button class="btn primary" onclick="markQ()">Mark</button>
+        <span class="chip">Score: <b id="qs">0</b>/3</span>
+      </div>
+      <div class="status" id="qmsg">Press Mark.</div>
+    </div>
   </div>
 
-  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+  <footer style="margin-top:14px;text-align:center;color:rgba(234,242,255,.62);font-size:12px">
+    © 2025 LEC Biotec • Sci-Guru Virtual Labs
+  </footer>
 </div>
 
 <script>
-  const KEY="sciguru_topic13_organic_v1";
+  function burn(){
+    const fuel = document.getElementById("fuel").value;
+    const o2 = document.getElementById("o2").value;
+    const msg = document.getElementById("msg");
 
-  const S = load() || {
-    score:0,
-    fuel:"wood",
-    oxygen:75,
-    awards:{}
-  };
+    const fuelName = (fuel==="paraffin") ? "Paraffin" : (fuel==="petrol") ? "Petrol" : "Wood";
 
-  function load(){ try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null} }
-  function save(){ localStorage.setItem(KEY, JSON.stringify(S)); renderScore(); }
-
-  function award(pts,id){
-    S.awards=S.awards||{};
-    if(S.awards[id]) return;
-    S.awards[id]=true;
-    S.score += pts;
-  }
-
-  function renderScore(){ document.getElementById("score").textContent = S.score||0; }
-
-  const fuelEl=document.getElementById("fuel");
-  const o2El=document.getElementById("oxygen");
-  const o2Label=document.getElementById("o2Label");
-
-  const flame=document.getElementById("flame");
-  const smoke=document.getElementById("smoke");
-  const sootPlate=document.getElementById("sootPlate");
-
-  const modeEl=document.getElementById("mode");
-  const energyEl=document.getElementById("energy");
-  const smokeLabel=document.getElementById("smokeLabel");
-
-  const co2Bar=document.getElementById("co2Bar");
-  const coBar=document.getElementById("coBar");
-  const sootBar=document.getElementById("sootBar");
-  const heatBar=document.getElementById("heatBar");
-  const feedback=document.getElementById("feedback");
-
-  // Simple "energy potential" model per fuel (relative)
-  const FUEL = {
-    wood:{label:"Wood", form:"Solid", baseHeat:55},
-    coal:{label:"Coal", form:"Solid", baseHeat:70},
-    paraffin:{label:"Paraffin/Kerosene", form:"Liquid", baseHeat:68},
-    petrol:{label:"Petrol", form:"Liquid", baseHeat:75},
-    diesel:{label:"Diesel", form:"Liquid", baseHeat:78},
-    lpg:{label:"LPG", form:"Gas", baseHeat:80},
-    naturalgas:{label:"Natural gas", form:"Gas", baseHeat:82}
-  };
-
-  function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-
-  function compute(){
-    const f = FUEL[S.fuel] || FUEL.wood;
-    const o2 = clamp(S.oxygen,0,100);
-
-    // combustion quality threshold depends slightly on fuel (solids need more oxygen to burn cleanly)
-    let thresh = 60;
-    if(f.form==="Solid") thresh = 70;
-    if(f.form==="Liquid") thresh = 62;
-    if(f.form==="Gas") thresh = 55;
-
-    const complete = o2 >= thresh;
-
-    // soot and CO rise when oxygen is low
-    const deficit = complete ? 0 : (thresh - o2);
-    const soot = clamp(deficit * 1.3, 0, 100);
-    const co = clamp(deficit * 1.1, 0, 100);
-
-    // CO2 higher with good oxygen
-    const co2 = clamp(40 + (o2 * 0.6) - (deficit*0.7), 0, 100);
-
-    // heat energy: baseHeat * efficiency factor
-    // incomplete combustion loses energy
-    const efficiency = complete ? (0.85 + (o2- thresh)*0.002) : (0.55 - deficit*0.003);
-    const heat = clamp(Math.round(f.baseHeat * clamp(efficiency,0.25,1.0)), 0, 100);
-
-    return {f, o2, complete, soot, co, co2, heat, thresh};
-  }
-
-  function setFill(el, pct){
-    el.style.width = pct + "%";
-    // no fixed colors requested; keep default background behavior via gradients
-    el.style.background = "linear-gradient(90deg, rgba(47,123,255,.95), rgba(124,92,255,.65))";
-  }
-
-  function renderVisual(res){
-    // Flame size and "cleanliness"
-    const size = 70 + Math.round((res.o2/100)*40);
-    flame.style.width = size + "px";
-    flame.style.height = (90 + Math.round((res.heat/100)*50)) + "px";
-
-    // Adjust flame "color feel" via opacity layers (simple)
-    // Clean flame (complete): more blue/clear -> reduce smoky look
-    // Dirty flame (incomplete): more yellow/red + smoke/soot
-    const dirty = clamp((res.soot + res.co)/200, 0, 1);
-
-    flame.style.opacity = 0.95;
-    smoke.style.opacity = clamp(dirty * 0.95, 0, 0.95);
-
-    // Soot plate darkening
-    sootPlate.style.background = `rgba(0,0,0,${clamp(0.05 + (res.soot/120), 0.05, 0.55)})`;
-    sootPlate.style.color = res.soot>45 ? "rgba(234,242,255,.85)" : "rgba(234,242,255,.55)";
-    sootPlate.textContent = res.soot>45 ? "Soot Deposited ✅" : "Soot Plate";
-
-    // labels
-    modeEl.textContent = res.complete ? "Complete" : "Incomplete";
-    energyEl.textContent = res.heat + "/100";
-    smokeLabel.textContent = res.soot<20 ? "Low" : res.soot<55 ? "Medium" : "High";
-
-    // bars
-    setFill(co2Bar, res.co2);
-    setFill(coBar, res.co);
-    setFill(sootBar, res.soot);
-    setFill(heatBar, res.heat);
-  }
-
-  function observe(){
-    const res = compute();
-    renderVisual(res);
-
-    award(10, "observe_once");
-
-    // scoring for learning decisions
-    if(res.complete) award(10, "achieved_complete");
-    if(!res.complete) award(5, "saw_incomplete");
-    if(res.complete && res.o2>=90) award(10, "very_high_o2");
-
-    const msg =
-      `Observation:\n`+
-      `Fuel: ${res.f.label} (${res.f.form})\n`+
-      `Oxygen supply: ${res.o2}%\n`+
-      `Combustion: ${res.complete ? "Complete ✅" : "Incomplete ⚠️"}\n\n`+
-      `${res.complete ? 
-        "Complete combustion gives a cleaner flame and more heat energy. Main products: CO₂ + water.\n" :
-        "Incomplete combustion gives smoke/soot and produces carbon monoxide (CO). Less heat energy.\n"
-      }\n`+
-      `Heat energy (model): ${res.heat}/100\n`+
-      `CO₂: ${Math.round(res.co2)}% • CO: ${Math.round(res.co)}% • Soot: ${Math.round(res.soot)}%\n`+
-      `(+points on first observations)`;
-
-    feedback.textContent = msg;
-    save();
-  }
-
-  function checkUnderstanding(){
-    const res = compute();
-    let ok = false;
-
-    // We expect: if oxygen >= threshold → complete; if below → incomplete
-    if(S.oxygen >= res.thresh && res.complete) ok = true;
-    if(S.oxygen < res.thresh && !res.complete) ok = true;
-
-    if(ok){
-      award(20,"check_ok");
-      feedback.textContent =
-        "✅ Correct understanding!\n" +
-        "Enough oxygen → complete combustion (cleaner flame, more energy, CO₂ + water).\n" +
-        "Not enough oxygen → incomplete combustion (smoke/soot + CO).\n" +
-        "(+20 points once)";
+    if(o2==="plenty"){
+      msg.innerHTML = "<span class='ok'>Complete combustion ✅</span> " + fuelName +
+        " burns with plenty oxygen → mainly <b>CO₂ + H₂O</b> (cleaner flame).";
     }else{
-      award(5,"check_try");
-      feedback.textContent =
-        "Try again:\n" +
-        "Increase oxygen to make combustion complete, or reduce oxygen to cause incomplete combustion.\n" +
-        "(+5 points once)";
+      msg.innerHTML = "<span class='warn'>Incomplete combustion ⚠️</span> " + fuelName +
+        " burns with low oxygen → <b>CO + soot + H₂O</b>. CO is poisonous.";
     }
-    save();
-    renderVisual(res);
   }
 
-  // events
-  fuelEl.onchange=()=>{ S.fuel = fuelEl.value; save(); observe(); };
-  o2El.oninput=()=>{ S.oxygen = Number(o2El.value); o2Label.textContent = S.oxygen + "%"; save(); };
+  function reset(){
+    document.getElementById("fuel").value="paraffin";
+    document.getElementById("o2").value="plenty";
+    document.getElementById("msg").textContent="Press Burn.";
+  }
 
-  document.getElementById("observeBtn").onclick=observe;
-  document.getElementById("checkBtn").onclick=checkUnderstanding;
+  function mark(){
+    const ids=["m1","m2","m3"];
+    let s=0; ids.forEach(id=>{ if(document.getElementById(id).value==="ok") s++; });
+    document.getElementById("score").textContent=s;
+    document.getElementById("mmsg").innerHTML = (s===3) ? "<span class='ok'>Correct ✅</span>" : "<span class='bad'>Try again ❌</span> "+s+"/3";
+  }
 
-  document.getElementById("resetBtn").onclick=()=>{
-    if(!confirm("Reset Topic 13 experiment progress on this device?")) return;
-    localStorage.removeItem(KEY);
-    location.reload();
-  };
-
-  // init
-  fuelEl.value = S.fuel || "wood";
-  o2El.value = S.oxygen ?? 75;
-  o2Label.textContent = (S.oxygen ?? 75) + "%";
-  renderScore();
-  observe();
-  save();
+  function markQ(){
+    const ids=["q1","q2","q3"];
+    let s=0; ids.forEach(id=>{ if(document.getElementById(id).value==="ok") s++; });
+    document.getElementById("qs").textContent=s;
+    document.getElementById("qmsg").innerHTML = (s===3) ? "<span class='ok'>Excellent ✅</span>" : "<span class='bad'>Try again ❌</span> "+s+"/3";
+  }
 </script>
 </body>
 </html>
