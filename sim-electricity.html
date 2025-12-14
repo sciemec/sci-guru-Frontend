@@ -2,566 +2,686 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Sci-Guru | Electricity Simulator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sci-Guru • Topic 19: Electricity (Virtual Lab)</title>
   <link rel="icon" href="lec-logo.jpg"/>
+
   <style>
     :root{
       --bg1:#0b1220; --bg2:#081a3b;
-      --card:rgba(255,255,255,.07);
       --stroke:rgba(255,255,255,.12);
       --text:#eaf2ff;
       --muted:rgba(234,242,255,.72);
-      --blue:#2f7bff; --blue2:#7c5cff;
-      --good:#33d07a; --warn:#ffcc66; --bad:#ff5a6b;
-      --wire:#8fb7ff;
+      --blue:#2f7bff;
+      --purple:#7c5cff;
+      --good:#33d07a;
+      --warn:#ffcc66;
+      --bad:#ff5a6b;
+      --card:rgba(255,255,255,.05);
     }
     *{box-sizing:border-box}
     body{
-      margin:0; color:var(--text);
+      margin:0;color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(1200px 600px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
-        radial-gradient(900px 500px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
+        radial-gradient(1200px 650px at 20% 10%, rgba(47,123,255,.34), transparent 60%),
+        radial-gradient(900px 520px at 90% 30%, rgba(124,92,255,.22), transparent 55%),
         linear-gradient(135deg, var(--bg1), var(--bg2));
       min-height:100vh;
     }
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 40px}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 36px}
     header{
-      position:sticky; top:10px; z-index:10;
-      padding:12px 14px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.25);
-      backdrop-filter: blur(10px);
+      position:sticky;top:10px;z-index:10;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      padding:12px 14px;border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
       border-radius:16px;
     }
-    .brand{display:flex; align-items:center; gap:10px; min-width:0}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
     .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;border:1px solid var(--stroke);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center}
     .logo img{width:100%;height:100%;object-fit:cover}
-    .brand .t b{display:block;font-size:16px}
-    .brand .t span{display:block;font-size:12px;color:var(--muted)}
-    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .t b{display:block;font-size:16px}
+    .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:800;
-      font-size:13px;
-      cursor:pointer;
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);
+      color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:900;font-size:13px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      user-select:none;
     }
-    .btn.primary{
+    .btn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+
+    .hero{
+      margin-top:12px;border:1px solid var(--stroke);background:var(--card);
+      border-radius:18px;padding:14px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    }
+    .hero h1{margin:0;font-size:18px}
+    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5;max-width:920px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dot{width:9px;height:9px;border-radius:99px;background:var(--good);box-shadow:0 0 0 4px rgba(51,208,122,.14)}
+
+    .grid{margin-top:12px;display:grid;grid-template-columns:1.15fr .85fr;gap:12px;align-items:start}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--stroke);background:var(--card);border-radius:18px;overflow:hidden}
+    .panelHead{padding:14px;border-bottom:1px solid var(--stroke);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.18)}
+    .panelHead h2{margin:0;font-size:14px}
+    .panelHead small{color:var(--muted)}
+    .panelBody{padding:12px}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      padding:10px 12px;border-radius:14px;font-weight:900;font-size:12px;cursor:pointer;
+    }
+    .tab.active{
       border-color:rgba(47,123,255,.55);
       background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));
       color:#071022;
     }
 
-    .grid{margin-top:12px; display:grid; grid-template-columns: 360px 1fr; gap:12px; align-items:start}
-    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:16px;padding:12px}
+    .card h3{margin:0 0 8px;font-size:13px}
+    .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
 
-    .panel{border:1px solid var(--stroke); background:rgba(255,255,255,.05); border-radius:18px; overflow:hidden}
-    .head{padding:14px;border-bottom:1px solid var(--stroke);background:rgba(0,0,0,.18)}
-    .head h2{margin:0;font-size:14px}
-    .body{padding:12px}
-    .muted{color:var(--muted);font-size:12px;line-height:1.5}
-    select, input{
+    input, select{
       width:100%;
       background:rgba(255,255,255,.06);
-      border:1px solid var(--stroke);
+      border:1px solid rgba(255,255,255,.12);
       color:var(--text);
       border-radius:14px;
       padding:12px;
       outline:none;
       font-size:14px;
     }
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    @media(max-width:520px){.row{grid-template-columns:1fr}}
-    .stat{
-      margin-top:10px;
-      border:1px solid var(--stroke);
+    input[type="range"]{padding:0;height:38px}
+    .row{display:grid;grid-template-columns:1fr 1fr .65fr;gap:8px;align-items:center}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+
+    .miniBtn{
+      border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);
+      padding:10px 10px;border-radius:12px;font-weight:900;font-size:12px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    }
+    .miniBtn.primary{border-color:rgba(47,123,255,.55);background:linear-gradient(135deg, rgba(47,123,255,.95), rgba(124,92,255,.55));color:#071022}
+    .miniBtn.bad{border-color:rgba(255,90,107,.55);background:rgba(255,90,107,.16)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .note{
+      margin-top:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);border-radius:16px;padding:12px;min-height:80px;white-space:pre-wrap
+    }
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:7px 9px;border-radius:999px;
+      font-size:12px;color:var(--muted)
+    }
+    .tag b{color:var(--text)}
+
+    /* Circuit view */
+    .circuitBox{
+      border:1px solid rgba(255,255,255,.12);
       background:rgba(0,0,0,.18);
       border-radius:16px;
       padding:12px;
-      white-space:pre-wrap;
-      min-height:140px;
+      margin-top:10px;
     }
-    .good{color:var(--good)}
-    .warn{color:var(--warn)}
-    .bad{color:var(--bad)}
-
-    /* Simulator canvas */
-    .sim{
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.18);
-      border-radius:18px;
+    .meters{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:10px
+    }
+    .meter{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:10px;
+      flex:1 1 220px;
+      min-width:220px;
+    }
+    .meter h4{margin:0;font-size:12px;color:var(--muted)}
+    .meter b{display:block;font-size:22px;margin-top:6px}
+    .bulbRow{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center
+    }
+    .bulb{
+      width:54px;height:54px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:1000;
+      position:relative;
       overflow:hidden;
     }
-    .simTop{
-      padding:12px;
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      border-bottom:1px solid var(--stroke);
-      background:rgba(0,0,0,.18);
+    .glow{
+      position:absolute;inset:-30px;
+      background:radial-gradient(circle at 50% 50%, rgba(255,204,102,.75), transparent 55%);
+      opacity:0;
+      transition:opacity .2s ease;
     }
-    .chip{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:12px;
-      color:var(--muted);
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .chip b{color:var(--text)}
-    canvas{display:block;width:100%;height:520px}
-    .simBtns{display:flex;gap:8px;flex-wrap:wrap}
+    .bulb span{position:relative;z-index:2}
+    .hint{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.45}
+    .svgWrap{width:100%;overflow:auto}
+    svg{width:100%;max-width:860px;height:auto;display:block}
+    .wire{stroke:rgba(234,242,255,.65);stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .wire.off{stroke:rgba(234,242,255,.20)}
+    .node{fill:rgba(234,242,255,.70)}
+    .node.off{fill:rgba(234,242,255,.25)}
+    .label{fill:rgba(234,242,255,.80);font-size:14px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .box{fill:rgba(255,255,255,.06);stroke:rgba(255,255,255,.14);stroke-width:2;rx:14;ry:14}
+    .box2{fill:rgba(0,0,0,.16);stroke:rgba(255,255,255,.14);stroke-width:2;rx:14;ry:14}
+
+    footer{margin-top:16px;text-align:center;color:rgba(234,242,255,.62);font-size:12px}
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">
-          <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none'; this.parentElement.textContent='SG';"/>
-        </div>
-        <div class="t">
-          <b>Electricity Simulator</b>
-          <span>Now with SERIES circuits • brightness • switch</span>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="lec-logo.jpg" alt="Logo" onerror="this.style.display='none';this.parentElement.textContent='SG';">
+      </div>
+      <div class="t">
+        <b>Topic 19 • Electricity (Virtual Lab)</b>
+        <span>Series circuits • Current & voltage • Conductors & insulators</span>
+      </div>
+    </div>
+    <nav>
+      <a class="btn" href="tutor.html">← Back to Tutor</a>
+      <a class="btn" href="labs-hub.html">Labs Hub</a>
+      <a class="btn primary" href="sim-electricity.html">Refresh</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Build a series circuit and read the meters</h1>
+      <p>Change number of cells, number of bulbs, and resistance — then see how current and brightness change.</p>
+    </div>
+    <div class="pill"><span class="dot"></span> Auto-save enabled</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panelHead">
+        <div><h2>Electricity Stations</h2><small>Pick one station</small></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="series">Series Circuit Builder</button>
+          <button class="tab" data-tab="materials">Conductors & Insulators</button>
+          <button class="tab" data-tab="charges">Static vs Current</button>
         </div>
       </div>
-      <nav>
-        <a class="btn" href="tutor.html">Tutor</a>
-        <a class="btn" href="labs.html">Labs</a>
-        <a class="btn primary" href="sim-electricity.html">Electricity</a>
-      </nav>
-    </header>
 
-    <div class="grid">
-      <!-- Controls -->
-      <section class="panel">
-        <div class="head">
-          <h2>Controls</h2>
+      <div class="panelBody">
+        <!-- SERIES -->
+        <div class="card tabPane" id="pane-series">
+          <h3>Series circuit builder</h3>
+          <p>In a series circuit: <b>current is the same everywhere</b>, and adding bulbs increases total resistance so current decreases.</p>
+
+          <div class="circuitBox">
+            <div class="row">
+              <div>
+                <label style="color:var(--muted);font-size:12px">Cells (1–4)</label>
+                <input id="cells" type="range" min="1" max="4" value="2">
+              </div>
+              <div>
+                <label style="color:var(--muted);font-size:12px">Bulbs in series (1–3)</label>
+                <input id="bulbs" type="range" min="1" max="3" value="2">
+              </div>
+              <div>
+                <button class="miniBtn primary" id="toggleSwitch">Switch: OFF</button>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div>
+                <label style="color:var(--muted);font-size:12px">Extra resistor (Ω)</label>
+                <input id="extraR" type="range" min="0" max="30" value="5">
+              </div>
+              <div>
+                <label style="color:var(--muted);font-size:12px">Bulb resistance each (Ω)</label>
+                <input id="bulbR" type="range" min="3" max="25" value="10">
+              </div>
+              <div>
+                <button class="miniBtn" id="randomSetup">Random</button>
+              </div>
+            </div>
+
+            <div class="meters">
+              <div class="meter">
+                <h4>Supply Voltage (V)</h4>
+                <b id="vOut">—</b>
+              </div>
+              <div class="meter">
+                <h4>Current in series (A)</h4>
+                <b id="iOut">—</b>
+              </div>
+              <div class="meter">
+                <h4>Total Resistance (Ω)</h4>
+                <b id="rOut">—</b>
+              </div>
+            </div>
+
+            <div class="bulbRow">
+              <span class="tag">Bulb brightness:</span>
+              <div class="bulb"><div class="glow" id="g1"></div><span>Bulb 1</span></div>
+              <div class="bulb"><div class="glow" id="g2"></div><span>Bulb 2</span></div>
+              <div class="bulb"><div class="glow" id="g3"></div><span>Bulb 3</span></div>
+            </div>
+            <div class="hint" id="seriesHint">Tip: Turn ON the switch to allow current to flow.</div>
+
+            <div class="svgWrap" style="margin-top:10px">
+              <svg viewBox="0 0 920 360" aria-label="Series circuit diagram">
+                <rect x="18" y="18" width="884" height="324" class="box2"></rect>
+
+                <!-- battery box -->
+                <rect x="60" y="135" width="120" height="90" class="box"></rect>
+                <text x="78" y="162" class="label">Battery</text>
+                <text x="78" y="185" class="label" id="batLabel">2 cells</text>
+
+                <!-- switch -->
+                <rect x="250" y="135" width="120" height="90" class="box"></rect>
+                <text x="273" y="162" class="label">Switch</text>
+                <text x="273" y="185" class="label" id="swLabel">OFF</text>
+
+                <!-- bulbs area -->
+                <rect x="430" y="80" width="420" height="200" class="box"></rect>
+                <text x="448" y="108" class="label">Series loads</text>
+                <text x="448" y="130" class="label" id="loadLabel">2 bulbs + resistor</text>
+
+                <!-- wire loop -->
+                <path id="wirePath" class="wire off"
+                      d="M 120 135
+                         L 120 80
+                         L 860 80
+                         L 860 280
+                         L 120 280
+                         L 120 225"></path>
+
+                <!-- nodes -->
+                <circle cx="120" cy="80" r="7" class="node off" id="n1"></circle>
+                <circle cx="860" cy="80" r="7" class="node off" id="n2"></circle>
+                <circle cx="860" cy="280" r="7" class="node off" id="n3"></circle>
+                <circle cx="120" cy="280" r="7" class="node off" id="n4"></circle>
+
+                <!-- ammeter -->
+                <rect x="410" y="248" width="110" height="64" class="box"></rect>
+                <text x="432" y="274" class="label">Ammeter</text>
+                <text x="432" y="298" class="label" id="ammLabel">I = 0.00 A</text>
+
+                <!-- voltmeter -->
+                <rect x="560" y="248" width="120" height="64" class="box"></rect>
+                <text x="582" y="274" class="label">Voltmeter</text>
+                <text x="582" y="298" class="label" id="volLabel">V = 0.0 V</text>
+
+                <text x="60" y="328" class="label" fill="rgba(234,242,255,.62)">
+                  Notes: Ammeter is in series. Voltmeter is across the supply (shown as a reading).
+                </text>
+              </svg>
+            </div>
+
+            <div class="controls">
+              <button class="miniBtn bad" id="resetAll">Reset Topic 19 Progress</button>
+            </div>
+
+            <div class="note" id="seriesNote">
+In a closed circuit (switch ON), current flows.
+In series: current is the same through all components.
+Voltage is shared across components.
+            </div>
+          </div>
         </div>
-        <div class="body">
-          <div class="muted">
-            Choose a circuit type, then use the switch and variables.
-            <br/><br/>
-            <b>Goal:</b> Understand how SERIES circuits affect brightness and current.
+
+        <!-- MATERIALS -->
+        <div class="card tabPane" id="pane-materials" style="display:none">
+          <h3>Conductors and insulators</h3>
+          <p>Test a material: does it allow current to flow?</p>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag">Score: <b id="mScore">0</b></span>
+            <span class="tag">Correct: <b id="mCorrect">0</b></span>
+            <span class="tag">Attempts: <b id="mAttempts">0</b></span>
           </div>
 
-          <div style="margin-top:10px;">
-            <label class="muted">Circuit type</label>
-            <select id="mode">
-              <option value="single">Simple circuit (1 bulb)</option>
-              <option value="series2">Series circuit (2 bulbs)</option>
-              <option value="series3">Series circuit (3 bulbs)</option>
-            </select>
+          <div class="note" id="mQ">Press “New Material”</div>
+
+          <div class="controls">
+            <button class="miniBtn" id="mNew">New Material</button>
+            <button class="miniBtn primary" id="mCon">Conductor</button>
+            <button class="miniBtn primary" id="mIns">Insulator</button>
           </div>
 
-          <div class="row">
-            <div>
-              <label class="muted">Battery voltage (V)</label>
-              <input id="voltage" type="number" value="3" min="1" max="12" step="1"/>
-            </div>
-            <div>
-              <label class="muted">Bulb resistance (Ω)</label>
-              <input id="res" type="number" value="6" min="1" max="50" step="1"/>
-            </div>
+          <div class="note" id="mNote">
+Conductors: copper, aluminium, iron, graphite.
+Insulators: plastic, rubber, wood, glass.
           </div>
+        </div>
 
-          <div class="row">
+        <!-- CHARGES -->
+        <div class="card tabPane" id="pane-charges" style="display:none">
+          <h3>Static vs current electricity</h3>
+          <p>Pick the best description.</p>
+
+          <div class="note" id="cQ">Press “New Question”</div>
+
+          <div class="row" style="margin-top:10px">
             <div>
-              <label class="muted">Switch</label>
-              <select id="sw">
-                <option value="open">Open (OFF)</option>
-                <option value="closed">Closed (ON)</option>
+              <select id="cPick">
+                <option value="">-- choose answer --</option>
+                <option value="static">Static electricity (charge build-up)</option>
+                <option value="current">Current electricity (flow of charge)</option>
               </select>
             </div>
-            <div>
-              <label class="muted">Challenge</label>
-              <select id="challenge">
-                <option value="none">None</option>
-                <option value="brightest">Make bulb brightest</option>
-                <option value="savepower">Light bulb but save power</option>
-                <option value="compare">Compare 1 bulb vs Series</option>
-              </select>
-            </div>
+            <div><button class="miniBtn primary" id="cCheck">Check</button></div>
+            <div><button class="miniBtn" id="cNew">New Question</button></div>
           </div>
 
-          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn primary" id="applyBtn" type="button">Apply</button>
-            <button class="btn" id="resetBtn" type="button">Reset</button>
-          </div>
-
-          <div class="stat" id="stat"></div>
+          <div class="note" id="cNote">Tip: Static = charge collected on an object. Current = charge moving in a circuit.</div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Simulator -->
-      <section class="sim">
-        <div class="simTop">
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <span class="chip"><b id="chipMode">Simple</b> circuit</span>
-            <span class="chip">Current: <b id="chipI">0.00 A</b></span>
-            <span class="chip">Power: <b id="chipP">0.0 W</b></span>
-          </div>
-          <div class="simBtns">
-            <button class="btn" id="toggleBtn" type="button">Toggle Switch</button>
-            <button class="btn" id="stepBtn" type="button">Explain</button>
-          </div>
+    <aside class="panel">
+      <div class="panelHead">
+        <div><h2>Key Points</h2><small>Topic 19 summary</small></div>
+      </div>
+      <div class="panelBody">
+        <div class="card">
+          <h3>Charges</h3>
+          <p>Positive (protons), negative (electrons). Rubbing can transfer electrons (static electricity).</p>
         </div>
-        <canvas id="c" width="1200" height="520"></canvas>
-      </section>
-    </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Current electricity</h3>
+          <p>Current is the <b>flow of charge</b> in a closed circuit.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Series circuits</h3>
+          <p>Same current everywhere. Adding components increases resistance → current decreases → bulbs get dimmer.</p>
+        </div>
+        <div style="height:10px"></div>
+        <div class="card">
+          <h3>Meters</h3>
+          <p>Ammeter is connected <b>in series</b>. Voltmeter is connected <b>across</b> (in parallel with) the component/supply.</p>
+        </div>
+      </div>
+    </aside>
   </div>
 
-  <script>
-    const canvas = document.getElementById("c");
-    const ctx = canvas.getContext("2d");
+  <footer>© 2025 LEC Biotec • sales@lecbiotec.com • Harare, Zimbabwe</footer>
+</div>
 
-    const modeEl = document.getElementById("mode");
-    const vEl = document.getElementById("voltage");
-    const rEl = document.getElementById("res");
-    const swEl = document.getElementById("sw");
-    const statEl = document.getElementById("stat");
-    const chipMode = document.getElementById("chipMode");
-    const chipI = document.getElementById("chipI");
-    const chipP = document.getElementById("chipP");
-    const challengeEl = document.getElementById("challenge");
+<script>
+  const KEY = "sciguru_topic19_electricity_lab_v1";
+  const clamp = (v,min,max)=>Math.max(min, Math.min(max, v));
 
-    const applyBtn = document.getElementById("applyBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const toggleBtn = document.getElementById("toggleBtn");
-    const stepBtn = document.getElementById("stepBtn");
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+    catch(e){ return null; }
+  }
+  function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
 
-    function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+  const S = load() || {
+    series:{ cells:2, bulbs:2, extraR:5, bulbR:10, switchOn:false },
+    materials:{ score:0, correct:0, attempts:0, current:null },
+    charges:{ current:null }
+  };
 
-    function circuitInfo(){
-      const mode = modeEl.value;
-      const V = clamp(parseFloat(vEl.value||3), 1, 24);
-      const Rb = clamp(parseFloat(rEl.value||6), 1, 200);
-      const closed = (swEl.value === "closed");
-
-      let bulbs = 1;
-      if(mode === "series2") bulbs = 2;
-      if(mode === "series3") bulbs = 3;
-
-      // Series total resistance: bulbs * Rb
-      const Rt = bulbs * Rb;
-
-      // If open switch: I = 0
-      const I = closed ? (V / Rt) : 0;
-
-      // Power for whole circuit: P = V * I
-      const P = V * I;
-
-      // Power per bulb in series: I^2 * Rb
-      const Pbulb = (I*I*Rb);
-
-      // brightness proxy 0..1 based on power per bulb vs a reference
-      const ref = 1.0; // 1W baseline
-      const bright = clamp(Pbulb / ref, 0, 1.2);
-
-      return {mode,V,Rb,bulbs,closed,Rt,I,P,Pbulb,bright};
-    }
-
-    function writeStat(info){
-      const {mode,V,Rb,bulbs,closed,Rt,I,P,Pbulb} = info;
-
-      const name = mode==="single"?"Simple (1 bulb)":(mode==="series2"?"Series (2 bulbs)":"Series (3 bulbs)");
-      chipMode.textContent = name;
-      chipI.textContent = I.toFixed(2) + " A";
-      chipP.textContent = P.toFixed(1) + " W";
-
-      const lines = [];
-      lines.push(`Circuit: ${name}`);
-      lines.push(`Switch: ${closed ? "CLOSED (ON)" : "OPEN (OFF)"}`);
-      lines.push("");
-      lines.push(`Battery voltage V = ${V.toFixed(0)} V`);
-      lines.push(`Bulb resistance (each) R = ${Rb.toFixed(0)} Ω`);
-      lines.push(`Total resistance Rt = ${Rt.toFixed(0)} Ω  (series adds up)`);
-      lines.push("");
-      lines.push(`Current I = V / Rt = ${I.toFixed(2)} A`);
-      lines.push(`Total Power P = V × I = ${P.toFixed(1)} W`);
-      lines.push(`Power per bulb = I² × R = ${Pbulb.toFixed(2)} W`);
-      lines.push("");
-      lines.push("Key idea:");
-      lines.push("• In SERIES, adding bulbs increases total resistance.");
-      lines.push("• More resistance → less current → bulbs become dimmer.");
-      lines.push("• If one bulb breaks (open circuit), ALL go off (series).");
-
-      // Challenge feedback
-      const ch = challengeEl.value;
-      if(ch !== "none"){
-        lines.push("");
-        lines.push("Challenge feedback:");
-        lines.push(getChallengeFeedback(info, ch));
-      }
-
-      statEl.className = "stat";
-      statEl.textContent = lines.join("\n");
-    }
-
-    function getChallengeFeedback(info, ch){
-      const {closed,bulbs,V,Rb,I,P,Pbulb} = info;
-      if(!closed) return "Switch is OFF. Close the switch to complete the circuit.";
-      if(ch==="brightest"){
-        if(bulbs>1) return "For maximum brightness: use 1 bulb OR raise voltage OR reduce resistance.";
-        if(V>=6 && Rb<=6) return "✅ Very bright setup. Great!";
-        return "Try increasing voltage or decreasing resistance to make it brighter.";
-      }
-      if(ch==="savepower"){
-        if(P<=1.5 && Pbulb>0.15) return "✅ Good balance: light is on but power is low.";
-        return "Reduce voltage or increase resistance to save power (but keep it on).";
-      }
-      if(ch==="compare"){
-        return "Switch between Simple (1 bulb) and Series (2/3 bulbs). Notice current and power per bulb drop in series.";
-      }
-      return "";
-    }
-
-    function draw(info){
-      const {bulbs,closed,bright} = info;
-
-      // Fit to actual on-screen size for crispness
-      const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.floor(rect.width * dpr);
-      canvas.height = Math.floor(520 * dpr);
-      canvas.style.height = "520px";
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-
-      const w = rect.width;
-      const h = 520;
-
-      // Background
-      ctx.clearRect(0,0,w,h);
-      ctx.fillStyle = "rgba(255,255,255,0.03)";
-      ctx.fillRect(0,0,w,h);
-
-      // Coordinates for a simple loop
-      const pad = 70;
-      const left = pad, right = w - pad, top = 110, bottom = h - 90;
-
-      // Wires
-      ctx.lineWidth = 6;
-      ctx.strokeStyle = closed ? "rgba(143,183,255,0.95)" : "rgba(143,183,255,0.35)";
-      ctx.beginPath();
-      ctx.moveTo(left, top);
-      ctx.lineTo(right, top);
-      ctx.lineTo(right, bottom);
-      ctx.lineTo(left, bottom);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Battery on left side
-      drawBattery(left, (top+bottom)/2);
-
-      // Switch on top wire
-      drawSwitch((left+right)/2, top, closed);
-
-      // Bulbs along bottom wire (series bulbs)
-      const spacing = (right-left) / (bulbs+1);
-      for(let i=1;i<=bulbs;i++){
-        const x = left + spacing*i;
-        drawBulb(x, bottom, closed ? bright : 0);
-      }
-
-      // Current arrows (simple animation-like dots)
-      if(closed){
-        drawFlowDots(left, top, right, top, right, bottom, left, bottom);
-      }
-
-      // Labels
-      ctx.fillStyle = "rgba(234,242,255,0.82)";
-      ctx.font = "700 14px system-ui, Segoe UI, Arial";
-      ctx.fillText("Battery", left-30, (top+bottom)/2 - 40);
-      ctx.fillText("Switch", (left+right)/2 - 24, top-18);
-      ctx.fillText("Series bulbs", left+10, bottom+32);
-    }
-
-    function drawBattery(x, y){
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.fillStyle = "rgba(255,255,255,0.08)";
-      ctx.strokeStyle = "rgba(255,255,255,0.25)";
-      ctx.lineWidth = 2;
-
-      // Body
-      ctx.beginPath();
-      ctx.roundRect(-28, -55, 56, 110, 12);
-      ctx.fill(); ctx.stroke();
-
-      // + and -
-      ctx.fillStyle = "rgba(234,242,255,0.85)";
-      ctx.font = "900 18px system-ui, Segoe UI, Arial";
-      ctx.fillText("+", -6, -20);
-      ctx.fillText("–", -6, 35);
-
-      ctx.restore();
-    }
-
-    function drawSwitch(x, y, closed){
-      ctx.save();
-      ctx.translate(x, y);
-
-      // Terminals
-      ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(-40, 0); ctx.lineTo(-10, 0);
-      ctx.moveTo(10, 0); ctx.lineTo(40, 0);
-      ctx.stroke();
-
-      // Lever
-      ctx.strokeStyle = closed ? "rgba(51,208,122,0.95)" : "rgba(255,90,107,0.85)";
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      if(closed){
-        ctx.moveTo(-10,0); ctx.lineTo(10,0);
-      }else{
-        ctx.moveTo(-10,0); ctx.lineTo(12,-18);
-      }
-      ctx.stroke();
-
-      // Label
-      ctx.fillStyle = "rgba(234,242,255,0.85)";
-      ctx.font = "700 12px system-ui, Segoe UI, Arial";
-      ctx.fillText(closed ? "ON" : "OFF", -12, -24);
-
-      ctx.restore();
-    }
-
-    function drawBulb(x, y, bright){
-      ctx.save();
-      ctx.translate(x, y);
-
-      // Base
-      ctx.fillStyle = "rgba(255,255,255,0.10)";
-      ctx.strokeStyle = "rgba(255,255,255,0.28)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.roundRect(-18, -10, 36, 22, 8);
-      ctx.fill(); ctx.stroke();
-
-      // Glass
-      const glow = Math.min(bright, 1.2);
-      const glowA = 0.10 + glow*0.40;
-
-      ctx.fillStyle = `rgba(255, 220, 120, ${glowA})`;
-      ctx.beginPath();
-      ctx.arc(0, -34, 22 + glow*6, 0, Math.PI*2);
-      ctx.fill();
-
-      ctx.fillStyle = "rgba(255,255,255,0.10)";
-      ctx.strokeStyle = "rgba(255,255,255,0.30)";
-      ctx.beginPath();
-      ctx.arc(0, -34, 22, 0, Math.PI*2);
-      ctx.fill(); ctx.stroke();
-
-      // filament
-      ctx.strokeStyle = `rgba(255, 220, 120, ${0.20 + glow*0.70})`;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(-8, -34);
-      ctx.quadraticCurveTo(0, -28, 8, -34);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    let t = 0;
-    function drawFlowDots(x1,y1,x2,y2,x3,y3,x4,y4){
-      t += 0.02;
-      const pts = [
-        {x:x1,y:y1},{x:x2,y:y2},{x:x3,y:y3},{x:x4,y:y4},{x:x1,y:y1}
-      ];
-
-      // draw small dots along the path
-      ctx.fillStyle = "rgba(143,183,255,0.9)";
-      for(let i=0;i<18;i++){
-        const u = (i/18 + (t%1)) % 1;
-        const p = pointOnLoop(pts, u);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
-        ctx.fill();
-      }
-    }
-
-    function pointOnLoop(pts, u){
-      // 4 segments
-      const segLens = [];
-      let total = 0;
-      for(let i=0;i<pts.length-1;i++){
-        const dx = pts[i+1].x-pts[i].x;
-        const dy = pts[i+1].y-pts[i].y;
-        const L = Math.hypot(dx,dy);
-        segLens.push(L);
-        total += L;
-      }
-      let dist = u * total;
-      for(let i=0;i<segLens.length;i++){
-        if(dist <= segLens[i]){
-          const a = pts[i], b = pts[i+1];
-          const f = dist / segLens[i];
-          return {x:a.x + (b.x-a.x)*f, y:a.y + (b.y-a.y)*f};
-        }
-        dist -= segLens[i];
-      }
-      return pts[0];
-    }
-
-    function apply(){
-      const info = circuitInfo();
-      writeStat(info);
-      draw(info);
-    }
-
-    function reset(){
-      modeEl.value = "single";
-      vEl.value = 3;
-      rEl.value = 6;
-      swEl.value = "open";
-      challengeEl.value = "none";
-      apply();
-    }
-
-    applyBtn.addEventListener("click", apply);
-    resetBtn.addEventListener("click", reset);
-    toggleBtn.addEventListener("click", ()=>{
-      swEl.value = (swEl.value==="closed") ? "open" : "closed";
-      apply();
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tabPane").forEach(p=>p.style.display="none");
+      document.getElementById("pane-"+t).style.display="block";
+      save(S);
     });
+  });
 
-    stepBtn.addEventListener("click", ()=>{
-      const info = circuitInfo();
-      const name = info.mode==="single"?"1 bulb":(info.mode==="series2"?"2 bulbs in series":"3 bulbs in series");
-      statEl.className = "stat";
-      statEl.textContent =
-`EXPLAIN • ${name}
+  // Reset
+  document.getElementById("resetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset Topic 19 lab progress on this device?")) return;
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
 
-1) Close the switch to complete the circuit.
-2) Current flows around ONE loop in a series circuit.
-3) Total resistance increases when you add bulbs in series.
-4) More resistance → less current → bulbs get dimmer.
-5) If one bulb breaks (open circuit), all bulbs go off.
+  // ===== SERIES BUILDER =====
+  const cells = document.getElementById("cells");
+  const bulbs = document.getElementById("bulbs");
+  const extraR = document.getElementById("extraR");
+  const bulbR = document.getElementById("bulbR");
+  const toggleSwitch = document.getElementById("toggleSwitch");
+  const randomSetup = document.getElementById("randomSetup");
 
+  const vOut = document.getElementById("vOut");
+  const iOut = document.getElementById("iOut");
+  const rOut = document.getElementById("rOut");
+  const seriesHint = document.getElementById("seriesHint");
+  const seriesNote = document.getElementById("seriesNote");
+
+  const wirePath = document.getElementById("wirePath");
+  const n1 = document.getElementById("n1");
+  const n2 = document.getElementById("n2");
+  const n3 = document.getElementById("n3");
+  const n4 = document.getElementById("n4");
+
+  const batLabel = document.getElementById("batLabel");
+  const swLabel = document.getElementById("swLabel");
+  const loadLabel = document.getElementById("loadLabel");
+  const ammLabel = document.getElementById("ammLabel");
+  const volLabel = document.getElementById("volLabel");
+
+  const g1 = document.getElementById("g1");
+  const g2 = document.getElementById("g2");
+  const g3 = document.getElementById("g3");
+
+  function setGlow(glowEl, on, level){
+    if(!on){ glowEl.style.opacity = 0; return; }
+    glowEl.style.opacity = clamp(level, 0, 1).toFixed(2);
+  }
+
+  function computeSeries(){
+    // simple model: each cell ~1.5V
+    const V = Number(S.series.cells) * 1.5;
+
+    const nBulbs = Number(S.series.bulbs);
+    const Rbulb = Number(S.series.bulbR);
+    const Rex = Number(S.series.extraR);
+
+    // total resistance series sum
+    const Rtotal = nBulbs * Rbulb + Rex;
+
+    // if switch OFF => I = 0
+    let I = 0;
+    if(S.series.switchOn){
+      I = (Rtotal > 0) ? (V / Rtotal) : 0;
+    }
+
+    // brightness ~ power per bulb: P = I^2 * Rbulb
+    // map to 0..1 with a soft scale
+    const P = I*I*Rbulb;
+    const bright = clamp(P / 0.10, 0, 1); // scale chosen for nice display
+
+    return {V, I, Rtotal, bright};
+  }
+
+  function renderSeries(){
+    cells.value = S.series.cells;
+    bulbs.value = S.series.bulbs;
+    extraR.value = S.series.extraR;
+    bulbR.value = S.series.bulbR;
+
+    toggleSwitch.textContent = "Switch: " + (S.series.switchOn ? "ON" : "OFF");
+    toggleSwitch.classList.toggle("primary", S.series.switchOn);
+
+    const {V, I, Rtotal, bright} = computeSeries();
+
+    vOut.textContent = V.toFixed(1) + " V";
+    iOut.textContent = I.toFixed(3) + " A";
+    rOut.textContent = Rtotal.toFixed(1) + " Ω";
+
+    batLabel.textContent = `${S.series.cells} cell${S.series.cells>1?"s":""}`;
+    swLabel.textContent = S.series.switchOn ? "ON" : "OFF";
+    loadLabel.textContent = `${S.series.bulbs} bulb${S.series.bulbs>1?"s":""}` + (Number(S.series.extraR)>0 ? " + resistor" : "");
+
+    ammLabel.textContent = `I = ${I.toFixed(3)} A`;
+    volLabel.textContent = `V = ${V.toFixed(1)} V`;
+
+    // wire + nodes visuals
+    const on = S.series.switchOn && I > 0;
+    wirePath.classList.toggle("off", !on);
+    [n1,n2,n3,n4].forEach(n=>n.classList.toggle("off", !on));
+
+    // bulbs shown
+    const nBulbs = Number(S.series.bulbs);
+    // show/hide bulb glows
+    setGlow(g1, on && nBulbs>=1, bright);
+    setGlow(g2, on && nBulbs>=2, bright);
+    setGlow(g3, on && nBulbs>=3, bright);
+
+    // also "hide" bulbs 2/3 if not used (dim background)
+    g2.parentElement.style.opacity = (nBulbs>=2) ? 1 : .35;
+    g3.parentElement.style.opacity = (nBulbs>=3) ? 1 : .35;
+
+    if(!S.series.switchOn){
+      seriesHint.textContent = "Tip: Switch is OFF → open circuit → no current → bulbs OFF.";
+    } else {
+      seriesHint.textContent = `Switch ON → closed circuit. Current is ${I.toFixed(3)} A everywhere in the series loop.`;
+    }
+
+    seriesNote.textContent =
+`Series circuit facts:
+• Current is the same everywhere in series.
+• Total resistance increases when you add components.
+• Increasing resistance reduces current (bulbs dimmer).
 Try this:
-• Switch ON and compare current (A) for 1 bulb vs series.
-• Increase V and observe brightness increasing.`;
-    });
+1) Keep cells fixed, add bulbs → bulbs dim.
+2) Keep bulbs fixed, add cells → bulbs brighter.`;
 
-    window.addEventListener("resize", apply);
-    reset();
-    // draw once more for smooth dots
-    function loop(){
-      apply();
-      requestAnimationFrame(loop);
+    save(S);
+  }
+
+  // events
+  cells.addEventListener("input", ()=>{ S.series.cells = Number(cells.value); renderSeries(); });
+  bulbs.addEventListener("input", ()=>{ S.series.bulbs = Number(bulbs.value); renderSeries(); });
+  extraR.addEventListener("input", ()=>{ S.series.extraR = Number(extraR.value); renderSeries(); });
+  bulbR.addEventListener("input", ()=>{ S.series.bulbR = Number(bulbR.value); renderSeries(); });
+
+  toggleSwitch.addEventListener("click", ()=>{
+    S.series.switchOn = !S.series.switchOn;
+    renderSeries();
+  });
+
+  randomSetup.addEventListener("click", ()=>{
+    S.series.cells = 1 + Math.floor(Math.random()*4);
+    S.series.bulbs = 1 + Math.floor(Math.random()*3);
+    S.series.extraR = Math.floor(Math.random()*31);
+    S.series.bulbR = 3 + Math.floor(Math.random()*23);
+    S.series.switchOn = Math.random() < 0.7;
+    renderSeries();
+  });
+
+  renderSeries();
+
+  // ===== CONDUCTORS / INSULATORS =====
+  const mScore = document.getElementById("mScore");
+  const mCorrect = document.getElementById("mCorrect");
+  const mAttempts = document.getElementById("mAttempts");
+  const mQ = document.getElementById("mQ");
+  const mNote = document.getElementById("mNote");
+
+  const materialsItems = [
+    {q:"Copper wire", a:"con", exp:"Copper is a conductor."},
+    {q:"Aluminium spoon", a:"con", exp:"Aluminium is a conductor."},
+    {q:"Iron nail", a:"con", exp:"Iron is a conductor."},
+    {q:"Graphite (pencil lead)", a:"con", exp:"Graphite conducts electricity."},
+    {q:"Plastic ruler", a:"ins", exp:"Plastic is an insulator."},
+    {q:"Rubber band", a:"ins", exp:"Rubber is an insulator."},
+    {q:"Dry wood", a:"ins", exp:"Dry wood is an insulator."},
+    {q:"Glass cup", a:"ins", exp:"Glass is an insulator."}
+  ];
+
+  function renderMat(){
+    mScore.textContent = S.materials.score;
+    mCorrect.textContent = S.materials.correct;
+    mAttempts.textContent = S.materials.attempts;
+    save(S);
+  }
+  renderMat();
+
+  function newMat(){
+    const it = materialsItems[Math.floor(Math.random()*materialsItems.length)];
+    S.materials.current = it;
+    mQ.textContent = "Material: " + it.q;
+    mNote.textContent = "Conductor or Insulator?";
+    renderMat();
+  }
+
+  function answerMat(ans){
+    if(!S.materials.current){
+      mNote.textContent = "Press “New Material” first.";
+      return;
     }
-    // Only animate flow dots if closed to reduce jitter; but safe to loop anyway
-    requestAnimationFrame(loop);
-  </script>
+    S.materials.attempts++;
+    const ok = (ans === S.materials.current.a);
+    if(ok){
+      S.materials.correct++;
+      S.materials.score += 5;
+      mNote.textContent = "✅ Correct! " + S.materials.current.exp;
+    } else {
+      mNote.textContent = "❌ Not quite. " + S.materials.current.exp;
+    }
+    renderMat();
+  }
+
+  document.getElementById("mNew").addEventListener("click", newMat);
+  document.getElementById("mCon").addEventListener("click", ()=>answerMat("con"));
+  document.getElementById("mIns").addEventListener("click", ()=>answerMat("ins"));
+  if(S.materials.current){ mQ.textContent = "Material: " + S.materials.current.q; }
+
+  // ===== STATIC vs CURRENT =====
+  const cQ = document.getElementById("cQ");
+  const cPick = document.getElementById("cPick");
+  const cNote = document.getElementById("cNote");
+
+  const chargeItems = [
+    {q:"Rubbing a balloon on hair and it sticks to a wall.", a:"static", exp:"Charge builds up on the balloon (static electricity)."},
+    {q:"A torch lighting when the switch is ON.", a:"current", exp:"Charge flows through a circuit (current electricity)."},
+    {q:"You get a small shock after walking on carpet then touching metal.", a:"static", exp:"Built-up charge discharges (static)."},
+    {q:"A phone charging from a power bank.", a:"current", exp:"Electric charge flows through a circuit (current)."}
+  ];
+
+  function newCharge(){
+    const it = chargeItems[Math.floor(Math.random()*chargeItems.length)];
+    S.charges.current = it;
+    cQ.textContent = "Scenario: " + it.q;
+    cPick.value = "";
+    cNote.textContent = "Choose Static or Current, then Check.";
+    save(S);
+  }
+
+  document.getElementById("cNew").addEventListener("click", newCharge);
+
+  document.getElementById("cCheck").addEventListener("click", ()=>{
+    if(!S.charges.current){
+      cNote.textContent = "Press “New Question” first.";
+      return;
+    }
+    const ans = cPick.value;
+    if(!ans){
+      cNote.textContent = "Choose an answer first.";
+      return;
+    }
+    const ok = (ans === S.charges.current.a);
+    cNote.textContent = (ok ? "✅ Correct! " : "❌ Not quite. ") + S.charges.current.exp;
+  });
+
+  if(S.charges.current){ cQ.textContent = "Scenario: " + S.charges.current.q; }
+</script>
 </body>
 </html>
