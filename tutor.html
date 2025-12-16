@@ -1,30 +1,605 @@
-import express from "express";
-import cors from "cors";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sci-Guru Tutor | Form 1 & Form 2</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b33;
+      --panel2:#0d1730;
+      --text:#e8eefc;
+      --muted:#a8b6d6;
+      --border:rgba(255,255,255,0.08);
+      --accent:rgba(110,231,255,0.20);
+      --accent2:rgba(52,211,153,0.18);
+      --danger:rgba(251,113,133,0.22);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(110,231,255,0.10), transparent 55%),
+                  radial-gradient(1000px 700px at 90% 10%, rgba(52,211,153,0.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    a{text-decoration: none;}
+    .app{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      min-height:100vh;
+    }
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr;}
+      .sidebar{position:sticky; top:0; z-index:10; max-height: 400px; overflow-y: auto;}
+    }
 
-const app = express();
-app.use(express.json());
+    /* Sidebar */
+    .sidebar{
+      background: rgba(15,27,51,0.95);
+      border-right:1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding: 10px 10px 14px;
+      border-bottom:1px solid var(--border);
+      margin-bottom:12px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand h1{font-size:14px;margin:0;font-weight:900;letter-spacing:0.2px}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px;line-height:1.25}
 
-// ✅ CORS for GitHub Pages
-app.use(cors({
-  origin: "*",
-  methods: ["GET","POST","OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
+    .seg{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 12px 0 10px;
+    }
+    .pillBtn{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color:var(--text);
+      cursor:pointer;
+      font-size:12px;
+      user-select:none;
+    }
+    .pillBtn.active{
+      border-color: rgba(110,231,255,0.35);
+      background: rgba(110,231,255,0.10);
+    }
 
-app.get("/", (req,res)=>res.send("Sci-Guru backend OK"));
-app.get("/health", (req,res)=>res.json({ok:true}));
+    .search{
+      display:flex; gap:8px; align-items:center;
+      margin: 8px 0 12px;
+    }
+    .search input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color:var(--text);
+      outline:none;
+    }
 
-// ✅ Support BOTH endpoints so frontend never breaks
-app.post("/api/chat", async (req,res)=>{
-  const { message } = req.body;
-  // TODO: call OpenAI here
-  res.json({ reply: `OK (demo): You asked: ${message}` });
+    .navTitle{
+      font-size:12px;
+      color:var(--muted);
+      margin: 10px 6px 8px;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex: 1;
+      overflow-y:auto;
+      padding-right:4px;
+    }
+    .nav::-webkit-scrollbar{width:6px}
+    .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:999px}
+    
+    .navItem{
+      padding:10px 10px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      border-radius:14px;
+      cursor:pointer;
+      transition: all 0.2s ease;
+    }
+    .navItem:hover{transform: translateX(4px); background: rgba(255,255,255,0.05);}
+    .navItem.active{
+      border-color: rgba(52,211,153,0.30);
+      background: rgba(52,211,153,0.10);
+    }
+    .navItem b{display:block;font-size:13px}
+    .navItem span{display:block;color:var(--muted);font-size:12px;margin-top:2px;line-height:1.25}
+
+    .sideFooter{
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top:1px solid var(--border);
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      cursor:pointer;
+      font-size:13px;
+      text-decoration:none;
+      user-select:none;
+      transition: background 0.2s;
+    }
+    .btn:hover{background: rgba(255,255,255,0.1);}
+
+    /* Main Content */
+    .main{
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 20px;
+    }
+    .topbar h2{ margin:0; font-size:18px; font-weight:900;}
+    .topbar p{ margin:4px 0 0; color:var(--muted); font-size:14px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+    }
+    @media (max-width: 1100px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      background: rgba(15,27,51,0.6);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(8px);
+    }
+    .cardHead{
+      padding:14px 18px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      background: rgba(255,255,255,0.02);
+    }
+    .cardHead b{font-size:14px}
+    .cardBody{padding:18px}
+    .muted{color:var(--muted)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:11px;
+      background: rgba(255,255,255,0.03);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .labGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin-top: 14px;
+    }
+    @media (max-width: 520px){
+      .labGrid{grid-template-columns:1fr;}
+    }
+    .lab{
+      padding:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      border-radius:14px;
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .lab b{font-size:14px; color: #fff}
+    .lab p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}
+    .lab .btn{margin-top:auto; justify-content:center; background: rgba(110,231,255,0.1);}
+
+    /* Quiz Styling */
+    .qRow{display:flex;flex-direction:column;gap:12px}
+    .qBox{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      border-radius:14px;
+      padding:16px;
+    }
+    .qBox b{display:block;font-size:14px;margin-bottom:12px; color: #fff}
+    .qOpt{
+      display:flex;gap:10px;align-items:center;
+      margin:8px 0; padding: 10px; 
+      border-radius: 8px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .qOpt:hover{ background: rgba(255,255,255,0.05); }
+    .qOpt input{margin:0; cursor: pointer;}
+    .qActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    
+    .notice{
+      margin-top:14px;
+      padding:12px 16px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .notice.ok{background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.25); color: #a7ffd9;}
+    .notice.warn{background: rgba(251,113,133,0.1); border-color: rgba(251,113,133,0.25); color: #ffb1bc;}
+
+    /* AI Chat Drawer */
+    .chatFab{ position: fixed; right: 20px; bottom: 20px; z-index: 50; }
+    .chatFab button{
+      width:56px;height:56px;border-radius:20px;
+      border:1px solid var(--border);
+      background: #3b82f6;
+      color: white;
+      cursor:pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      font-weight:900;
+      transition: transform 0.2s;
+    }
+    .chatFab button:hover{ transform: scale(1.05); }
+
+    .drawer{
+      position: fixed;
+      top: 0; right: 0;
+      width: 420px;
+      max-width: 100vw;
+      height: 100vh;
+      background: #0f172a;
+      border-left:1px solid var(--border);
+      box-shadow: var(--shadow);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 60;
+      display:flex;flex-direction:column;
+    }
+    .drawer.open{transform: translateX(0);}
+    .drawerHead{
+      padding:16px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .drawerBody{padding:16px;flex:1;overflow-y:auto}
+    .msg{
+      margin:12px 0;
+      padding:12px;
+      border-radius:14px;
+      font-size:14px;
+      line-height:1.5;
+      max-width: 90%;
+    }
+    .msg.me{background: #1e293b; align-self: flex-end; margin-left: auto; border: 1px solid var(--border);}
+    .msg.ai{background: #334155; border: 1px solid rgba(110,231,255,0.2); margin-right: auto;}
+    
+    .drawerFoot{
+      padding:16px;
+      border-top:1px solid var(--border);
+      display:flex;gap:8px;
+    }
+    .drawerFoot input{
+      flex: 1; padding:12px; border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.05); color:var(--text); outline:none;
+    }
+
+    .rightCol .card{position:sticky; top: 20px;}
+    @media (max-width: 1100px){ .rightCol .card{position:static;} }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">
+          <img src="images/lec-logo.jpg" alt="Logo" onerror="this.parentElement.innerHTML='SG'">
+        </div>
+        <div>
+          <h1>Sci-Guru Tutor</h1>
+          <p>The Ultimate Science Hub</p>
+        </div>
+      </div>
+
+      <div class="seg" id="formSeg">
+        <button class="pillBtn active" data-form="f1">Form 1</button>
+        <button class="pillBtn" data-form="f2">Form 2</button>
+        <button class="pillBtn" data-form="labs">Labs Hub</button>
+      </div>
+
+      <div class="search">
+        <input id="searchBox" type="text" placeholder="Search topics...">
+      </div>
+
+      <div class="navTitle" id="navTitle">Topics</div>
+      <div class="nav" id="nav"></div>
+
+      <div class="sideFooter">
+        <button class="btn" id="btnResetProgress" style="flex:1">Reset Data</button>
+        <button class="btn" id="btnOpenChat" style="flex:1">AI Helper</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2 id="pageTitle">Welcome Student</h2>
+          <p id="pageSub" class="muted">Select a topic from the sidebar to begin.</p>
+        </div>
+        <div class="chips" id="statusChips"></div>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <div class="cardHead">
+            <b id="contentTitle">Course Material</b>
+            <span class="chip" id="contentTag">INFO</span>
+          </div>
+          <div class="cardBody">
+            <div id="contentArea" class="muted">
+              Choose a form and a topic to see core concepts and virtual labs.
+            </div>
+            <div id="labsArea" style="margin-top:20px; display:none;">
+              <div class="chips" id="labsChips"></div>
+              <div class="labGrid" id="labsGrid"></div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="rightCol">
+          <section class="card">
+            <div class="cardHead">
+              <b>Knowledge Check</b>
+              <span class="chip" id="progressChip">0%</span>
+            </div>
+            <div class="cardBody">
+              <div id="quizArea" class="muted">Select a topic to start a quiz.</div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div class="chatFab">
+    <button id="chatToggle">AI</button>
+  </div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawerHead">
+      <b id="chatHeader">Sci-Guru AI</b>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" id="chatClear" style="padding: 6px 10px;">Clear</button>
+        <button class="btn" id="chatClose" style="padding: 6px 10px;">X</button>
+      </div>
+    </div>
+    <div class="drawerBody" id="chatBody">
+      <div class="msg ai">Hello! I'm your science assistant. Select a topic and ask me anything!</div>
+    </div>
+    <div class="drawerFoot">
+      <input id="chatInput" placeholder="Ask a question..." />
+      <button class="btn" id="chatSend">Send</button>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   DATA STORAGE
+========================================================= */
+const form1Topics = [
+  { id:"f1-t1", title:"Topic 1: Intro & Lab Safety", subtitle:"Rules & Apparatus", summary:["Lab safety rules and symbols.","Basic lab apparatus usage.","Making scientific measurements."], labs:[]},
+  { id:"f1-t2", title:"Topic 2: Cells & Organization", subtitle:"Units of Life", summary:["MRS GREN life processes.","Cell specialization.","Tissues, Organs, Systems."], labs:[]},
+  { id:"f1-t8", title:"Topic 8: Separation Methods", subtitle:"Mixtures", summary:["Filtration and evaporation.","Distillation and magnetism.","Water treatment processes."], labs:[{ title:"Virtual Lab: Separation", desc:"Master filtration and evaporation.", href:"sim-separation.html" }]},
+  { id:"f1-density", title:"Physics: Density", subtitle:"Mass/Volume", summary:["Using mass balances.","Regular vs Irregular objects.","Floating and sinking laws."], labs:[{ title:"Density Lab", desc:"The Imbokodo challenge.", href:"sim-density.html" }]},
+  { id:"f1-electricity", title:"Physics: Electricity", subtitle:"Circuits", summary:["Circuit components.","Series vs Parallel basics.","Safe electrical connections."], labs:[{ title:"Circuit Sim", desc:"Build and test circuits.", href:"sim-electricity.html" }]}
+];
+
+const form2Units = [
+  { id:"f2-u4", title:"Unit 4: Transport Systems", subtitle:"Osmosis & Blood", summary:["Diffusion & Active Transport.","Xylem and Phloem roles.","Human heart and circulation."], labs:[{ title:"Transport Sim", desc:"Membrane & Plant Transport.", href:"sim-f2-transport.html" }]},
+  { id:"f2-u5", title:"Unit 5: Reproduction", subtitle:"Plants & Humans", summary:["Pollination steps.","Human fetal development.","Placenta and birth."], labs:[{ title:"Reproduction Lab", desc:"Plant vs Human cycles.", href:"sim-f2-reproduction.html" }]},
+  { id:"f2-u8", title:"Unit 8: Matter & Particles", subtitle:"Moles & Dilution", summary:["Concentration calculations.","The Mole concept intro.","Serial dilutions."], labs:[{ title:"Matter Sim", desc:"Concentration & Particles.", href:"sim-f2-matter.html" }]},
+  { id:"f2-u18", title:"Unit 18: Magnetism", subtitle:"Field Lines", summary:["Magnetic poles behavior.","Visualizing field lines.","Magnetic materials."], labs:[]}
+];
+
+const QUIZZES = {
+  "f1-t2": [
+    { q:"Which is the basic unit of life?", opts:["Tissue","Cell","Organ","System"], a:1 },
+    { q:"Which is NOT a life process?", opts:["Respiration","Movement","Rusting","Reproduction"], a:2 }
+  ],
+  "f2-u4": [
+    { q:"Osmosis is the movement of:", opts:["Sugar","Water","Salt","Oxygen"], a:1 },
+    { q:"Which vessel carries blood away from the heart?", opts:["Vein","Artery","Capillary","Trachea"], a:1 }
+  ]
+};
+
+/* =========================================================
+   CORE LOGIC
+========================================================= */
+let currentView = "f1";
+let selectedId = null;
+
+const nav = document.getElementById("nav");
+const contentArea = document.getElementById("contentArea");
+const quizArea = document.getElementById("quizArea");
+
+function getProgress(id) {
+  return JSON.parse(localStorage.getItem(`sg_prog_${id}`) || "{}");
+}
+
+function renderNav() {
+  nav.innerHTML = "";
+  const list = currentView === "f1" ? form1Topics : (currentView === "f2" ? form2Units : buildLabsHub());
+  const searchQ = document.getElementById("searchBox").value.toLowerCase();
+
+  list.forEach(item => {
+    if (item.title.toLowerCase().includes(searchQ)) {
+      const div = document.createElement("div");
+      div.className = `navItem ${item.id === selectedId ? 'active' : ''}`;
+      div.innerHTML = `<b>${item.title}</b><span>${item.subtitle || ''}</span>`;
+      div.onclick = () => selectItem(item.id);
+      nav.appendChild(div);
+    }
+  });
+  updateGlobalProgress();
+}
+
+function buildLabsHub() {
+  const allLabs = [...form1Topics, ...form2Units].filter(t => t.labs && t.labs.length > 0);
+  return allLabs.map(l => ({ ...l, subtitle: "Virtual Laboratory" }));
+}
+
+function selectItem(id) {
+  selectedId = id;
+  const item = [...form1Topics, ...form2Units].find(x => x.id === id) || buildLabsHub().find(x => x.id === id);
+  if (!item) return;
+
+  document.getElementById("pageTitle").textContent = item.title;
+  document.getElementById("contentTitle").textContent = "Overview";
+  
+  const bullets = item.summary.map(s => `<li>${s}</li>`).join("");
+  contentArea.innerHTML = `<ul style="line-height:1.6">${bullets}</ul>`;
+  
+  // Labs
+  const labsGrid = document.getElementById("labsGrid");
+  const labsArea = document.getElementById("labsArea");
+  labsGrid.innerHTML = "";
+  if (item.labs && item.labs.length > 0) {
+    labsArea.style.display = "block";
+    item.labs.forEach(l => {
+      labsGrid.innerHTML += `
+        <div class="lab">
+          <b>${l.title}</b>
+          <p>${l.desc}</p>
+          <a href="${l.href}" class="btn" target="_blank" rel="noopener">Launch Lab</a>
+        </div>`;
+    });
+  } else {
+    labsArea.style.display = "none";
+  }
+
+  renderQuiz(id);
+  renderNav();
+}
+
+function renderQuiz(id) {
+  const questions = QUIZZES[id];
+  if (!questions) {
+    quizArea.innerHTML = "<p class='muted'>No quiz available for this topic yet.</p>";
+    return;
+  }
+
+  let html = `<div class="qRow">`;
+  questions.forEach((q, i) => {
+    html += `<div class="qBox"><b>${i+1}. ${q.q}</b>`;
+    q.opts.forEach((opt, oi) => {
+      html += `<label class="qOpt"><input type="radio" name="q${i}" value="${oi}"> ${opt}</label>`;
+    });
+    html += `</div>`;
+  });
+  html += `<button class="btn" onclick="gradeQuiz('${id}')" style="background:var(--accent2); color:#fff; border:none">Submit Quiz</button></div><div id="quizResult"></div>`;
+  quizArea.innerHTML = html;
+}
+
+window.gradeQuiz = (id) => {
+  const qs = QUIZZES[id];
+  let score = 0;
+  qs.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (selected && parseInt(selected.value) === q.a) score++;
+  });
+  const pct = Math.round((score / qs.length) * 100);
+  localStorage.setItem(`sg_prog_${id}`, JSON.stringify({ score, pct }));
+  document.getElementById("quizResult").innerHTML = `<div class="notice ok">You scored ${pct}%! Progress saved.</div>`;
+  updateGlobalProgress();
+};
+
+function updateGlobalProgress() {
+  const list = currentView === "f1" ? form1Topics : form2Units;
+  let completed = 0;
+  list.forEach(item => { if (getProgress(item.id).pct >= 0) completed++; });
+  const totalPct = Math.round((completed / list.length) * 100) || 0;
+  document.getElementById("progressChip").textContent = `Completion: ${totalPct}%`;
+}
+
+/* =========================================================
+   UI EVENTS
+========================================================= */
+document.getElementById("formSeg").addEventListener("click", (e) => {
+  const btn = e.target.closest(".pillBtn");
+  if (!btn) return;
+  document.querySelectorAll(".pillBtn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  currentView = btn.dataset.form;
+  renderNav();
 });
 
-app.post("/chat", async (req,res)=>{
-  const { message } = req.body;
-  // TODO: call OpenAI here
-  res.json({ reply: `OK (demo): You asked: ${message}` });
-});
+document.getElementById("searchBox").addEventListener("input", renderNav);
 
-app.listen(process.env.PORT || 3000, ()=>console.log("Server running"));
+document.getElementById("chatToggle").onclick = () => document.getElementById("drawer").classList.toggle("open");
+document.getElementById("chatClose").onclick = () => document.getElementById("drawer").classList.remove("open");
+
+document.getElementById("btnResetProgress").onclick = () => {
+  if (confirm("Reset all quiz scores?")) {
+    Object.keys(localStorage).forEach(k => { if(k.startsWith("sg_prog_")) localStorage.removeItem(k); });
+    location.reload();
+  }
+};
+
+// Simple Chat Simulation (Replace with actual API call)
+document.getElementById("chatSend").onclick = () => {
+  const input = document.getElementById("chatInput");
+  const body = document.getElementById("chatBody");
+  if (!input.value) return;
+  
+  body.innerHTML += `<div class="msg me">${input.value}</div>`;
+  const val = input.value.toLowerCase();
+  input.value = "";
+  
+  setTimeout(() => {
+    let reply = "That's an interesting question! For specific scientific details, please refer to the course summary or your textbook.";
+    if (val.includes("cell")) reply = "Cells are the building blocks of life. Animal cells have a membrane, while plant cells also have a cell wall!";
+    body.innerHTML += `<div class="msg ai">${reply}</div>`;
+    body.scrollTop = body.scrollHeight;
+  }, 600);
+};
+
+// Initialize
+renderNav();
+</script>
+</body>
+  </html>
