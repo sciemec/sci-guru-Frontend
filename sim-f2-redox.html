@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Oxidation & Reduction</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:460px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:200px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:560px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+    .bad{color:#fb7185}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Chemistry Lab: Oxidation & Reduction (Unit 11)</h1>
+  <p>Distinguish physical vs chemical change and model oxygen transfer (oxidation = gain of oxygen, reduction = loss of oxygen).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tChange">Physical vs Chemical</button>
+        <button class="tab" id="tOxy">Oxygen Transfer</button>
+        <button class="tab" id="tRust">Rusting Factors</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="860"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tChange = document.getElementById("tChange");
+  const tOxy = document.getElementById("tOxy");
+  const tRust = document.getElementById("tRust");
+  const tabs = [tChange,tOxy,tRust];
+
+  let mode = "change";
+
+  const S = {
+    scenario: "melting",
+    oxyLevel: 60, // oxygen available
+    heat: 50,
+    water: 40,
+    salt: 20
+  };
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+  function clamp(a,b,x){ return Math.max(a, Math.min(b,x)); }
+
+  const scenarios = {
+    melting: {name:"Ice melting", type:"Physical", why:"State changes; no new substance formed."},
+    dissolving: {name:"Salt dissolving in water", type:"Physical", why:"Can be reversed by evaporation; no new substance."},
+    burning: {name:"Wood burning", type:"Chemical", why:"New substances (ash, gases) formed; not easily reversible."},
+    rusting: {name:"Iron rusting", type:"Chemical", why:"New substance (rust/iron oxide) formed."},
+    cooking: {name:"Cooking an egg", type:"Chemical", why:"Protein changes; not reversible."},
+  };
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="change"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Physical change: reversible, no new substance. Chemical change: new substance formed.</span></div>
+
+        <div class="row">
+          <label>Scenario</label>
+          <select id="sc">
+            ${Object.keys(scenarios).map(k=>`<option value="${k}" ${S.scenario===k?"selected":""}>${scenarios[k].name}</option>`).join("")}
+          </select>
+        </div>
+
+        <p class="hint">Try different scenarios and see the classification.</p>
+      `;
+
+      document.getElementById("sc").addEventListener("change", e=>{S.scenario=e.target.value; draw();});
+      note.textContent = "Classify changes: physical vs chemical.";
+    }
+
+    if (mode==="oxy"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Oxidation = gain of oxygen; Reduction = loss of oxygen</span></div>
+
+        <div class="row">
+          <label>Oxygen available</label>
+          <input id="oxy" type="range" min="0" max="100" value="${S.oxyLevel}">
+          <span class="pill">${S.oxyLevel}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="run1">Oxidise (add oxygen)</button>
+          <button class="btn" id="run2">Reduce (remove oxygen)</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">Example idea: metal + oxygen → metal oxide (oxidation). Metal oxide losing oxygen → metal (reduction).</p>
+      `;
+
+      document.getElementById("oxy").addEventListener("input", e=>{S.oxyLevel=+e.target.value; renderControls(); draw();});
+
+      document.getElementById("run1").addEventListener("click", ()=>{
+        state.oxide = clamp(0,100, state.oxide + (S.oxyLevel/10));
+        state.metal = clamp(0,100, 100 - state.oxide);
+        draw();
+      });
+
+      document.getElementById("run2").addEventListener("click", ()=>{
+        state.oxide = clamp(0,100, state.oxide - 12);
+        state.metal = clamp(0,100, 100 - state.oxide);
+        draw();
+      });
+
+      document.getElementById("reset").addEventListener("click", ()=>{
+        state.oxide=10; state.metal=90; draw();
+      });
+
+      note.textContent = "This is a simple oxygen-transfer model (Form 2 level).";
+    }
+
+    if (mode==="rust"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Rusting needs oxygen + water (salt speeds it up)</span></div>
+
+        <div class="row">
+          <label>Water (moisture)</label>
+          <input id="water" type="range" min="0" max="100" value="${S.water}">
+          <span class="pill">${S.water}</span>
+        </div>
+
+        <div class="row">
+          <label>Oxygen (air exposure)</label>
+          <input id="oxy" type="range" min="0" max="100" value="${S.oxyLevel}">
+          <span class="pill">${S.oxyLevel}</span>
+        </div>
+
+        <div class="row">
+          <label>Salt (electrolyte)</label>
+          <input id="salt" type="range" min="0" max="100" value="${S.salt}">
+          <span class="pill">${S.salt}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="calc">Calculate rust rate</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="rateOut">Rust rate: —</span>
+        </div>
+
+        <p class="hint">Reduce rusting by painting, oiling, galvanising, or keeping iron dry.</p>
+      `;
+
+      document.getElementById("water").addEventListener("input", e=>{S.water=+e.target.value; renderControls(); draw();});
+      document.getElementById("oxy").addEventListener("input", e=>{S.oxyLevel=+e.target.value; renderControls(); draw();});
+      document.getElementById("salt").addEventListener("input", e=>{S.salt=+e.target.value; renderControls(); draw();});
+
+      document.getElementById("calc").addEventListener("click", ()=>{
+        const rate = clamp(0,100, (S.water*0.45 + S.oxyLevel*0.35 + S.salt*0.30) - 15);
+        const el = document.getElementById("rateOut");
+        el.textContent = `Rust rate: ${rate.toFixed(0)}%`;
+        state.rust = rate;
+        draw();
+      });
+
+      note.textContent = "Rusting model: oxygen + water required; salt increases rate.";
+    }
+  }
+
+  const state = {
+    metal: 90,
+    oxide: 10,
+    rust: 0
+  };
+
+  function drawFrame(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+  }
+
+  function drawChange(){
+    drawFrame();
+    const sc = scenarios[S.scenario];
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Physical vs Chemical Change", 70, 110);
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText(`Scenario: ${sc.name}`, 90, 170);
+
+    ctx.fillStyle = sc.type==="Physical" ? "rgba(110,231,255,0.85)" : "rgba(251,113,133,0.85)";
+    ctx.font="18px system-ui";
+    ctx.fillText(`Type: ${sc.type} change`, 90, 210);
+
+    ctx.fillStyle="rgba(255,255,255,0.70)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Why: ${sc.why}`, 90, 245);
+
+    // simple illustration boxes
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(90, 290, 460, 420, 20); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText("Before", 120, 330);
+    ctx.fillText("After", 360, 330);
+
+    // before/after icons
+    function blob(x,y,txt,col){
+      ctx.fillStyle=col;
+      ctx.beginPath(); ctx.ellipse(x,y,70,55,0.1,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="13px system-ui";
+      ctx.fillText(txt, x-40, y+6);
+    }
+
+    if (S.scenario==="melting"){
+      blob(200, 470, "Solid", "rgba(110,231,255,0.10)");
+      blob(430, 470, "Liquid", "rgba(110,231,255,0.16)");
+    } else if (S.scenario==="dissolving"){
+      blob(200, 470, "Salt + water", "rgba(255,255,255,0.08)");
+      blob(430, 470, "Solution", "rgba(110,231,255,0.10)");
+    } else if (S.scenario==="burning"){
+      blob(200, 470, "Wood", "rgba(255,220,120,0.10)");
+      blob(430, 470, "Ash + gases", "rgba(251,113,133,0.10)");
+    } else if (S.scenario==="rusting"){
+      blob(200, 470, "Iron", "rgba(255,255,255,0.06)");
+      blob(430, 470, "Rust", "rgba(251,113,133,0.12)");
+    } else {
+      blob(200, 470, "Raw egg", "rgba(255,255,255,0.06)");
+      blob(430, 470, "Cooked egg", "rgba(255,220,120,0.10)");
+    }
+  }
+
+  function drawOxygenTransfer(){
+    drawFrame();
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Oxygen Transfer (Oxidation/Reduction Model)", 70, 110);
+
+    // metal vs oxide bars
+    function bar(x,y,val,title,col){
+      ctx.fillStyle="rgba(255,255,255,0.06)";
+      ctx.fillRect(x,y,420,26);
+      ctx.fillStyle=col;
+      ctx.fillRect(x,y,420*(val/100),26);
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.strokeRect(x,y,420,26);
+
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="14px system-ui";
+      ctx.fillText(`${title}: ${val.toFixed(0)}%`, x, y-10);
+    }
+
+    bar(120, 220, state.metal, "Metal present", "rgba(110,231,255,0.18)");
+    bar(120, 300, state.oxide, "Metal oxide present", "rgba(251,113,133,0.18)");
+
+    // equation text
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="15px system-ui";
+    ctx.fillText("Oxidation: metal + oxygen → metal oxide", 120, 380);
+    ctx.fillText("Reduction: metal oxide → metal (oxygen removed)", 120, 410);
+
+    // oxygen bubbles
+    const n = Math.floor(S.oxyLevel/7);
+    for(let i=0;i<n;i++){
+      const x = 700 + Math.random()*300;
+      const y = 240 + Math.random()*420;
+      ctx.fillStyle="rgba(255,255,255,0.10)";
+      ctx.beginPath(); ctx.arc(x,y, 4+Math.random()*6, 0, Math.PI*2); ctx.fill();
+    }
+
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="13px system-ui";
+    ctx.fillText(`Oxygen availability: ${S.oxyLevel}`, 120, 470);
+  }
+
+  function drawRust(){
+    drawFrame();
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Rusting Factors (Model)", 70, 110);
+
+    // iron bar
+    const x=160, y=220, w=780, h=420;
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,22); ctx.fill(); ctx.stroke();
+
+    // rust overlay proportional to rust rate
+    const r = clamp(0,100,state.rust);
+    ctx.fillStyle="rgba(251,113,133,0.10)";
+    ctx.fillRect(x, y, w*(r/100), h);
+
+    ctx.fillStyle="rgba(255,255,255,0.80)";
+    ctx.font="15px system-ui";
+    ctx.fillText("Iron surface", x+18, y-10);
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Left side becomes more rusty as rust rate increases.", x+18, y+30);
+
+    // show factors
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Water: ${S.water}   Oxygen: ${S.oxyLevel}   Salt: ${S.salt}`, 160, 700);
+    ctx.fillText(`Calculated rust rate: ${r.toFixed(0)}%`, 160, 730);
+  }
+
+  function draw(){
+    if (mode==="change") drawChange();
+    if (mode==="oxy") drawOxygenTransfer();
+    if (mode==="rust") drawRust();
+  }
+
+  // tabs
+  tChange.addEventListener("click", ()=>{mode="change"; setActive(tChange); renderControls(); draw();});
+  tOxy.addEventListener("click", ()=>{mode="oxy"; setActive(tOxy); renderControls(); draw();});
+  tRust.addEventListener("click", ()=>{mode="rust"; setActive(tRust); renderControls(); draw();});
+
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

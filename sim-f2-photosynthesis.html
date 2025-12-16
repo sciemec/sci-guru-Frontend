@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Cells & Organisation</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:420px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:170px}
+    select,input{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+    .bad{color:#fb7185}
+    canvas{width:100%;height:520px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{
+      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);cursor:grab;font-size:12px;color:var(--text);user-select:none;
+    }
+    .dropgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .drop{
+      border:1px dashed rgba(255,255,255,0.22);border-radius:14px;padding:10px;min-height:64px;
+      background:rgba(255,255,255,0.02);
+    }
+    .drop b{display:block;font-size:12px}
+    .drop span{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Cells & Levels of Organisation (Unit 1)</h1>
+  <p>Label organelles, practice classification (5 kingdoms), and explore variation (continuous vs discontinuous).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tCell">Cell Lab</button>
+        <button class="tab" id="tClass">Classification</button>
+        <button class="tab" id="tVar">Variation</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="720"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tCell = document.getElementById("tCell");
+  const tClass = document.getElementById("tClass");
+  const tVar = document.getElementById("tVar");
+  const tabs = [tCell,tClass,tVar];
+
+  let mode = "cell";
+
+  const S = {
+    cellType: "plant", // plant or animal
+    zoom: 1.0,
+
+    // drag labels
+    labels: [
+      {name:"Nucleus", placed:false},
+      {name:"Cytoplasm", placed:false},
+      {name:"Cell membrane", placed:false},
+      {name:"Cell wall", placed:false},
+      {name:"Chloroplast", placed:false},
+      {name:"Vacuole", placed:false},
+      {name:"Mitochondrion", placed:false}
+    ],
+
+    // drop zones (relative positions)
+    zones: [],
+
+    // classification
+    specimen: "A mushroom grows on dead wood.",
+    answerKingdom: "Fungi",
+    userKingdom: "",
+
+    // variation
+    varType: "continuous",
+    mean: 165,
+    spread: 12
+  };
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+
+  function resetLabels(){
+    S.labels.forEach(l=>l.placed=false);
+    buildZones();
+  }
+
+  function buildZones(){
+    // define zones based on cell type
+    const w = canvas.width, h = canvas.height;
+    const cx = w*0.55, cy = h*0.50;
+
+    // clear zones
+    S.zones = [];
+
+    // shared zones
+    S.zones.push({key:"Nucleus", x:cx+40, y:cy-40, r:26});
+    S.zones.push({key:"Cytoplasm", x:cx-40, y:cy+30, r:28});
+    S.zones.push({key:"Cell membrane", x:cx-220, y:cy-10, r:26});
+    S.zones.push({key:"Mitochondrion", x:cx+120, y:cy+90, r:22});
+
+    if (S.cellType==="plant"){
+      S.zones.push({key:"Cell wall", x:cx-260, y:cy-120, r:26});
+      S.zones.push({key:"Chloroplast", x:cx+190, y:cy-120, r:22});
+      S.zones.push({key:"Vacuole", x:cx+10, y:cy+10, r:30});
+    } else {
+      // animal doesn't have cell wall/chloroplast/large vacuole
+      // (keep them in labels list but they won't be needed)
+    }
+  }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="cell"){
+      controls.innerHTML = `
+        <div class="row">
+          <label>Cell type</label>
+          <select id="cellType">
+            <option value="plant" ${S.cellType==="plant"?"selected":""}>Plant cell</option>
+            <option value="animal" ${S.cellType==="animal"?"selected":""}>Animal cell</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Zoom</label>
+          <input id="zoom" type="range" min="0.8" max="1.4" step="0.05" value="${S.zoom}">
+          <span class="pill">${S.zoom.toFixed(2)}×</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="resetLab">Reset labels</button>
+        </div>
+
+        <div class="hint">Drag each label chip into the correct part of the cell.</div>
+        <div class="chips" id="chips"></div>
+
+        <div class="row" style="margin-top:12px">
+          <span class="pill" id="score">Score: —</span>
+        </div>
+      `;
+
+      document.getElementById("cellType").addEventListener("change", e=>{
+        S.cellType = e.target.value;
+        resetLabels();
+        renderControls();
+        draw();
+      });
+
+      document.getElementById("zoom").addEventListener("input", e=>{
+        S.zoom = +e.target.value;
+        renderControls();
+        draw();
+      });
+
+      document.getElementById("resetLab").addEventListener("click", ()=>{
+        resetLabels();
+        renderControls();
+        draw();
+      });
+
+      const chips = document.getElementById("chips");
+
+      // show only relevant labels for chosen cell type
+      const allowed = S.cellType==="plant"
+        ? ["Nucleus","Cytoplasm","Cell membrane","Cell wall","Chloroplast","Vacuole","Mitochondrion"]
+        : ["Nucleus","Cytoplasm","Cell membrane","Mitochondrion"];
+
+      const activeLabels = S.labels.filter(l=>allowed.includes(l.name));
+
+      chips.innerHTML = activeLabels.map(l=>{
+        const done = l.placed ? 'style="opacity:0.45;pointer-events:none"' : "";
+        return `<div class="chip" draggable="true" data-name="${l.name}" ${done}>${l.name}</div>`;
+      }).join("");
+
+      chips.querySelectorAll(".chip").forEach(ch=>{
+        ch.addEventListener("dragstart", ev=>{
+          ev.dataTransfer.setData("text/plain", ch.dataset.name);
+        });
+      });
+
+      note.textContent = "Drop labels onto the glowing target circles.";
+    }
+
+    if (mode==="class"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">5 Kingdoms: Animalia • Plantae • Fungi • Protista • Monera</span></div>
+        <div class="row">
+          <label>Specimen</label>
+          <select id="spec">
+            <option value="mushroom">A mushroom grows on dead wood.</option>
+            <option value="amoeba">Amoeba moves using pseudopodia in pond water.</option>
+            <option value="bacteria">Tiny single-celled bacteria cause a disease.</option>
+            <option value="maize">Maize plant makes food by photosynthesis.</option>
+            <option value="goat">A goat eats grass and produces milk.</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Your kingdom</label>
+          <select id="king">
+            <option value="" selected>Select…</option>
+            <option value="Animalia">Animalia</option>
+            <option value="Plantae">Plantae</option>
+            <option value="Fungi">Fungi</option>
+            <option value="Protista">Protista</option>
+            <option value="Monera">Monera</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="btn" id="checkK">Check</button>
+          <button class="btn" id="newK">New</button>
+        </div>
+        <p class="hint" id="kMsg"></p>
+      `;
+
+      const map = {
+        mushroom: {text:"A mushroom grows on dead wood.", ans:"Fungi"},
+        amoeba: {text:"Amoeba moves using pseudopodia in pond water.", ans:"Protista"},
+        bacteria: {text:"Tiny single-celled bacteria cause a disease.", ans:"Monera"},
+        maize: {text:"Maize plant makes food by photosynthesis.", ans:"Plantae"},
+        goat: {text:"A goat eats grass and produces milk.", ans:"Animalia"},
+      };
+
+      const spec = document.getElementById("spec");
+      const king = document.getElementById("king");
+      const kMsg = document.getElementById("kMsg");
+
+      function setSpec(key){
+        S.specimen = map[key].text;
+        S.answerKingdom = map[key].ans;
+        king.value = "";
+        kMsg.textContent = `Specimen: ${S.specimen}`;
+        kMsg.className = "hint";
+        draw();
+      }
+      spec.addEventListener("change", e=> setSpec(e.target.value));
+      setSpec("mushroom");
+
+      document.getElementById("checkK").addEventListener("click", ()=>{
+        const val = king.value;
+        if (!val){ kMsg.textContent="Choose a kingdom first."; kMsg.className="hint bad"; return; }
+        if (val === S.answerKingdom){
+          kMsg.textContent = `Correct ✅ (${val})`;
+          kMsg.className = "hint good";
+        } else {
+          kMsg.textContent = `Not correct ❌ Correct answer is ${S.answerKingdom}.`;
+          kMsg.className = "hint bad";
+        }
+      });
+
+      document.getElementById("newK").addEventListener("click", ()=>{
+        const keys = Object.keys(map);
+        const pick = keys[Math.floor(Math.random()*keys.length)];
+        spec.value = pick;
+        setSpec(pick);
+      });
+
+      note.textContent = "Classification practice: choose the correct kingdom based on the description.";
+    }
+
+    if (mode==="var"){
+      controls.innerHTML = `
+        <div class="row">
+          <label>Variation type</label>
+          <select id="varType">
+            <option value="continuous" ${S.varType==="continuous"?"selected":""}>Continuous (range)</option>
+            <option value="discontinuous" ${S.varType==="discontinuous"?"selected":""}>Discontinuous (groups)</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Mean (for continuous)</label>
+          <input id="mean" type="range" min="120" max="190" value="${S.mean}">
+          <span class="pill">${S.mean}</span>
+        </div>
+
+        <div class="row">
+          <label>Spread (for continuous)</label>
+          <input id="spread" type="range" min="5" max="25" value="${S.spread}">
+          <span class="pill">${S.spread}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="regen">Generate data</button>
+        </div>
+
+        <p class="hint">
+          Continuous examples: height, mass. Discontinuous examples: blood group, tongue rolling.
+        </p>
+      `;
+
+      document.getElementById("varType").addEventListener("change", e=>{S.varType=e.target.value; draw();});
+      document.getElementById("mean").addEventListener("input", e=>{S.mean=+e.target.value; renderControls(); draw();});
+      document.getElementById("spread").addEventListener("input", e=>{S.spread=+e.target.value; renderControls(); draw();});
+      document.getElementById("regen").addEventListener("click", ()=> draw());
+
+      note.textContent = "Variation: look at the shape of the distribution (range vs separate groups).";
+    }
+  }
+
+  // --- drag & drop on canvas zones ---
+  canvas.addEventListener("dragover", (e)=>{ if(mode==="cell"){ e.preventDefault(); }});
+  canvas.addEventListener("drop", (e)=>{
+    if (mode!=="cell") return;
+    e.preventDefault();
+    const name = e.dataTransfer.getData("text/plain");
+    if (!name) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    // find nearest correct zone
+    const zone = S.zones.find(z=>{
+      const dx = mx - z.x, dy = my - z.y;
+      return Math.sqrt(dx*dx+dy*dy) <= z.r + 18;
+    });
+    if (!zone) return;
+
+    if (zone.key === name){
+      const lab = S.labels.find(l=>l.name===name);
+      if (lab) lab.placed = true;
+      renderControls();
+      draw();
+    }
+  });
+
+  function drawCell(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    const cx = canvas.width*0.55, cy = canvas.height*0.50;
+    const z = S.zoom;
+
+    // cell shapes
+    if (S.cellType==="plant"){
+      // cell wall
+      ctx.fillStyle="rgba(124,92,255,0.10)";
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=4;
+      ctx.fillRect(cx-280*z, cy-190*z, 560*z, 380*z);
+      ctx.strokeRect(cx-280*z, cy-190*z, 560*z, 380*z);
+
+      // membrane (inner)
+      ctx.strokeStyle="rgba(110,231,255,0.35)";
+      ctx.lineWidth=3;
+      ctx.strokeRect(cx-260*z, cy-170*z, 520*z, 340*z);
+
+      // cytoplasm fill
+      ctx.fillStyle="rgba(110,231,255,0.06)";
+      ctx.fillRect(cx-260*z, cy-170*z, 520*z, 340*z);
+
+      // vacuole
+      ctx.fillStyle="rgba(255,255,255,0.06)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(cx-120*z, cy-70*z, 240*z, 190*z, 40);
+      ctx.fill(); ctx.stroke();
+
+      // nucleus
+      ctx.fillStyle="rgba(255,255,255,0.10)";
+      ctx.beginPath(); ctx.arc(cx+40*z, cy-40*z, 40*z, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.25)"; ctx.stroke();
+
+      // chloroplasts
+      for(let i=0;i<5;i++){
+        const x = cx+190*z + (i%2)*18*z;
+        const y = cy-120*z + i*26*z;
+        ctx.fillStyle="rgba(52,211,153,0.20)";
+        ctx.beginPath(); ctx.ellipse(x,y,22*z,12*z,0,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle="rgba(255,255,255,0.12)"; ctx.stroke();
+      }
+
+      // mitochondrion
+      ctx.fillStyle="rgba(251,113,133,0.12)";
+      ctx.beginPath(); ctx.ellipse(cx+120*z, cy+90*z, 30*z, 18*z, 0.2, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+
+    } else {
+      // animal cell (oval)
+      ctx.fillStyle="rgba(110,231,255,0.06)";
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=4;
+      ctx.beginPath(); ctx.ellipse(cx,cy,290*z,200*z,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+      // nucleus
+      ctx.fillStyle="rgba(255,255,255,0.10)";
+      ctx.beginPath(); ctx.arc(cx+60*z, cy-20*z, 46*z, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.22)"; ctx.stroke();
+
+      // mitochondrion
+      ctx.fillStyle="rgba(251,113,133,0.12)";
+      ctx.beginPath(); ctx.ellipse(cx+120*z, cy+90*z, 30*z, 18*z, 0.2, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+    }
+
+    // target zones
+    ctx.font="16px system-ui";
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.fillText(S.cellType==="plant" ? "Plant cell (drag labels to targets)" : "Animal cell (drag labels to targets)", 70, 105);
+
+    // draw glowing circles
+    S.zones.forEach(zon=>{
+      const labelObj = S.labels.find(l=>l.name===zon.key);
+      const done = labelObj && labelObj.placed;
+
+      ctx.beginPath();
+      ctx.arc(zon.x, zon.y, zon.r, 0, Math.PI*2);
+      ctx.strokeStyle = done ? "rgba(52,211,153,0.7)" : "rgba(110,231,255,0.55)";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = done ? "rgba(52,211,153,0.14)" : "rgba(110,231,255,0.06)";
+      ctx.fill();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="12px system-ui";
+      ctx.fillText(done ? `✓ ${zon.key}` : zon.key, zon.x - (zon.key.length*3), zon.y + 4);
+    });
+
+    // score
+    const allowed = S.cellType==="plant"
+      ? ["Nucleus","Cytoplasm","Cell membrane","Cell wall","Chloroplast","Vacuole","Mitochondrion"]
+      : ["Nucleus","Cytoplasm","Cell membrane","Mitochondrion"];
+    const placed = S.labels.filter(l=>allowed.includes(l.name) && l.placed).length;
+    const total = allowed.length;
+
+    const scoreEl = document.getElementById("score");
+    if (scoreEl) scoreEl.textContent = `Score: ${placed}/${total}`;
+  }
+
+  function drawClassification(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Classification (5 Kingdoms)", 70, 110);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="16px system-ui";
+    ctx.fillText("Specimen:", 70, 150);
+    ctx.fillStyle="rgba(110,231,255,0.9)";
+    ctx.fillText(S.specimen, 170, 150);
+
+    // draw 5 boxes
+    const ks = ["Animalia","Plantae","Fungi","Protista","Monera"];
+    const startX = 90, startY = 210, bw=190, bh=120, gap=16;
+    ks.forEach((k,i)=>{
+      const x = startX + (i%3)*(bw+gap);
+      const y = startY + Math.floor(i/3)*(bh+gap);
+
+      ctx.fillStyle="rgba(255,255,255,0.03)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(x,y,bw,bh,16);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="16px system-ui";
+      ctx.fillText(k, x+16, y+34);
+
+      ctx.fillStyle="rgba(255,255,255,0.65)";
+      ctx.font="12px system-ui";
+      const hint = (k==="Animalia")?"Multicellular, feeds":
+                   (k==="Plantae")?"Photosynthesis":
+                   (k==="Fungi")?"Saprophyte/parasite":
+                   (k==="Protista")?"Mostly single-celled":
+                   "Bacteria (prokaryote)";
+      ctx.fillText(hint, x+16, y+60);
+    });
+  }
+
+  function randNormal(mu, sigma){
+    // Box–Muller
+    let u=0,v=0;
+    while(u===0) u=Math.random();
+    while(v===0) v=Math.random();
+    const z = Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+    return mu + z*sigma;
+  }
+
+  function drawVariation(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Variation", 70, 110);
+
+    if (S.varType==="continuous"){
+      // generate heights
+      const values = Array.from({length:80}, ()=>Math.round(randNormal(S.mean, S.spread)));
+      // histogram bins
+      const min = Math.min(...values), max = Math.max(...values);
+      const bins = 10;
+      const binW = Math.max(1, Math.floor((max-min)/bins));
+      const counts = Array.from({length:bins}, ()=>0);
+
+      values.forEach(v=>{
+        const idx = Math.min(bins-1, Math.max(0, Math.floor((v-min)/binW)));
+        counts[idx] += 1;
+      });
+
+      // draw histogram
+      const gx=90, gy=560, gw=900, gh=300;
+      ctx.strokeStyle="rgba(255,255,255,0.2)";
+      ctx.lineWidth=2;
+      ctx.strokeRect(gx, gy-gh, gw, gh);
+
+      const maxC = Math.max(...counts);
+      for(let i=0;i<bins;i++){
+        const barH = (counts[i]/maxC)* (gh-30);
+        const x = gx + i*(gw/bins) + 8;
+        const w = (gw/bins) - 16;
+        const y = gy - barH;
+
+        ctx.fillStyle="rgba(110,231,255,0.25)";
+        ctx.fillRect(x,y,w,barH);
+        ctx.strokeStyle="rgba(255,255,255,0.12)";
+        ctx.strokeRect(x,y,w,barH);
+
+        ctx.fillStyle="rgba(255,255,255,0.7)";
+        ctx.font="12px system-ui";
+        const a = min + i*binW;
+        const b = a + binW;
+        ctx.fillText(`${a}-${b}`, x, gy+18);
+      }
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Example: Height (continuous) shows a range and a bell-shaped distribution.", 70, 160);
+
+    } else {
+      // discontinuous categories (blood groups example)
+      const cats = ["A","B","AB","O"];
+      const counts = cats.map(()=>Math.floor(8 + Math.random()*25));
+      const maxC = Math.max(...counts);
+
+      const gx=140, gy=610, gw=820, gh=340;
+      ctx.strokeStyle="rgba(255,255,255,0.2)";
+      ctx.lineWidth=2;
+      ctx.strokeRect(gx, gy-gh, gw, gh);
+
+      cats.forEach((c,i)=>{
+        const barH = (counts[i]/maxC)*(gh-40);
+        const x = gx + i*(gw/cats.length) + 40;
+        const w = (gw/cats.length) - 80;
+        const y = gy - barH;
+
+        ctx.fillStyle="rgba(124,92,255,0.25)";
+        ctx.fillRect(x,y,w,barH);
+        ctx.strokeStyle="rgba(255,255,255,0.12)";
+        ctx.strokeRect(x,y,w,barH);
+
+        ctx.fillStyle="rgba(255,255,255,0.85)";
+        ctx.font="16px system-ui";
+        ctx.fillText(c, x + w/2 - 6, gy+22);
+
+        ctx.fillStyle="rgba(255,255,255,0.7)";
+        ctx.font="12px system-ui";
+        ctx.fillText(counts[i]+" students", x + 6, y - 10);
+      });
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Example: Blood group (discontinuous) forms separate groups (no in-between).", 70, 160);
+    }
+  }
+
+  function draw(){
+    if (mode==="cell") drawCell();
+    if (mode==="class") drawClassification();
+    if (mode==="var") drawVariation();
+  }
+
+  function goCell(){ mode="cell"; setActive(tCell); renderControls(); draw(); }
+  function goClass(){ mode="class"; setActive(tClass); renderControls(); draw(); }
+  function goVar(){ mode="var"; setActive(tVar); renderControls(); draw(); }
+
+  tCell.addEventListener("click", goCell);
+  tClass.addEventListener("click", goClass);
+  tVar.addEventListener("click", goVar);
+
+  // init helpers
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  buildZones();
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

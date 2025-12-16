@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Data Presentation</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px;display:grid;grid-template-columns:360px 1fr;gap:14px;}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.8);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:13px}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:140px}
+    input{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text);outline:none;}
+    .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;}
+    canvas{width:100%;height:440px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .tag{display:inline-block;padding:5px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Data Presentation (Straight-Line Graphs)</h1>
+  <p>Enter a table of values for x and y, then plot. Try direct proportion (y = kx) and inverse (y = k/x).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">Controls</div>
+    <div class="pb">
+      <div class="row">
+        <label>Preset</label>
+        <select id="preset" class="btn" style="padding:10px 12px">
+          <option value="direct" selected>Direct proportion (y = 2x)</option>
+          <option value="inverse">Inverse proportion (y = 12/x)</option>
+          <option value="custom">Custom (edit values)</option>
+        </select>
+      </div>
+
+      <div class="row"><span class="tag">Enter 6 points</span></div>
+
+      <div id="table"></div>
+
+      <div class="row">
+        <button class="btn" id="plot">Plot graph</button>
+        <button class="btn" id="clear">Clear</button>
+        <a class="btn" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <p style="color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0">
+        Tip: A direct proportion graph is a straight line through the origin.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">Graph</div>
+    <div class="pb">
+      <canvas id="c" width="900" height="600"></canvas>
+      <p id="note" style="margin-top:10px;color:var(--muted);font-size:13px;"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+const preset = document.getElementById("preset");
+const tableDiv = document.getElementById("table");
+const plotBtn = document.getElementById("plot");
+const clearBtn = document.getElementById("clear");
+const note = document.getElementById("note");
+
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+let data = Array.from({length:6}, (_,i)=>({x:i+1,y:(i+1)*2}));
+
+function buildTable(){
+  tableDiv.innerHTML = "";
+  data.forEach((row,i)=>{
+    const wrap = document.createElement("div");
+    wrap.className = "row";
+    wrap.innerHTML = `
+      <label>Point ${i+1}</label>
+      <input type="number" step="any" value="${row.x}" data-i="${i}" data-k="x" style="width:90px">
+      <input type="number" step="any" value="${row.y}" data-i="${i}" data-k="y" style="width:90px">
+    `;
+    tableDiv.appendChild(wrap);
+  });
+
+  tableDiv.querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const i = Number(inp.dataset.i);
+      const k = inp.dataset.k;
+      data[i][k] = Number(inp.value);
+      preset.value = "custom";
+    });
+  });
+}
+
+function setPreset(type){
+  if(type==="direct"){
+    data = Array.from({length:6}, (_,i)=>({x:i+1,y:(i+1)*2}));
+    note.textContent = "Direct proportion example: y = 2x (line should pass through origin).";
+  } else if(type==="inverse"){
+    const xs = [1,2,3,4,6,12];
+    data = xs.map(x=>({x, y:12/x}));
+    note.textContent = "Inverse proportion example: y = 12/x (graph is a curve, not a straight line).";
+  } else {
+    note.textContent = "Custom data: edit values and plot.";
+  }
+  buildTable();
+  drawAxes();
+}
+
+function drawAxes(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // margins
+  const m=70;
+  const w=canvas.width, h=canvas.height;
+
+  // axes box
+  ctx.strokeStyle="rgba(255,255,255,0.25)";
+  ctx.lineWidth=2;
+  ctx.strokeRect(m,m,w-2*m,h-2*m);
+
+  // axis labels
+  ctx.fillStyle="rgba(255,255,255,0.75)";
+  ctx.font="16px system-ui";
+  ctx.fillText("y", m-18, m-10);
+  ctx.fillText("x", w-m+10, h-m+6);
+}
+
+function plot(){
+  drawAxes();
+  const m=70, w=canvas.width, h=canvas.height;
+
+  const xs = data.map(d=>d.x);
+  const ys = data.map(d=>d.y);
+
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+  const padX = (maxX-minX) === 0 ? 1 : (maxX-minX)*0.1;
+  const padY = (maxY-minY) === 0 ? 1 : (maxY-minY)*0.1;
+
+  const x0 = minX - padX, x1 = maxX + padX;
+  const y0 = minY - padY, y1 = maxY + padY;
+
+  function mapX(x){ return m + ( (x - x0) / (x1 - x0) ) * (w-2*m); }
+  function mapY(y){ return (h-m) - ( (y - y0) / (y1 - y0) ) * (h-2*m); }
+
+  // line + points
+  ctx.strokeStyle="rgba(110,231,255,0.75)";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  data.forEach((p,i)=>{
+    const X=mapX(p.x), Y=mapY(p.y);
+    if(i===0) ctx.moveTo(X,Y); else ctx.lineTo(X,Y);
+  });
+  ctx.stroke();
+
+  data.forEach((p)=>{
+    const X=mapX(p.x), Y=mapY(p.y);
+    ctx.fillStyle="rgba(110,231,255,0.9)";
+    ctx.beginPath();
+    ctx.arc(X,Y,5,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  note.textContent += ` | Range x: ${minX}–${maxX}, y: ${minY}–${maxY}`;
+}
+
+preset.addEventListener("change", ()=> setPreset(preset.value));
+plotBtn.addEventListener("click", plot);
+clearBtn.addEventListener("click", ()=>{ drawAxes(); note.textContent="Cleared. Plot again when ready."; });
+
+buildTable();
+setPreset("direct");
+</script>
+</body>
+</html>

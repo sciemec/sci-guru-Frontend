@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Respiratory Systems</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:420px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:170px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    canvas{width:100%;height:520px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .good{color:#34d399}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Respiratory Systems (Unit 3)</h1>
+  <p>Model breathing, gas exchange in alveoli, and link to the cellular respiration equation.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <div class="row">
+        <label>Activity level</label>
+        <select id="activity">
+          <option value="rest" selected>Resting</option>
+          <option value="walk">Walking</option>
+          <option value="run">Running</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Breaths per minute</label>
+        <input id="bpm" type="range" min="6" max="40" value="14">
+        <span class="pill" id="bpmOut">14</span>
+      </div>
+
+      <div class="row">
+        <label>Tidal volume (mL)</label>
+        <input id="tv" type="range" min="200" max="900" value="500">
+        <span class="pill" id="tvOut">500 mL</span>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="start">Start</button>
+        <button class="btn" id="stop">Stop</button>
+        <button class="btn" id="reset">Reset</button>
+      </div>
+
+      <div class="row">
+        <span class="pill" id="ventOut">Minute ventilation: —</span>
+      </div>
+
+      <p class="hint good" style="margin-top:10px">
+        Cellular respiration (word): glucose + oxygen → carbon dioxide + water + energy
+      </p>
+
+      <p class="hint">
+        When activity increases, breathing rate and depth usually increase to supply more oxygen and remove CO₂.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph"><span>Breathing + Alveoli View</span></div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="720"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const activity = document.getElementById("activity");
+  const bpm = document.getElementById("bpm");
+  const tv = document.getElementById("tv");
+  const bpmOut = document.getElementById("bpmOut");
+  const tvOut = document.getElementById("tvOut");
+  const ventOut = document.getElementById("ventOut");
+  const note = document.getElementById("note");
+
+  let running = false;
+  let phase = 0; // breathing phase
+  let lastT = performance.now();
+
+  function updateText(){
+    const B = +bpm.value;
+    const TV = +tv.value;
+    bpmOut.textContent = B;
+    tvOut.textContent = `${TV} mL`;
+    const minuteVent = (B * TV) / 1000; // L/min
+    ventOut.textContent = `Minute ventilation: ${minuteVent.toFixed(1)} L/min`;
+  }
+
+  function applyActivityPreset(){
+    const a = activity.value;
+    if (a==="rest"){ bpm.value=14; tv.value=500; }
+    if (a==="walk"){ bpm.value=20; tv.value=600; }
+    if (a==="run"){ bpm.value=30; tv.value=750; }
+    updateText();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    const B = +bpm.value;
+    const TV = +tv.value;
+
+    // breathing cycle (sin wave)
+    const cycle = 60 / B; // seconds per breath
+    const inhale = (Math.sin(phase*2*Math.PI) + 1)/2; // 0..1
+    const lungFill = 0.25 + inhale*0.75; // 0.25..1
+
+    // draw lungs
+    const cx=360, cy=380;
+    const lw=180, lh=240;
+
+    function lung(x, y, fill){
+      ctx.fillStyle=`rgba(110,231,255,${0.08 + fill*0.20})`;
+      ctx.strokeStyle="rgba(255,255,255,0.20)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.ellipse(x, y, lw*0.5, lh*0.55, 0.05, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+
+      // simple inner texture
+      ctx.strokeStyle=`rgba(255,255,255,${0.10 + fill*0.10})`;
+      ctx.lineWidth=1.5;
+      for(let i=0;i<8;i++){
+        ctx.beginPath();
+        ctx.arc(x + (i-4)*12, y + (i-4)*10, 30 + fill*20, 0, Math.PI*2);
+        ctx.stroke();
+      }
+    }
+
+    lung(cx-110, cy, lungFill);
+    lung(cx+110, cy, lungFill);
+
+    // trachea + bronchi
+    ctx.strokeStyle="rgba(255,255,255,0.28)";
+    ctx.lineWidth=10;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy-260);
+    ctx.lineTo(cx, cy-150);
+    ctx.stroke();
+
+    ctx.lineWidth=8;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy-150);
+    ctx.lineTo(cx-80, cy-90);
+    ctx.moveTo(cx, cy-150);
+    ctx.lineTo(cx+80, cy-90);
+    ctx.stroke();
+
+    // diaphragm
+    ctx.strokeStyle="rgba(124,92,255,0.55)";
+    ctx.lineWidth=6;
+    const dy = 40 + inhale*25;
+    ctx.beginPath();
+    ctx.moveTo(cx-250, cy+190);
+    ctx.quadraticCurveTo(cx, cy+190+dy, cx+250, cy+190);
+    ctx.stroke();
+
+    // labels
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Breathing Model", 70, 110);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Inhale/Exhale: ${(inhale*100).toFixed(0)}%`, 70, 140);
+    ctx.fillText(`Breaths/min: ${B}   |   Tidal volume: ${TV} mL`, 70, 165);
+
+    // Alveoli & gas exchange panel
+    const ax=650, ay=160, aw=380, ah=470;
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.strokeRect(ax,ay,aw,ah);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="16px system-ui";
+    ctx.fillText("Alveoli: Gas Exchange (Model)", ax+12, ay+28);
+
+    // alveoli cluster
+    const baseX = ax+190, baseY = ay+230;
+    const bubbles = 12;
+    for(let i=0;i<bubbles;i++){
+      const ang = (i/bubbles)*Math.PI*2;
+      const r = 70 + (i%3)*10;
+      const x = baseX + Math.cos(ang)*r*0.55;
+      const y = baseY + Math.sin(ang)*r*0.55;
+      const rad = 28 + (i%4)*4;
+
+      // oxygen level higher on inhale
+      const o2 = inhale;        // 0..1
+      const co2 = 1 - inhale;   // 0..1
+
+      ctx.fillStyle = `rgba(110,231,255,${0.08 + o2*0.22})`;
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+      // CO2 leaving indicator dots
+      ctx.fillStyle = `rgba(251,113,133,${0.05 + co2*0.25})`;
+      ctx.beginPath(); ctx.arc(x+rad+14, y, 5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x-rad-14, y, 4, 0, Math.PI*2); ctx.fill();
+    }
+
+    // arrows: O2 into blood, CO2 out
+    ctx.strokeStyle="rgba(110,231,255,0.8)";
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    ctx.moveTo(ax+40, ay+410);
+    ctx.lineTo(ax+160, ay+410);
+    ctx.stroke();
+
+    ctx.strokeStyle="rgba(251,113,133,0.7)";
+    ctx.beginPath();
+    ctx.moveTo(ax+340, ay+410);
+    ctx.lineTo(ax+220, ay+410);
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="13px system-ui";
+    ctx.fillText("O₂ diffuses into blood", ax+40, ay+395);
+    ctx.fillText("CO₂ diffuses out", ax+230, ay+395);
+
+    // summary text
+    const minuteVent = (B * TV)/1000;
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Minute ventilation ≈ ${minuteVent.toFixed(1)} L/min`, ax+12, ay+458);
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.fillText("Note: This is a teaching model, not real medical values.", ax+12, ay+482);
+
+    note.textContent = "When you inhale, oxygen in alveoli is higher; when you exhale, carbon dioxide leaving is higher (model).";
+  }
+
+  function tick(t){
+    if (!running) return;
+    const dt = Math.min(0.05, (t-lastT)/1000);
+    lastT = t;
+
+    const B = +bpm.value;
+    const cycle = 60 / B;
+    phase += dt / cycle;
+    phase = phase % 1;
+
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  document.getElementById("start").addEventListener("click", ()=>{
+    if (running) return;
+    running = true;
+    lastT = performance.now();
+    requestAnimationFrame(tick);
+  });
+  document.getElementById("stop").addEventListener("click", ()=> running=false);
+  document.getElementById("reset").addEventListener("click", ()=>{
+    running=false;
+    activity.value="rest";
+    applyActivityPreset();
+    phase=0;
+    draw();
+  });
+
+  activity.addEventListener("change", ()=>{
+    applyActivityPreset();
+    draw();
+  });
+
+  [bpm,tv].forEach(el=> el.addEventListener("input", ()=>{ updateText(); draw(); }));
+
+  applyActivityPreset();
+  updateText();
+  draw();
+</script>
+</body>
+</html>

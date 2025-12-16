@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Transport Systems</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:440px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:180px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:540px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Transport Systems (Unit 4)</h1>
+  <p>Explore diffusion, osmosis, and active transport (model), then basic blood flow path (heart → body → heart).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tDiff">Diffusion</button>
+        <button class="tab" id="tOsm">Osmosis</button>
+        <button class="tab" id="tAct">Active</button>
+        <button class="tab" id="tBlood">Blood Flow</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="760"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tDiff = document.getElementById("tDiff");
+  const tOsm = document.getElementById("tOsm");
+  const tAct = document.getElementById("tAct");
+  const tBlood = document.getElementById("tBlood");
+  const tabs = [tDiff,tOsm,tAct,tBlood];
+
+  let mode = "diff";
+
+  const S = {
+    // particle sims
+    leftConc: 70,
+    rightConc: 20,
+    membrane: true,
+    poreSize: 12,
+    temp: 25,
+
+    // active transport
+    atp: 60,
+    pumpCount: 4,
+
+    // blood flow
+    heartRate: 72,
+    oxy: 80
+  };
+
+  let particles = [];
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+
+  function initParticles(){
+    particles = [];
+    const frame = {x:90,y:140,w:920,h:520};
+    const mid = frame.x + frame.w/2;
+
+    function add(n, side, type){
+      for(let i=0;i<n;i++){
+        const x = side==="L" ? rand(frame.x+20, mid-20) : rand(mid+20, frame.x+frame.w-20);
+        const y = rand(frame.y+20, frame.y+frame.h-20);
+        particles.push({x,y,vx:rand(-1,1),vy:rand(-1,1),type});
+      }
+    }
+
+    // types: solute or water (for osmosis)
+    const L = Math.round(S.leftConc);
+    const R = Math.round(S.rightConc);
+    add(L, "L", "solute");
+    add(R, "R", "solute");
+
+    // water particles (more is fine)
+    for(let i=0;i<120;i++){
+      const x = rand(frame.x+20, frame.x+frame.w-20);
+      const y = rand(frame.y+20, frame.y+frame.h-20);
+      particles.push({x,y,vx:rand(-1,1),vy:rand(-1,1),type:"water"});
+    }
+  }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="diff"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Diffusion = movement from high concentration → low concentration</span></div>
+
+        <div class="row">
+          <label>Left solute concentration</label>
+          <input id="lC" type="range" min="0" max="120" value="${S.leftConc}">
+          <span class="pill">${S.leftConc}</span>
+        </div>
+
+        <div class="row">
+          <label>Right solute concentration</label>
+          <input id="rC" type="range" min="0" max="120" value="${S.rightConc}">
+          <span class="pill">${S.rightConc}</span>
+        </div>
+
+        <div class="row">
+          <label>Temperature (°C)</label>
+          <input id="temp" type="range" min="0" max="50" value="${S.temp}">
+          <span class="pill">${S.temp}°C</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="regen">Restart</button>
+        </div>
+
+        <p class="hint">Higher temperature → faster particle movement (model).</p>
+      `;
+
+      document.getElementById("lC").addEventListener("input", e=>{S.leftConc=+e.target.value; renderControls();});
+      document.getElementById("rC").addEventListener("input", e=>{S.rightConc=+e.target.value; renderControls();});
+      document.getElementById("temp").addEventListener("input", e=>{S.temp=+e.target.value; renderControls();});
+      document.getElementById("regen").addEventListener("click", ()=>{ initParticles(); });
+
+      note.textContent = "Watch solute spread until both sides become more equal.";
+    }
+
+    if (mode==="osm"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Osmosis = movement of water through a partially permeable membrane</span></div>
+
+        <div class="row">
+          <label>Left solute (more solute = lower water potential)</label>
+          <input id="lC" type="range" min="0" max="120" value="${S.leftConc}">
+          <span class="pill">${S.leftConc}</span>
+        </div>
+
+        <div class="row">
+          <label>Right solute</label>
+          <input id="rC" type="range" min="0" max="120" value="${S.rightConc}">
+          <span class="pill">${S.rightConc}</span>
+        </div>
+
+        <div class="row">
+          <label>Pore size (water can pass, solute blocked)</label>
+          <input id="pore" type="range" min="6" max="20" value="${S.poreSize}">
+          <span class="pill">${S.poreSize}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="regen">Restart</button>
+        </div>
+
+        <p class="hint">Water moves from dilute → concentrated side (higher → lower water potential).</p>
+      `;
+
+      document.getElementById("lC").addEventListener("input", e=>{S.leftConc=+e.target.value; renderControls();});
+      document.getElementById("rC").addEventListener("input", e=>{S.rightConc=+e.target.value; renderControls();});
+      document.getElementById("pore").addEventListener("input", e=>{S.poreSize=+e.target.value; renderControls();});
+      document.getElementById("regen").addEventListener("click", ()=>{ initParticles(); });
+
+      note.textContent = "Only water crosses the membrane freely in this model. Solute is blocked.";
+    }
+
+    if (mode==="act"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Active transport = movement against concentration gradient using energy (ATP)</span></div>
+
+        <div class="row">
+          <label>Left solute (inside cell)</label>
+          <input id="lC" type="range" min="0" max="120" value="${S.leftConc}">
+          <span class="pill">${S.leftConc}</span>
+        </div>
+
+        <div class="row">
+          <label>Right solute (outside)</label>
+          <input id="rC" type="range" min="0" max="120" value="${S.rightConc}">
+          <span class="pill">${S.rightConc}</span>
+        </div>
+
+        <div class="row">
+          <label>ATP energy level</label>
+          <input id="atp" type="range" min="0" max="100" value="${S.atp}">
+          <span class="pill">${S.atp}</span>
+        </div>
+
+        <div class="row">
+          <label>Number of pumps</label>
+          <input id="pumps" type="range" min="1" max="8" value="${S.pumpCount}">
+          <span class="pill">${S.pumpCount}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="doPump">Pump (step)</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">Pumps can move solute from low → high concentration if ATP is available.</p>
+      `;
+
+      document.getElementById("lC").addEventListener("input", e=>{S.leftConc=+e.target.value; renderControls();});
+      document.getElementById("rC").addEventListener("input", e=>{S.rightConc=+e.target.value; renderControls();});
+      document.getElementById("atp").addEventListener("input", e=>{S.atp=+e.target.value; renderControls();});
+      document.getElementById("pumps").addEventListener("input", e=>{S.pumpCount=+e.target.value; renderControls();});
+
+      document.getElementById("doPump").addEventListener("click", ()=>{
+        // pump moves 1 solute each pump from right->left if left is higher OR not (against gradient)
+        // limit by ATP
+        const moves = Math.min(S.pumpCount, Math.floor(S.atp/8));
+        if (moves<=0) return;
+        // move from right to left (simulate absorption into cell)
+        S.rightConc = Math.max(0, S.rightConc - moves);
+        S.leftConc  = Math.min(120, S.leftConc + moves);
+        S.atp = Math.max(0, S.atp - moves*8);
+        renderControls();
+      });
+
+      document.getElementById("reset").addEventListener("click", ()=>{
+        S.leftConc=70; S.rightConc=20; S.atp=60; S.pumpCount=4;
+        renderControls();
+      });
+
+      note.textContent = "Press Pump (step) to move solute into the cell using ATP (teaching model).";
+    }
+
+    if (mode==="blood"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Blood transport: heart pumps blood through vessels</span></div>
+
+        <div class="row">
+          <label>Heart rate (beats/min)</label>
+          <input id="hr" type="range" min="40" max="160" value="${S.heartRate}">
+          <span class="pill">${S.heartRate}</span>
+        </div>
+
+        <div class="row">
+          <label>Oxygen level (model)</label>
+          <input id="oxy" type="range" min="0" max="100" value="${S.oxy}">
+          <span class="pill">${S.oxy}%</span>
+        </div>
+
+        <p class="hint">
+          Arteries carry blood away from the heart; veins carry blood back; capillaries allow exchange.
+        </p>
+      `;
+      document.getElementById("hr").addEventListener("input", e=>{S.heartRate=+e.target.value; renderControls();});
+      document.getElementById("oxy").addEventListener("input", e=>{S.oxy=+e.target.value; renderControls();});
+      note.textContent = "Visual pathway: Heart → Arteries → Capillaries → Veins → Heart (simplified).";
+    }
+  }
+
+  function drawFrame(){
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+  }
+
+  function drawParticles(withMembrane, osmosisMode){
+    drawFrame();
+    const frame = {x:90,y:140,w:920,h:520};
+    const mid = frame.x + frame.w/2;
+
+    // container
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.strokeRect(frame.x, frame.y, frame.w, frame.h);
+
+    // membrane line
+    if (withMembrane){
+      ctx.strokeStyle="rgba(124,92,255,0.55)";
+      ctx.lineWidth=6;
+      ctx.beginPath();
+      ctx.moveTo(mid, frame.y);
+      ctx.lineTo(mid, frame.y+frame.h);
+      ctx.stroke();
+
+      // pores
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      for(let i=0;i<12;i++){
+        const py = frame.y + 30 + i*(frame.h-60)/11;
+        ctx.beginPath();
+        ctx.moveTo(mid-4, py);
+        ctx.lineTo(mid+4, py);
+        ctx.stroke();
+      }
+    }
+
+    // counts on each side (solute)
+    let L=0,R=0,WL=0,WR=0;
+    particles.forEach(p=>{
+      if (p.type==="solute"){
+        if (p.x < mid) L++; else R++;
+      } else {
+        if (p.x < mid) WL++; else WR++;
+      }
+    });
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText(osmosisMode ? "Osmosis model" : "Diffusion model", 70, 110);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="13px system-ui";
+    ctx.fillText(`Solute Left: ${L}   Solute Right: ${R}`, frame.x, frame.y-10);
+    if (osmosisMode) ctx.fillText(`Water Left: ${WL}   Water Right: ${WR}`, frame.x+300, frame.y-10);
+
+    // draw particles
+    particles.forEach(p=>{
+      if (p.type==="solute"){
+        ctx.fillStyle="rgba(124,92,255,0.55)";
+        ctx.beginPath(); ctx.arc(p.x,p.y,5,0,Math.PI*2); ctx.fill();
+      } else {
+        ctx.fillStyle="rgba(110,231,255,0.35)";
+        ctx.beginPath(); ctx.arc(p.x,p.y,3.5,0,Math.PI*2); ctx.fill();
+      }
+    });
+
+    // osmosis direction hint
+    if (osmosisMode){
+      const dir = (S.leftConc > S.rightConc) ? "Water tends to move → Left (more concentrated)" :
+                  (S.rightConc > S.leftConc) ? "Water tends to move → Right (more concentrated)" :
+                  "Equal solute: no net osmosis";
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.fillText(dir, frame.x, frame.y+frame.h+24);
+    }
+  }
+
+  function stepParticles(){
+    const frame = {x:90,y:140,w:920,h:520};
+    const mid = frame.x + frame.w/2;
+    const speed = 0.6 + (S.temp/50)*1.6;
+
+    // membrane rules
+    const withMembrane = (mode==="osm");
+    const pore = S.poreSize;
+
+    // bias for osmosis: water more likely to cross towards higher solute
+    const bias = (mode==="osm") ? (S.leftConc - S.rightConc)/120 : 0;
+
+    particles.forEach(p=>{
+      p.vx += rand(-0.25,0.25)*0.2;
+      p.vy += rand(-0.25,0.25)*0.2;
+
+      // clamp velocity
+      p.vx = Math.max(-2.2, Math.min(2.2, p.vx));
+      p.vy = Math.max(-2.2, Math.min(2.2, p.vy));
+
+      // move
+      p.x += p.vx*speed;
+      p.y += p.vy*speed;
+
+      // bounce walls
+      if (p.x < frame.x+10){ p.x=frame.x+10; p.vx*=-1; }
+      if (p.x > frame.x+frame.w-10){ p.x=frame.x+frame.w-10; p.vx*=-1; }
+      if (p.y < frame.y+10){ p.y=frame.y+10; p.vy*=-1; }
+      if (p.y > frame.y+frame.h-10){ p.y=frame.y+frame.h-10; p.vy*=-1; }
+
+      // cross membrane?
+      if (withMembrane){
+        const near = Math.abs(p.x - mid) < 2.8;
+        if (near){
+          if (p.type==="water"){
+            // allow water through pores; add osmosis bias
+            p.vx += (bias*0.3);
+            // pass through
+          } else {
+            // solute blocked if pore too small
+            if (pore < 14){
+              // reflect
+              p.vx *= -1;
+              p.x += p.vx*2.5;
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function drawActiveTransport(){
+    drawFrame();
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Active Transport (Pump model)", 70, 110);
+
+    // membrane box
+    const x=150, y=160, w=800, h=460;
+    const mid = x + w/2;
+
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.strokeRect(x,y,w,h);
+
+    // membrane
+    ctx.strokeStyle="rgba(124,92,255,0.55)";
+    ctx.lineWidth=8;
+    ctx.beginPath(); ctx.moveTo(mid,y); ctx.lineTo(mid,y+h); ctx.stroke();
+
+    // pumps
+    for(let i=0;i<S.pumpCount;i++){
+      const py = y + 60 + i*(h-120)/(Math.max(1,S.pumpCount-1));
+      ctx.fillStyle="rgba(110,231,255,0.14)";
+      ctx.strokeStyle="rgba(255,255,255,0.22)";
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(mid-18, py-22, 36, 44, 10); ctx.fill(); ctx.stroke();
+
+      ctx.strokeStyle="rgba(110,231,255,0.75)";
+      ctx.lineWidth=3;
+      ctx.beginPath();
+      ctx.moveTo(mid-10, py);
+      ctx.lineTo(mid+10, py);
+      ctx.stroke();
+    }
+
+    // concentrations bars
+    const L = S.leftConc, R = S.rightConc;
+
+    function bar(bx, by, val, title){
+      ctx.fillStyle="rgba(255,255,255,0.06)";
+      ctx.fillRect(bx,by,220,22);
+      ctx.fillStyle="rgba(124,92,255,0.35)";
+      ctx.fillRect(bx,by,220*(val/120),22);
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.strokeRect(bx,by,220,22);
+      ctx.fillStyle="rgba(255,255,255,0.8)";
+      ctx.font="13px system-ui";
+      ctx.fillText(`${title}: ${val}`, bx, by-8);
+    }
+
+    bar(x+40, y+40, L, "Inside (Left) solute");
+    bar(x+w-260, y+40, R, "Outside (Right) solute");
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`ATP energy: ${S.atp}`, x+40, y+h+40);
+
+    // hint
+    const against = (L > R) ? "Pumping against gradient (low→high) needs ATP." : "Pumping into cell builds concentration.";
+    ctx.fillText(against, x+40, y+h+65);
+  }
+
+  function drawBlood(){
+    drawFrame();
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Blood Transport (Simplified)", 70, 110);
+
+    const cx=420, cy=360;
+
+    // heart
+    ctx.fillStyle="rgba(251,113,133,0.10)";
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.roundRect(cx-90, cy-110, 180, 220, 30);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText("HEART (pump)", cx-55, cy);
+
+    // body box
+    const bx=740, by=240, bw=280, bh=260;
+    ctx.fillStyle="rgba(110,231,255,0.06)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,24);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.8)";
+    ctx.fillText("BODY CELLS", bx+80, by+140);
+
+    // vessels (artery red, vein blue)
+    ctx.lineWidth=10;
+
+    // artery
+    ctx.strokeStyle="rgba(251,113,133,0.55)";
+    ctx.beginPath();
+    ctx.moveTo(cx+90, cy-40);
+    ctx.bezierCurveTo(cx+250, cy-120, bx-80, by+40, bx, by+80);
+    ctx.stroke();
+
+    // vein
+    ctx.strokeStyle="rgba(110,231,255,0.55)";
+    ctx.beginPath();
+    ctx.moveTo(bx, by+180);
+    ctx.bezierCurveTo(bx-120, by+240, cx+220, cy+140, cx+90, cy+40);
+    ctx.stroke();
+
+    // capillaries (mesh)
+    ctx.strokeStyle="rgba(255,255,255,0.12)";
+    ctx.lineWidth=2;
+    for(let i=0;i<10;i++){
+      ctx.beginPath();
+      ctx.moveTo(bx+40, by+70+i*12);
+      ctx.lineTo(bx+bw-40, by+70+i*12);
+      ctx.stroke();
+    }
+
+    // moving blood dots
+    const t = performance.now()/1000;
+    const beat = (S.heartRate/60);
+    const pulse = (Math.sin(t*2*Math.PI*beat)+1)/2;
+
+    function dotPath(color, p){
+      // p: 0..1
+      // artery path approx
+      const x1=cx+90, y1=cy-40;
+      const x2=bx, y2=by+80;
+      const x = x1 + (x2-x1)*p;
+      const y = y1 + (y2-y1)*p - 60*Math.sin(Math.PI*p)*0.6;
+      ctx.fillStyle=color;
+      ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2); ctx.fill();
+    }
+
+    function dotPath2(color, p){
+      const x1=bx, y1=by+180;
+      const x2=cx+90, y2=cy+40;
+      const x = x1 + (x2-x1)*p;
+      const y = y1 + (y2-y1)*p + 60*Math.sin(Math.PI*p)*0.6;
+      ctx.fillStyle=color;
+      ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2); ctx.fill();
+    }
+
+    for(let i=0;i<7;i++){
+      const p = (i/7 + t*0.08*(1+pulse))%1;
+      dotPath(`rgba(251,113,133,${0.35 + S.oxy/200})`, p);
+      const q = (i/7 + t*0.08*(1+pulse) + 0.4)%1;
+      dotPath2(`rgba(110,231,255,${0.35 + (100-S.oxy)/200})`, q);
+    }
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Heart rate: ${S.heartRate} bpm`, 70, 145);
+    ctx.fillText(`Oxygen level (model): ${S.oxy}%`, 70, 170);
+    ctx.fillText("Arteries carry blood away from heart; veins return blood; capillaries allow exchange.", 70, 200);
+
+    // animate
+    requestAnimationFrame(draw);
+  }
+
+  function draw(){
+    if (mode==="diff"){
+      drawParticles(false,false);
+    } else if (mode==="osm"){
+      drawParticles(true,true);
+    } else if (mode==="act"){
+      drawActiveTransport();
+    } else if (mode==="blood"){
+      drawBlood();
+      return;
+    }
+  }
+
+  function tick(){
+    if (mode==="diff" || mode==="osm"){
+      stepParticles();
+      draw();
+      requestAnimationFrame(tick);
+    }
+  }
+
+  // Tabs
+  function go(newMode, tab){
+    mode = newMode;
+    setActive(tab);
+    renderControls();
+    if (mode==="diff" || mode==="osm"){
+      initParticles();
+      tick();
+    } else {
+      draw();
+    }
+  }
+
+  tDiff.addEventListener("click", ()=>go("diff", tDiff));
+  tOsm.addEventListener("click", ()=>go("osm", tOsm));
+  tAct.addEventListener("click", ()=>go("act", tAct));
+  tBlood.addEventListener("click", ()=>go("blood", tBlood));
+
+  // roundRect fallback
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  renderControls();
+  initParticles();
+  tick();
+</script>
+</body>
+</html>

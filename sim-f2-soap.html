@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Soap Making & Cleaning</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:460px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:200px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:560px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Chemistry Lab: Industrial Process — Soap (Unit 10)</h1>
+  <p>Saponification (fat + alkali → soap + glycerol) and how soap removes grease (micelles).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tMake">Soap Making</button>
+        <button class="tab" id="tClean">How Soap Cleans</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="860"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tMake = document.getElementById("tMake");
+  const tClean = document.getElementById("tClean");
+  const tabs = [tMake,tClean];
+
+  let mode = "make";
+
+  const S = {
+    fat: 60,
+    alkali: 40,
+    heat: 30,
+    mixing: 50,
+    progress: 0,
+
+    soap: 0,
+    glycerol: 0,
+
+    soapAmount: 40,
+    grease: 55,
+    stirring: 40
+  };
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+  function clamp(a,b,x){ return Math.max(a, Math.min(b,x)); }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="make"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Saponification: fat + alkali → soap + glycerol</span></div>
+
+        <div class="row">
+          <label>Fat/oil amount</label>
+          <input id="fat" type="range" min="0" max="100" value="${S.fat}">
+          <span class="pill">${S.fat}</span>
+        </div>
+
+        <div class="row">
+          <label>Alkali amount (NaOH/KOH)</label>
+          <input id="alk" type="range" min="0" max="100" value="${S.alkali}">
+          <span class="pill">${S.alkali}</span>
+        </div>
+
+        <div class="row">
+          <label>Heat level</label>
+          <input id="heat" type="range" min="0" max="100" value="${S.heat}">
+          <span class="pill">${S.heat}</span>
+        </div>
+
+        <div class="row">
+          <label>Mixing intensity</label>
+          <input id="mix" type="range" min="0" max="100" value="${S.mixing}">
+          <span class="pill">${S.mixing}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="start">Start process</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="prog">Progress: ${S.progress.toFixed(0)}%</span>
+          <span class="pill">Soap: ${S.soap.toFixed(0)}</span>
+          <span class="pill">Glycerol: ${S.glycerol.toFixed(0)}</span>
+        </div>
+
+        <p class="hint">Industrial soap can be made by batch or continuous processes.</p>
+      `;
+
+      document.getElementById("fat").addEventListener("input", e=>{S.fat=+e.target.value; renderControls(); draw();});
+      document.getElementById("alk").addEventListener("input", e=>{S.alkali=+e.target.value; renderControls(); draw();});
+      document.getElementById("heat").addEventListener("input", e=>{S.heat=+e.target.value; renderControls(); draw();});
+      document.getElementById("mix").addEventListener("input", e=>{S.mixing=+e.target.value; renderControls(); draw();});
+
+      document.getElementById("start").addEventListener("click", ()=>{
+        running = true;
+        lastT = performance.now();
+        requestAnimationFrame(tick);
+      });
+
+      document.getElementById("reset").addEventListener("click", ()=>{
+        running=false;
+        S.progress=0; S.soap=0; S.glycerol=0;
+        renderControls(); draw();
+      });
+
+      note.textContent = "This is a teaching model of saponification progress (not a lab recipe).";
+    }
+
+    if (mode==="clean"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Soap molecule: hydrophobic tail + hydrophilic head</span></div>
+
+        <div class="row">
+          <label>Soap amount</label>
+          <input id="soapA" type="range" min="0" max="100" value="${S.soapAmount}">
+          <span class="pill">${S.soapAmount}</span>
+        </div>
+
+        <div class="row">
+          <label>Grease amount</label>
+          <input id="grease" type="range" min="0" max="100" value="${S.grease}">
+          <span class="pill">${S.grease}</span>
+        </div>
+
+        <div class="row">
+          <label>Stirring</label>
+          <input id="stir" type="range" min="0" max="100" value="${S.stirring}">
+          <span class="pill">${S.stirring}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="wash">Wash (step)</button>
+          <button class="btn" id="reset2">Reset</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="cleanOut">Cleanliness: —</span>
+        </div>
+
+        <p class="hint">Soap forms micelles: tails surround grease, heads face water → grease lifts off.</p>
+      `;
+
+      document.getElementById("soapA").addEventListener("input", e=>{S.soapAmount=+e.target.value; renderControls(); draw();});
+      document.getElementById("grease").addEventListener("input", e=>{S.grease=+e.target.value; renderControls(); draw();});
+      document.getElementById("stir").addEventListener("input", e=>{S.stirring=+e.target.value; renderControls(); draw();});
+
+      document.getElementById("wash").addEventListener("click", ()=>{
+        // grease reduced by soap and stirring
+        const power = (S.soapAmount*0.45 + S.stirring*0.35)/100;
+        const removed = Math.max(0, power*12);
+        S.grease = clamp(0,100, S.grease - removed);
+        renderControls();
+        draw();
+      });
+
+      document.getElementById("reset2").addEventListener("click", ()=>{
+        S.soapAmount=40; S.grease=55; S.stirring=40;
+        renderControls(); draw();
+      });
+
+      note.textContent = "Click Wash to see micelles surround grease and reduce it (model).";
+    }
+  }
+
+  let running=false;
+  let lastT=performance.now();
+
+  function tick(t){
+    if (!running || mode!=="make") return;
+    const dt = Math.min(0.05, (t-lastT)/1000);
+    lastT = t;
+
+    // progress depends on heat + mixing + balanced fat/alkali
+    const balance = 1 - Math.abs(S.fat - S.alkali)/100; // 0..1
+    const speed = (S.heat*0.45 + S.mixing*0.35)/100 * (0.4 + balance*0.6);
+
+    S.progress = clamp(0,100, S.progress + speed*22*dt);
+    // products formed as progress increases
+    S.soap = S.progress * (0.7 + balance*0.3);
+    S.glycerol = S.progress * 0.25;
+
+    if (S.progress>=100){
+      running=false;
+    }
+    renderControls();
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  function drawMake(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Soap Manufacture (Model)", 70, 110);
+
+    // reactor tank
+    const x=160, y=180, w=420, h=520;
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,22); ctx.fill(); ctx.stroke();
+
+    // contents: oil + alkali + progress foam
+    const oilH = (S.fat/100)*240;
+    const alkH = (S.alkali/100)*240;
+
+    ctx.fillStyle="rgba(255,220,120,0.12)";
+    ctx.fillRect(x+20, y+h-20-oilH, w-40, oilH);
+
+    ctx.fillStyle="rgba(110,231,255,0.10)";
+    ctx.fillRect(x+20, y+h-20-oilH-alkH, w-40, alkH);
+
+    // foam layer increases with progress
+    const foamH = (S.progress/100)*140;
+    ctx.fillStyle="rgba(255,255,255,0.08)";
+    ctx.fillRect(x+20, y+40, w-40, foamH);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText("Reactor (batch/continuous)", x+20, y-14);
+
+    // progress bar
+    const px=660, py=220, pw=360, ph=26;
+    ctx.fillStyle="rgba(255,255,255,0.06)";
+    ctx.fillRect(px,py,pw,ph);
+    ctx.fillStyle="rgba(52,211,153,0.22)";
+    ctx.fillRect(px,py,pw*(S.progress/100),ph);
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.strokeRect(px,py,pw,ph);
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText(`Progress: ${S.progress.toFixed(0)}%`, px, py-12);
+
+    // equation box
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(660, 280, 360, 170, 18); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="15px system-ui";
+    ctx.fillText("Equation (word):", 680, 315);
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.fillText("fat/oil + alkali → soap + glycerol", 680, 345);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Heat + mixing increase rate.", 680, 380);
+    ctx.fillText("Balanced amounts improve yield.", 680, 405);
+
+    // output tanks
+    function outTank(ox, oy, title, val, col){
+      ctx.fillStyle="rgba(255,255,255,0.03)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(ox, oy, 170, 200, 18); ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle=col;
+      ctx.fillRect(ox+14, oy+200-14-(val/100)*160, 142, (val/100)*160);
+
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="14px system-ui";
+      ctx.fillText(title, ox+14, oy-10);
+      ctx.fillStyle="rgba(255,255,255,0.65)";
+      ctx.fillText(val.toFixed(0), ox+14, oy+220);
+    }
+
+    outTank(660, 520, "Soap output", clamp(0,100,S.soap), "rgba(110,231,255,0.14)");
+    outTank(850, 520, "Glycerol", clamp(0,100,S.glycerol), "rgba(255,220,120,0.10)");
+  }
+
+  function drawClean(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("How Soap Cleans (Micelles Model)", 70, 110);
+
+    // water area
+    const wx=120, wy=200, ww=900, wh=560;
+    ctx.fillStyle="rgba(110,231,255,0.06)";
+    ctx.fillRect(wx,wy,ww,wh);
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.strokeRect(wx,wy,ww,wh);
+
+    // grease blob
+    const gx=580, gy=480;
+    const gSize = 30 + (S.grease/100)*120;
+    ctx.fillStyle="rgba(255,220,120,0.10)";
+    ctx.strokeStyle="rgba(255,255,255,0.12)";
+    ctx.beginPath();
+    ctx.ellipse(gx,gy,gSize*1.1,gSize*0.8,0.2,0,Math.PI*2);
+    ctx.fill(); ctx.stroke();
+
+    // micelles (more soap => more micelles)
+    const mic = Math.floor((S.soapAmount/100)*18);
+    for(let i=0;i<mic;i++){
+      const ang = (i/mic)*Math.PI*2;
+      const r = gSize*0.65 + 18;
+      const mx = gx + Math.cos(ang)*r;
+      const my = gy + Math.sin(ang)*r;
+
+      // head (hydrophilic)
+      ctx.fillStyle="rgba(110,231,255,0.55)";
+      ctx.beginPath(); ctx.arc(mx,my,6,0,Math.PI*2); ctx.fill();
+
+      // tail (hydrophobic) pointing inward
+      ctx.strokeStyle="rgba(255,255,255,0.30)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(mx,my);
+      ctx.lineTo(gx + Math.cos(ang)*gSize*0.35, gy + Math.sin(ang)*gSize*0.25);
+      ctx.stroke();
+    }
+
+    // stirring swirls
+    const swirl = (S.stirring/100);
+    ctx.strokeStyle="rgba(255,255,255,0.10)";
+    ctx.lineWidth=3;
+    for(let i=0;i<6;i++){
+      ctx.beginPath();
+      ctx.arc(gx,gy, gSize + 50 + i*18, 0, Math.PI*2*swirl);
+      ctx.stroke();
+    }
+
+    // cleanliness meter
+    const clean = clamp(0,100, 100 - S.grease);
+    ctx.fillStyle="rgba(255,255,255,0.06)";
+    ctx.fillRect(120, 160, 900, 22);
+    ctx.fillStyle="rgba(52,211,153,0.22)";
+    ctx.fillRect(120, 160, 900*(clean/100), 22);
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.strokeRect(120, 160, 900, 22);
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Cleanliness: ${clean.toFixed(0)}%`, 130, 155);
+
+    const out = document.getElementById("cleanOut");
+    if (out) out.textContent = `Cleanliness: ${clean.toFixed(0)}%`;
+  }
+
+  function draw(){
+    if (mode==="make") drawMake();
+    if (mode==="clean") drawClean();
+  }
+
+  tMake.addEventListener("click", ()=>{mode="make"; setActive(tMake); renderControls(); draw();});
+  tClean.addEventListener("click", ()=>{mode="clean"; setActive(tClean); renderControls(); draw();});
+
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

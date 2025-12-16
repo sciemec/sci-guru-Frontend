@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Magnetism & Electricity</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:430px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:170px}
+    input, select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    canvas{width:100%;height:500px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    .big{font-weight:900;font-size:14px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Magnetism & Electricity (Unit 18)</h1>
+  <p>See magnetic field lines (model) and a simple series circuit (current + brightness).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tMag">Magnetism</button>
+        <button class="tab" id="tElec">Electricity</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1000" height="700"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tMag = document.getElementById("tMag");
+  const tElec = document.getElementById("tElec");
+  const tabs = [tMag,tElec];
+
+  let mode = "mag";
+
+  const S = {
+    // magnetism
+    lines: 18,
+    strength: 1.0,
+    showCompass: true,
+    compassX: 0.65,
+    compassY: 0.50,
+
+    // electricity
+    V: 6,
+    Rbulb: 10,
+    Rextra: 0,
+    closed: true
+  };
+
+  function setActive(tab){
+    tabs.forEach(b=>b.classList.remove("active"));
+    tab.classList.add("active");
+  }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="mag"){
+      controls.innerHTML = `
+        <div class="row"><div class="big">Magnetic Field Lines (Bar Magnet)</div></div>
+
+        <div class="row">
+          <label>Number of field lines</label>
+          <input id="lines" type="range" min="6" max="40" value="${S.lines}">
+          <span class="pill">${S.lines}</span>
+        </div>
+
+        <div class="row">
+          <label>Strength (model)</label>
+          <input id="strength" type="range" min="0.5" max="2.0" step="0.05" value="${S.strength}">
+          <span class="pill">${S.strength}</span>
+        </div>
+
+        <div class="row">
+          <label>Show compass</label>
+          <select id="showCompass">
+            <option value="yes" ${S.showCompass?"selected":""}>Yes</option>
+            <option value="no" ${!S.showCompass?"selected":""}>No</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="centerCompass">Center compass</button>
+        </div>
+
+        <p class="hint">
+          Field lines go from <b>N</b> to <b>S</b> outside the magnet. Strongest at the poles (model).
+        </p>
+      `;
+
+      document.getElementById("lines").addEventListener("input", e=>{S.lines=+e.target.value; renderControls(); draw();});
+      document.getElementById("strength").addEventListener("input", e=>{S.strength=+e.target.value; renderControls(); draw();});
+      document.getElementById("showCompass").addEventListener("change", e=>{S.showCompass = e.target.value==="yes"; draw();});
+      document.getElementById("centerCompass").addEventListener("click", ()=>{
+        S.compassX=0.65; S.compassY=0.50; draw();
+      });
+
+      note.textContent = "Drag the compass on the canvas to see how it aligns with the field.";
+    }
+
+    if (mode==="elec"){
+      controls.innerHTML = `
+        <div class="row"><div class="big">Series Circuit (Battery + Switch + Bulb)</div></div>
+
+        <div class="row">
+          <label>Battery voltage (V)</label>
+          <input id="V" type="range" min="1" max="12" value="${S.V}">
+          <span class="pill">${S.V} V</span>
+        </div>
+
+        <div class="row">
+          <label>Bulb resistance (Ω)</label>
+          <input id="Rbulb" type="range" min="2" max="50" value="${S.Rbulb}">
+          <span class="pill">${S.Rbulb} Ω</span>
+        </div>
+
+        <div class="row">
+          <label>Extra resistor (Ω)</label>
+          <input id="Rextra" type="range" min="0" max="50" value="${S.Rextra}">
+          <span class="pill">${S.Rextra} Ω</span>
+        </div>
+
+        <div class="row">
+          <label>Switch</label>
+          <button class="btn" id="toggle">${S.closed ? "Closed (ON)" : "Open (OFF)"}</button>
+        </div>
+
+        <p class="hint">
+          Current in series: <b>I = V / R<sub>total</sub></b>. Brightness increases when current increases (model).
+        </p>
+      `;
+
+      document.getElementById("V").addEventListener("input", e=>{S.V=+e.target.value; renderControls(); draw();});
+      document.getElementById("Rbulb").addEventListener("input", e=>{S.Rbulb=+e.target.value; renderControls(); draw();});
+      document.getElementById("Rextra").addEventListener("input", e=>{S.Rextra=+e.target.value; renderControls(); draw();});
+      document.getElementById("toggle").addEventListener("click", ()=>{
+        S.closed = !S.closed; renderControls(); draw();
+      });
+
+      note.textContent = "This shows a simple series circuit. We can upgrade next to series/parallel + meters.";
+    }
+  }
+
+  // ------- Magnet model (2D dipole approximation) -------
+  function fieldAt(x,y){
+    // two poles: N at left, S at right
+    const cx = canvas.width*0.5;
+    const cy = canvas.height*0.5;
+    const sep = 160; // pole separation
+    const Np = {x: cx - sep/2, y: cy};
+    const Sp = {x: cx + sep/2, y: cy};
+
+    // field from a pole ~ r / |r|^3, with N outward, S inward (model)
+    function pole(p, sign){
+      const dx = x - p.x;
+      const dy = y - p.y;
+      const r2 = dx*dx + dy*dy + 300; // soften to avoid singularity
+      const r = Math.sqrt(r2);
+      const k = sign * S.strength / (r2 * r);
+      return {bx: dx*k, by: dy*k};
+    }
+    const bN = pole(Np, +1);
+    const bS = pole(Sp, -1);
+    return {bx: bN.bx + bS.bx, by: bN.by + bS.by};
+  }
+
+  function drawMagnet(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    const cx = canvas.width*0.5;
+    const cy = canvas.height*0.5;
+    const w = 320, h = 110;
+
+    // magnet body
+    ctx.fillStyle="rgba(110,231,255,0.12)";
+    ctx.strokeStyle="rgba(255,255,255,0.25)";
+    ctx.lineWidth=3;
+    ctx.fillRect(cx-w/2, cy-h/2, w, h);
+    ctx.strokeRect(cx-w/2, cy-h/2, w, h);
+
+    // N / S labels
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="20px system-ui";
+    ctx.fillText("N", cx-w/2 + 16, cy+7);
+    ctx.fillText("S", cx+w/2 - 30, cy+7);
+
+    // draw field lines by seeding points around N pole
+    const seedCount = S.lines;
+    const radius = 40;
+    const Np = {x: cx - 160/2, y: cy};
+
+    ctx.strokeStyle="rgba(124,92,255,0.55)";
+    ctx.lineWidth=2;
+
+    for(let i=0;i<seedCount;i++){
+      const ang = (i/seedCount) * Math.PI*2;
+      let x = Np.x + Math.cos(ang)*radius;
+      let y = Np.y + Math.sin(ang)*radius;
+
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+
+      // trace
+      for(let s=0;s<600;s++){
+        const B = fieldAt(x,y);
+        const mag = Math.sqrt(B.bx*B.bx + B.by*B.by) || 1e-6;
+        const step = 22; // step size
+        x += (B.bx/mag)*step;
+        y += (B.by/mag)*step;
+
+        ctx.lineTo(x,y);
+
+        // stop outside frame
+        if (x<60 || x>canvas.width-60 || y<60 || y>canvas.height-60) break;
+      }
+      ctx.stroke();
+    }
+
+    // compass
+    if (S.showCompass){
+      const px = 50 + S.compassX*(canvas.width-100);
+      const py = 50 + S.compassY*(canvas.height-100);
+      const B = fieldAt(px,py);
+      const ang = Math.atan2(B.by, B.bx);
+
+      // compass base
+      ctx.fillStyle="rgba(255,255,255,0.12)";
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.arc(px,py,28,0,Math.PI*2);
+      ctx.fill(); ctx.stroke();
+
+      // needle
+      const len=34;
+      const x2 = px + Math.cos(ang)*len;
+      const y2 = py + Math.sin(ang)*len;
+      const x1 = px - Math.cos(ang)*len*0.6;
+      const y1 = py - Math.sin(ang)*len*0.6;
+
+      ctx.strokeStyle="rgba(110,231,255,0.9)";
+      ctx.lineWidth=4;
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="12px system-ui";
+      ctx.fillText("Compass (drag)", px-34, py+48);
+    }
+  }
+
+  // ------- Electricity drawing -------
+  function drawCircuit(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    const left=160, right=canvas.width-160, top=190, bottom=canvas.height-190;
+    const midX = (left+right)/2;
+
+    // circuit wire rectangle
+    ctx.strokeStyle="rgba(255,255,255,0.35)";
+    ctx.lineWidth=6;
+    ctx.beginPath();
+    ctx.moveTo(left, top);
+    ctx.lineTo(right, top);
+    ctx.lineTo(right, bottom);
+    ctx.lineTo(left, bottom);
+    ctx.closePath();
+    ctx.stroke();
+
+    // battery on left side
+    const bx = left, by = (top+bottom)/2;
+    ctx.strokeStyle="rgba(110,231,255,0.9)";
+    ctx.lineWidth=6;
+    ctx.beginPath();
+    ctx.moveTo(bx, by-60); ctx.lineTo(bx, by+60); ctx.stroke();
+    ctx.strokeStyle="rgba(255,255,255,0.8)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(bx-20, by-35); ctx.lineTo(bx+20, by-35); ctx.stroke(); // long plate
+    ctx.beginPath();
+    ctx.moveTo(bx-12, by+10); ctx.lineTo(bx+12, by+10); ctx.stroke(); // short plate
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText(`${S.V} V`, bx-20, by+85);
+
+    // switch on top right
+    const sx = right-120, sy=top;
+    ctx.strokeStyle="rgba(255,255,255,0.85)";
+    ctx.lineWidth=5;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(sx+60, sy);
+    ctx.stroke();
+
+    // switch gap
+    ctx.lineWidth=6;
+    ctx.strokeStyle="rgba(255,255,255,0.35)";
+    ctx.beginPath();
+    ctx.moveTo(sx+60, sy);
+    ctx.lineTo(sx+120, sy);
+    ctx.stroke();
+
+    // switch blade
+    ctx.strokeStyle="rgba(110,231,255,0.9)";
+    ctx.lineWidth=5;
+    ctx.beginPath();
+    ctx.moveTo(sx+60, sy);
+    if (S.closed){
+      ctx.lineTo(sx+120, sy);
+    } else {
+      ctx.lineTo(sx+120, sy-30);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Switch: ${S.closed?"Closed":"Open"}`, sx-10, sy-18);
+
+    // extra resistor on bottom (optional)
+    if (S.Rextra > 0){
+      const rx1 = midX-120, ry = bottom;
+      ctx.strokeStyle="rgba(255,255,255,0.85)";
+      ctx.lineWidth=4;
+      ctx.beginPath();
+      ctx.moveTo(rx1, ry);
+      ctx.lineTo(rx1+240, ry);
+      ctx.stroke();
+
+      ctx.fillStyle="rgba(124,92,255,0.85)";
+      ctx.fillRect(midX-60, ry-18, 120, 36);
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=2;
+      ctx.strokeRect(midX-60, ry-18, 120, 36);
+
+      ctx.fillStyle="rgba(255,255,255,0.9)";
+      ctx.font="14px system-ui";
+      ctx.fillText(`${S.Rextra} Ω`, midX-20, ry+5);
+    }
+
+    // bulb on right side
+    const bulbX = right, bulbY = (top+bottom)/2;
+
+    // current & brightness
+    const Rtotal = S.Rbulb + S.Rextra;
+    const I = (S.closed && Rtotal>0) ? (S.V / Rtotal) : 0;
+    const brightness = Math.max(0, Math.min(1, I / 0.8)); // normalize
+
+    // bulb glow
+    ctx.fillStyle = `rgba(255, 220, 120, ${0.1 + brightness*0.6})`;
+    ctx.beginPath();
+    ctx.arc(bulbX, bulbY, 70, 0, Math.PI*2);
+    ctx.fill();
+
+    // bulb outline
+    ctx.strokeStyle="rgba(255,255,255,0.85)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.arc(bulbX, bulbY, 30, 0, Math.PI*2);
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Bulb ${S.Rbulb} Ω`, bulbX-48, bulbY+55);
+
+    // show current text
+    ctx.font="18px system-ui";
+    ctx.fillText(`Rtotal = ${Rtotal} Ω`, 70, 110);
+    ctx.fillText(`Current I = V/R = ${I.toFixed(2)} A`, 70, 140);
+    ctx.fillText(`Brightness (model) = ${(brightness*100).toFixed(0)}%`, 70, 170);
+
+    // moving electrons indicator (simple dots around loop when closed)
+    if (S.closed && I>0){
+      const speed = Math.min(6, 1 + I*6);
+      const t = performance.now()/1000;
+      ctx.fillStyle="rgba(110,231,255,0.9)";
+      for(let k=0;k<18;k++){
+        const p = (k/18 + (t*speed)/20) % 1;
+        let x,y;
+
+        // param around rectangle
+        const per = 2*(right-left) + 2*(bottom-top);
+        let d = p*per;
+
+        if (d < (right-left)){
+          x = left + d; y = top;
+        } else if (d < (right-left) + (bottom-top)){
+          d -= (right-left);
+          x = right; y = top + d;
+        } else if (d < (right-left) + (bottom-top) + (right-left)){
+          d -= (right-left) + (bottom-top);
+          x = right - d; y = bottom;
+        } else {
+          d -= (right-left) + (bottom-top) + (right-left);
+          x = left; y = bottom - d;
+        }
+
+        ctx.beginPath();
+        ctx.arc(x,y,4,0,Math.PI*2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(drawCircuit); // animate
+    }
+  }
+
+  // Compass dragging
+  let dragging = false;
+
+  canvas.addEventListener("mousedown", (e)=>{
+    if (mode!=="mag" || !S.showCompass) return;
+    const r = canvas.getBoundingClientRect();
+    const mx = (e.clientX - r.left) * (canvas.width / r.width);
+    const my = (e.clientY - r.top) * (canvas.height / r.height);
+
+    const px = 50 + S.compassX*(canvas.width-100);
+    const py = 50 + S.compassY*(canvas.height-100);
+    const dx = mx-px, dy = my-py;
+    if (dx*dx+dy*dy < 40*40) dragging = true;
+  });
+
+  window.addEventListener("mouseup", ()=> dragging=false);
+
+  window.addEventListener("mousemove", (e)=>{
+    if (!dragging) return;
+    const r = canvas.getBoundingClientRect();
+    const mx = (e.clientX - r.left) * (canvas.width / r.width);
+    const my = (e.clientY - r.top) * (canvas.height / r.height);
+
+    // convert to normalized inside frame (50..w-50)
+    const nx = (mx - 50) / (canvas.width - 100);
+    const ny = (my - 50) / (canvas.height - 100);
+    S.compassX = Math.max(0.05, Math.min(0.95, nx));
+    S.compassY = Math.max(0.05, Math.min(0.95, ny));
+    draw();
+  });
+
+  function draw(){
+    if (mode==="mag") drawMagnet();
+    if (mode==="elec") drawCircuit();
+  }
+
+  function goMag(){ mode="mag"; setActive(tMag); renderControls(); draw(); }
+  function goElec(){ mode="elec"; setActive(tElec); renderControls(); draw(); }
+
+  tMag.addEventListener("click", goMag);
+  tElec.addEventListener("click", goElec);
+
+  // init
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Acids & Bases</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:460px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:200px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:560px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+    .bad{color:#fb7185}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Chemistry Lab: Acids & Bases (Unit 9)</h1>
+  <p>pH scale, indicators, and neutralisation (acid + base → salt + water).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tPH">pH & Indicators</button>
+        <button class="tab" id="tNeut">Neutralisation</button>
+        <button class="tab" id="tMix">Acid Reactions</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="860"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tPH = document.getElementById("tPH");
+  const tNeut = document.getElementById("tNeut");
+  const tMix = document.getElementById("tMix");
+  const tabs = [tPH,tNeut,tMix];
+
+  let mode = "ph";
+
+  const S = {
+    ph: 3.0,
+    indicator: "universal",
+
+    // neutralisation
+    acid: "HCl",
+    base: "NaOH",
+    acidVol: 25,   // mL
+    baseVol: 0,    // mL added
+    strengthA: 1.0,
+    strengthB: 1.0,
+
+    // reactions
+    react: "carbonate",
+    metal: "Mg",
+    oxide: "CuO",
+    carbonate: "CaCO3",
+    acidType: "HCl"
+  };
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+  function clamp(a,b,x){ return Math.max(a, Math.min(b,x)); }
+
+  function phColor(pH){
+    // approximate gradient: red (acid) -> green (neutral) -> blue/purple (alkali)
+    const p = clamp(0,14,pH)/14;
+    const r = Math.round(255*(1 - Math.min(1, p*1.3)));
+    const g = Math.round(210*(1 - Math.abs(p-0.5)*1.8));
+    const b = Math.round(255*(Math.max(0, (p-0.45)*1.8)));
+    return `rgba(${r},${g},${b},0.55)`;
+  }
+
+  function indicatorResult(pH, ind){
+    pH = clamp(0,14,pH);
+    if (ind==="litmus"){
+      if (pH < 7) return {name:"Litmus", color:"rgba(251,113,133,0.60)", text:"Red"};
+      if (pH > 7) return {name:"Litmus", color:"rgba(110,231,255,0.60)", text:"Blue"};
+      return {name:"Litmus", color:"rgba(255,255,255,0.20)", text:"No change (neutral)"};
+    }
+    if (ind==="methyl"){
+      if (pH < 3.1) return {name:"Methyl orange", color:"rgba(251,113,133,0.55)", text:"Red"};
+      if (pH < 4.4) return {name:"Methyl orange", color:"rgba(255,220,120,0.45)", text:"Orange"};
+      return {name:"Methyl orange", color:"rgba(52,211,153,0.35)", text:"Yellow"};
+    }
+    // universal
+    return {name:"Universal indicator", color:phColor(pH), text:`Approx pH ${pH.toFixed(1)}`};
+  }
+
+  function saltFrom(acid, base){
+    // basic mapping for common school examples
+    const acids = {
+      "HCl":"chloride",
+      "H2SO4":"sulfate",
+      "HNO3":"nitrate"
+    };
+    const bases = {
+      "NaOH":"sodium",
+      "KOH":"potassium",
+      "Ca(OH)2":"calcium",
+      "NH4OH":"ammonium"
+    };
+    return `${bases[base]||"metal"} ${acids[acid]||"salt"} + water`;
+  }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="ph"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">pH scale: 0–6 acid, 7 neutral, 8–14 alkali</span></div>
+
+        <div class="row">
+          <label>pH value</label>
+          <input id="ph" type="range" min="0" max="14" step="0.1" value="${S.ph}">
+          <span class="pill">${S.ph.toFixed(1)}</span>
+        </div>
+
+        <div class="row">
+          <label>Indicator</label>
+          <select id="ind">
+            <option value="universal" ${S.indicator==="universal"?"selected":""}>Universal indicator</option>
+            <option value="litmus" ${S.indicator==="litmus"?"selected":""}>Litmus</option>
+            <option value="methyl" ${S.indicator==="methyl"?"selected":""}>Methyl orange</option>
+          </select>
+        </div>
+
+        <p class="hint">Indicators change colour depending on pH.</p>
+      `;
+
+      document.getElementById("ph").addEventListener("input", e=>{S.ph=+e.target.value; renderControls(); draw();});
+      document.getElementById("ind").addEventListener("change", e=>{S.indicator=e.target.value; draw();});
+
+      note.textContent = "Move the slider to see the indicator colour change.";
+    }
+
+    if (mode==="neut"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Neutralisation: acid + base → salt + water</span></div>
+
+        <div class="row">
+          <label>Acid</label>
+          <select id="acid">
+            <option value="HCl" ${S.acid==="HCl"?"selected":""}>Hydrochloric acid (HCl)</option>
+            <option value="H2SO4" ${S.acid==="H2SO4"?"selected":""}>Sulfuric acid (H₂SO₄)</option>
+            <option value="HNO3" ${S.acid==="HNO3"?"selected":""}>Nitric acid (HNO₃)</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Base (alkali)</label>
+          <select id="base">
+            <option value="NaOH" ${S.base==="NaOH"?"selected":""}>Sodium hydroxide (NaOH)</option>
+            <option value="KOH" ${S.base==="KOH"?"selected":""}>Potassium hydroxide (KOH)</option>
+            <option value="Ca(OH)2" ${S.base==="Ca(OH)2"?"selected":""}>Calcium hydroxide (Ca(OH)₂)</option>
+            <option value="NH4OH" ${S.base==="NH4OH"?"selected":""}>Ammonium hydroxide (NH₄OH)</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Acid volume (mL)</label>
+          <input id="av" type="range" min="10" max="50" value="${S.acidVol}">
+          <span class="pill">${S.acidVol} mL</span>
+        </div>
+
+        <div class="row">
+          <label>Add base (mL)</label>
+          <input id="bv" type="range" min="0" max="80" value="${S.baseVol}">
+          <span class="pill">${S.baseVol} mL</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">This is a simplified titration-style model (not exact lab calculation).</p>
+      `;
+
+      document.getElementById("acid").addEventListener("change", e=>{S.acid=e.target.value; draw();});
+      document.getElementById("base").addEventListener("change", e=>{S.base=e.target.value; draw();});
+      document.getElementById("av").addEventListener("input", e=>{S.acidVol=+e.target.value; renderControls(); draw();});
+      document.getElementById("bv").addEventListener("input", e=>{S.baseVol=+e.target.value; renderControls(); draw();});
+      document.getElementById("reset").addEventListener("click", ()=>{
+        S.acid="HCl"; S.base="NaOH"; S.acidVol=25; S.baseVol=0;
+        renderControls(); draw();
+      });
+
+      note.textContent = "Add base and watch the pH move toward neutral around the equivalence point (model).";
+    }
+
+    if (mode==="mix"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Acid reactions: with metals, bases/oxides, carbonates</span></div>
+
+        <div class="row">
+          <label>Acid</label>
+          <select id="acidType">
+            <option value="HCl" ${S.acidType==="HCl"?"selected":""}>HCl</option>
+            <option value="H2SO4" ${S.acidType==="H2SO4"?"selected":""}>H₂SO₄</option>
+            <option value="HNO3" ${S.acidType==="HNO3"?"selected":""}>HNO₃</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Reaction type</label>
+          <select id="react">
+            <option value="metal" ${S.react==="metal"?"selected":""}>Acid + metal → salt + hydrogen</option>
+            <option value="oxide" ${S.react==="oxide"?"selected":""}>Acid + metal oxide → salt + water</option>
+            <option value="carbonate" ${S.react==="carbonate"?"selected":""}>Acid + carbonate → salt + water + CO₂</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Choose substance</label>
+          <select id="sub"></select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="run">Run reaction</button>
+          <button class="btn" id="clear">Clear</button>
+        </div>
+
+        <p class="hint" id="eqHint"></p>
+      `;
+
+      const sub = document.getElementById("sub");
+      function fillSubs(){
+        sub.innerHTML = "";
+        if (S.react==="metal"){
+          ["Mg","Zn","Fe"].forEach(v=> sub.insertAdjacentHTML("beforeend", `<option value="${v}">${v}</option>`));
+          sub.value = S.metal;
+        } else if (S.react==="oxide"){
+          ["CuO","MgO","ZnO"].forEach(v=> sub.insertAdjacentHTML("beforeend", `<option value="${v}">${v}</option>`));
+          sub.value = S.oxide;
+        } else {
+          ["CaCO3","Na2CO3","MgCO3"].forEach(v=> sub.insertAdjacentHTML("beforeend", `<option value="${v}">${v}</option>`));
+          sub.value = S.carbonate;
+        }
+      }
+      fillSubs();
+
+      const eqHint = document.getElementById("eqHint");
+      function updateHint(){
+        let txt = "";
+        if (S.react==="metal") txt = "Example: acid + metal → salt + hydrogen (H₂).";
+        if (S.react==="oxide") txt = "Example: acid + metal oxide/hydroxide → salt + water.";
+        if (S.react==="carbonate") txt = "Example: acid + carbonate → salt + water + carbon dioxide (CO₂).";
+        eqHint.textContent = txt;
+      }
+      updateHint();
+
+      document.getElementById("acidType").addEventListener("change", e=>{S.acidType=e.target.value; draw();});
+      document.getElementById("react").addEventListener("change", e=>{
+        S.react=e.target.value;
+        fillSubs(); updateHint(); draw();
+      });
+      sub.addEventListener("change", e=>{
+        if (S.react==="metal") S.metal=e.target.value;
+        if (S.react==="oxide") S.oxide=e.target.value;
+        if (S.react==="carbonate") S.carbonate=e.target.value;
+      });
+
+      document.getElementById("run").addEventListener("click", ()=>{ animateBubbles(); });
+      document.getElementById("clear").addEventListener("click", ()=>{ bubbles=[]; draw(); });
+
+      note.textContent = "Press Run reaction to see gas bubbles for metal (H₂) or carbonate (CO₂).";
+    }
+  }
+
+  // bubbles animation for reactions
+  let bubbles = [];
+  function animateBubbles(){
+    bubbles = [];
+    const n = (S.react==="oxide") ? 0 : 36;
+    for(let i=0;i<n;i++){
+      bubbles.push({x:720 + Math.random()*200, y:660 + Math.random()*60, r:2+Math.random()*5, vy:0.5+Math.random()*1.3, life:0});
+    }
+  }
+
+  function drawBeaker(pH, label){
+    // beaker
+    const bx=650, by=240, bw=360, bh=460;
+
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,18); ctx.stroke();
+
+    // liquid level
+    const level = 0.78;
+    const lh = bh*level;
+    ctx.fillStyle = phColor(pH);
+    ctx.fillRect(bx+10, by+bh-lh, bw-20, lh-10);
+
+    // label
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="14px system-ui";
+    ctx.fillText(label, bx+14, by+28);
+
+    // pH text
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.fillText(`pH ≈ ${pH.toFixed(1)}`, bx+14, by+52);
+  }
+
+  function drawPHMode(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("pH & Indicators", 70, 110);
+
+    // pH scale bar
+    const x=90, y=160, w=520, h=40;
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.strokeRect(x,y,w,h);
+
+    for(let i=0;i<=14;i++){
+      ctx.fillStyle = phColor(i);
+      const seg = w/14;
+      ctx.fillRect(x + i*seg, y, seg, h);
+      ctx.fillStyle="rgba(255,255,255,0.55)";
+      ctx.font="11px system-ui";
+      if (i%2===0) ctx.fillText(i, x+i*seg+2, y+h+16);
+    }
+
+    // marker
+    const px = x + (S.ph/14)*w;
+    ctx.strokeStyle="rgba(255,255,255,0.75)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(px, y-10);
+    ctx.lineTo(px, y+h+10);
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Acid", x+10, y-12);
+    ctx.fillText("Neutral", x+w/2-20, y-12);
+    ctx.fillText("Alkali", x+w-40, y-12);
+
+    const res = indicatorResult(S.ph, S.indicator);
+    drawBeaker(S.ph, res.name);
+
+    // indicator swatch
+    ctx.fillStyle=res.color;
+    ctx.beginPath();
+    ctx.roundRect(90, 260, 520, 120, 20);
+    ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText(`Indicator colour: ${res.text}`, 110, 330);
+
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Remember: pH < 7 acidic, pH = 7 neutral, pH > 7 alkaline.", 90, 410);
+  }
+
+  function drawNeutralisation(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Neutralisation Model", 70, 110);
+
+    // equivalence point model: assume equal strength & 25 mL acid; equivalence at 25 mL base
+    const eq = S.acidVol;
+    const diff = S.baseVol - eq;
+
+    // map diff to pH: below eq acidic; above eq alkaline
+    let pH;
+    if (diff < 0){
+      pH = 2 + (S.baseVol/eq)*5; // 2..7
+    } else if (diff === 0){
+      pH = 7;
+    } else {
+      pH = 7 + clamp(0,1,diff/eq)*5; // 7..12
+    }
+
+    // beaker shows resulting pH
+    const res = indicatorResult(pH, "universal");
+    drawBeaker(pH, "Mixture (universal indicator)");
+
+    // draw simple burette + arrows
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.roundRect(220, 240, 90, 420, 18);
+    ctx.stroke();
+    ctx.fillStyle="rgba(110,231,255,0.10)";
+    ctx.fillRect(230, 260, 70, 380);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Burette (base)", 190, 220);
+
+    // slider marker on burette
+    const frac = clamp(0,1,S.baseVol/80);
+    const my = 640 - frac*360;
+    ctx.strokeStyle="rgba(255,255,255,0.65)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(215, my);
+    ctx.lineTo(315, my);
+    ctx.stroke();
+
+    // equation text
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText("Word: acid + base → salt + water", 70, 145);
+    ctx.font="14px system-ui";
+    ctx.fillText(`Example salt: ${saltFrom(S.acid, S.base)}`, 70, 175);
+
+    // indicator result
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.fillText(`Mixture colour (universal indicator): ${res.text}`, 70, 205);
+
+    // message
+    ctx.fillStyle = (Math.abs(diff) <= 2) ? "rgba(52,211,153,0.85)" : "rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    const msg = (Math.abs(diff) <= 2) ? "Near neutralisation point ✅" :
+                (diff < 0) ? "Still acidic — add more base." :
+                "Excess base — mixture is alkaline.";
+    ctx.fillText(msg, 70, 235);
+
+    // titration curve mini-graph
+    const gx=90, gy=760, gw=520, gh=80;
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.strokeRect(gx, gy-gh, gw, gh);
+
+    ctx.strokeStyle="rgba(110,231,255,0.65)";
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    for(let v=0; v<=80; v+=2){
+      const d = v-eq;
+      let ph;
+      if (d < 0) ph = 2 + (v/eq)*5;
+      else if (d===0) ph=7;
+      else ph = 7 + clamp(0,1,d/eq)*5;
+
+      const x = gx + (v/80)*gw;
+      const y = (gy) - (ph/14)*gh;
+      if (v===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+
+    // current point
+    const cx = gx + (S.baseVol/80)*gw;
+    const cy = gy - (pH/14)*gh;
+    ctx.fillStyle="rgba(124,92,255,0.85)";
+    ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="12px system-ui";
+    ctx.fillText("Base added (mL) →", gx+340, gy+18);
+    ctx.fillText("pH", gx-28, gy-gh+14);
+  }
+
+  function drawReactions(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Acid Reactions", 70, 110);
+
+    // reaction card
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(90, 150, 520, 200, 20); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="15px system-ui";
+    const sub = (S.react==="metal") ? S.metal : (S.react==="oxide") ? S.oxide : S.carbonate;
+
+    let eq = "";
+    if (S.react==="metal") eq = `${S.acidType} + ${sub} → salt + H₂`;
+    if (S.react==="oxide") eq = `${S.acidType} + ${sub} → salt + H₂O`;
+    if (S.react==="carbonate") eq = `${S.acidType} + ${sub} → salt + H₂O + CO₂`;
+
+    ctx.fillText(`Reaction: ${eq}`, 110, 190);
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="13px system-ui";
+    ctx.fillText("Click 'Run reaction' to show bubbles if gas is produced.", 110, 220);
+
+    // beaker
+    const pH = 2.5;
+    drawBeaker(pH, "Acid in beaker");
+
+    // bubbles
+    bubbles.forEach(b=>{
+      b.y -= b.vy;
+      b.life += 1;
+      ctx.fillStyle="rgba(255,255,255,0.25)";
+      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+    });
+    bubbles = bubbles.filter(b=>b.y > 260 && b.life < 280);
+
+    // gas label
+    if (S.react==="metal"){
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Gas produced: Hydrogen (H₂)", 90, 440);
+    } else if (S.react==="carbonate"){
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Gas produced: Carbon dioxide (CO₂)", 90, 440);
+    } else {
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="14px system-ui";
+      ctx.fillText("No gas bubbles expected for oxide/hydroxide neutralisation.", 90, 440);
+    }
+
+    requestAnimationFrame(drawReactions);
+  }
+
+  function draw(){
+    if (mode==="ph") drawPHMode();
+    if (mode==="neut") drawNeutralisation();
+    if (mode==="mix") drawReactions();
+  }
+
+  // tabs
+  tPH.addEventListener("click", ()=>{mode="ph"; setActive(tPH); renderControls(); draw();});
+  tNeut.addEventListener("click", ()=>{mode="neut"; setActive(tNeut); renderControls(); draw();});
+  tMix.addEventListener("click", ()=>{mode="mix"; setActive(tMix); renderControls(); draw();});
+
+  // roundRect fallback
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

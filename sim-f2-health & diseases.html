@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Health & Disease</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:460px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:200px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:560px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+    .bad{color:#fb7185}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Health & Disease (Unit 6)</h1>
+  <p>Understand infectious disease cycle + bilharzia (schistosomiasis) lifecycle and prevention decisions.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tCycle">Infection Cycle</button>
+        <button class="tab" id="tBilh">Bilharzia</button>
+        <button class="tab" id="tGame">Prevention Game</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="820"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tCycle = document.getElementById("tCycle");
+  const tBilh = document.getElementById("tBilh");
+  const tGame = document.getElementById("tGame");
+  const tabs = [tCycle,tBilh,tGame];
+
+  let mode = "cycle";
+
+  const S = {
+    stage: 0,
+    exposure: 40,
+    hygiene: 50,
+    cleanWater: 40,
+    snailControl: 30,
+
+    score: 0,
+    msg: "",
+    risk: 0
+  };
+
+  const cycleStages = [
+    "1) Pathogen source (infected person/animal)",
+    "2) Exit (cough, faeces, urine, blood)",
+    "3) Transmission (water, food, air, contact)",
+    "4) Entry (mouth, nose, cuts, skin)",
+    "5) New host infected"
+  ];
+
+  const bilhStages = [
+    "Eggs released in urine/faeces into water",
+    "Snails infected (intermediate host)",
+    "Larvae released into water",
+    "Larvae penetrate human skin in contaminated water",
+    "Adult worms live in blood vessels; eggs cause disease"
+  ];
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="cycle"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Infectious disease cycle (general)</span></div>
+
+        <div class="row">
+          <label>Stage</label>
+          <select id="stage">
+            ${cycleStages.map((s,i)=>`<option value="${i}" ${S.stage===i?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="prev">◀ Prev</button>
+          <button class="btn" id="next">Next ▶</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">
+          Breaking the cycle (handwashing, sanitation, safe water, vaccination) reduces spread.
+        </p>
+      `;
+
+      document.getElementById("stage").addEventListener("change", e=>{S.stage=+e.target.value; draw();});
+      document.getElementById("prev").addEventListener("click", ()=>{S.stage=Math.max(0,S.stage-1); renderControls(); draw();});
+      document.getElementById("next").addEventListener("click", ()=>{S.stage=Math.min(4,S.stage+1); renderControls(); draw();});
+      document.getElementById("reset").addEventListener("click", ()=>{S.stage=0; renderControls(); draw();});
+
+      note.textContent = "Cycle applies to many communicable diseases.";
+    }
+
+    if (mode==="bilh"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Bilharzia (Schistosomiasis) lifecycle</span></div>
+
+        <div class="row">
+          <label>Stage</label>
+          <select id="stage">
+            ${bilhStages.map((s,i)=>`<option value="${i}" ${S.stage===i?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="prev">◀ Prev</button>
+          <button class="btn" id="next">Next ▶</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">
+          Prevention: avoid unsafe water, use toilets, treat infected people, control snails, provide clean water.
+        </p>
+      `;
+
+      document.getElementById("stage").addEventListener("change", e=>{S.stage=+e.target.value; draw();});
+      document.getElementById("prev").addEventListener("click", ()=>{S.stage=Math.max(0,S.stage-1); renderControls(); draw();});
+      document.getElementById("next").addEventListener("click", ()=>{S.stage=Math.min(4,S.stage+1); renderControls(); draw();});
+      document.getElementById("reset").addEventListener("click", ()=>{S.stage=0; renderControls(); draw();});
+
+      note.textContent = "Bilharzia involves freshwater snails as an intermediate host.";
+    }
+
+    if (mode==="game"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Prevention Game: reduce bilharzia risk</span></div>
+
+        <div class="row">
+          <label>Exposure to unsafe water</label>
+          <input id="exposure" type="range" min="0" max="100" value="${S.exposure}">
+          <span class="pill">${S.exposure}</span>
+        </div>
+
+        <div class="row">
+          <label>Hygiene & sanitation</label>
+          <input id="hygiene" type="range" min="0" max="100" value="${S.hygiene}">
+          <span class="pill">${S.hygiene}</span>
+        </div>
+
+        <div class="row">
+          <label>Clean water access</label>
+          <input id="clean" type="range" min="0" max="100" value="${S.cleanWater}">
+          <span class="pill">${S.cleanWater}</span>
+        </div>
+
+        <div class="row">
+          <label>Snail control</label>
+          <input id="snail" type="range" min="0" max="100" value="${S.snailControl}">
+          <span class="pill">${S.snailControl}</span>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="calc">Calculate risk</button>
+          <button class="btn" id="challenge">New challenge</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="risk">Risk: —</span>
+          <span class="pill" id="score">Score: ${S.score}</span>
+        </div>
+
+        <p class="hint" id="msg">${S.msg || "Goal: get risk below 25%."}</p>
+      `;
+
+      document.getElementById("exposure").addEventListener("input", e=>{S.exposure=+e.target.value; renderControls(); draw();});
+      document.getElementById("hygiene").addEventListener("input", e=>{S.hygiene=+e.target.value; renderControls(); draw();});
+      document.getElementById("clean").addEventListener("input", e=>{S.cleanWater=+e.target.value; renderControls(); draw();});
+      document.getElementById("snail").addEventListener("input", e=>{S.snailControl=+e.target.value; renderControls(); draw();});
+
+      document.getElementById("calc").addEventListener("click", ()=>{
+        // risk model: exposure increases risk; hygiene/clean/snail reduce risk
+        const risk = Math.max(0, Math.min(100,
+          (S.exposure*0.65) - (S.hygiene*0.20) - (S.cleanWater*0.25) - (S.snailControl*0.15) + 20
+        ));
+        S.risk = risk;
+
+        if (risk < 25){
+          S.score += 1;
+          S.msg = "Excellent ✅ Risk is low. You broke the transmission route.";
+        } else if (risk < 50){
+          S.msg = "Improving 👍 Try reducing exposure or increasing clean water and sanitation.";
+        } else {
+          S.msg = "High risk ⚠️ Reduce unsafe water contact and improve sanitation/clean water.";
+        }
+        renderControls();
+        draw();
+      });
+
+      document.getElementById("challenge").addEventListener("click", ()=>{
+        // random scenario
+        S.exposure = Math.floor(40 + Math.random()*60);
+        S.hygiene = Math.floor(20 + Math.random()*60);
+        S.cleanWater = Math.floor(10 + Math.random()*70);
+        S.snailControl = Math.floor(10 + Math.random()*60);
+        S.msg = "New challenge loaded. Try to get risk below 25%.";
+        S.risk = 0;
+        renderControls();
+        draw();
+      });
+
+      note.textContent = "This is a learning model for decisions that reduce infection risk.";
+    }
+  }
+
+  function drawBox(x,y,w,h,title,subtitle,active){
+    ctx.fillStyle = active ? "rgba(110,231,255,0.10)" : "rgba(255,255,255,0.03)";
+    ctx.strokeStyle = active ? "rgba(110,231,255,0.35)" : "rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,18); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="16px system-ui";
+    ctx.fillText(title, x+14, y+28);
+
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="12px system-ui";
+    wrapText(subtitle, x+14, y+50, w-28, 16);
+  }
+
+  function wrapText(text, x, y, maxWidth, lineHeight){
+    const words = text.split(" ");
+    let line = "";
+    for (let n=0;n<words.length;n++){
+      const testLine = line + words[n] + " ";
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n>0){
+        ctx.fillText(line, x, y);
+        line = words[n] + " ";
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, y);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    // title
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Health & Disease", 70, 110);
+
+    if (mode==="cycle"){
+      const x=110, y=160, w=860, h=110, gap=18;
+      cycleStages.forEach((s,i)=>{
+        drawBox(x, y+i*(h+gap), w, h, `Stage ${i+1}`, s.replace(/^\d\)\s*/,""), i===S.stage);
+      });
+
+      // arrows
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=3;
+      for(let i=0;i<4;i++){
+        const ay = y + i*(h+gap) + h + 8;
+        ctx.beginPath();
+        ctx.moveTo(x+w/2, ay);
+        ctx.lineTo(x+w/2, ay+gap-16);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x+w/2, ay+gap-16);
+        ctx.lineTo(x+w/2-8, ay+gap-24);
+        ctx.lineTo(x+w/2+8, ay+gap-24);
+        ctx.closePath();
+        ctx.fillStyle="rgba(255,255,255,0.18)";
+        ctx.fill();
+      }
+    }
+
+    if (mode==="bilh"){
+      // water scene
+      const wx=120, wy=520, ww=860, wh=200;
+      ctx.fillStyle="rgba(110,231,255,0.08)";
+      ctx.fillRect(wx,wy,ww,wh);
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.strokeRect(wx,wy,ww,wh);
+
+      // snail
+      ctx.fillStyle="rgba(255,220,120,0.12)";
+      ctx.beginPath();
+      ctx.arc(wx+170, wy+110, 40, 0, Math.PI*2);
+      ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Freshwater snail", wx+120, wy+175);
+
+      // person feet in water
+      ctx.fillStyle="rgba(251,113,133,0.08)";
+      ctx.beginPath(); ctx.roundRect(wx+650, wy+40, 160, 110, 20); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.fillText("Human contact", wx+670, wy+175);
+
+      const x=110, y=160, w=860, h=80, gap=16;
+      bilhStages.forEach((s,i)=>{
+        drawBox(x, y+i*(h+gap), w, h, `Stage ${i+1}`, s, i===S.stage);
+      });
+
+      // highlight different actors based on stage
+      if (S.stage===1){
+        ctx.strokeStyle="rgba(110,231,255,0.35)";
+        ctx.lineWidth=6;
+        ctx.strokeRect(wx+120, wy+60, 120, 120); // snail highlight
+      }
+      if (S.stage===3){
+        ctx.strokeStyle="rgba(251,113,133,0.35)";
+        ctx.lineWidth=6;
+        ctx.strokeRect(wx+640, wy+30, 180, 140); // human highlight
+      }
+    }
+
+    if (mode==="game"){
+      // show a risk gauge
+      const gx=180, gy=260, r=120;
+      ctx.fillStyle="rgba(255,255,255,0.06)";
+      ctx.beginPath(); ctx.arc(gx,gy,r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.stroke();
+
+      const risk = S.risk || 0;
+      const ang = (-Math.PI/2) + (risk/100)*Math.PI*2;
+
+      // needle
+      ctx.strokeStyle="rgba(110,231,255,0.8)";
+      ctx.lineWidth=4;
+      ctx.beginPath();
+      ctx.moveTo(gx,gy);
+      ctx.lineTo(gx + Math.cos(ang)*r*0.9, gy + Math.sin(ang)*r*0.9);
+      ctx.stroke();
+
+      // text
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.font="16px system-ui";
+      ctx.fillText("Risk Gauge", gx-38, gy-r-18);
+
+      ctx.font="18px system-ui";
+      ctx.fillText(`Risk: ${risk.toFixed(0)}%`, gx-45, gy+r+28);
+
+      // advice box
+      drawBox(420, 190, 560, 220, "Advice", "Reduce exposure to unsafe water; improve sanitation (use toilets), provide clean water, treat cases, and control snails.", false);
+
+      // environment picture
+      ctx.fillStyle="rgba(110,231,255,0.06)";
+      ctx.fillRect(420, 450, 560, 260);
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.strokeRect(420, 450, 560, 260);
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Community environment (model)", 430, 472);
+
+      // river
+      ctx.fillStyle="rgba(110,231,255,0.10)";
+      ctx.fillRect(440, 540, 520, 70);
+
+      // toilet icon
+      ctx.fillStyle="rgba(255,255,255,0.10)";
+      ctx.beginPath(); ctx.roundRect(460, 500, 80, 70, 14); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.fillText("Toilet", 472, 590);
+
+      // clean water tap
+      ctx.fillStyle="rgba(255,255,255,0.10)";
+      ctx.beginPath(); ctx.roundRect(860, 500, 90, 70, 14); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.fillText("Tap", 892, 590);
+
+      // danger label
+      ctx.fillStyle="rgba(251,113,133,0.70)";
+      ctx.fillText("Unsafe river water", 660, 532);
+    }
+  }
+
+  // roundRect fallback
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  function go(newMode, tab){
+    mode = newMode;
+    setActive(tab);
+    // reset stage when switching between cycle/bilh
+    if (mode==="cycle" || mode==="bilh") S.stage = 0;
+    renderControls();
+    draw();
+  }
+
+  tCycle.addEventListener("click", ()=>go("cycle", tCycle));
+  tBilh.addEventListener("click", ()=>go("bilh", tBilh));
+  tGame.addEventListener("click", ()=>go("game", tGame));
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

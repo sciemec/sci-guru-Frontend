@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Matter & Particles</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px;display:grid;grid-template-columns:360px 1fr;gap:14px;}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.8);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:120px}
+    input[type="range"]{width:100%}
+    .big{font-size:14px;font-weight:800}
+    .tag{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    canvas{width:100%;height:420px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;}
+    .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Virtual Lab: Matter & Particles</h1>
+  <p>Move the temperature slider to see changes of state and particle motion (model simulation).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">Controls</div>
+    <div class="pb">
+      <div class="row">
+        <label>Temperature (°C)</label>
+        <div style="flex:1">
+          <input id="temp" type="range" min="-20" max="140" value="25"/>
+          <div class="row" style="justify-content:space-between;margin:6px 0 0">
+            <span class="tag">-20</span><span class="tag">0</span><span class="tag">100</span><span class="tag">140</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Substance</label>
+        <select id="sub" class="btn" style="padding:10px 12px">
+          <option value="water" selected>Water (0°C melt, 100°C boil)</option>
+          <option value="ethanol">Ethanol (-114°C melt, 78°C boil)</option>
+          <option value="paraffin">Paraffin wax (~50°C melt, ~300°C boil)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>State</label>
+        <div class="big" id="state">Liquid</div>
+      </div>
+
+      <div class="row">
+        <label>Particle notes</label>
+        <div id="notes" style="color:var(--muted);font-size:13px;line-height:1.4">
+          Particles are close together, moving and sliding past each other.
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="reset">Reset particles</button>
+        <a class="btn" href="tutor.html">Back to Tutor</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">Particle Model View</div>
+    <div class="pb">
+      <canvas id="c" width="900" height="600"></canvas>
+      <p style="margin-top:10px">
+        This is a model (not real particle sizes). It helps you visualize: <b>spacing</b>, <b>motion</b>, and <b>state changes</b>.
+      </p>
+    </div>
+  </section>
+</div>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+const temp = document.getElementById("temp");
+const sub = document.getElementById("sub");
+const stateEl = document.getElementById("state");
+const notesEl = document.getElementById("notes");
+const resetBtn = document.getElementById("reset");
+
+const substancePoints = {
+  water:   { melt: 0, boil: 100 },
+  ethanol: { melt: -114, boil: 78 },
+  paraffin:{ melt: 50, boil: 300 } // boil not reachable on slider (fine)
+};
+
+let particles = [];
+
+function rand(a,b){ return a + Math.random()*(b-a); }
+
+function buildParticles(count){
+  particles = [];
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: rand(60, canvas.width-60),
+      y: rand(60, canvas.height-60),
+      vx: rand(-1,1),
+      vy: rand(-1,1),
+      r: rand(6,10)
+    });
+  }
+}
+
+function getStateAndParams(){
+  const t = Number(temp.value);
+  const p = substancePoints[sub.value];
+
+  let state = "Liquid";
+  if (t < p.melt) state = "Solid";
+  else if (t >= p.boil) state = "Gas";
+
+  // speed scales with temperature
+  const speed = state === "Solid" ? 0.6 : state === "Liquid" ? 1.4 : 2.4;
+  const wiggle = (t + 20) / 160; // 0..1-ish
+
+  // spacing effect: solid packed, liquid medium, gas spread
+  const attract = state === "Solid" ? 0.02 : state === "Liquid" ? 0.01 : 0.0;
+  const repel = state === "Solid" ? 0.08 : state === "Liquid" ? 0.05 : 0.02;
+
+  return { t, p, state, speed, wiggle, attract, repel };
+}
+
+function setText(state){
+  stateEl.textContent = state;
+  if(state==="Solid"){
+    notesEl.textContent = "Particles are tightly packed and vibrate in fixed positions (they do not flow).";
+  }else if(state==="Liquid"){
+    notesEl.textContent = "Particles are close together, moving and sliding past each other (they flow).";
+  }else{
+    notesEl.textContent = "Particles are far apart and move quickly in random directions (they spread to fill the container).";
+  }
+}
+
+function step(){
+  const { state, speed, wiggle, attract, repel } = getStateAndParams();
+  setText(state);
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // container
+  ctx.strokeStyle = "rgba(255,255,255,0.22)";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(40,40,canvas.width-80,canvas.height-80);
+
+  // simple attraction/repulsion for packed states
+  for(let i=0;i<particles.length;i++){
+    const a = particles[i];
+    for(let j=i+1;j<particles.length;j++){
+      const b = particles[j];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const d2 = dx*dx + dy*dy;
+      const minD = (a.r + b.r) * 1.15;
+      const minD2 = minD*minD;
+
+      // repel if too close
+      if(d2 < minD2){
+        const d = Math.sqrt(d2) || 0.001;
+        const push = repel * (minD - d);
+        const ux = dx/d, uy = dy/d;
+        a.vx -= ux*push; a.vy -= uy*push;
+        b.vx += ux*push; b.vy += uy*push;
+      } else if (attract > 0 && d2 < (minD2 * 6)){
+        // slight attraction to keep together (solid/liquid)
+        const d = Math.sqrt(d2);
+        const pull = attract * (d - minD);
+        const ux = dx/d, uy = dy/d;
+        a.vx += ux*pull; a.vy += uy*pull;
+        b.vx -= ux*pull; b.vy -= uy*pull;
+      }
+    }
+  }
+
+  for(const p of particles){
+    // random wiggle increases with temperature
+    p.vx += (Math.random()-0.5) * 0.25 * wiggle;
+    p.vy += (Math.random()-0.5) * 0.25 * wiggle;
+
+    // clamp velocity by state
+    const maxV = speed;
+    p.vx = Math.max(-maxV, Math.min(maxV, p.vx));
+    p.vy = Math.max(-maxV, Math.min(maxV, p.vy));
+
+    p.x += p.vx * 2;
+    p.y += p.vy * 2;
+
+    // bounce on container walls
+    const L=40+p.r, R=canvas.width-40-p.r, T=40+p.r, B=canvas.height-40-p.r;
+    if(p.x < L){ p.x=L; p.vx*=-1; }
+    if(p.x > R){ p.x=R; p.vx*=-1; }
+    if(p.y < T){ p.y=T; p.vy*=-1; }
+    if(p.y > B){ p.y=B; p.vy*=-1; }
+
+    // draw
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(110,231,255,0.75)";
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  requestAnimationFrame(step);
+}
+
+resetBtn.addEventListener("click", () => buildParticles(24));
+temp.addEventListener("input", () => {});
+sub.addEventListener("change", () => buildParticles(24));
+
+buildParticles(24);
+step();
+</script>
+</body>
+</html>

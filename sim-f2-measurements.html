@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Measurements & Density</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:460px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:200px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:560px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Physics Lab: Measurements & Density (Unit 14)</h1>
+  <p>Convert SI units, measure volume (regular/irregular), then calculate density (density = mass ÷ volume).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tConv">Unit conversions</button>
+        <button class="tab" id="tVol">Volume measurement</button>
+        <button class="tab" id="tDen">Density</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="860"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tConv = document.getElementById("tConv");
+  const tVol  = document.getElementById("tVol");
+  const tDen  = document.getElementById("tDen");
+  const tabs = [tConv,tVol,tDen];
+
+  let mode = "conv";
+
+  const S = {
+    // conversions
+    val: 1000,
+    from: "g",
+    to: "kg",
+
+    // volume
+    volMode: "cuboid",
+    L: 10, W: 5, H: 4,     // cm
+    r: 3, hcyl: 10,        // cm
+    v1: 40,                // mL initial water
+    objVol: 12,            // cm3 (same as mL) for displacement
+
+    // density
+    mass: 120,             // g
+    volume: 60,            // cm3
+    densUnit: "g/cm3"
+  };
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+  function clamp(a,b,x){ return Math.max(a, Math.min(b,x)); }
+
+  const unitMap = {
+    // mass
+    mg: 0.001, g: 1, kg: 1000,
+    // length
+    mm: 0.1, cm: 1, m: 100,
+    // volume
+    mL: 1, L: 1000,
+    cm3: 1, dm3: 1000
+  };
+
+  function convert(value, from, to){
+    if (!(from in unitMap) || !(to in unitMap)) return null;
+    // convert via base (g for mass, cm for length, mL/cm3 for volume) is not perfect across categories.
+    // We keep conversions within same category by allowed groups:
+    const mass = ["mg","g","kg"];
+    const len  = ["mm","cm","m"];
+    const vol  = ["mL","L","cm3","dm3"];
+
+    const inGroup = (grp)=> grp.includes(from) && grp.includes(to);
+    if (!(inGroup(mass) || inGroup(len) || inGroup(vol))) return null;
+
+    return value * (unitMap[from] / unitMap[to]);
+  }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="conv"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Convert SI multiples (e.g., g↔kg, cm↔m, mL↔L)</span></div>
+
+        <div class="row">
+          <label>Value</label>
+          <input id="val" type="number" value="${S.val}" step="0.01" />
+        </div>
+
+        <div class="row">
+          <label>From unit</label>
+          <select id="from">
+            <optgroup label="Mass">${["mg","g","kg"].map(u=>`<option ${S.from===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+            <optgroup label="Length">${["mm","cm","m"].map(u=>`<option ${S.from===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+            <optgroup label="Volume">${["mL","L","cm3","dm3"].map(u=>`<option ${S.from===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>To unit</label>
+          <select id="to">
+            <optgroup label="Mass">${["mg","g","kg"].map(u=>`<option ${S.to===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+            <optgroup label="Length">${["mm","cm","m"].map(u=>`<option ${S.to===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+            <optgroup label="Volume">${["mL","L","cm3","dm3"].map(u=>`<option ${S.to===u?"selected":""} value="${u}">${u}</option>`).join("")}</optgroup>
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="swap">Swap</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="out">Result: —</span>
+        </div>
+
+        <p class="hint">Mass and weight are different: mass (kg), weight is a force (N).</p>
+      `;
+
+      document.getElementById("val").addEventListener("input", e=>{S.val=+e.target.value; draw(); renderControls();});
+      document.getElementById("from").addEventListener("change", e=>{S.from=e.target.value; draw(); renderControls();});
+      document.getElementById("to").addEventListener("change", e=>{S.to=e.target.value; draw(); renderControls();});
+
+      document.getElementById("swap").addEventListener("click", ()=>{
+        const a=S.from; S.from=S.to; S.to=a;
+        renderControls(); draw();
+      });
+
+      document.getElementById("reset").addEventListener("click", ()=>{
+        S.val=1000; S.from="g"; S.to="kg";
+        renderControls(); draw();
+      });
+
+      note.textContent = "Conversions are within the same category (mass, length, or volume).";
+    }
+
+    if (mode==="vol"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Volume: regular shapes (calculate) + irregular (displacement)</span></div>
+
+        <div class="row">
+          <label>Method</label>
+          <select id="vm">
+            <option value="cuboid" ${S.volMode==="cuboid"?"selected":""}>Cuboid (V = L×W×H)</option>
+            <option value="cylinder" ${S.volMode==="cylinder"?"selected":""}>Cylinder (V = πr²h)</option>
+            <option value="displacement" ${S.volMode==="displacement"?"selected":""}>Displacement (V = V₂ − V₁)</option>
+          </select>
+        </div>
+
+        <div id="volControls"></div>
+
+        <div class="row">
+          <button class="btn" id="calcV">Calculate volume</button>
+          <button class="btn" id="resetV">Reset</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="vOut">Volume: —</span>
+        </div>
+
+        <p class="hint">1 cm³ = 1 mL (same volume).</p>
+      `;
+
+      const vc = document.getElementById("volControls");
+
+      function inject(){
+        if (S.volMode==="cuboid"){
+          vc.innerHTML = `
+            <div class="row"><label>L (cm)</label><input id="L" type="number" value="${S.L}" step="0.1"></div>
+            <div class="row"><label>W (cm)</label><input id="W" type="number" value="${S.W}" step="0.1"></div>
+            <div class="row"><label>H (cm)</label><input id="H" type="number" value="${S.H}" step="0.1"></div>
+          `;
+          ["L","W","H"].forEach(id=> document.getElementById(id).addEventListener("input", e=>{S[id]=+e.target.value; draw();}));
+        }
+        if (S.volMode==="cylinder"){
+          vc.innerHTML = `
+            <div class="row"><label>Radius r (cm)</label><input id="r" type="number" value="${S.r}" step="0.1"></div>
+            <div class="row"><label>Height h (cm)</label><input id="hcyl" type="number" value="${S.hcyl}" step="0.1"></div>
+          `;
+          document.getElementById("r").addEventListener("input", e=>{S.r=+e.target.value; draw();});
+          document.getElementById("hcyl").addEventListener("input", e=>{S.hcyl=+e.target.value; draw();});
+        }
+        if (S.volMode==="displacement"){
+          vc.innerHTML = `
+            <div class="row"><label>Initial water volume V₁ (mL)</label><input id="v1" type="number" value="${S.v1}" step="1"></div>
+            <div class="row"><label>Object volume (cm³ ≡ mL)</label><input id="objVol" type="number" value="${S.objVol}" step="1"></div>
+          `;
+          document.getElementById("v1").addEventListener("input", e=>{S.v1=+e.target.value; draw();});
+          document.getElementById("objVol").addEventListener("input", e=>{S.objVol=+e.target.value; draw();});
+        }
+      }
+
+      document.getElementById("vm").addEventListener("change", e=>{S.volMode=e.target.value; renderControls(); draw();});
+      inject();
+
+      document.getElementById("calcV").addEventListener("click", ()=>{ draw(true); renderControls(); });
+      document.getElementById("resetV").addEventListener("click", ()=>{
+        S.volMode="cuboid"; S.L=10; S.W=5; S.H=4; S.r=3; S.hcyl=10; S.v1=40; S.objVol=12;
+        renderControls(); draw();
+      });
+
+      note.textContent = "Use displacement for irregular objects (like a stone/imbokodo).";
+    }
+
+    if (mode==="den"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Density = mass ÷ volume</span></div>
+
+        <div class="row">
+          <label>Mass (g)</label>
+          <input id="mass" type="number" value="${S.mass}" step="0.1">
+        </div>
+
+        <div class="row">
+          <label>Volume (cm³)</label>
+          <input id="vol" type="number" value="${S.volume}" step="0.1">
+        </div>
+
+        <div class="row">
+          <button class="btn" id="calcD">Calculate density</button>
+          <button class="btn" id="resetD">Reset</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="dOut">Density: —</span>
+          <span class="pill" id="sinkOut">Float/Sink: —</span>
+        </div>
+
+        <p class="hint">Water density ≈ 1.0 g/cm³. If object density > 1, it usually sinks.</p>
+      `;
+
+      document.getElementById("mass").addEventListener("input", e=>{S.mass=+e.target.value; draw();});
+      document.getElementById("vol").addEventListener("input", e=>{S.volume=+e.target.value; draw();});
+
+      document.getElementById("calcD").addEventListener("click", ()=>{ draw(true); renderControls(); });
+      document.getElementById("resetD").addEventListener("click", ()=>{
+        S.mass=120; S.volume=60;
+        renderControls(); draw();
+      });
+
+      note.textContent = "Try values: a stone has higher density than water; a plastic container is lower.";
+    }
+  }
+
+  function volumeValue(){
+    if (S.volMode==="cuboid"){
+      return S.L*S.W*S.H; // cm3
+    }
+    if (S.volMode==="cylinder"){
+      return Math.PI*S.r*S.r*S.hcyl; // cm3
+    }
+    // displacement: V2 = V1 + objVol
+    return S.objVol; // cm3
+  }
+
+  function draw(showFinal=false){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Measurements & Density", 70, 110);
+
+    if (mode==="conv"){
+      const res = convert(S.val, S.from, S.to);
+      const out = document.getElementById("out");
+      if (out) out.textContent = `Result: ${res===null ? "Not allowed (different categories)" : (res.toFixed(4) + " " + S.to)}`;
+
+      // simple conversion card
+      box(120, 180, 900, 560, 24);
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="15px system-ui";
+      ctx.fillText("Conversion", 150, 220);
+
+      ctx.font="17px system-ui";
+      ctx.fillStyle="rgba(255,255,255,0.85)";
+      ctx.fillText(`${S.val} ${S.from}  →  ${res===null ? "—" : res.toFixed(4)} ${S.to}`, 150, 270);
+
+      ctx.fillStyle="rgba(255,255,255,0.65)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Examples:", 150, 330);
+      ctx.fillText("1000 g = 1 kg", 150, 360);
+      ctx.fillText("100 cm = 1 m", 150, 385);
+      ctx.fillText("1000 mL = 1 L", 150, 410);
+    }
+
+    if (mode==="vol"){
+      const v = volumeValue();
+      const vOut = document.getElementById("vOut");
+      if (vOut && showFinal) vOut.textContent = `Volume: ${v.toFixed(2)} cm³ (≈ mL)`;
+
+      box(120, 180, 900, 560, 24);
+
+      ctx.fillStyle="rgba(255,255,255,0.80)";
+      ctx.font="15px system-ui";
+      ctx.fillText("Volume Measurement", 150, 220);
+
+      if (S.volMode==="cuboid"){
+        ctx.fillStyle="rgba(255,255,255,0.65)";
+        ctx.font="14px system-ui";
+        ctx.fillText("Cuboid: V = L × W × H", 150, 260);
+        ctx.fillText(`L=${S.L} cm, W=${S.W} cm, H=${S.H} cm`, 150, 290);
+
+        // draw cuboid
+        ctx.strokeStyle="rgba(110,231,255,0.40)";
+        ctx.lineWidth=3;
+        ctx.strokeRect(680, 300, 240, 180);
+        ctx.strokeRect(720, 340, 240, 180);
+        ctx.beginPath(); ctx.moveTo(680,300); ctx.lineTo(720,340); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(920,300); ctx.lineTo(960,340); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(680,480); ctx.lineTo(720,520); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(920,480); ctx.lineTo(960,520); ctx.stroke();
+
+        ctx.fillStyle="rgba(255,255,255,0.75)";
+        ctx.fillText(`Calculated V = ${v.toFixed(2)} cm³`, 150, 340);
+      }
+
+      if (S.volMode==="cylinder"){
+        ctx.fillStyle="rgba(255,255,255,0.65)";
+        ctx.font="14px system-ui";
+        ctx.fillText("Cylinder: V = πr²h", 150, 260);
+        ctx.fillText(`r=${S.r} cm, h=${S.hcyl} cm`, 150, 290);
+
+        // draw cylinder
+        ctx.strokeStyle="rgba(110,231,255,0.40)";
+        ctx.lineWidth=3;
+        ellipse(820, 320, 120, 28);
+        ctx.beginPath(); ctx.moveTo(700,320); ctx.lineTo(700,560); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(940,320); ctx.lineTo(940,560); ctx.stroke();
+        ellipse(820, 560, 120, 28);
+
+        ctx.fillStyle="rgba(255,255,255,0.75)";
+        ctx.fillText(`Calculated V = ${v.toFixed(2)} cm³`, 150, 340);
+      }
+
+      if (S.volMode==="displacement"){
+        const v2 = S.v1 + S.objVol;
+        ctx.fillStyle="rgba(255,255,255,0.65)";
+        ctx.font="14px system-ui";
+        ctx.fillText("Displacement method: V(object) = V₂ − V₁", 150, 260);
+        ctx.fillText(`V₁=${S.v1} mL, V₂=${v2} mL`, 150, 290);
+
+        // measuring cylinder
+        const mx=740, my=250, mw=260, mh=520;
+        ctx.strokeStyle="rgba(255,255,255,0.18)";
+        ctx.lineWidth=2;
+        roundRect(mx,my,mw,mh,18); ctx.stroke();
+
+        // water levels
+        const maxMark = 100;
+        function levelToY(vol){
+          return my+mh - (clamp(0,maxMark,vol)/maxMark)*mh;
+        }
+        const y1 = levelToY(S.v1);
+        const y2 = levelToY(v2);
+
+        ctx.fillStyle="rgba(110,231,255,0.10)";
+        ctx.fillRect(mx+10, y1, mw-20, (my+mh-10)-y1);
+
+        // object added water rise highlight
+        ctx.fillStyle="rgba(52,211,153,0.12)";
+        ctx.fillRect(mx+10, y2, mw-20, y1-y2);
+
+        // ticks
+        ctx.strokeStyle="rgba(255,255,255,0.10)";
+        for(let i=0;i<=10;i++){
+          const vol = i*10;
+          const yy = levelToY(vol);
+          ctx.beginPath(); ctx.moveTo(mx+10,yy); ctx.lineTo(mx+50,yy); ctx.stroke();
+          ctx.fillStyle="rgba(255,255,255,0.45)";
+          ctx.font="12px system-ui";
+          ctx.fillText(vol, mx+54, yy+4);
+        }
+
+        ctx.fillStyle="rgba(255,255,255,0.75)";
+        ctx.fillText(`Object volume = ${S.objVol.toFixed(2)} cm³ (mL)`, 150, 340);
+      }
+    }
+
+    if (mode==="den"){
+      const d = (S.volume>0) ? (S.mass / S.volume) : null;
+      const dOut = document.getElementById("dOut");
+      const sinkOut = document.getElementById("sinkOut");
+      if (showFinal && dOut) dOut.textContent = `Density: ${d===null ? "—" : d.toFixed(3)} g/cm³`;
+      if (showFinal && sinkOut){
+        if (d===null) sinkOut.textContent = "Float/Sink: —";
+        else sinkOut.textContent = `Float/Sink (water≈1): ${d>1 ? "Sink" : "Float"}`;
+      }
+
+      box(120, 180, 900, 560, 24);
+
+      ctx.fillStyle="rgba(255,255,255,0.80)";
+      ctx.font="15px system-ui";
+      ctx.fillText("Density Calculation", 150, 220);
+
+      ctx.fillStyle="rgba(255,255,255,0.65)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Formula: density = mass ÷ volume", 150, 260);
+      ctx.fillText(`mass = ${S.mass} g`, 150, 290);
+      ctx.fillText(`volume = ${S.volume} cm³`, 150, 320);
+
+      if (d!==null){
+        ctx.fillStyle="rgba(255,255,255,0.85)";
+        ctx.font="18px system-ui";
+        ctx.fillText(`density = ${d.toFixed(3)} g/cm³`, 150, 370);
+
+        // compare to water bar
+        const bx=150, by=430, bw=820, bh=26;
+        ctx.fillStyle="rgba(255,255,255,0.06)";
+        ctx.fillRect(bx,by,bw,bh);
+
+        const val = clamp(0,3,d); // show up to 3
+        ctx.fillStyle="rgba(110,231,255,0.18)";
+        ctx.fillRect(bx,by,bw*(1/3),bh); // water mark at 1
+
+        ctx.fillStyle="rgba(52,211,153,0.22)";
+        ctx.fillRect(bx,by,bw*(val/3),bh);
+
+        ctx.strokeStyle="rgba(255,255,255,0.18)";
+        ctx.strokeRect(bx,by,bw,bh);
+
+        ctx.fillStyle="rgba(255,255,255,0.65)";
+        ctx.font="13px system-ui";
+        ctx.fillText("0", bx-10, by+48);
+        ctx.fillText("1 (water)", bx + bw*(1/3)-18, by-10);
+        ctx.fillText("3", bx + bw-10, by+48);
+
+        ctx.fillStyle = (d>1) ? "rgba(251,113,133,0.85)" : "rgba(52,211,153,0.85)";
+        ctx.font="15px system-ui";
+        ctx.fillText(d>1 ? "Higher than water → sinks" : "Lower than water → floats", 150, 500);
+      }
+    }
+  }
+
+  function box(x,y,w,h,r){
+    ctx.fillStyle="rgba(255,255,255,0.03)";
+    ctx.strokeStyle="rgba(255,255,255,0.18)";
+    ctx.lineWidth=2;
+    roundRect(x,y,w,h,r); ctx.fill(); ctx.stroke();
+  }
+
+  function roundRect(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr);
+    ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr);
+    ctx.arcTo(x,y,x+w,y,rr);
+    ctx.closePath();
+  }
+
+  function ellipse(cx,cy,rx,ry){
+    ctx.beginPath();
+    ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);
+    ctx.stroke();
+  }
+
+  tConv.addEventListener("click", ()=>{mode="conv"; setActive(tConv); renderControls(); draw();});
+  tVol.addEventListener("click",  ()=>{mode="vol";  setActive(tVol);  renderControls(); draw();});
+  tDen.addEventListener("click",  ()=>{mode="den";  setActive(tDen);  renderControls(); draw();});
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

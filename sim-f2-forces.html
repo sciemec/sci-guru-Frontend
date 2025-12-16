@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Forces</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1180px;margin:0 auto;padding:14px;display:grid;grid-template-columns:420px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:170px}
+    input, select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="range"]{width:100%}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    canvas{width:100%;height:460px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .big{font-weight:900;font-size:14px}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Forces (Resultant + Moments + Friction)</h1>
+  <p>Explore co-linear resultant force, turning effect (moment), and friction effects.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tRes">Resultant</button>
+        <button class="tab" id="tMom">Moments</button>
+        <button class="tab" id="tFri">Friction</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="980" height="650"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const c = document.getElementById("c");
+  const ctx = c.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tRes = document.getElementById("tRes");
+  const tMom = document.getElementById("tMom");
+  const tFri = document.getElementById("tFri");
+  const tabs = [tRes,tMom,tFri];
+
+  let mode = "res";
+
+  // STATE for three modes
+  const S = {
+    // resultant
+    F1: 40, dir1: "right",
+    F2: 25, dir2: "left",
+
+    // moments
+    L: 80, dL: 0.25, // load force and distance (m)
+    E: 40, dE: 0.50, // effort force and distance (m)
+
+    // friction
+    mass: 10, muS: 0.4, muK: 0.3, applied: 30, g: 10,
+    x: 0, v: 0
+  };
+
+  function setActive(tab){
+    tabs.forEach(b=>b.classList.remove("active"));
+    tab.classList.add("active");
+  }
+
+  function pill(text){ return `<span class="pill">${text}</span>`; }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="res"){
+      controls.innerHTML = `
+        <div class="row"><div class="big">1) Co-linear Resultant Force</div></div>
+
+        <div class="row">
+          <label>Force 1 (N)</label>
+          <input id="F1" type="range" min="0" max="200" value="${S.F1}">
+          ${pill(S.F1+" N")}
+        </div>
+        <div class="row">
+          <label>Force 1 direction</label>
+          <select id="dir1">
+            <option value="right" ${S.dir1==="right"?"selected":""}>Right →</option>
+            <option value="left" ${S.dir1==="left"?"selected":""}>Left ←</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Force 2 (N)</label>
+          <input id="F2" type="range" min="0" max="200" value="${S.F2}">
+          ${pill(S.F2+" N")}
+        </div>
+        <div class="row">
+          <label>Force 2 direction</label>
+          <select id="dir2">
+            <option value="right" ${S.dir2==="right"?"selected":""}>Right →</option>
+            <option value="left" ${S.dir2==="left"?"selected":""}>Left ←</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="resetRes">Reset</button>
+        </div>
+
+        <p class="hint">
+          Resultant = total right forces − total left forces. If negative, direction is left.
+        </p>
+      `;
+
+      document.getElementById("F1").addEventListener("input", e=>{S.F1=+e.target.value; draw();});
+      document.getElementById("F2").addEventListener("input", e=>{S.F2=+e.target.value; draw();});
+      document.getElementById("dir1").addEventListener("change", e=>{S.dir1=e.target.value; draw();});
+      document.getElementById("dir2").addEventListener("change", e=>{S.dir2=e.target.value; draw();});
+      document.getElementById("resetRes").addEventListener("click", ()=>{
+        S.F1=40; S.dir1="right"; S.F2=25; S.dir2="left"; renderControls(); draw();
+      });
+    }
+
+    if (mode==="mom"){
+      controls.innerHTML = `
+        <div class="row"><div class="big">2) Moments (Turning Effect)</div></div>
+
+        <div class="row">
+          <label>Load force (N)</label>
+          <input id="L" type="range" min="0" max="200" value="${S.L}">
+          ${pill(S.L+" N")}
+        </div>
+        <div class="row">
+          <label>Load distance (m)</label>
+          <input id="dL" type="range" min="0.05" max="1.00" step="0.01" value="${S.dL}">
+          ${pill(S.dL+" m")}
+        </div>
+
+        <div class="row">
+          <label>Effort force (N)</label>
+          <input id="E" type="range" min="0" max="200" value="${S.E}">
+          ${pill(S.E+" N")}
+        </div>
+        <div class="row">
+          <label>Effort distance (m)</label>
+          <input id="dE" type="range" min="0.05" max="1.00" step="0.01" value="${S.dE}">
+          ${pill(S.dE+" m")}
+        </div>
+
+        <div class="row">
+          <button class="btn" id="resetMom">Reset</button>
+        </div>
+
+        <p class="hint">
+          Moment = Force × perpendicular distance from pivot.
+        </p>
+      `;
+
+      document.getElementById("L").addEventListener("input", e=>{S.L=+e.target.value; draw();});
+      document.getElementById("dL").addEventListener("input", e=>{S.dL=+e.target.value; renderControls(); draw();});
+      document.getElementById("E").addEventListener("input", e=>{S.E=+e.target.value; draw();});
+      document.getElementById("dE").addEventListener("input", e=>{S.dE=+e.target.value; renderControls(); draw();});
+      document.getElementById("resetMom").addEventListener("click", ()=>{
+        S.L=80; S.dL=0.25; S.E=40; S.dE=0.50; renderControls(); draw();
+      });
+    }
+
+    if (mode==="fri"){
+      controls.innerHTML = `
+        <div class="row"><div class="big">3) Friction</div></div>
+
+        <div class="row">
+          <label>Mass of box (kg)</label>
+          <input id="mass" type="range" min="1" max="50" value="${S.mass}">
+          ${pill(S.mass+" kg")}
+        </div>
+
+        <div class="row">
+          <label>Coefficient μ (static)</label>
+          <input id="muS" type="range" min="0" max="1.0" step="0.01" value="${S.muS}">
+          ${pill(S.muS)}
+        </div>
+
+        <div class="row">
+          <label>Coefficient μ (kinetic)</label>
+          <input id="muK" type="range" min="0" max="1.0" step="0.01" value="${S.muK}">
+          ${pill(S.muK)}
+        </div>
+
+        <div class="row">
+          <label>Applied force (N)</label>
+          <input id="applied" type="range" min="0" max="300" value="${S.applied}">
+          ${pill(S.applied+" N")}
+        </div>
+
+        <div class="row">
+          <button class="btn" id="startStop">Start/Stop</button>
+          <button class="btn" id="resetFri">Reset</button>
+        </div>
+
+        <p class="hint">
+          Max static friction = μ<sub>s</sub>N. If applied force is bigger, the box moves and friction becomes μ<sub>k</sub>N.
+        </p>
+      `;
+
+      document.getElementById("mass").addEventListener("input", e=>{S.mass=+e.target.value; draw();});
+      document.getElementById("muS").addEventListener("input", e=>{S.muS=+e.target.value; draw();});
+      document.getElementById("muK").addEventListener("input", e=>{S.muK=+e.target.value; draw();});
+      document.getElementById("applied").addEventListener("input", e=>{S.applied=+e.target.value; draw();});
+
+      let running = false;
+      let lastT = performance.now();
+
+      function tick(t){
+        if (!running) return;
+        const dt = Math.min(0.05, (t-lastT)/1000);
+        lastT = t;
+
+        // friction physics on flat surface
+        const N = S.mass * S.g;
+        const fMax = S.muS * N;
+
+        let friction = 0;
+        let net = 0;
+        let moving = Math.abs(S.v) > 0.01;
+
+        if (!moving){
+          // static friction adjusts up to fMax
+          if (S.applied <= fMax){
+            friction = S.applied;
+            net = 0;
+            S.v = 0;
+          } else {
+            // starts moving
+            moving = true;
+          }
+        }
+
+        if (moving){
+          friction = S.muK * N;
+          net = S.applied - friction;
+          const a = net / S.mass;
+          S.v += a * dt;
+          S.x += S.v * dt;
+          // mild damping to stop it going crazy
+          S.v *= 0.995;
+
+          // clamp within view
+          S.x = Math.max(-2.5, Math.min(2.5, S.x));
+          if (S.x === -2.5 || S.x === 2.5) S.v *= -0.3;
+        }
+
+        draw();
+        requestAnimationFrame(tick);
+      }
+
+      document.getElementById("startStop").addEventListener("click", ()=>{
+        running = !running;
+        lastT = performance.now();
+        if (running) requestAnimationFrame(tick);
+      });
+
+      document.getElementById("resetFri").addEventListener("click", ()=>{
+        S.mass=10; S.muS=0.4; S.muK=0.3; S.applied=30; S.x=0; S.v=0;
+        renderControls(); draw();
+      });
+    }
+  }
+
+  function arrow(x1,y1,x2,y2,label){
+    ctx.strokeStyle="rgba(110,231,255,0.85)";
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+
+    const ang = Math.atan2(y2-y1,x2-x1);
+    const head=14;
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2 - head*Math.cos(ang-0.5), y2 - head*Math.sin(ang-0.5));
+    ctx.lineTo(x2 - head*Math.cos(ang+0.5), y2 - head*Math.sin(ang+0.5));
+    ctx.closePath();
+    ctx.fillStyle="rgba(110,231,255,0.85)";
+    ctx.fill();
+
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="16px system-ui";
+    ctx.fillText(label, (x1+x2)/2 + 8, (y1+y2)/2 - 8);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+
+    // frame
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,c.width-100,c.height-100);
+
+    if (mode==="res"){
+      note.textContent = "Resultant force shown as a single arrow.";
+      const midY = c.height/2;
+      const centerX = c.width/2;
+
+      // compute resultant
+      const right = (S.dir1==="right"?S.F1:0) + (S.dir2==="right"?S.F2:0);
+      const left  = (S.dir1==="left"?S.F1:0) + (S.dir2==="left"?S.F2:0);
+      const R = right - left;
+
+      // draw forces
+      const scale = 2.2; // pixels per N (visual)
+      const len1 = S.F1*scale;
+      const len2 = S.F2*scale;
+
+      // F1 from center
+      if (S.dir1==="right") arrow(centerX, midY-60, centerX+len1, midY-60, `F1 ${S.F1}N`);
+      else arrow(centerX, midY-60, centerX-len1, midY-60, `F1 ${S.F1}N`);
+
+      // F2
+      if (S.dir2==="right") arrow(centerX, midY, centerX+len2, midY, `F2 ${S.F2}N`);
+      else arrow(centerX, midY, centerX-len2, midY, `F2 ${S.F2}N`);
+
+      // resultant
+      const lenR = Math.abs(R)*scale;
+      ctx.strokeStyle="rgba(124,92,255,0.85)";
+      ctx.fillStyle="rgba(124,92,255,0.85)";
+
+      if (R === 0){
+        ctx.fillStyle="rgba(255,255,255,0.85)";
+        ctx.font="18px system-ui";
+        ctx.fillText("Resultant R = 0 N (balanced)", 70, 110);
+      } else {
+        const yR = midY+90;
+        if (R>0) arrow(centerX, yR, centerX+lenR, yR, `R ${Math.abs(R)}N →`);
+        else arrow(centerX, yR, centerX-lenR, yR, `R ${Math.abs(R)}N ←`);
+
+        ctx.fillStyle="rgba(255,255,255,0.85)";
+        ctx.font="18px system-ui";
+        ctx.fillText(`Right total = ${right} N, Left total = ${left} N`, 70, 110);
+      }
+    }
+
+    if (mode==="mom"){
+      const pivotX = c.width/2;
+      const beamY = c.height/2 + 20;
+
+      note.textContent = "Compare clockwise and anticlockwise moments around the pivot.";
+
+      // beam
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=10;
+      ctx.beginPath(); ctx.moveTo(110, beamY); ctx.lineTo(c.width-110, beamY); ctx.stroke();
+
+      // pivot
+      ctx.fillStyle="rgba(124,92,255,0.85)";
+      ctx.beginPath();
+      ctx.moveTo(pivotX, beamY-10);
+      ctx.lineTo(pivotX-45, beamY+90);
+      ctx.lineTo(pivotX+45, beamY+90);
+      ctx.closePath();
+      ctx.fill();
+
+      // map distance (0.05..1m) to pixels
+      const pxPerM = 260;
+      const xLoad = pivotX - (S.dL * pxPerM);
+      const xEff  = pivotX + (S.dE * pxPerM);
+
+      // forces drawn
+      arrow(xLoad, beamY-10, xLoad, beamY-120, `Load ${S.L}N`);
+      arrow(xEff,  beamY-10, xEff,  beamY-160, `Effort ${S.E}N`);
+
+      // moments
+      const Mload = S.L * S.dL;
+      const Meff  = S.E * S.dE;
+
+      ctx.fillStyle="rgba(255,255,255,0.9)";
+      ctx.font="18px system-ui";
+      ctx.fillText(`Load moment = ${Mload.toFixed(2)} N·m`, 70, 110);
+      ctx.fillText(`Effort moment = ${Meff.toFixed(2)} N·m`, 70, 138);
+
+      let status = "Balanced ✅";
+      if (Math.abs(Meff - Mload) > 0.05){
+        status = Meff > Mload ? "Effort side wins (clockwise) →" : "← Load side wins (anticlockwise)";
+      }
+      ctx.fillText(`Result: ${status}`, 70, 170);
+    }
+
+    if (mode==="fri"){
+      note.textContent = "If applied force is not enough to overcome max static friction, the box stays still.";
+      const groundY = c.height - 170;
+
+      // ground
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=6;
+      ctx.beginPath(); ctx.moveTo(90, groundY); ctx.lineTo(c.width-90, groundY); ctx.stroke();
+
+      // compute friction
+      const N = S.mass * S.g;
+      const fMax = S.muS * N;
+      const fk = S.muK * N;
+
+      const moving = Math.abs(S.v) > 0.02;
+      const friction = moving ? fk : Math.min(S.applied, fMax);
+      const net = moving ? (S.applied - fk) : (S.applied - friction);
+
+      // box position
+      const centerX = c.width/2 + (S.x * 180);
+      const boxW=140, boxH=90;
+      const boxX = centerX - boxW/2;
+      const boxY = groundY - boxH;
+
+      // box
+      ctx.fillStyle="rgba(110,231,255,0.20)";
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=3;
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+      // applied force arrow
+      arrow(centerX-10, boxY+boxH/2, centerX + (S.applied*1.2), boxY+boxH/2, `Applied ${S.applied}N`);
+
+      // friction arrow (opposes)
+      const frLen = friction*1.2;
+      arrow(centerX+10, boxY+boxH/2+60, centerX - frLen, boxY+boxH/2+60, `Friction ${friction.toFixed(1)}N`);
+
+      // text
+      ctx.fillStyle="rgba(255,255,255,0.9)";
+      ctx.font="18px system-ui";
+      ctx.fillText(`N = mg = ${N.toFixed(1)} N`, 70, 110);
+      ctx.fillText(`Max static friction = μsN = ${fMax.toFixed(1)} N`, 70, 138);
+      ctx.fillText(`Kinetic friction = μkN = ${fk.toFixed(1)} N`, 70, 166);
+      ctx.fillText(`Net force ≈ ${net.toFixed(1)} N`, 70, 198);
+
+      const state = moving ? "Moving ✅" : (S.applied <= fMax ? "Not moving (static friction holds) ❌" : "About to move ✅");
+      ctx.fillText(`State: ${state}`, 70, 230);
+    }
+  }
+
+  // Tab handlers
+  function goRes(){ mode="res"; setActive(tRes); renderControls(); draw(); }
+  function goMom(){ mode="mom"; setActive(tMom); renderControls(); draw(); }
+  function goFri(){ mode="fri"; setActive(tFri); renderControls(); draw(); }
+
+  tRes.addEventListener("click", goRes);
+  tMom.addEventListener("click", goMom);
+  tFri.addEventListener("click", goFri);
+
+  // init
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Reproduction</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:440px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:180px}
+    input,select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,0.03);cursor:pointer;font-size:12px;color:var(--text)}
+    .tab.active{border-color:rgba(110,231,255,0.35);background:rgba(110,231,255,0.10)}
+    canvas{width:100%;height:540px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;}
+    .good{color:#34d399}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Reproduction (Unit 5)</h1>
+  <p>Flowering plant reproduction (pollination → fertilisation → seed/fruit) + human reproduction basics (diagram model).</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">
+      <span>Controls</span>
+      <div class="tabbar">
+        <button class="tab active" id="tPlant">Plant</button>
+        <button class="tab" id="tHuman">Human</button>
+        <button class="tab" id="tQuiz">Quick Quiz</button>
+      </div>
+    </div>
+    <div class="pb" id="controls"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <span>Simulation View</span>
+      <a class="btn" href="tutor.html">Back to Tutor</a>
+    </div>
+    <div class="pb">
+      <canvas id="c" width="1100" height="760"></canvas>
+      <p class="hint" id="note"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const controls = document.getElementById("controls");
+  const note = document.getElementById("note");
+
+  const tPlant = document.getElementById("tPlant");
+  const tHuman = document.getElementById("tHuman");
+  const tQuiz = document.getElementById("tQuiz");
+  const tabs = [tPlant,tHuman,tQuiz];
+
+  let mode = "plant";
+
+  const S = {
+    pollinator: "bee",
+    pollination: "cross",
+    stage: 0, // 0..4
+    showLabels: true,
+
+    // quiz
+    qIndex: 0,
+    score: 0
+  };
+
+  const stages = [
+    "1) Pollination: pollen moves from anther to stigma",
+    "2) Pollen tube grows down the style",
+    "3) Fertilisation: male nucleus fuses with ovule nucleus",
+    "4) Seed forms (ovule becomes seed)",
+    "5) Fruit forms (ovary becomes fruit)"
+  ];
+
+  const quiz = [
+    {q:"Pollination is transfer of pollen from…", a:["anther to stigma","stigma to anther","ovary to ovule"], correct:0},
+    {q:"Fertilisation in flowering plants happens in the…", a:["ovule","anther","petal"], correct:0},
+    {q:"After fertilisation, the ovule becomes the…", a:["seed","fruit","stigma"], correct:0},
+    {q:"Cross-pollination means pollen goes to a flower on…", a:["another plant of same species","same flower only","a different species"], correct:0},
+    {q:"The placenta in humans mainly…", a:["nourishes and protects embryo/foetus","digests food","stores urine"], correct:0},
+  ];
+
+  function setActive(tab){ tabs.forEach(b=>b.classList.remove("active")); tab.classList.add("active"); }
+
+  function renderControls(){
+    controls.innerHTML = "";
+
+    if (mode==="plant"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Plant reproduction: pollination → fertilisation → seed/fruit</span></div>
+
+        <div class="row">
+          <label>Pollinator</label>
+          <select id="pollinator">
+            <option value="bee" ${S.pollinator==="bee"?"selected":""}>Bee</option>
+            <option value="wind" ${S.pollinator==="wind"?"selected":""}>Wind</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Pollination type</label>
+          <select id="ptype">
+            <option value="self" ${S.pollination==="self"?"selected":""}>Self-pollination</option>
+            <option value="cross" ${S.pollination==="cross"?"selected":""}>Cross-pollination</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Stage</label>
+          <select id="stage">
+            ${stages.map((s,i)=>`<option value="${i}" ${S.stage===i?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Show labels</label>
+          <select id="labels">
+            <option value="yes" ${S.showLabels?"selected":""}>Yes</option>
+            <option value="no" ${!S.showLabels?"selected":""}>No</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="prev">◀ Prev</button>
+          <button class="btn" id="next">Next ▶</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+
+        <p class="hint">Use the stage steps to understand what changes into seed and fruit.</p>
+      `;
+
+      document.getElementById("pollinator").addEventListener("change", e=>{S.pollinator=e.target.value; draw();});
+      document.getElementById("ptype").addEventListener("change", e=>{S.pollination=e.target.value; draw();});
+      document.getElementById("stage").addEventListener("change", e=>{S.stage=+e.target.value; draw();});
+      document.getElementById("labels").addEventListener("change", e=>{S.showLabels=(e.target.value==="yes"); draw();});
+      document.getElementById("prev").addEventListener("click", ()=>{S.stage=Math.max(0,S.stage-1); renderControls(); draw();});
+      document.getElementById("next").addEventListener("click", ()=>{S.stage=Math.min(4,S.stage+1); renderControls(); draw();});
+      document.getElementById("reset").addEventListener("click", ()=>{S.stage=0; S.pollinator="bee"; S.pollination="cross"; S.showLabels=true; renderControls(); draw();});
+
+      note.textContent = "This is a learning model of the process (not a real microscope image).";
+    }
+
+    if (mode==="human"){
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Human reproduction (overview): male + female systems</span></div>
+        <p class="hint">
+          Key ideas: fertilisation occurs in the oviduct, placenta supports foetus, childbirth is delivery of baby.
+        </p>
+        <div class="row">
+          <label>Show labels</label>
+          <select id="labels">
+            <option value="yes" ${S.showLabels?"selected":""}>Yes</option>
+            <option value="no" ${!S.showLabels?"selected":""}>No</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="btn" id="toggle">Toggle view</button>
+        </div>
+        <p class="hint">We can expand this later with menstrual cycle + contraception lessons (safe content).</p>
+      `;
+      let view = "female";
+      document.getElementById("labels").addEventListener("change", e=>{S.showLabels=(e.target.value==="yes"); drawHuman(view);});
+      document.getElementById("toggle").addEventListener("click", ()=>{
+        view = (view==="female") ? "male" : "female";
+        drawHuman(view);
+      });
+
+      note.textContent = "Diagram is simplified for Form 2 learning.";
+    }
+
+    if (mode==="quiz"){
+      const q = quiz[S.qIndex];
+      controls.innerHTML = `
+        <div class="row"><span class="pill">Quick Quiz</span></div>
+        <div class="hint"><b>Q${S.qIndex+1}.</b> ${q.q}</div>
+        <div class="row" style="flex-direction:column;align-items:stretch">
+          ${q.a.map((opt,i)=>`<button class="btn" data-i="${i}">${String.fromCharCode(65+i)}. ${opt}</button>`).join("")}
+        </div>
+        <div class="row">
+          <span class="pill" id="score">Score: ${S.score}/${quiz.length}</span>
+          <button class="btn" id="restart">Restart Quiz</button>
+        </div>
+        <p class="hint" id="msg"></p>
+      `;
+
+      controls.querySelectorAll("button[data-i]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const i = +b.dataset.i;
+          const msg = document.getElementById("msg");
+          const correct = quiz[S.qIndex].correct;
+          if (i===correct){
+            S.score++;
+            msg.textContent = "Correct ✅";
+            msg.className = "hint good";
+          } else {
+            msg.textContent = `Not correct ❌ Correct answer: ${String.fromCharCode(65+correct)}.`;
+            msg.className = "hint";
+          }
+          setTimeout(()=>{
+            S.qIndex++;
+            if (S.qIndex>=quiz.length) S.qIndex=quiz.length-1;
+            renderControls();
+            draw();
+          }, 700);
+        });
+      });
+
+      document.getElementById("restart").addEventListener("click", ()=>{
+        S.qIndex=0; S.score=0; renderControls(); draw();
+      });
+
+      note.textContent = "Quiz mixes plant + human reproduction concepts.";
+    }
+  }
+
+  function drawFlowerBase(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    // stem
+    ctx.strokeStyle="rgba(52,211,153,0.35)";
+    ctx.lineWidth=14;
+    ctx.beginPath();
+    ctx.moveTo(520, 690);
+    ctx.lineTo(520, 480);
+    ctx.stroke();
+
+    // petals
+    const cx=520, cy=360;
+    for(let i=0;i<6;i++){
+      const ang = (i/6)*Math.PI*2;
+      const px = cx + Math.cos(ang)*150;
+      const py = cy + Math.sin(ang)*110;
+      ctx.fillStyle="rgba(124,92,255,0.12)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.ellipse(px,py,90,55,ang,0,Math.PI*2);
+      ctx.fill(); ctx.stroke();
+    }
+
+    // ovary
+    ctx.fillStyle="rgba(110,231,255,0.08)";
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.roundRect(cx-55, cy+120, 110, 90, 24);
+    ctx.fill(); ctx.stroke();
+
+    // style
+    ctx.strokeStyle="rgba(255,255,255,0.25)";
+    ctx.lineWidth=10;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy+120);
+    ctx.lineTo(cx, cy-40);
+    ctx.stroke();
+
+    // stigma
+    ctx.fillStyle="rgba(255,255,255,0.12)";
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy-70, 55, 24, 0, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+
+    // stamens + anthers
+    for(let i=0;i<5;i++){
+      const ang = -0.9 + i*0.45;
+      const sx = cx + Math.cos(ang)*90;
+      const sy = cy + Math.sin(ang)*70;
+      ctx.strokeStyle="rgba(255,255,255,0.25)";
+      ctx.lineWidth=6;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy+40);
+      ctx.lineTo(sx, sy);
+      ctx.stroke();
+
+      ctx.fillStyle="rgba(251,113,133,0.15)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, 26, 14, ang, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+    }
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Flowering Plant Reproduction", 70, 110);
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="14px system-ui";
+    ctx.fillText(stages[S.stage], 70, 145);
+
+    if (S.showLabels){
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Stigma", cx+70, cy-70);
+      ctx.fillText("Style", cx+70, cy+20);
+      ctx.fillText("Ovary", cx+70, cy+170);
+      ctx.fillText("Anthers", cx-250, cy-60);
+    }
+  }
+
+  function drawPlant(){
+    drawFlowerBase();
+    const cx=520, cy=360;
+
+    // pollen dots
+    function pollen(x,y,n){
+      ctx.fillStyle="rgba(251,113,133,0.55)";
+      for(let i=0;i<n;i++){
+        ctx.beginPath();
+        ctx.arc(x + (Math.random()*30-15), y + (Math.random()*20-10), 3.2, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // pollinator
+    if (S.pollinator==="bee"){
+      const bx=240, by=250;
+      ctx.fillStyle="rgba(255,220,120,0.18)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(bx,by,40,22,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(bx+25,by-20,26,16,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle="rgba(255,255,255,0.7)";
+      ctx.font="12px system-ui";
+      ctx.fillText("Bee", bx-10, by+44);
+
+      // bee carries pollen when stage 0
+      if (S.stage===0) pollen(bx+40, by, 18);
+    } else {
+      ctx.fillStyle="rgba(255,255,255,0.45)";
+      ctx.font="14px system-ui";
+      ctx.fillText("Wind → → →", 180, 250);
+    }
+
+    // Stage visuals
+    if (S.stage===0){
+      // pollination: pollen on stigma
+      pollen(cx, cy-70, 26);
+
+      // arrows
+      ctx.strokeStyle="rgba(110,231,255,0.65)";
+      ctx.lineWidth=3;
+      ctx.beginPath();
+      ctx.moveTo(cx-180, cy-80);
+      ctx.lineTo(cx-20, cy-80);
+      ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText(S.pollination==="self" ? "Self-pollination" : "Cross-pollination", 70, 178);
+    }
+
+    if (S.stage===1){
+      // pollen tube down style
+      pollen(cx, cy-70, 16);
+      ctx.strokeStyle="rgba(251,113,133,0.55)";
+      ctx.lineWidth=4;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy-55);
+      ctx.lineTo(cx, cy+120);
+      ctx.stroke();
+    }
+
+    if (S.stage===2){
+      // fertilisation in ovule inside ovary
+      const ox=cx, oy=cy+165;
+      ctx.fillStyle="rgba(110,231,255,0.10)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.arc(ox,oy,18,0,Math.PI*2);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle="rgba(251,113,133,0.55)";
+      ctx.beginPath(); ctx.arc(ox-6,oy,6,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="rgba(124,92,255,0.55)";
+      ctx.beginPath(); ctx.arc(ox+6,oy,6,0,Math.PI*2); ctx.fill();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Fusion of nuclei (fertilisation)", 70, 178);
+    }
+
+    if (S.stage===3){
+      // seed formation (ovules become seeds)
+      for(let i=0;i<5;i++){
+        const x=cx-30+i*15;
+        const y=cy+165 + (i%2)*10;
+        ctx.fillStyle="rgba(255,255,255,0.10)";
+        ctx.strokeStyle="rgba(255,255,255,0.18)";
+        ctx.beginPath();
+        ctx.ellipse(x,y,10,14,0,0,Math.PI*2);
+        ctx.fill(); ctx.stroke();
+      }
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Ovules → seeds", 70, 178);
+    }
+
+    if (S.stage===4){
+      // fruit formation (ovary becomes fruit)
+      ctx.fillStyle="rgba(52,211,153,0.08)";
+      ctx.strokeStyle="rgba(255,255,255,0.22)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(cx-80, cy+105, 160, 120, 40);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle="rgba(255,255,255,0.75)";
+      ctx.font="13px system-ui";
+      ctx.fillText("Ovary wall thickens → fruit", 70, 178);
+    }
+  }
+
+  function drawHuman(view="female"){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Human Reproduction (Simplified Diagram)", 70, 110);
+
+    if (view==="female"){
+      const x=520, y=200;
+
+      // uterus
+      ctx.fillStyle="rgba(251,113,133,0.08)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.roundRect(x-90, y+100, 180, 220, 40);
+      ctx.fill(); ctx.stroke();
+
+      // oviducts
+      ctx.strokeStyle="rgba(255,255,255,0.22)";
+      ctx.lineWidth=6;
+      ctx.beginPath();
+      ctx.moveTo(x-60, y+120); ctx.quadraticCurveTo(x-180, y+70, x-240, y+130);
+      ctx.moveTo(x+60, y+120); ctx.quadraticCurveTo(x+180, y+70, x+240, y+130);
+      ctx.stroke();
+
+      // ovaries
+      ctx.fillStyle="rgba(110,231,255,0.10)";
+      ctx.beginPath(); ctx.arc(x-240, y+130, 26, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x+240, y+130, 26, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.stroke();
+
+      // cervix
+      ctx.fillStyle="rgba(255,255,255,0.06)";
+      ctx.beginPath(); ctx.roundRect(x-30, y+320, 60, 60, 18); ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,0.18)"; ctx.stroke();
+
+      // placenta + foetus icon
+      ctx.fillStyle="rgba(52,211,153,0.10)";
+      ctx.beginPath(); ctx.arc(x, y+200, 40, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle="rgba(255,255,255,0.12)";
+      ctx.beginPath(); ctx.arc(x, y+235, 24, 0, Math.PI*2); ctx.fill();
+
+      if (S.showLabels){
+        ctx.fillStyle="rgba(255,255,255,0.75)";
+        ctx.font="14px system-ui";
+        ctx.fillText("Ovary", x-290, y+130);
+        ctx.fillText("Oviduct (fertilisation here)", x-260, y+60);
+        ctx.fillText("Uterus", x+100, y+210);
+        ctx.fillText("Placenta", x+60, y+200);
+        ctx.fillText("Cervix", x+50, y+355);
+      }
+
+      note.textContent = "Fertilisation occurs in the oviduct; embryo implants in uterus; placenta nourishes foetus.";
+    } else {
+      const x=520, y=210;
+
+      // testes
+      ctx.fillStyle="rgba(110,231,255,0.08)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(x-60, y+360, 120, 90, 40);
+      ctx.fill(); ctx.stroke();
+
+      // sperm duct
+      ctx.strokeStyle="rgba(255,255,255,0.22)";
+      ctx.lineWidth=6;
+      ctx.beginPath();
+      ctx.moveTo(x-10, y+360);
+      ctx.quadraticCurveTo(x-200, y+250, x-60, y+160);
+      ctx.stroke();
+
+      // bladder placeholder
+      ctx.fillStyle="rgba(251,113,133,0.06)";
+      ctx.strokeStyle="rgba(255,255,255,0.18)";
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(x-80, y+120, 160, 140, 50);
+      ctx.fill(); ctx.stroke();
+
+      if (S.showLabels){
+        ctx.fillStyle="rgba(255,255,255,0.75)";
+        ctx.font="14px system-ui";
+        ctx.fillText("Testes (produce sperm)", x+90, y+410);
+        ctx.fillText("Sperm duct", x-270, y+250);
+        ctx.fillText("Bladder (not reproductive, shown for position)", x+110, y+180);
+      }
+
+      note.textContent = "This is a simplified layout. Key idea: sperm produced in testes and carried via sperm duct.";
+    }
+  }
+
+  function drawQuiz(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=3;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+
+    const q = quiz[S.qIndex];
+
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    ctx.font="18px system-ui";
+    ctx.fillText("Quick Quiz", 70, 110);
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="16px system-ui";
+    ctx.fillText(`Q${S.qIndex+1}: ${q.q}`, 70, 155);
+
+    ctx.fillStyle="rgba(255,255,255,0.65)";
+    ctx.font="14px system-ui";
+    q.a.forEach((opt,i)=> ctx.fillText(`${String.fromCharCode(65+i)}. ${opt}`, 90, 200 + i*30));
+
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.fillText(`Score: ${S.score}/${quiz.length}`, 70, 330);
+
+    note.textContent = "Answer options are on the left panel buttons.";
+  }
+
+  function draw(){
+    if (mode==="plant") drawPlant();
+    if (mode==="human") drawHuman("female");
+    if (mode==="quiz") drawQuiz();
+  }
+
+  // tabs
+  tPlant.addEventListener("click", ()=>{mode="plant"; setActive(tPlant); renderControls(); draw();});
+  tHuman.addEventListener("click", ()=>{mode="human"; setActive(tHuman); renderControls(); drawHuman("female");});
+  tQuiz.addEventListener("click", ()=>{mode="quiz"; setActive(tQuiz); renderControls(); drawQuiz();});
+
+  // roundRect fallback
+  CanvasRenderingContext2D.prototype.roundRect ||= function(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    this.beginPath();
+    this.moveTo(x+rr,y);
+    this.arcTo(x+w,y,x+w,y+h,rr);
+    this.arcTo(x+w,y+h,x,y+h,rr);
+    this.arcTo(x,y+h,x,y,rr);
+    this.arcTo(x,y,x+w,y,rr);
+    this.closePath();
+    return this;
+  };
+
+  renderControls();
+  draw();
+</script>
+</body>
+</html>

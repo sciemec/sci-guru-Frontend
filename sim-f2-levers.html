@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Levers</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px;display:grid;grid-template-columns:360px 1fr;gap:14px;}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.8);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:13px}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:140px}
+    input[type="range"]{width:100%}
+    .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;}
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    canvas{width:100%;height:440px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);}
+    .big{font-weight:900;font-size:14px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Machines (Levers)</h1>
+  <p>Move fulcrum, load, and effort positions. Compare moments and see if the lever balances.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">Controls</div>
+    <div class="pb">
+      <div class="row">
+        <label>Lever class</label>
+        <select id="cls" class="btn" style="padding:10px 12px">
+          <option value="1" selected>1st class (F between L and E)</option>
+          <option value="2">2nd class (L between F and E)</option>
+          <option value="3">3rd class (E between F and L)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Load (N)</label>
+        <input id="loadN" type="range" min="10" max="200" value="100"/>
+        <span class="pill" id="loadOut">100 N</span>
+      </div>
+
+      <div class="row">
+        <label>Effort (N)</label>
+        <input id="effN" type="range" min="10" max="200" value="60"/>
+        <span class="pill" id="effOut">60 N</span>
+      </div>
+
+      <div class="row">
+        <label>Fulcrum position</label>
+        <input id="fpos" type="range" min="20" max="80" value="50"/>
+        <span class="pill" id="fOut">50%</span>
+      </div>
+
+      <div class="row">
+        <label>Load position</label>
+        <input id="lpos" type="range" min="5" max="95" value="30"/>
+        <span class="pill" id="lOut">30%</span>
+      </div>
+
+      <div class="row">
+        <label>Effort position</label>
+        <input id="epos" type="range" min="5" max="95" value="70"/>
+        <span class="pill" id="eOut">70%</span>
+      </div>
+
+      <div class="row">
+        <div class="big" id="balance">Balance: —</div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="reset">Reset</button>
+        <a class="btn" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <p style="margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.45">
+        Moment = Force × perpendicular distance from fulcrum.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">Lever View</div>
+    <div class="pb">
+      <canvas id="c" width="900" height="600"></canvas>
+      <p id="mom" style="margin-top:10px;color:var(--muted);font-size:13px;"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+const cls = document.getElementById("cls");
+const loadN = document.getElementById("loadN");
+const effN = document.getElementById("effN");
+const fpos = document.getElementById("fpos");
+const lpos = document.getElementById("lpos");
+const epos = document.getElementById("epos");
+
+const loadOut = document.getElementById("loadOut");
+const effOut = document.getElementById("effOut");
+const fOut = document.getElementById("fOut");
+const lOut = document.getElementById("lOut");
+const eOut = document.getElementById("eOut");
+
+const balance = document.getElementById("balance");
+const mom = document.getElementById("mom");
+const reset = document.getElementById("reset");
+
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+function clampOrder(){
+  const c = cls.value;
+  if (c === "1"){
+    // F between L and E -> ensure L < F < E
+    let F = Number(fpos.value);
+    let L = Math.min(Number(lpos.value), F-5);
+    let E = Math.max(Number(epos.value), F+5);
+    lpos.value = Math.max(5, L);
+    epos.value = Math.min(95, E);
+  } else if (c === "2"){
+    // L between F and E -> ensure F < L < E
+    let F = Number(fpos.value);
+    let L = Number(lpos.value);
+    let E = Number(epos.value);
+    if (!(F < L && L < E)){
+      fpos.value = 30; lpos.value = 55; epos.value = 80;
+    }
+  } else {
+    // E between F and L -> ensure F < E < L
+    let F = Number(fpos.value);
+    let E = Number(epos.value);
+    let L = Number(lpos.value);
+    if (!(F < E && E < L)){
+      fpos.value = 20; epos.value = 45; lpos.value = 80;
+    }
+  }
+}
+
+function posToX(pct){
+  const m=90;
+  return m + (pct/100)*(canvas.width-2*m);
+}
+
+function draw(){
+  clampOrder();
+
+  const L = Number(loadN.value);
+  const E = Number(effN.value);
+  const Fp = Number(fpos.value);
+  const Lp = Number(lpos.value);
+  const Ep = Number(epos.value);
+
+  loadOut.textContent = `${L} N`;
+  effOut.textContent = `${E} N`;
+  fOut.textContent = `${Fp}%`;
+  lOut.textContent = `${Lp}%`;
+  eOut.textContent = `${Ep}%`;
+
+  const xF = posToX(Fp);
+  const xL = posToX(Lp);
+  const xE = posToX(Ep);
+
+  // distances from fulcrum (use pixels as “distance units”)
+  const dL = Math.abs(xL - xF);
+  const dE = Math.abs(xE - xF);
+
+  const mL = L * dL;
+  const mE = E * dE;
+
+  const diff = mE - mL;
+  let status = "Balanced ✅";
+  if (Math.abs(diff) > Math.max(1, 0.02*Math.max(mL,mE))){
+    status = diff > 0 ? "Effort side wins →" : "← Load side wins";
+  }
+  balance.textContent = `Balance: ${status}`;
+  mom.textContent = `Load moment: ${Math.round(mL)} | Effort moment: ${Math.round(mE)} (pixels used as distance units)`;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // beam
+  const y = 320;
+  ctx.strokeStyle="rgba(255,255,255,0.25)";
+  ctx.lineWidth=10;
+  ctx.beginPath();
+  ctx.moveTo(90,y);
+  ctx.lineTo(canvas.width-90,y);
+  ctx.stroke();
+
+  // fulcrum
+  ctx.fillStyle="rgba(124,92,255,0.8)";
+  ctx.beginPath();
+  ctx.moveTo(xF, y-10);
+  ctx.lineTo(xF-35, y+70);
+  ctx.lineTo(xF+35, y+70);
+  ctx.closePath();
+  ctx.fill();
+
+  // load
+  ctx.fillStyle="rgba(255,80,80,0.85)";
+  ctx.fillRect(xL-18, y-70, 36, 60);
+  ctx.fillStyle="rgba(255,255,255,0.85)";
+  ctx.font="14px system-ui";
+  ctx.fillText("LOAD", xL-22, y-78);
+  ctx.fillText(L+"N", xL-12, y-42);
+
+  // effort
+  ctx.fillStyle="rgba(110,231,255,0.85)";
+  ctx.fillRect(xE-18, y-120, 36, 110);
+  ctx.fillStyle="rgba(255,255,255,0.85)";
+  ctx.fillText("EFFORT", xE-28, y-128);
+  ctx.fillText(E+"N", xE-12, y-88);
+
+  // markers
+  ctx.fillStyle="rgba(255,255,255,0.7)";
+  ctx.fillText("F", xF-4, y+95);
+  ctx.fillText("L", xL-4, y+95);
+  ctx.fillText("E", xE-4, y+95);
+}
+
+[cls,loadN,effN,fpos,lpos,epos].forEach(el=> el.addEventListener("input", draw));
+cls.addEventListener("change", draw);
+
+reset.addEventListener("click", ()=>{
+  cls.value="1";
+  loadN.value=100; effN.value=60;
+  fpos.value=50; lpos.value=30; epos.value=70;
+  draw();
+});
+
+draw();
+</script>
+</body>
+</html>

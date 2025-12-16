@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Concentration & Dilution</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1150px;margin:0 auto;padding:14px;display:grid;grid-template-columns:430px 1fr;gap:14px;}
+    @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.82);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:900;font-size:13px}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:170px}
+    input, select{
+      padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);outline:none;
+    }
+    input[type="number"]{width:140px}
+    .btn{
+      display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;
+    }
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .good{color:#34d399}
+    .bad{color:#fb7185}
+    .big{font-weight:900;font-size:14px}
+    .box{
+      border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);
+      padding:12px;margin-top:10px;
+    }
+    .beaker{
+      height:420px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.03);
+      position:relative;overflow:hidden;
+    }
+    .liq{
+      position:absolute;left:0;right:0;bottom:0;height:60%;
+      background:rgba(110,231,255,0.18);
+      border-top:1px solid rgba(255,255,255,0.15);
+      transition:height 0.25s ease;
+    }
+    .shade{
+      position:absolute;left:0;right:0;top:0;bottom:0;
+      background:rgba(110,231,255,0.0);
+      pointer-events:none;
+      transition:background 0.25s ease;
+    }
+    .tagTop{
+      position:absolute;top:14px;left:14px;font-weight:900;font-size:14px
+    }
+    .tagSub{
+      position:absolute;top:40px;left:14px;color:var(--muted);font-size:12px
+    }
+    .hint{
+      color:var(--muted);font-size:13px;line-height:1.45;margin:8px 0 0;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Lab: Concentration & Dilution (Unit 8)</h1>
+  <p>Practice concentration calculations and dilution using <b>C1V1 = C2V2</b>.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">Calculator</div>
+    <div class="pb">
+
+      <div class="box">
+        <div class="big">1) Concentration from mass and volume</div>
+        <div class="row">
+          <label>Solute mass (g)</label>
+          <input id="mass" type="number" min="0" step="0.01" value="5"/>
+        </div>
+        <div class="row">
+          <label>Solution volume (cm³ or mL)</label>
+          <input id="vol" type="number" min="0" step="0.1" value="250"/>
+        </div>
+        <div class="row">
+          <label>Concentration unit</label>
+          <select id="unit">
+            <option value="g_per_100cm3" selected>g / 100 cm³</option>
+            <option value="g_per_dm3">g / dm³</option>
+            <option value="g_per_cm3">g / cm³</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="btn" id="calcC">Calculate</button>
+          <span class="pill" id="cOut">—</span>
+        </div>
+        <p class="hint">Tip: 1 dm³ = 1000 cm³. Many school problems use g/100cm³.</p>
+      </div>
+
+      <div class="box">
+        <div class="big">2) Dilution (C1V1 = C2V2)</div>
+        <div class="row">
+          <label>Initial concentration C1</label>
+          <input id="c1" type="number" step="0.01" value="2.0"/>
+          <span class="pill">units</span>
+        </div>
+        <div class="row">
+          <label>Initial volume V1 (cm³)</label>
+          <input id="v1" type="number" step="0.1" value="50"/>
+        </div>
+        <div class="row">
+          <label>Final concentration C2</label>
+          <input id="c2" type="number" step="0.01" value="0.5"/>
+        </div>
+        <div class="row">
+          <label>Final volume V2 (cm³)</label>
+          <input id="v2" type="number" step="0.1" value="200"/>
+        </div>
+
+        <div class="row" style="gap:8px">
+          <button class="btn" id="solveV2">Solve V2</button>
+          <button class="btn" id="solveV1">Solve V1</button>
+          <button class="btn" id="solveC2">Solve C2</button>
+          <button class="btn" id="solveC1">Solve C1</button>
+        </div>
+
+        <div class="row">
+          <span class="pill" id="dOut">Result will appear here…</span>
+        </div>
+
+        <p class="hint">Meaning: You keep the amount of solute the same, but add solvent to change concentration.</p>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="newQ">New Practice Question</button>
+        <button class="btn" id="checkQ">Check Answer</button>
+        <a class="btn" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <div class="box" id="qBox">
+        <div class="big">Practice Question</div>
+        <p class="hint" id="qText">Click “New Practice Question”.</p>
+        <div class="row">
+          <label>Your answer</label>
+          <input id="ans" type="number" step="0.01" placeholder="Enter number"/>
+          <span class="pill" id="ansUnit">—</span>
+        </div>
+        <p class="hint" id="qMsg"></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">Visual (Solution Strength)</div>
+    <div class="pb">
+      <div class="beaker" id="beaker">
+        <div class="tagTop" id="visTop">Solution</div>
+        <div class="tagSub" id="visSub">Strength changes with concentration</div>
+        <div class="liq" id="liq"></div>
+        <div class="shade" id="shade"></div>
+      </div>
+      <p class="hint">
+        Darker color = more concentrated (model). Real lab color depends on the chemical/indicator.
+      </p>
+    </div>
+  </section>
+</div>
+
+<script>
+  const mass = document.getElementById("mass");
+  const vol  = document.getElementById("vol");
+  const unit = document.getElementById("unit");
+  const cOut = document.getElementById("cOut");
+  const calcC = document.getElementById("calcC");
+
+  const c1 = document.getElementById("c1");
+  const v1 = document.getElementById("v1");
+  const c2 = document.getElementById("c2");
+  const v2 = document.getElementById("v2");
+  const dOut = document.getElementById("dOut");
+  const solveV2 = document.getElementById("solveV2");
+  const solveV1 = document.getElementById("solveV1");
+  const solveC2 = document.getElementById("solveC2");
+  const solveC1 = document.getElementById("solveC1");
+
+  const liq = document.getElementById("liq");
+  const shade = document.getElementById("shade");
+  const visTop = document.getElementById("visTop");
+  const visSub = document.getElementById("visSub");
+
+  const newQ = document.getElementById("newQ");
+  const checkQ = document.getElementById("checkQ");
+  const qText = document.getElementById("qText");
+  const ans = document.getElementById("ans");
+  const ansUnit = document.getElementById("ansUnit");
+  const qMsg = document.getElementById("qMsg");
+
+  function safe(n){ return Number.isFinite(n) ? n : NaN; }
+  function round(n, dp=3){
+    const p = Math.pow(10,dp);
+    return Math.round(n*p)/p;
+  }
+
+  function concentrationFromMassVolume(m, Vcm3, u){
+    if (Vcm3 <= 0) return NaN;
+    if (u === "g_per_100cm3") return (m / Vcm3) * 100;
+    if (u === "g_per_dm3")    return (m / Vcm3) * 1000;
+    if (u === "g_per_cm3")    return (m / Vcm3);
+    return NaN;
+  }
+
+  function updateVisual(strength, volumeCm3){
+    // strength: any positive number, we map 0..max to opacity
+    const maxStrength = 10; // for visual scaling
+    const s = Math.max(0, Math.min(1, strength / maxStrength));
+    shade.style.background = `rgba(110,231,255,${0.08 + s*0.35})`;
+
+    // volume for height (0..500 cm3)
+    const maxV = 500;
+    const h = Math.max(10, Math.min(90, (volumeCm3/maxV)*80 + 15));
+    liq.style.height = h + "%";
+
+    visTop.textContent = `Strength: ${round(strength,3)}`;
+    visSub.textContent = `Volume: ${round(volumeCm3,1)} cm³ (model)`;
+  }
+
+  calcC.addEventListener("click", ()=>{
+    const m = safe(Number(mass.value));
+    const V = safe(Number(vol.value));
+    const u = unit.value;
+    const C = concentrationFromMassVolume(m, V, u);
+
+    if (!Number.isFinite(C)){
+      cOut.textContent = "Check inputs";
+      return;
+    }
+    let label = "";
+    if (u==="g_per_100cm3") label = "g/100cm³";
+    if (u==="g_per_dm3") label = "g/dm³";
+    if (u==="g_per_cm3") label = "g/cm³";
+    cOut.textContent = `${round(C,3)} ${label}`;
+
+    // update visual using a standardized “strength”
+    const strength = (u==="g_per_dm3") ? C/10 : (u==="g_per_100cm3") ? C : C*100;
+    updateVisual(strength, V);
+  });
+
+  function dilutionSolve(which){
+    const C1 = safe(Number(c1.value));
+    const V1 = safe(Number(v1.value));
+    const C2 = safe(Number(c2.value));
+    const V2 = safe(Number(v2.value));
+
+    // C1V1 = C2V2
+    if (which==="V2"){
+      if (!(C2>0)) return NaN;
+      return (C1*V1)/C2;
+    }
+    if (which==="V1"){
+      if (!(C1>0)) return NaN;
+      return (C2*V2)/C1;
+    }
+    if (which==="C2"){
+      if (!(V2>0)) return NaN;
+      return (C1*V1)/V2;
+    }
+    if (which==="C1"){
+      if (!(V1>0)) return NaN;
+      return (C2*V2)/V1;
+    }
+    return NaN;
+  }
+
+  function showDilutionResult(which, value){
+    if (!Number.isFinite(value)){
+      dOut.textContent = "Check inputs (no zero/negative where not allowed)";
+      return;
+    }
+    if (which==="V2"){
+      v2.value = round(value,2);
+      dOut.textContent = `V2 = ${round(value,2)} cm³`;
+      updateVisual(Number(c2.value), value);
+    }
+    if (which==="V1"){
+      v1.value = round(value,2);
+      dOut.textContent = `V1 = ${round(value,2)} cm³`;
+    }
+    if (which==="C2"){
+      c2.value = round(value,3);
+      dOut.textContent = `C2 = ${round(value,3)} (same units as C1)`;
+      updateVisual(value, Number(v2.value));
+    }
+    if (which==="C1"){
+      c1.value = round(value,3);
+      dOut.textContent = `C1 = ${round(value,3)} (same units as C2)`;
+    }
+  }
+
+  solveV2.addEventListener("click", ()=> showDilutionResult("V2", dilutionSolve("V2")));
+  solveV1.addEventListener("click", ()=> showDilutionResult("V1", dilutionSolve("V1")));
+  solveC2.addEventListener("click", ()=> showDilutionResult("C2", dilutionSolve("C2")));
+  solveC1.addEventListener("click", ()=> showDilutionResult("C1", dilutionSolve("C1")));
+
+  // Practice questions
+  let currentQ = null;
+
+  function randInt(a,b){ return Math.floor(a + Math.random()*(b-a+1)); }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function makeQuestion(){
+    const types = ["massVolToC","dilutionV2","dilutionC2"];
+    const type = pick(types);
+
+    if (type==="massVolToC"){
+      const m = randInt(2,20);
+      const V = pick([50,100,200,250,500]);
+      currentQ = { type, m, V, answer: (m/V)*100, unit:"g/100cm³" };
+      qText.textContent = `A student dissolves ${m} g of salt to make ${V} cm³ of solution. Calculate concentration in g/100cm³.`;
+      ansUnit.textContent = currentQ.unit;
+    }
+
+    if (type==="dilutionV2"){
+      const C1 = pick([2,3,4,5]);
+      const V1 = pick([10,20,25,50]);
+      const C2 = pick([0.5,1,1.5,2]);
+      const V2 = (C1*V1)/C2;
+      currentQ = { type, C1, V1, C2, answer: V2, unit:"cm³" };
+      qText.textContent = `Dilution: You have ${V1} cm³ of solution at C1 = ${C1}. You want C2 = ${C2}. Find the final volume V2. (Use C1V1=C2V2)`;
+      ansUnit.textContent = currentQ.unit;
+    }
+
+    if (type==="dilutionC2"){
+      const C1 = pick([2,3,4,5]);
+      const V1 = pick([10,20,25,50]);
+      const V2 = pick([100,150,200,250]);
+      const C2 = (C1*V1)/V2;
+      currentQ = { type, C1, V1, V2, answer: C2, unit:"same units as C1" };
+      qText.textContent = `Dilution: C1 = ${C1}, V1 = ${V1} cm³. After dilution final volume is V2 = ${V2} cm³. Calculate final concentration C2.`;
+      ansUnit.textContent = currentQ.unit;
+    }
+
+    ans.value = "";
+    qMsg.textContent = "";
+    qMsg.className = "hint";
+  }
+
+  newQ.addEventListener("click", makeQuestion);
+
+  checkQ.addEventListener("click", ()=>{
+    if (!currentQ){
+      qMsg.textContent = "Click “New Practice Question” first.";
+      qMsg.className = "hint bad";
+      return;
+    }
+    const user = Number(ans.value);
+    if (!Number.isFinite(user)){
+      qMsg.textContent = "Enter a number first.";
+      qMsg.className = "hint bad";
+      return;
+    }
+
+    const correct = currentQ.answer;
+    const tol = Math.max(0.02*Math.abs(correct), 0.02); // 2% tolerance
+    if (Math.abs(user - correct) <= tol){
+      qMsg.textContent = `Correct ✅  (Answer ≈ ${round(correct,3)})`;
+      qMsg.className = "hint good";
+    } else {
+      qMsg.textContent = `Not correct ❌  Correct answer ≈ ${round(correct,3)}. Try again.`;
+      qMsg.className = "hint bad";
+    }
+  });
+
+  // initial visual
+  updateVisual(2, 250);
+</script>
+</body>
+</html>

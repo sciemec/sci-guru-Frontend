@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sci-Guru Lab | Acids & Bases</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#0f1b33;--text:#e8eefc;--muted:#a8b6d6;--border:rgba(255,255,255,0.08);}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    header{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(15,27,51,0.75);backdrop-filter:blur(10px);}
+    h1{margin:0;font-size:16px}
+    p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
+    .wrap{max-width:1100px;margin:0 auto;padding:14px;display:grid;grid-template-columns:380px 1fr;gap:14px;}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr;}}
+    .panel{background:rgba(15,27,51,0.8);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .ph{padding:12px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:13px}
+    .pb{padding:14px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    label{font-size:12px;color:var(--muted);min-width:130px}
+    input[type="range"]{width:100%}
+    .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;cursor:pointer;font-size:13px;}
+    .pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .beaker{
+      width:100%; height:420px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);
+      display:flex;align-items:center;justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .liquid{
+      position:absolute;left:0;right:0;bottom:0;
+      height:65%;
+      background: rgba(110,231,255,0.15);
+      border-top:1px solid rgba(255,255,255,0.15);
+    }
+    .labelBig{position:absolute;top:14px;left:14px;font-weight:900;font-size:14px}
+    .labelSmall{position:absolute;top:40px;left:14px;color:var(--muted);font-size:12px}
+    .colorBox{
+      position:absolute;right:14px;top:14px;
+      width:70px;height:70px;border-radius:14px;border:1px solid var(--border);
+      background:#2e66ff;
+    }
+    .meter{height:10px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,0.03);overflow:hidden}
+    .fill{height:100%;width:50%;background:rgba(110,231,255,0.45)}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Form 2 Virtual Lab: Acids, Bases & Indicators</h1>
+  <p>Use the pH slider or pick a substance. See universal indicator color + acid/base label.</p>
+</header>
+
+<div class="wrap">
+  <section class="panel">
+    <div class="ph">Controls</div>
+    <div class="pb">
+      <div class="row">
+        <label>Choose substance</label>
+        <select id="sub" class="btn" style="padding:10px 12px">
+          <option value="custom" selected>Custom (use slider)</option>
+          <option value="lemon">Lemon juice (pH ~2)</option>
+          <option value="vinegar">Vinegar (pH ~3)</option>
+          <option value="water">Pure water (pH 7)</option>
+          <option value="soap">Soapy water (pH ~10)</option>
+          <option value="bleach">Bleach (pH ~12)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>pH value</label>
+        <div style="flex:1">
+          <input id="ph" type="range" min="0" max="14" value="7" step="1"/>
+          <div class="row" style="justify-content:space-between;margin:6px 0 0">
+            <span class="pill">0</span><span class="pill">7</span><span class="pill">14</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label>Classification</label>
+        <div id="class" style="font-weight:900;font-size:14px">Neutral</div>
+      </div>
+
+      <div class="row">
+        <label>Indicator</label>
+        <div class="pill">Universal indicator</div>
+      </div>
+
+      <div class="row">
+        <label>pH meter</label>
+        <div style="flex:1">
+          <div class="meter"><div class="fill" id="fill"></div></div>
+          <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px">
+            <span>Acid</span><span>Neutral</span><span>Base</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="reset">Reset to pH 7</button>
+        <a class="btn" href="tutor.html">Back to Tutor</a>
+      </div>
+
+      <p style="margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.45">
+        Remember: pH &lt; 7 = acid, pH = 7 neutral, pH &gt; 7 base/alkali.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">Beaker View</div>
+    <div class="pb">
+      <div class="beaker">
+        <div class="labelBig" id="labelBig">pH 7</div>
+        <div class="labelSmall" id="labelSmall">Neutral solution</div>
+        <div class="colorBox" id="colorBox" title="Indicator color"></div>
+        <div class="liquid" id="liquid"></div>
+      </div>
+      <p style="margin-top:10px;color:var(--muted);font-size:13px;">
+        Indicator color is a model to help you learn. Real lab colors may vary by brand.
+      </p>
+    </div>
+  </section>
+</div>
+
+<script>
+const ph = document.getElementById("ph");
+const sub = document.getElementById("sub");
+const cls = document.getElementById("class");
+const labelBig = document.getElementById("labelBig");
+const labelSmall = document.getElementById("labelSmall");
+const colorBox = document.getElementById("colorBox");
+const fill = document.getElementById("fill");
+const reset = document.getElementById("reset");
+
+const presets = {
+  lemon: 2,
+  vinegar: 3,
+  water: 7,
+  soap: 10,
+  bleach: 12
+};
+
+// very simple universal indicator palette
+function indicatorColor(pH){
+  if (pH <= 2) return "#ff1f3a";      // red
+  if (pH <= 4) return "#ff6a00";      // orange
+  if (pH <= 6) return "#ffd000";      // yellow
+  if (pH == 7) return "#22c55e";      // green
+  if (pH <= 9) return "#2e66ff";      // blue
+  if (pH <= 11) return "#6a3cff";     // purple
+  return "#a300ff";                   // deep purple
+}
+
+function classify(pH){
+  if (pH < 7) return { name:"Acidic", note:"Acid solution", hue:"rgba(255,80,80,0.18)" };
+  if (pH === 7) return { name:"Neutral", note:"Neutral solution", hue:"rgba(34,197,94,0.16)" };
+  return { name:"Alkaline (Base)", note:"Base/alkali solution", hue:"rgba(80,140,255,0.16)" };
+}
+
+function update(){
+  const v = Number(ph.value);
+  const c = classify(v);
+
+  cls.textContent = c.name;
+  labelBig.textContent = `pH ${v}`;
+  labelSmall.textContent = c.note;
+
+  const col = indicatorColor(v);
+  colorBox.style.background = col;
+
+  // meter fill (0..14)
+  fill.style.width = ((v/14)*100) + "%";
+  fill.style.background = "rgba(110,231,255,0.45)";
+
+  // liquid tone
+  document.getElementById("liquid").style.background = c.hue;
+}
+
+sub.addEventListener("change", () => {
+  const val = sub.value;
+  if (val === "custom") return;
+  ph.value = presets[val];
+  update();
+});
+
+ph.addEventListener("input", () => {
+  sub.value = "custom";
+  update();
+});
+
+reset.addEventListener("click", () => {
+  sub.value = "custom";
+  ph.value = 7;
+  update();
+});
+
+update();
+</script>
+</body>
+</html>
