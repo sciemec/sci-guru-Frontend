@@ -2,604 +2,1036 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sci-Guru Tutor | Form 1 & Form 2</title>
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:#0f1b33;
-      --panel2:#0d1730;
-      --text:#e8eefc;
-      --muted:#a8b6d6;
-      --border:rgba(255,255,255,0.08);
-      --accent:rgba(110,231,255,0.20);
-      --accent2:rgba(52,211,153,0.18);
-      --danger:rgba(251,113,133,0.22);
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --bg:#0b1020;
+      --panel:#0f1a33;
+      --panel2:#0c162d;
+      --border:rgba(255,255,255,.09);
+      --text:#eaf0ff;
+      --muted:#a7b4d8;
+      --blue:rgba(99,102,241,.25);
+      --blue2:rgba(59,130,246,.20);
+      --green:rgba(16,185,129,.18);
+      --red:rgba(244,63,94,.18);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background: radial-gradient(1200px 700px at 20% 0%, rgba(110,231,255,0.10), transparent 55%),
-                  radial-gradient(1000px 700px at 90% 10%, rgba(52,211,153,0.10), transparent 55%),
-                  var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 10% 0%, rgba(59,130,246,.12), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, rgba(16,185,129,.10), transparent 55%),
+        var(--bg);
       min-height:100vh;
-      overflow-x:hidden;
     }
-    a{text-decoration: none;}
+    a{color:inherit; text-decoration:none}
     .app{
       display:grid;
-      grid-template-columns: 320px 1fr;
-      min-height:100vh;
+      grid-template-columns: 360px 1fr;
+      gap:16px;
+      padding:16px;
+      max-width: 1300px;
+      margin: 0 auto;
     }
     @media (max-width: 980px){
-      .app{grid-template-columns: 1fr;}
-      .sidebar{position:sticky; top:0; z-index:10; max-height: 400px; overflow-y: auto;}
+      .app{grid-template-columns:1fr}
     }
 
-    /* Sidebar */
-    .sidebar{
-      background: rgba(15,27,51,0.95);
-      border-right:1px solid var(--border);
-      backdrop-filter: blur(12px);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
+    /* Header */
+    .topHeader{
+      grid-column: 1 / -1;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(15,26,51,.85);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
     .brand{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding: 10px 10px 14px;
-      border-bottom:1px solid var(--border);
-      margin-bottom:12px;
+      display:flex; align-items:center; gap:12px;
     }
-    .logo{
-      width:44px;height:44px;border-radius:14px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
+    .badge{
+      width:42px;height:42px;border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
       display:flex;align-items:center;justify-content:center;
-      overflow:hidden;
+      font-weight:900;
+      letter-spacing:.5px;
     }
-    .logo img{width:100%;height:100%;object-fit:cover;display:block}
-    .brand h1{font-size:14px;margin:0;font-weight:900;letter-spacing:0.2px}
-    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px;line-height:1.25}
-
-    .seg{
-      display:flex; gap:8px; flex-wrap:wrap;
-      margin: 12px 0 10px;
+    .brand h1{margin:0;font-size:18px;font-weight:900}
+    .brand p{margin:2px 0 0; font-size:13px; color:var(--muted)}
+    .tabs{
+      display:flex; gap:10px; flex-wrap:wrap;
     }
-    .pillBtn{
-      padding:8px 10px;
+    .tab{
+      padding:10px 14px;
       border-radius:999px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,.03);
       color:var(--text);
       cursor:pointer;
-      font-size:12px;
+      font-size:13px;
       user-select:none;
     }
-    .pillBtn.active{
-      border-color: rgba(110,231,255,0.35);
-      background: rgba(110,231,255,0.10);
+    .tab.active{
+      background: rgba(59,130,246,.14);
+      border-color: rgba(59,130,246,.35);
     }
 
-    .search{
-      display:flex; gap:8px; align-items:center;
-      margin: 8px 0 12px;
+    /* Left panel */
+    .left{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(15,26,51,.80);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      min-height: 620px;
     }
-    .search input{
+    .leftHead{
+      padding:14px 14px 10px;
+      border-bottom:1px solid var(--border);
+    }
+    .leftHead b{display:block; font-size:16px}
+    .leftHead span{display:block; margin-top:4px; color:var(--muted); font-size:13px}
+    .searchRow{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+    }
+    .searchRow input{
       width:100%;
       padding:10px 12px;
-      border-radius:12px;
+      border-radius:14px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,.03);
       color:var(--text);
       outline:none;
     }
-
-    .navTitle{
-      font-size:12px;
-      color:var(--muted);
-      margin: 10px 6px 8px;
-      text-transform:uppercase;
-      letter-spacing:0.12em;
+    .topicList{
+      padding:12px 12px 14px;
+      overflow:auto;
+      flex:1;
     }
-
-    .nav{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      flex: 1;
-      overflow-y:auto;
-      padding-right:4px;
-    }
-    .nav::-webkit-scrollbar{width:6px}
-    .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:999px}
-    
-    .navItem{
-      padding:10px 10px;
+    .topicList::-webkit-scrollbar{width:10px}
+    .topicList::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px}
+    .topicBtn{
+      width:100%;
+      text-align:left;
+      padding:12px 12px;
+      border-radius:16px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      margin-bottom:10px;
       cursor:pointer;
-      transition: all 0.2s ease;
-    }
-    .navItem:hover{transform: translateX(4px); background: rgba(255,255,255,0.05);}
-    .navItem.active{
-      border-color: rgba(52,211,153,0.30);
-      background: rgba(52,211,153,0.10);
-    }
-    .navItem b{display:block;font-size:13px}
-    .navItem span{display:block;color:var(--muted);font-size:12px;margin-top:2px;line-height:1.25}
-
-    .sideFooter{
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top:1px solid var(--border);
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-      cursor:pointer;
-      font-size:13px;
-      text-decoration:none;
-      user-select:none;
-      transition: background 0.2s;
-    }
-    .btn:hover{background: rgba(255,255,255,0.1);}
-
-    /* Main Content */
-    .main{
-      padding: 20px;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .topbar{
+      transition: transform .08s ease, background .12s ease;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-bottom: 20px;
     }
-    .topbar h2{ margin:0; font-size:18px; font-weight:900;}
-    .topbar p{ margin:4px 0 0; color:var(--muted); font-size:14px; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:20px;
+    .topicBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.05)}
+    .topicBtn.active{
+      background: rgba(59,130,246,.15);
+      border-color: rgba(59,130,246,.35);
     }
-    @media (max-width: 1100px){
-      .grid{grid-template-columns: 1fr;}
+    .topicBtn .l{
+      display:flex; flex-direction:column; gap:3px;
     }
-
-    .card{
-      background: rgba(15,27,51,0.6);
-      border:1px solid var(--border);
-      border-radius:16px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-    }
-    .cardHead{
-      padding:14px 18px;
-      border-bottom:1px solid var(--border);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      background: rgba(255,255,255,0.02);
-    }
-    .cardHead b{font-size:14px}
-    .cardBody{padding:18px}
-    .muted{color:var(--muted)}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      padding:6px 12px;
+    .topicBtn .l b{font-size:14px}
+    .topicBtn .l span{font-size:12px; color:var(--muted)}
+    .topicBtn .r{
+      font-size:12px; color:var(--muted);
+      padding:6px 10px;
       border-radius:999px;
       border:1px solid var(--border);
-      color:var(--muted);
-      font-size:11px;
-      background: rgba(255,255,255,0.03);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
     }
 
-    .labGrid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap:14px;
-      margin-top: 14px;
-    }
-    @media (max-width: 520px){
-      .labGrid{grid-template-columns:1fr;}
-    }
-    .lab{
-      padding:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      border-radius:14px;
-      display:flex;flex-direction:column;gap:8px;
-    }
-    .lab b{font-size:14px; color: #fff}
-    .lab p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}
-    .lab .btn{margin-top:auto; justify-content:center; background: rgba(110,231,255,0.1);}
-
-    /* Quiz Styling */
-    .qRow{display:flex;flex-direction:column;gap:12px}
-    .qBox{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      border-radius:14px;
-      padding:16px;
-    }
-    .qBox b{display:block;font-size:14px;margin-bottom:12px; color: #fff}
-    .qOpt{
-      display:flex;gap:10px;align-items:center;
-      margin:8px 0; padding: 10px; 
-      border-radius: 8px; cursor: pointer;
-      transition: background 0.2s;
-    }
-    .qOpt:hover{ background: rgba(255,255,255,0.05); }
-    .qOpt input{margin:0; cursor: pointer;}
-    .qActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    
-    .notice{
-      margin-top:14px;
-      padding:12px 16px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      font-size:13px;
-      line-height:1.5;
-    }
-    .notice.ok{background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.25); color: #a7ffd9;}
-    .notice.warn{background: rgba(251,113,133,0.1); border-color: rgba(251,113,133,0.25); color: #ffb1bc;}
-
-    /* AI Chat Drawer */
-    .chatFab{ position: fixed; right: 20px; bottom: 20px; z-index: 50; }
-    .chatFab button{
-      width:56px;height:56px;border-radius:20px;
-      border:1px solid var(--border);
-      background: #3b82f6;
-      color: white;
-      cursor:pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      font-weight:900;
-      transition: transform 0.2s;
-    }
-    .chatFab button:hover{ transform: scale(1.05); }
-
-    .drawer{
-      position: fixed;
-      top: 0; right: 0;
-      width: 420px;
-      max-width: 100vw;
-      height: 100vh;
-      background: #0f172a;
-      border-left:1px solid var(--border);
-      box-shadow: var(--shadow);
-      transform: translateX(100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 60;
-      display:flex;flex-direction:column;
-    }
-    .drawer.open{transform: translateX(0);}
-    .drawerHead{
-      padding:16px;
-      border-bottom:1px solid var(--border);
-      display:flex;align-items:center;justify-content:space-between;
-    }
-    .drawerBody{padding:16px;flex:1;overflow-y:auto}
-    .msg{
-      margin:12px 0;
-      padding:12px;
-      border-radius:14px;
-      font-size:14px;
-      line-height:1.5;
-      max-width: 90%;
-    }
-    .msg.me{background: #1e293b; align-self: flex-end; margin-left: auto; border: 1px solid var(--border);}
-    .msg.ai{background: #334155; border: 1px solid rgba(110,231,255,0.2); margin-right: auto;}
-    
-    .drawerFoot{
-      padding:16px;
+    .leftFooter{
+      padding:12px 14px;
       border-top:1px solid var(--border);
-      display:flex;gap:8px;
+      display:flex; gap:10px; flex-wrap:wrap;
     }
-    .drawerFoot input{
-      flex: 1; padding:12px; border-radius:12px;
+    .btn{
+      padding:10px 12px;
+      border-radius:14px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,0.05); color:var(--text); outline:none;
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      font-size:13px;
+      user-select:none;
+    }
+    .btn:hover{background: rgba(255,255,255,.05)}
+
+    /* Right panel */
+    .right{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:16px;
+      align-content:start;
+    }
+    @media (max-width: 1100px){
+      .right{grid-template-columns:1fr}
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(15,26,51,.80);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .cardHead{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .cardHead b{font-size:14px}
+    .chip{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .cardBody{padding:14px}
+    .muted{color:var(--muted)}
+    ul{margin:10px 0 0 18px; color:var(--muted); line-height:1.55}
+    .labBox{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+      margin-top:10px;
+    }
+    .labBox b{display:block; font-size:13px}
+    .labBox span{display:block; font-size:12px; color:var(--muted); margin-top:4px}
+    .labBox a{
+      display:inline-flex;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(59,130,246,.14);
+      justify-content:center;
     }
 
-    .rightCol .card{position:sticky; top: 20px;}
-    @media (max-width: 1100px){ .rightCol .card{position:static;} }
+    /* Quiz */
+    .q{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background: rgba(255,255,255,.03);
+      margin-top:10px;
+    }
+    .q b{display:block; font-size:13px; margin-bottom:8px}
+    .q label{display:flex; gap:8px; margin:6px 0; color:var(--muted); font-size:13px}
+    .qActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .notice{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-size:13px;
+      line-height:1.4;
+    }
+    .ok{background: var(--green); border-color: rgba(16,185,129,.28)}
+    .warn{background: var(--red); border-color: rgba(244,63,94,.28)}
+    .scoreBig{
+      font-size:44px; font-weight:900; margin:6px 0 0;
+    }
+
+    /* AI modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal{
+      width: 720px;
+      max-width: 98vw;
+      max-height: 90vh;
+      overflow:hidden;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      background: rgba(15,26,51,.95);
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .modalBody{padding:12px 14px; overflow:auto; flex:1}
+    .msg{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:10px 12px;
+      margin:10px 0;
+      white-space: pre-wrap;
+      line-height:1.4;
+      font-size:13px;
+    }
+    .msg.me{background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.22)}
+    .msg.ai{background: rgba(16,185,129,.10); border-color: rgba(16,185,129,.20)}
+    .modalFoot{
+      padding:12px 14px;
+      border-top:1px solid var(--border);
+      display:flex; gap:10px;
+    }
+    .modalFoot input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      outline:none;
+    }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <aside class="sidebar">
+
+    <div class="topHeader">
       <div class="brand">
-        <div class="logo">
-          <img src="images/lec-logo.jpg" alt="Logo" onerror="this.parentElement.innerHTML='SG'">
-        </div>
+        <div class="badge">SG</div>
         <div>
           <h1>Sci-Guru Tutor</h1>
           <p>The Ultimate Science Hub</p>
         </div>
       </div>
+      <div class="tabs">
+        <button class="tab active" id="tabF1">Form 1</button>
+        <button class="tab" id="tabF2">Form 2</button>
+        <button class="tab" id="tabLabs">Labs Hub</button>
+      </div>
+    </div>
 
-      <div class="seg" id="formSeg">
-        <button class="pillBtn active" data-form="f1">Form 1</button>
-        <button class="pillBtn" data-form="f2">Form 2</button>
-        <button class="pillBtn" data-form="labs">Labs Hub</button>
+    <!-- LEFT -->
+    <aside class="left">
+      <div class="leftHead">
+        <b id="leftTitle">Form 1 Topics</b>
+        <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
       </div>
 
-      <div class="search">
-        <input id="searchBox" type="text" placeholder="Search topics...">
+      <div class="searchRow">
+        <input id="searchBox" placeholder="Search topics..." />
       </div>
 
-      <div class="navTitle" id="navTitle">Topics</div>
-      <div class="nav" id="nav"></div>
+      <div class="topicList" id="topicList"></div>
 
-      <div class="sideFooter">
-        <button class="btn" id="btnResetProgress" style="flex:1">Reset Data</button>
-        <button class="btn" id="btnOpenChat" style="flex:1">AI Helper</button>
+      <div class="leftFooter">
+        <button class="btn" id="btnReset">Reset Data</button>
+        <button class="btn" id="btnAI">AI Helper</button>
       </div>
     </aside>
 
-    <main class="main">
-      <div class="topbar">
-        <div>
-          <h2 id="pageTitle">Welcome Student</h2>
-          <p id="pageSub" class="muted">Select a topic from the sidebar to begin.</p>
+    <!-- RIGHT -->
+    <section class="right">
+
+      <div class="card">
+        <div class="cardHead">
+          <b id="topicHeader">Welcome</b>
+          <span class="chip" id="topicChip">Overview</span>
         </div>
-        <div class="chips" id="statusChips"></div>
+        <div class="cardBody">
+          <div class="muted" id="topicIntro">
+            Your Form 1 Topics 1–19 are restored here, and Form 2 is added as a separate tab.
+          </div>
+          <div id="topicBullets"></div>
+          <div id="labArea"></div>
+        </div>
       </div>
 
-      <div class="grid">
-        <section class="card">
+      <div>
+        <div class="card">
           <div class="cardHead">
-            <b id="contentTitle">Course Material</b>
-            <span class="chip" id="contentTag">INFO</span>
+            <b>Topic Quiz</b>
+            <span class="chip" id="quizChip">Saved</span>
           </div>
           <div class="cardBody">
-            <div id="contentArea" class="muted">
-              Choose a form and a topic to see core concepts and virtual labs.
-            </div>
-            <div id="labsArea" style="margin-top:20px; display:none;">
-              <div class="chips" id="labsChips"></div>
-              <div class="labGrid" id="labsGrid"></div>
-            </div>
+            <div class="muted" id="quizIntro">Select a topic to load a quiz.</div>
+            <div id="quizArea"></div>
           </div>
-        </section>
+        </div>
 
-        <aside class="rightCol">
-          <section class="card">
-            <div class="cardHead">
-              <b>Knowledge Check</b>
-              <span class="chip" id="progressChip">0%</span>
-            </div>
-            <div class="cardBody">
-              <div id="quizArea" class="muted">Select a topic to start a quiz.</div>
-            </div>
-          </section>
-        </aside>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead">
+            <b>Your Score</b>
+            <span class="chip" id="scoreChip">Quiz Score</span>
+          </div>
+          <div class="cardBody">
+            <div class="muted">Latest score for selected topic:</div>
+            <div class="scoreBig" id="scoreBig">0</div>
+          </div>
+        </div>
       </div>
-    </main>
+
+    </section>
   </div>
 
-  <div class="chatFab">
-    <button id="chatToggle">AI</button>
-  </div>
-
-  <div class="drawer" id="drawer">
-    <div class="drawerHead">
-      <b id="chatHeader">Sci-Guru AI</b>
-      <div style="display:flex; gap:8px;">
-        <button class="btn" id="chatClear" style="padding: 6px 10px;">Clear</button>
-        <button class="btn" id="chatClose" style="padding: 6px 10px;">X</button>
+  <!-- AI Modal -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <b id="aiTitle">Sci-Guru AI Helper</b>
+        <div style="display:flex; gap:10px;">
+          <button class="btn" id="aiClear">Clear</button>
+          <button class="btn" id="aiClose">Close</button>
+        </div>
       </div>
-    </div>
-    <div class="drawerBody" id="chatBody">
-      <div class="msg ai">Hello! I'm your science assistant. Select a topic and ask me anything!</div>
-    </div>
-    <div class="drawerFoot">
-      <input id="chatInput" placeholder="Ask a question..." />
-      <button class="btn" id="chatSend">Send</button>
+      <div class="modalBody" id="aiBody">
+        <div class="msg ai">Ask me about the selected topic. (If AI doesn’t respond, your backend route may be different.)</div>
+      </div>
+      <div class="modalFoot">
+        <input id="aiInput" placeholder="Type your question..." />
+        <button class="btn" id="aiSend">Send</button>
+      </div>
     </div>
   </div>
 
 <script>
 /* =========================================================
-   DATA STORAGE
+   IMPORTANT: FILE NAMING RULE
+   - Avoid spaces and & in filenames to prevent broken links.
+========================================================= */
+
+function safeHref(path){
+  // encode spaces and symbols safely for href use
+  return encodeURI(path);
+}
+
+/* =========================================================
+   FORM 1 TOPICS (RESTORED 1–19)
+   - Keep your Form 1 labs here.
+   - If a sim page doesn’t exist yet, leave labs: [].
 ========================================================= */
 const form1Topics = [
-  { id:"f1-t1", title:"Topic 1: Intro & Lab Safety", subtitle:"Rules & Apparatus", summary:["Lab safety rules and symbols.","Basic lab apparatus usage.","Making scientific measurements."], labs:[]},
-  { id:"f1-t2", title:"Topic 2: Cells & Organization", subtitle:"Units of Life", summary:["MRS GREN life processes.","Cell specialization.","Tissues, Organs, Systems."], labs:[]},
-  { id:"f1-t8", title:"Topic 8: Separation Methods", subtitle:"Mixtures", summary:["Filtration and evaporation.","Distillation and magnetism.","Water treatment processes."], labs:[{ title:"Virtual Lab: Separation", desc:"Master filtration and evaporation.", href:"sim-separation.html" }]},
-  { id:"f1-density", title:"Physics: Density", subtitle:"Mass/Volume", summary:["Using mass balances.","Regular vs Irregular objects.","Floating and sinking laws."], labs:[{ title:"Density Lab", desc:"The Imbokodo challenge.", href:"sim-density.html" }]},
-  { id:"f1-electricity", title:"Physics: Electricity", subtitle:"Circuits", summary:["Circuit components.","Series vs Parallel basics.","Safe electrical connections."], labs:[{ title:"Circuit Sim", desc:"Build and test circuits.", href:"sim-electricity.html" }]}
+  { id:"f1-t1", n:1,  title:"Laboratory",     sub:"Intro & Lab Safety", bullets:[
+    "Lab rules and safety procedures",
+    "Hazard symbols and safe handling",
+    "Basic apparatus and measurements"
+  ], labs:[] },
+
+  { id:"f1-t2", n:2,  title:"Cells",         sub:"Cells & Organization", bullets:[
+    "Cells as the basic unit of life",
+    "Tissues, organs and systems",
+    "Specialised cells and functions"
+  ], labs:[
+    { name:"Cells Labels Lab", file:"sim-cells-labels.html", desc:"Label cell parts and functions." }
+  ]},
+
+  { id:"f1-t3", n:3,  title:"Nutrition",     sub:"Feeding & Digestion", bullets:[
+    "Autotrophs vs heterotrophs",
+    "Photosynthesis basics",
+    "Human digestive system overview"
+  ], labs:[] },
+
+  { id:"f1-t4", n:4,  title:"Respiratory",   sub:"Breathing & Gas Exchange", bullets:[
+    "Respiration releases energy in cells",
+    "Lungs and air passages",
+    "Gas exchange in alveoli"
+  ], labs:[] },
+
+  { id:"f1-t5", n:5,  title:"Transport",     sub:"Movement in plants & humans", bullets:[
+    "Diffusion and osmosis basics",
+    "Blood transport system overview",
+    "Xylem and phloem intro"
+  ], labs:[] },
+
+  { id:"f1-t6", n:6,  title:"Reproductive",  sub:"Plants & Human Reproduction", bullets:[
+    "Pollination and fertilisation",
+    "Seed/fruit formation overview",
+    "Human reproduction basics"
+  ], labs:[] },
+
+  { id:"f1-t7", n:7,  title:"Health",        sub:"Health & Disease", bullets:[
+    "Infectious vs non-infectious diseases",
+    "Prevention: hygiene and sanitation",
+    "Good health habits"
+  ], labs:[] },
+
+  { id:"f1-t8", n:8,  title:"Separation",    sub:"Separation Methods", bullets:[
+    "Filtration, evaporation, sieving, decanting",
+    "Magnetism and other methods",
+    "Choosing a method by properties"
+  ], labs:[
+    { name:"Separation Simulator", file:"sim-separation.html", desc:"Practice separation methods." }
+  ]},
+
+  { id:"f1-t9",  n:9,  title:"Matter",       sub:"States & Particles", bullets:[
+    "Particles and states of matter",
+    "Changes of state (melting/boiling)",
+    "Basic particle model"
+  ], labs:[] },
+
+  { id:"f1-t10", n:10, title:"Acids",        sub:"Acids & Bases (Intro)", bullets:[
+    "Acids and bases in daily life",
+    "Indicators and pH idea",
+    "Neutralisation concept"
+  ], labs:[] },
+
+  { id:"f1-t11", n:11, title:"Industrial",   sub:"Industrial Processes (Intro)", bullets:[
+    "Industry and simple processes",
+    "Safety in industrial chemicals",
+    "Applications to daily life"
+  ], labs:[] },
+
+  { id:"f1-t12", n:12, title:"Oxidation",    sub:"Oxidation & Reduction (Intro)", bullets:[
+    "Physical vs chemical change",
+    "Oxidation and reduction idea",
+    "Everyday examples"
+  ], labs:[] },
+
+  { id:"f1-t13", n:13, title:"Data",         sub:"Data Presentation", bullets:[
+    "Tables and graphs",
+    "Reading graphs correctly",
+    "Trends and conclusions"
+  ], labs:[
+    { name:"Data / Graphs Lab", file:"sim-data.html", desc:"Practice plotting and reading graphs." }
+  ]},
+
+  { id:"f1-t14", n:14, title:"Measurements", sub:"SI Units & Density", bullets:[
+    "SI units and conversions",
+    "Mass vs weight",
+    "Volume and density concept"
+  ], labs:[] },
+
+  { id:"f1-t15", n:15, title:"Forces",       sub:"Force & Friction", bullets:[
+    "Force as a vector",
+    "Resultant force",
+    "Friction and how to reduce it"
+  ], labs:[] },
+
+  { id:"f1-t16", n:16, title:"Machines",     sub:"Simple Machines", bullets:[
+    "Levers, pulleys, wheel & axle",
+    "Effort, load and fulcrum",
+    "Practical uses"
+  ], labs:[] },
+
+  { id:"f1-t17", n:17, title:"Energy",       sub:"Work, Light & Sound", bullets:[
+    "Conservation of energy",
+    "Work done = force × distance",
+    "Light and sound basics"
+  ], labs:[
+    { name:"Energy Lab", file:"sim-energy.html", desc:"Energy transformations (basic)." }
+  ]},
+
+  { id:"f1-t18", n:18, title:"Magnetism",    sub:"Magnets & Fields", bullets:[
+    "Magnetic poles and attraction/repulsion",
+    "Field lines around a magnet",
+    "Simple investigations"
+  ], labs:[] },
+
+  { id:"f1-t19", n:19, title:"Electricity",  sub:"Circuits (Series upgrade later)", bullets:[
+    "Circuit symbols and components",
+    "Building simple circuits",
+    "Series circuits (planned upgrade)"
+  ], labs:[
+    { name:"Electricity Simulator", file:"sim-electricity.html", desc:"Build circuits and test." },
+    { name:"Density Simulator", file:"sim-density.html", desc:"Mass, volume and density." }
+  ]},
 ];
 
-const form2Units = [
-  { id:"f2-u4", title:"Unit 4: Transport Systems", subtitle:"Osmosis & Blood", summary:["Diffusion & Active Transport.","Xylem and Phloem roles.","Human heart and circulation."], labs:[{ title:"Transport Sim", desc:"Membrane & Plant Transport.", href:"sim-f2-transport.html" }]},
-  { id:"f2-u5", title:"Unit 5: Reproduction", subtitle:"Plants & Humans", summary:["Pollination steps.","Human fetal development.","Placenta and birth."], labs:[{ title:"Reproduction Lab", desc:"Plant vs Human cycles.", href:"sim-f2-reproduction.html" }]},
-  { id:"f2-u8", title:"Unit 8: Matter & Particles", subtitle:"Moles & Dilution", summary:["Concentration calculations.","The Mole concept intro.","Serial dilutions."], labs:[{ title:"Matter Sim", desc:"Concentration & Particles.", href:"sim-f2-matter.html" }]},
-  { id:"f2-u18", title:"Unit 18: Magnetism", subtitle:"Field Lines", summary:["Magnetic poles behavior.","Visualizing field lines.","Magnetic materials."], labs:[]}
+/* =========================================================
+   FORM 2 TOPICS/UNITS (your new repo pages)
+   - Links assume you renamed files to remove spaces/&.
+========================================================= */
+const form2Topics = [
+  { id:"f2-u1", n:1,  title:"Cells & Organisation", sub:"Classification, variation & selection", bullets:[
+    "Life processes and characteristics",
+    "Five-kingdom classification overview",
+    "Variation and selection concepts"
+  ], labs:[ { name:"Form 2 Cells Lab", file:"sim-f2-cells.html", desc:"Form 2 cells activities." } ] },
+
+  { id:"f2-u2", n:2,  title:"Nutrition", sub:"Photosynthesis + digestion", bullets:[
+    "Photosynthesis and leaf adaptations",
+    "Food chains and food webs",
+    "Digestive system processes"
+  ], labs:[] },
+
+  { id:"f2-u3", n:3,  title:"Respiratory", sub:"Respiration equation + lungs", bullets:[
+    "glucose + oxygen → carbon dioxide + water + energy",
+    "Human respiratory system parts",
+    "External gas exchange"
+  ], labs:[] },
+
+  { id:"f2-u4", n:4,  title:"Transport Systems", sub:"Diffusion/osmosis + xylem/phloem + heart", bullets:[
+    "Diffusion, osmosis and active transport",
+    "Xylem and phloem functions",
+    "Heart, vessels and blood components"
+  ], labs:[ { name:"Transport Lab", file:"sim-f2-transport.html", desc:"Transport systems sim." } ] },
+
+  { id:"f2-u5", n:5,  title:"Reproductive Systems", sub:"Plants + humans + placenta", bullets:[
+    "Pollination and fertilisation",
+    "Seed and fruit formation",
+    "Placenta function and childbirth"
+  ], labs:[ { name:"Reproduction Lab", file:"sim-f2-reproduction.html", desc:"Reproduction sim." } ] },
+
+  { id:"f2-u6", n:6,  title:"Health & Disease", sub:"Disease cycle + bilharzia", bullets:[
+    "Infectious vs non-infectious diseases",
+    "Infectious disease cycle",
+    "Bilharzia transmission and prevention"
+  ], labs:[ { name:"Health & Disease Lab", file:"sim-f2-health-diseases.html", desc:"Health & disease sim." } ] },
+
+  { id:"f2-u7", n:7,  title:"Separation", sub:"Revision + applications", bullets:[
+    "Filtration, evaporation, magnetism, decanting",
+    "Water treatment applications",
+    "Agricultural processing (salt/sugar)"
+  ], labs:[] },
+
+  { id:"f2-u8", n:8,  title:"Matter / Concentration", sub:"Solutions, dilution, mole intro", bullets:[
+    "Concentration calculations",
+    "Dilution concept",
+    "Mole and Avogadro intro"
+  ], labs:[
+    { name:"Matter Lab", file:"sim-f2-matter.html", desc:"Matter concepts." },
+    { name:"Concentration Lab", file:"sim-f2-concentration.html", desc:"Concentration and dilution." }
+  ]},
+
+  { id:"f2-u9", n:9,  title:"Acids & Bases", sub:"Neutralisation reactions", bullets:[
+    "acid + base → salt + water",
+    "Reactions with oxides/hydroxides/carbonates",
+    "Everyday examples (antacids, bicarbonate)"
+  ], labs:[ { name:"Acids & Bases Lab", file:"sim-f2-acids-bases.html", desc:"Neutralisation practice." } ] },
+
+  { id:"f2-u12", n:12, title:"Organic / Combustion", sub:"Complete vs incomplete combustion", bullets:[
+    "Complete combustion products",
+    "Incomplete combustion (CO, soot)",
+    "Environmental effects"
+  ], labs:[ { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." } ] },
+
+  { id:"f2-u13", n:13, title:"Data Presentation", sub:"Straight line graphs", bullets:[
+    "Construct straight-line graphs",
+    "Direct/inverse proportionality",
+    "Gradient and intercept"
+  ], labs:[ { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." } ] },
+
+  { id:"f2-u14", n:14, title:"Measurements", sub:"SI units + density", bullets:[
+    "Convert SI units",
+    "Mass vs weight",
+    "Volume and density"
+  ], labs:[ { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." } ] },
+
+  { id:"f2-u15", n:15, title:"Forces", sub:"Resultant, moments, friction", bullets:[
+    "Resultant forces",
+    "Moments = force × distance",
+    "Friction and reducing friction"
+  ], labs:[ { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." } ] },
+
+  { id:"f2-u16", n:16, title:"Machines / Levers", sub:"Simple machines", bullets:[
+    "Classes of levers",
+    "Fulcrum, effort, load",
+    "Simple machine applications"
+  ], labs:[ { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." } ] },
+
+  { id:"f2-u18", n:18, title:"Magnetism & Electricity", sub:"Fields and magnets", bullets:[
+    "Magnetic poles and fields",
+    "Field lines investigations",
+    "Magnetism applications"
+  ], labs:[ { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." } ] },
 ];
 
+/* =========================================================
+   LABS HUB (auto)
+========================================================= */
+function buildLabsHub(){
+  const labs = [];
+  form1Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 1", topic:`Topic ${t.n}: ${t.title}`, ...l})));
+  form2Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 2", topic:`Unit ${t.n}: ${t.title}`, ...l})));
+  return labs;
+}
+
+/* =========================================================
+   QUIZZES (you can expand)
+========================================================= */
 const QUIZZES = {
+  // Form 1 quizzes (key by id)
   "f1-t2": [
-    { q:"Which is the basic unit of life?", opts:["Tissue","Cell","Organ","System"], a:1 },
-    { q:"Which is NOT a life process?", opts:["Respiration","Movement","Rusting","Reproduction"], a:2 }
+    { q:"The basic unit of life is:", opts:["Organ","Cell","Tissue","System"], a:1 },
+    { q:"A group of similar cells working together is called:", opts:["Organ","Tissue","Species","Kingdom"], a:1 },
+    { q:"Which is NOT a life process?", opts:["Respiration","Movement","Rusting","Growth"], a:2 },
   ],
+  "f1-t3": [
+    { q:"Photosynthesis happens mainly in the:", opts:["Root","Leaf","Stem","Flower"], a:1 },
+    { q:"Humans are:", opts:["Autotrophs","Heterotrophs","Producers","Decomposers only"], a:1 },
+    { q:"Absorption occurs mainly in the:", opts:["Stomach","Small intestine","Mouth","Oesophagus"], a:1 },
+  ],
+  "f1-t4": [
+    { q:"Gas exchange happens in the:", opts:["Trachea","Alveoli","Ribs","Diaphragm only"], a:1 },
+    { q:"Respiration releases:", opts:["Energy","Water only","Oxygen","Food"], a:0 },
+    { q:"Breathing rate increases during:", opts:["Rest","Exercise","Sleep only","Never"], a:1 },
+  ],
+  "f1-t5": [
+    { q:"Osmosis is movement of:", opts:["Solute","Water","Blood","Air"], a:1 },
+    { q:"Diffusion is movement from:", opts:["Low to high","High to low","Cold to hot","Solid to liquid"], a:1 },
+    { q:"Blood vessels that carry blood away from the heart:", opts:["Veins","Arteries","Capillaries","Alveoli"], a:1 },
+  ],
+  "f1-t6": [
+    { q:"Pollination is transfer of:", opts:["Ovule to ovary","Pollen to stigma","Seed to soil","Nectar to anther"], a:1 },
+    { q:"Fertilisation produces a:", opts:["Spore","Zygote","Pollen grain","Leaf"], a:1 },
+    { q:"A baby grows in the mother's:", opts:["Lung","Uterus","Stomach","Heart"], a:1 },
+  ],
+  "f1-t7": [
+    { q:"Infectious diseases are:", opts:["Communicable","Non-communicable","Always genetic","Always deficiency"], a:0 },
+    { q:"Prevention includes:", opts:["Hygiene","Sharing needles","Not washing hands","Drinking dirty water"], a:0 },
+    { q:"Health includes:", opts:["Physical only","Physical, mental, social","Mental only","Social only"], a:1 },
+  ],
+  "f1-t8": [
+    { q:"Filtration separates:", opts:["Two liquids","Insoluble solid from liquid","Salt from salt solution","Two gases"], a:1 },
+    { q:"Evaporation can be used to get:", opts:["Sand from water","Salt from salt solution","Oil from water","Iron from sand"], a:1 },
+    { q:"Magnetism can separate:", opts:["Sugar and water","Iron filings and sand","Salt and water","Two liquids"], a:1 },
+  ],
+
+  // Form 2 quizzes (a few starter ones)
   "f2-u4": [
-    { q:"Osmosis is the movement of:", opts:["Sugar","Water","Salt","Oxygen"], a:1 },
-    { q:"Which vessel carries blood away from the heart?", opts:["Vein","Artery","Capillary","Trachea"], a:1 }
-  ]
+    { q:"Osmosis is movement of:", opts:["Water","Solute","Air","Blood"], a:0 },
+    { q:"Xylem transports:", opts:["Food","Water and minerals","Oxygen","Hormones"], a:1 },
+    { q:"The heart pumps blood into:", opts:["Alveoli","Blood vessels","Stomach","Bones"], a:1 },
+  ],
+  "f2-u6": [
+    { q:"Bilharzia is commonly linked to:", opts:["Dust","Freshwater + snails","Only air","Only food"], a:1 },
+    { q:"Stopping disease spread means breaking:", opts:["All links at once only","One link in the disease cycle","Nothing","Only symptoms"], a:1 },
+    { q:"Infectious diseases are:", opts:["Communicable","Non-communicable","Always deficiency","Always genetic"], a:0 },
+  ],
+  "f2-u9": [
+    { q:"Neutralisation is:", opts:["acid + metal","acid + base","base + water","salt + water"], a:1 },
+    { q:"Acid + base forms:", opts:["salt + water","oxygen + water","CO2 + water","metal + hydrogen"], a:0 },
+    { q:"Acids react with carbonates to produce:", opts:["Salt only","Salt + water + CO2","Water only","CO2 only"], a:1 },
+  ],
 };
 
 /* =========================================================
-   CORE LOGIC
+   STATE + RENDER
 ========================================================= */
-let currentView = "f1";
+let mode = "f1"; // f1 | f2 | labs
 let selectedId = null;
 
-const nav = document.getElementById("nav");
-const contentArea = document.getElementById("contentArea");
+const topicList = document.getElementById("topicList");
+const searchBox = document.getElementById("searchBox");
+const leftTitle = document.getElementById("leftTitle");
+const leftSub = document.getElementById("leftSub");
+
+const topicHeader = document.getElementById("topicHeader");
+const topicChip = document.getElementById("topicChip");
+const topicIntro = document.getElementById("topicIntro");
+const topicBullets = document.getElementById("topicBullets");
+const labArea = document.getElementById("labArea");
+
+const quizIntro = document.getElementById("quizIntro");
 const quizArea = document.getElementById("quizArea");
+const scoreBig = document.getElementById("scoreBig");
 
-function getProgress(id) {
-  return JSON.parse(localStorage.getItem(`sg_prog_${id}`) || "{}");
+function getList(){
+  if (mode==="f1") return form1Topics;
+  if (mode==="f2") return form2Topics;
+  return [{ id:"labs-hub", n:"", title:"Labs Hub", sub:"All labs from Form 1 + Form 2", bullets:[
+    "This shows every virtual lab you linked in Form 1 and Form 2.",
+    "If a lab is missing, add it under the topic/unit labs list."
+  ], labs: buildLabsHub() }];
 }
 
-function renderNav() {
-  nav.innerHTML = "";
-  const list = currentView === "f1" ? form1Topics : (currentView === "f2" ? form2Units : buildLabsHub());
-  const searchQ = document.getElementById("searchBox").value.toLowerCase();
+function setMode(newMode){
+  mode = newMode;
+  selectedId = null;
+  searchBox.value = "";
+  renderLeft();
+  renderRightWelcome();
+}
 
-  list.forEach(item => {
-    if (item.title.toLowerCase().includes(searchQ)) {
-      const div = document.createElement("div");
-      div.className = `navItem ${item.id === selectedId ? 'active' : ''}`;
-      div.innerHTML = `<b>${item.title}</b><span>${item.subtitle || ''}</span>`;
-      div.onclick = () => selectItem(item.id);
-      nav.appendChild(div);
-    }
+function renderLeft(){
+  const list = getList();
+  leftTitle.textContent = mode==="f1" ? "Form 1 Topics" : mode==="f2" ? "Form 2 Units" : "Labs Hub";
+  leftSub.textContent = "Click to jump";
+
+  const q = searchBox.value.trim().toLowerCase();
+  const filtered = q
+    ? list.filter(t => (`${t.title} ${t.sub}`.toLowerCase().includes(q)))
+    : list;
+
+  topicList.innerHTML = "";
+  filtered.forEach(t=>{
+    const btn = document.createElement("button");
+    btn.className = "topicBtn" + (t.id===selectedId ? " active" : "");
+    const rightPill = mode==="labs" ? t.sub : (mode==="f1" ? `Topic ${t.n}` : `Unit ${t.n}`);
+    btn.innerHTML = `
+      <div class="l">
+        <b>${mode==="labs" ? t.title : (mode==="f1" ? `Topic ${t.n}` : `Unit ${t.n}`) + " — " + t.title}</b>
+        <span>${t.sub || ""}</span>
+      </div>
+      <div class="r">${rightPill}</div>
+    `;
+    btn.onclick = ()=> { selectedId = t.id; renderLeft(); renderRight(); };
+    topicList.appendChild(btn);
   });
-  updateGlobalProgress();
 }
 
-function buildLabsHub() {
-  const allLabs = [...form1Topics, ...form2Units].filter(t => t.labs && t.labs.length > 0);
-  return allLabs.map(l => ({ ...l, subtitle: "Virtual Laboratory" }));
+function renderRightWelcome(){
+  topicHeader.textContent = "Welcome";
+  topicChip.textContent = "Overview";
+  topicIntro.textContent =
+    "Form 1 Topics 1–19 are restored. Use the Form 2 tab for your new Form 2 content.";
+  topicBullets.innerHTML = "";
+  labArea.innerHTML = "";
+  quizIntro.textContent = "Select a topic to load a quiz.";
+  quizArea.innerHTML = "";
+  scoreBig.textContent = "0";
 }
 
-function selectItem(id) {
-  selectedId = id;
-  const item = [...form1Topics, ...form2Units].find(x => x.id === id) || buildLabsHub().find(x => x.id === id);
-  if (!item) return;
+function renderRight(){
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  if (!t) return renderRightWelcome();
 
-  document.getElementById("pageTitle").textContent = item.title;
-  document.getElementById("contentTitle").textContent = "Overview";
-  
-  const bullets = item.summary.map(s => `<li>${s}</li>`).join("");
-  contentArea.innerHTML = `<ul style="line-height:1.6">${bullets}</ul>`;
-  
-  // Labs
-  const labsGrid = document.getElementById("labsGrid");
-  const labsArea = document.getElementById("labsArea");
-  labsGrid.innerHTML = "";
-  if (item.labs && item.labs.length > 0) {
-    labsArea.style.display = "block";
-    item.labs.forEach(l => {
-      labsGrid.innerHTML += `
-        <div class="lab">
-          <b>${l.title}</b>
-          <p>${l.desc}</p>
-          <a href="${l.href}" class="btn" target="_blank" rel="noopener">Launch Lab</a>
-        </div>`;
-    });
+  topicHeader.textContent = mode==="labs" ? t.title : (mode==="f1" ? `Topic ${t.n}: ${t.title}` : `Unit ${t.n}: ${t.title}`);
+  topicChip.textContent = mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : "Labs";
+  topicIntro.textContent = t.sub || "";
+
+  // bullets
+  if (t.bullets && t.bullets.length){
+    topicBullets.innerHTML = `<ul>${t.bullets.map(b=>`<li>${escapeHtml(b)}</li>`).join("")}</ul>`;
   } else {
-    labsArea.style.display = "none";
+    topicBullets.innerHTML = `<div class="muted">No overview bullets yet.</div>`;
   }
 
-  renderQuiz(id);
-  renderNav();
+  // labs
+  const labs = t.labs || [];
+  labArea.innerHTML = "";
+  if (labs.length){
+    labs.forEach(l=>{
+      const box = document.createElement("div");
+      box.className = "labBox";
+      box.innerHTML = `
+        <b>Virtual Lab: ${escapeHtml(l.name || "Lab")}</b>
+        <span>${escapeHtml(l.desc || "")}</span>
+        <a href="${safeHref(l.file)}">Open Lab</a>
+      `;
+      labArea.appendChild(box);
+    });
+  } else {
+    labArea.innerHTML = `<div class="notice warn">No lab linked for this topic/unit yet.</div>`;
+  }
+
+  // quiz
+  renderQuizFor(selectedId);
+
+  // score
+  const saved = getSavedScore(selectedId);
+  scoreBig.textContent = saved ? String(saved.percent) : "0";
 }
 
-function renderQuiz(id) {
-  const questions = QUIZZES[id];
-  if (!questions) {
-    quizArea.innerHTML = "<p class='muted'>No quiz available for this topic yet.</p>";
+function storageKey(id){ return `sciguru_score_${id}`; }
+function saveScore(id, score, total){
+  const percent = Math.round((score/total)*100);
+  localStorage.setItem(storageKey(id), JSON.stringify({score,total,percent,at:new Date().toISOString()}));
+  return percent;
+}
+function getSavedScore(id){
+  try { return JSON.parse(localStorage.getItem(storageKey(id)) || ""); } catch { return null; }
+}
+
+function renderQuizFor(id){
+  const qs = QUIZZES[id] || [];
+  quizArea.innerHTML = "";
+
+  const saved = getSavedScore(id);
+  if (saved){
+    quizIntro.innerHTML = `<div class="notice ok">Last score: <b>${saved.score}/${saved.total}</b> (${saved.percent}%)</div>`;
+    scoreBig.textContent = String(saved.percent);
+  } else {
+    quizIntro.textContent = "Answer and submit to save your score.";
+    scoreBig.textContent = "0";
+  }
+
+  if (!qs.length){
+    quizArea.innerHTML = `<div class="notice">No quiz for this topic yet.</div>`;
     return;
   }
 
-  let html = `<div class="qRow">`;
-  questions.forEach((q, i) => {
-    html += `<div class="qBox"><b>${i+1}. ${q.q}</b>`;
-    q.opts.forEach((opt, oi) => {
-      html += `<label class="qOpt"><input type="radio" name="q${i}" value="${oi}"> ${opt}</label>`;
-    });
-    html += `</div>`;
+  const wrap = document.createElement("div");
+  qs.forEach((q, idx)=>{
+    const block = document.createElement("div");
+    block.className = "q";
+    block.innerHTML = `
+      <b>${idx+1}. ${escapeHtml(q.q)}</b>
+      ${q.opts.map((o,i)=>`
+        <label>
+          <input type="radio" name="q_${id}_${idx}" value="${i}">
+          <span>${escapeHtml(o)}</span>
+        </label>
+      `).join("")}
+    `;
+    wrap.appendChild(block);
   });
-  html += `<button class="btn" onclick="gradeQuiz('${id}')" style="background:var(--accent2); color:#fff; border:none">Submit Quiz</button></div><div id="quizResult"></div>`;
-  quizArea.innerHTML = html;
+
+  const actions = document.createElement("div");
+  actions.className = "qActions";
+  actions.innerHTML = `
+    <button class="btn" id="btnSubmit">Submit</button>
+    <button class="btn" id="btnClear">Clear</button>
+  `;
+  wrap.appendChild(actions);
+
+  const msg = document.createElement("div");
+  wrap.appendChild(msg);
+
+  quizArea.appendChild(wrap);
+
+  document.getElementById("btnSubmit").onclick = ()=>{
+    let score = 0;
+    qs.forEach((q, idx)=>{
+      const picked = document.querySelector(`input[name="q_${CSS.escape(id)}_${idx}"]:checked`);
+      if (picked && Number(picked.value) === q.a) score++;
+    });
+    const percent = saveScore(id, score, qs.length);
+    scoreBig.textContent = String(percent);
+    msg.innerHTML = percent>=60
+      ? `<div class="notice ok">Saved: ${score}/${qs.length} (${percent}%) ✅</div>`
+      : `<div class="notice warn">Saved: ${score}/${qs.length} (${percent}%) ⚠️ Try again.</div>`;
+  };
+
+  document.getElementById("btnClear").onclick = ()=>{
+    qs.forEach((q, idx)=>{
+      document.querySelectorAll(`input[name="q_${CSS.escape(id)}_${idx}"]`).forEach(r=>r.checked=false);
+    });
+    msg.innerHTML = `<div class="notice">Cleared selections.</div>`;
+  };
 }
 
-window.gradeQuiz = (id) => {
-  const qs = QUIZZES[id];
-  let score = 0;
-  qs.forEach((q, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if (selected && parseInt(selected.value) === q.a) score++;
-  });
-  const pct = Math.round((score / qs.length) * 100);
-  localStorage.setItem(`sg_prog_${id}`, JSON.stringify({ score, pct }));
-  document.getElementById("quizResult").innerHTML = `<div class="notice ok">You scored ${pct}%! Progress saved.</div>`;
-  updateGlobalProgress();
-};
-
-function updateGlobalProgress() {
-  const list = currentView === "f1" ? form1Topics : form2Units;
-  let completed = 0;
-  list.forEach(item => { if (getProgress(item.id).pct >= 0) completed++; });
-  const totalPct = Math.round((completed / list.length) * 100) || 0;
-  document.getElementById("progressChip").textContent = `Completion: ${totalPct}%`;
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 /* =========================================================
-   UI EVENTS
+   Tabs + Search + Reset
 ========================================================= */
-document.getElementById("formSeg").addEventListener("click", (e) => {
-  const btn = e.target.closest(".pillBtn");
-  if (!btn) return;
-  document.querySelectorAll(".pillBtn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  currentView = btn.dataset.form;
-  renderNav();
-});
+function setActiveTab(btnId){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  document.getElementById(btnId).classList.add("active");
+}
+document.getElementById("tabF1").onclick = ()=>{ setActiveTab("tabF1"); setMode("f1"); };
+document.getElementById("tabF2").onclick = ()=>{ setActiveTab("tabF2"); setMode("f2"); };
+document.getElementById("tabLabs").onclick = ()=>{ setActiveTab("tabLabs"); setMode("labs"); };
 
-document.getElementById("searchBox").addEventListener("input", renderNav);
+searchBox.addEventListener("input", renderLeft);
 
-document.getElementById("chatToggle").onclick = () => document.getElementById("drawer").classList.toggle("open");
-document.getElementById("chatClose").onclick = () => document.getElementById("drawer").classList.remove("open");
-
-document.getElementById("btnResetProgress").onclick = () => {
-  if (confirm("Reset all quiz scores?")) {
-    Object.keys(localStorage).forEach(k => { if(k.startsWith("sg_prog_")) localStorage.removeItem(k); });
-    location.reload();
+document.getElementById("btnReset").onclick = ()=>{
+  // clears ONLY Sci-Guru saved scores
+  const toRemove = [];
+  for (let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (k && k.startsWith("sciguru_score_")) toRemove.push(k);
   }
+  toRemove.forEach(k=>localStorage.removeItem(k));
+  scoreBig.textContent = "0";
+  if (selectedId) renderQuizFor(selectedId);
 };
 
-// Simple Chat Simulation (Replace with actual API call)
-document.getElementById("chatSend").onclick = () => {
-  const input = document.getElementById("chatInput");
-  const body = document.getElementById("chatBody");
-  if (!input.value) return;
-  
-  body.innerHTML += `<div class="msg me">${input.value}</div>`;
-  const val = input.value.toLowerCase();
-  input.value = "";
-  
-  setTimeout(() => {
-    let reply = "That's an interesting question! For specific scientific details, please refer to the course summary or your textbook.";
-    if (val.includes("cell")) reply = "Cells are the building blocks of life. Animal cells have a membrane, while plant cells also have a cell wall!";
-    body.innerHTML += `<div class="msg ai">${reply}</div>`;
-    body.scrollTop = body.scrollHeight;
-  }, 600);
+/* =========================================================
+   AI HELPER (modal)
+   - tries common endpoints; adjust if needed.
+========================================================= */
+const modalBack = document.getElementById("modalBack");
+const aiBody = document.getElementById("aiBody");
+const aiInput = document.getElementById("aiInput");
+const aiTitle = document.getElementById("aiTitle");
+const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask"];
+
+function openAI(){
+  modalBack.style.display = "flex";
+  const t = getList().find(x=>x.id===selectedId);
+  aiTitle.textContent = t ? `Sci-Guru AI • ${mode==="f1"?"Form 1":"Form 2"} • ${t.title}` : "Sci-Guru AI Helper";
+  setTimeout(()=>aiInput.focus(), 50);
+}
+function closeAI(){ modalBack.style.display = "none"; }
+document.getElementById("btnAI").onclick = openAI;
+document.getElementById("aiClose").onclick = closeAI;
+modalBack.addEventListener("click", (e)=>{ if (e.target===modalBack) closeAI(); });
+
+document.getElementById("aiClear").onclick = ()=>{
+  aiBody.innerHTML = `<div class="msg ai">Chat cleared. Ask me about the selected topic.</div>`;
 };
 
-// Initialize
-renderNav();
+function addMsg(who, text){
+  const div = document.createElement("div");
+  div.className = "msg " + (who==="me" ? "me" : "ai");
+  div.textContent = text;
+  aiBody.appendChild(div);
+  aiBody.scrollTop = aiBody.scrollHeight;
+}
+
+async function sendAI(){
+  const text = aiInput.value.trim();
+  if (!text) return;
+  addMsg("me", text);
+  aiInput.value = "";
+
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  const payload = {
+    message: text,
+    mode,
+    topic: t ? (mode==="f1" ? `Topic ${t.n}: ${t.title}` : `Unit ${t.n}: ${t.title}`) : ""
+  };
+
+  for (const ep of AI_ENDPOINTS){
+    try{
+      const res = await fetch(ep, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const reply = data.reply || data.answer || data.message;
+      if (reply){
+        addMsg("ai", reply);
+        return;
+      }
+    }catch(e){}
+  }
+
+  addMsg("ai",
+`AI backend not reached.
+Check your server has a POST route like /api/chat or /chat returning JSON { reply: "..." }`
+  );
+}
+
+document.getElementById("aiSend").onclick = sendAI;
+aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
+
+/* =========================================================
+   INIT
+========================================================= */
+renderLeft();
+renderRightWelcome();
 </script>
 </body>
-  </html>
+</html>
