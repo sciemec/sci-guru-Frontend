@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sci-Guru Tutor | Form 1 & Form 2</title>
+  <title>Sci-Guru Tutor | Form 1, Form 2 & Form 3</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -313,6 +313,7 @@
       color:var(--text);
       outline:none;
     }
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace}
   </style>
 </head>
 
@@ -330,6 +331,10 @@
       <div class="tabs">
         <button class="tab active" id="tabF1">Form 1</button>
         <button class="tab" id="tabF2">Form 2</button>
+
+        <!-- ✅ ADD-ONLY: FORM 3 TAB -->
+        <button class="tab" id="tabF3">Form 3</button>
+
         <button class="tab" id="tabLabs">Labs Hub</button>
       </div>
     </div>
@@ -350,6 +355,10 @@
       <div class="leftFooter">
         <button class="btn" id="btnReset">Reset Data</button>
         <button class="btn" id="btnAI">AI Helper</button>
+
+        <!-- ✅ ADD-ONLY: QUICK FORM 3 LINKS -->
+        <button class="btn" id="btnF3Hub" title="Opens Form 3 Labs Hub in new tab">Form 3 Labs</button>
+        <button class="btn" id="btnF3Mini" title="Opens Form 3 Mini Index 21–25 in new tab">F3 Index</button>
       </div>
     </aside>
 
@@ -367,6 +376,9 @@
           </div>
           <div id="topicBullets"></div>
           <div id="labArea"></div>
+
+          <!-- ✅ ADD-ONLY: Knowledge Search Area (now supports Form 1, 2 and 3) -->
+          <div id="kbArea"></div>
         </div>
       </div>
 
@@ -417,21 +429,208 @@
     </div>
   </div>
 
+<!-- ✅ ADD-ONLY: Optional loaders for external knowledge packs (safe if files missing) -->
+<script type="module">
+  // Form 3 external pack (your existing line kept)
+  import { FORM3_AI } from "./form3-ai-content.js";
+  window.SCI_GURU_KB = (window.SCI_GURU_KB || []).concat(FORM3_AI);
+  window.__FORM3_KB_READY__ = true;
+</script>
+
+<script type="module">
+  // Optional: if you later create these files, they will auto-load.
+  // If not present, it fails silently (main tutor still works).
+  try{
+    const m1 = await import("./form1-ai-content.js");
+    if (m1 && m1.FORM1_AI) window.SCI_GURU_KB = (window.SCI_GURU_KB || []).concat(m1.FORM1_AI);
+  }catch(e){}
+  try{
+    const m2 = await import("./form2-ai-content.js");
+    if (m2 && m2.FORM2_AI) window.SCI_GURU_KB = (window.SCI_GURU_KB || []).concat(m2.FORM2_AI);
+  }catch(e){}
+</script>
+
 <script>
 /* =========================================================
    IMPORTANT: FILE NAMING RULE
    - Avoid spaces and & in filenames to prevent broken links.
 ========================================================= */
-
 function safeHref(path){
   // encode spaces and symbols safely for href use
   return encodeURI(path);
 }
 
 /* =========================================================
+   ✅ ADD-ONLY: EMBEDDED OFFLINE KNOWLEDGE (Form 1 + Form 2)
+   - This gives you “AI Knowledge” even if backend is down.
+   - Form 3 pack can remain external (form3-ai-content.js).
+========================================================= */
+const FORM1_AI_EMBED = [
+  { form:"Form 1", unit:1, subject:"General Science", title:"Laboratory Safety", keywords:["safety","hazard","symbols","PPE","rules"],
+    keyIdeas:[
+      "Always wear PPE (goggles, lab coat) and follow teacher instructions.",
+      "Know hazard symbols: corrosive, flammable, toxic, irritant.",
+      "Do not taste chemicals; smell by wafting; label everything clearly.",
+      "Report spills and accidents immediately; dispose wastes properly."
+    ],
+    experiments:[{ title:"Safety Symbols Match", aim:"Identify hazard symbols and safe responses.", steps:["Match symbols to meaning.","Choose correct PPE.","Describe safe handling and storage."]}],
+    qa:[{q:"Why do we waft when smelling chemicals?", a:"To avoid breathing in concentrated fumes directly."}]
+  },
+  { form:"Form 1", unit:2, subject:"Biology", title:"Cells", keywords:["cell","organelles","tissue","organ","system"],
+    keyIdeas:["Cells are the basic unit of life.","Similar cells form tissues; tissues form organs; organs form systems.","Specialised cells are adapted to their jobs."],
+    experiments:[{ title:"Microscope Cell Observation", aim:"Observe cells and label parts.", steps:["Prepare slide (onion/cheek cells).","Focus microscope.","Draw and label nucleus, cytoplasm, membrane."]}],
+    qa:[{q:"What is a tissue?", a:"A group of similar cells performing the same function."}]
+  },
+  { form:"Form 1", unit:3, subject:"Biology", title:"Nutrition", keywords:["photosynthesis","digestion","absorption","autotroph","heterotroph"],
+    keyIdeas:["Green plants make food by photosynthesis.","Humans are heterotrophs and need balanced diets.","Digestion breaks food into soluble molecules for absorption."],
+    experiments:[{ title:"Starch Test", aim:"Test a leaf for starch after photosynthesis.", steps:["Boil leaf, then in ethanol to remove chlorophyll.","Rinse and add iodine.","Blue-black shows starch."]}],
+    qa:[{q:"Where does most absorption happen?", a:"In the small intestine (villi)."}]
+  },
+  { form:"Form 1", unit:4, subject:"Biology", title:"Respiration", keywords:["breathing","alveoli","gas exchange","energy"],
+    keyIdeas:["Respiration releases energy in cells.","Gas exchange occurs in alveoli.","Breathing rate increases during exercise."],
+    experiments:[{ title:"Breathing Rate", aim:"Compare breathing rate at rest vs after exercise.", steps:["Count breaths at rest.","Exercise 1 minute.","Count again and compare."]}],
+    qa:[{q:"Where does gas exchange happen?", a:"In the alveoli."}]
+  },
+  { form:"Form 1", unit:5, subject:"Biology", title:"Transport", keywords:["osmosis","diffusion","blood","xylem","phloem"],
+    keyIdeas:["Diffusion moves particles from high to low concentration.","Osmosis is movement of water across a partially permeable membrane.","Blood transports oxygen/nutrients; plants use xylem/phloem."],
+    experiments:[{ title:"Osmosis with Potato", aim:"Show water movement by osmosis.", steps:["Place potato strips in salt solution and water.","Observe mass/length changes.","Explain using water potential."]}],
+    qa:[{q:"What carries blood away from the heart?", a:"Arteries."}]
+  },
+  { form:"Form 1", unit:6, subject:"Biology", title:"Reproduction", keywords:["pollination","fertilisation","seed","uterus"],
+    keyIdeas:["Pollination is transfer of pollen to stigma.","Fertilisation forms a zygote.","In humans, embryo develops in the uterus."],
+    experiments:[{ title:"Flower Parts Label", aim:"Identify male/female flower parts.", steps:["Label anther, filament, stigma, style, ovary.","State functions of each part."]}],
+    qa:[{q:"What is pollination?", a:"Transfer of pollen from anther to stigma."}]
+  },
+  { form:"Form 1", unit:7, subject:"Biology", title:"Health & Disease", keywords:["infectious","prevention","hygiene","disease"],
+    keyIdeas:["Infectious diseases are communicable.","Prevention includes hygiene and sanitation.","Health includes physical, mental and social wellbeing."],
+    experiments:[{ title:"Hygiene Chain", aim:"Model how germs spread.", steps:["Use powder/glitter to represent germs.","Shake hands to show spread.","Suggest prevention methods."]}],
+    qa:[{q:"Difference between infectious and non-infectious?", a:"Infectious are caused by pathogens and can spread; non-infectious do not spread person-to-person."}]
+  },
+  { form:"Form 1", unit:8, subject:"Chemistry", title:"Separation", keywords:["filtration","evaporation","magnet","decanting","sieving"],
+    keyIdeas:["Different mixtures need different separation methods.","Filtration separates insoluble solids from liquids.","Evaporation can recover solute from solution."],
+    experiments:[{ title:"Filter Sand + Water", aim:"Separate an insoluble solid.", steps:["Set up funnel + filter paper.","Pour mixture.","Collect filtrate and residue."]}],
+    qa:[{q:"What does magnetism separate?", a:"Magnetic materials (e.g., iron filings) from non-magnetic materials."}]
+  },
+  { form:"Form 1", unit:9, subject:"Chemistry", title:"Matter", keywords:["solid","liquid","gas","particles","change of state"],
+    keyIdeas:["Particles are arranged differently in solids, liquids and gases.","Heating can cause melting/boiling; cooling can cause freezing/condensation."],
+    experiments:[{ title:"Heating Curve Discussion", aim:"Explain changes of state using particle model.", steps:["Observe ice melting then boiling water.","Discuss energy absorbed during change of state."]}],
+    qa:[{q:"Why does temperature stay constant during melting?", a:"Energy is used to break bonds, not raise temperature."}]
+  },
+  { form:"Form 1", unit:10, subject:"Chemistry", title:"Acids & Bases", keywords:["acid","base","indicator","neutralisation","pH"],
+    keyIdeas:["Acids and bases can be tested using indicators.","Neutralisation produces salt and water.","pH shows acidity/alkalinity."],
+    experiments:[{ title:"Indicator Test", aim:"Use indicators to identify acids and bases.", steps:["Test with litmus/universal indicator.","Record pH colours.","Classify samples."]}],
+    qa:[{q:"What is neutralisation?", a:"Reaction of an acid with a base to form salt and water."}]
+  },
+  { form:"Form 1", unit:13, subject:"Physics", title:"Data Presentation", keywords:["graph","table","trend","slope"],
+    keyIdeas:["Graphs help show relationships between variables.","A straight line through origin shows direct proportion.","Slope/gradient shows rate of change."],
+    experiments:[{ title:"Plot a Line Graph", aim:"Plot and interpret data.", steps:["Create axes with units.","Plot points accurately.","Draw best-fit line and interpret trend."]}],
+    qa:[{q:"What does a steeper slope mean?", a:"Greater rate of change."}]
+  },
+  { form:"Form 1", unit:14, subject:"Physics", title:"Measurements & Density", keywords:["SI","mass","weight","volume","density"],
+    keyIdeas:["Mass is amount of matter; weight is gravitational force.","Volume can be measured by displacement for irregular objects.","Density = mass ÷ volume."],
+    experiments:[{ title:"Displacement Method", aim:"Find volume of an irregular object.", steps:["Record water level V1.","Immerse object fully; record V2.","Volume = V2 − V1."]}],
+    qa:[{q:"Units of density?", a:"g/cm³ or kg/m³."}]
+  }
+];
+
+const FORM2_AI_EMBED = [
+  { form:"Form 2", unit:1, subject:"Biology", title:"Cells & Organisation", keywords:["classification","kingdoms","variation","selection","genetic engineering"],
+    keyIdeas:["Living things show life processes.","Five-kingdom classification groups organisms by features.","Variation can be continuous or discontinuous.","Selection changes populations over time."],
+    experiments:[{ title:"Variation Survey", aim:"Collect and classify variation data.", steps:["Measure height or handspan.","Plot frequency table.","Classify as continuous/discontinuous."]}],
+    qa:[{q:"Give one example of discontinuous variation.", a:"Blood group."}]
+  },
+  { form:"Form 2", unit:2, subject:"Biology", title:"Nutrition", keywords:["photosynthesis","leaf","food web","digestion","absorption"],
+    keyIdeas:["Photosynthesis occurs in chloroplasts.","Leaves have adaptations: large surface area, stomata.","Food webs show feeding relationships.","Digestion includes ingestion, digestion, absorption, assimilation, egestion."],
+    experiments:[{ title:"Leaf Adaptations", aim:"Link leaf structure to function.", steps:["Identify stomata/veins.","Explain why leaf is thin.","Explain role of guard cells."]}],
+    qa:[{q:"What does a food web show?", a:"Interconnected food chains in an ecosystem."}]
+  },
+  { form:"Form 2", unit:3, subject:"Biology", title:"Respiratory Systems", keywords:["respiration","lungs","oxygen","alveoli","energy"],
+    keyIdeas:["Cellular respiration releases energy: glucose + oxygen → carbon dioxide + water + energy.","Lungs exchange gases with blood.","Diaphragm and ribs help ventilation."],
+    experiments:[{ title:"Limewater Test", aim:"Show CO₂ in exhaled air.", steps:["Bubble exhaled air through limewater.","Observe turning milky.","Explain results."]}],
+    qa:[{q:"Where does respiration happen?", a:"In cells (mitochondria)."}]
+  },
+  { form:"Form 2", unit:4, subject:"Biology", title:"Transport Systems", keywords:["diffusion","osmosis","active transport","xylem","phloem","heart"],
+    keyIdeas:["Diffusion/osmosis move substances across membranes.","Active transport uses energy.","Xylem carries water/minerals; phloem carries sugars.","Heart pumps blood through vessels."],
+    experiments:[{ title:"Transpiration Factors", aim:"Compare transpiration under different conditions.", steps:["Place leaves in wind/light/shade.","Observe water loss differences.","Explain using stomata and evaporation."]}],
+    qa:[{q:"Function of phloem?", a:"Transport sugars/food from leaves to other parts."}]
+  },
+  { form:"Form 2", unit:5, subject:"Biology", title:"Reproductive Systems", keywords:["pollination","fertilisation","placenta","childbirth"],
+    keyIdeas:["Flowering plants reproduce via pollination and fertilisation.","Seeds and fruits form after fertilisation.","Placenta exchanges nutrients, oxygen, wastes between mother and fetus."],
+    experiments:[{ title:"Germination Conditions", aim:"Test conditions for germination.", steps:["Set seeds in warm/cold, wet/dry.","Observe sprouting.","Conclude needed conditions."]}],
+    qa:[{q:"Role of placenta?", a:"Supplies nutrients/oxygen and removes wastes; also protects via barrier."}]
+  },
+  { form:"Form 2", unit:6, subject:"Biology", title:"Health and Disease", keywords:["health","infectious","non-infectious","bilharzia","cycle"],
+    keyIdeas:["Health includes physical, mental, social wellbeing.","Infectious diseases are caused by organisms; non-infectious include deficiency/genetic/lifestyle.","Disease cycle can be broken by intervention.","Bilharzia is linked to freshwater snails."],
+    experiments:[{ title:"Breaking the Cycle", aim:"Identify how to stop disease spread.", steps:["List host/pathogen/environment links.","Choose an intervention (sanitation, treatment).","Explain effect on cycle."]}],
+    qa:[{q:"How to prevent bilharzia?", a:"Avoid unsafe freshwater, treat water, snail control, proper sanitation."}]
+  },
+  { form:"Form 2", unit:7, subject:"Chemistry", title:"Separation", keywords:["filtration","evaporation","decanting","sieving","water treatment"],
+    keyIdeas:["Separation depends on properties (solubility, boiling point, magnetism).","Water treatment uses filtration and sedimentation.","Agricultural processing uses sieving/winnowing."],
+    experiments:[{ title:"Water Treatment Model", aim:"Model filtration in purification.", steps:["Layer sand/gravel/charcoal in bottle.","Pour dirty water.","Observe cleaner filtrate."]}],
+    qa:[{q:"What does evaporation separate?", a:"Solute from solvent."}]
+  },
+  { form:"Form 2", unit:8, subject:"Chemistry", title:"Matter / Concentration", keywords:["solution","concentration","dilution","mole","Avogadro"],
+    keyIdeas:["Concentration = amount of solute per volume of solution.","Dilution reduces concentration by adding solvent.","Mole measures number of particles."],
+    experiments:[{ title:"Dilution Steps", aim:"Make a dilute solution from a concentrated one.", steps:["Measure known volume of concentrated solution.","Add water to a new total volume.","Label and calculate new concentration."]}],
+    qa:[{q:"What happens to concentration when you add water?", a:"It decreases."}]
+  },
+  { form:"Form 2", unit:9, subject:"Chemistry", title:"Acids and Bases", keywords:["neutralisation","salt","water","carbonates","antacid"],
+    keyIdeas:["Neutralisation: acid + base → salt + water.","Acids react with carbonates producing CO₂.","Antacids neutralise excess stomach acid."],
+    experiments:[{ title:"Carbonate Reaction", aim:"Observe CO₂ production.", steps:["Add acid to carbonate (e.g., chalk).","Bubble gas into limewater.","Confirm CO₂."]}],
+    qa:[{q:"Products when acid reacts with carbonate?", a:"Salt, water and carbon dioxide."}]
+  },
+  { form:"Form 2", unit:10, subject:"Chemistry", title:"Industrial Processes (Soap)", keywords:["soap","saponification","fat","alkali","glycerol"],
+    keyIdeas:["Soap is made by saponification: fat/oil + alkali → soap + glycerol.","Soap molecules have hydrophilic and hydrophobic parts.","Batch vs continuous process differs by scale."],
+    experiments:[{ title:"Soap Action Model", aim:"Explain how soap cleans.", steps:["Show oil + water separation.","Add soap and shake.","Explain micelles and emulsification."]}],
+    qa:[{q:"Why does soap remove grease?", a:"Hydrophobic tail attaches to grease; hydrophilic head interacts with water."}]
+  },
+  { form:"Form 2", unit:11, subject:"Chemistry", title:"Oxidation and Reduction", keywords:["oxidation","reduction","oxygen","chemical change","physical change"],
+    keyIdeas:["Physical changes are reversible; chemical changes form new substances.","Oxidation (basic): adding oxygen; reduction: removing oxygen.","Rusting is oxidation."],
+    experiments:[{ title:"Rusting Conditions", aim:"Investigate conditions for rusting.", steps:["Set iron in dry air, water, salt water.","Observe rust rate.","Conclude oxygen + water needed."]}],
+    qa:[{q:"Is melting a chemical change?", a:"No, it is a physical change."}]
+  },
+  { form:"Form 2", unit:12, subject:"Chemistry", title:"Organic Chemistry (Combustion)", keywords:["combustion","complete","incomplete","CO2","CO","soot"],
+    keyIdeas:["Complete combustion produces CO₂ and water.","Incomplete combustion produces CO and soot.","Incomplete combustion is dangerous due to CO poisoning."],
+    experiments:[{ title:"Flame Observation", aim:"Compare flame colour in different oxygen supply.", steps:["High oxygen gives blue flame.","Low oxygen gives yellow smoky flame.","Link to complete/incomplete combustion."]}],
+    qa:[{q:"Why is CO dangerous?", a:"It reduces oxygen transport in blood and can be fatal."}]
+  },
+  { form:"Form 2", unit:13, subject:"Physics", title:"Data Presentation", keywords:["graph","direct proportion","inverse proportion","gradient"],
+    keyIdeas:["Direct proportion gives straight line through origin.","Inverse proportion gives a curve.","Gradient = Δy/Δx."],
+    experiments:[{ title:"Plot and Interpret", aim:"Plot a straight-line graph and find gradient.", steps:["Plot points.","Draw best-fit line.","Compute gradient using two points."]}],
+    qa:[{q:"What shows direct proportion?", a:"A straight line passing through origin."}]
+  },
+  { form:"Form 2", unit:14, subject:"Physics", title:"Measurements", keywords:["SI units","mass","weight","volume","density"],
+    keyIdeas:["Convert between SI multiples (g↔kg, cm↔m, mL↔L).","Mass ≠ weight.","Density = mass ÷ volume."],
+    experiments:[{ title:"Density Practical", aim:"Calculate density of an object.", steps:["Measure mass using balance.","Measure volume (regular or displacement).","Compute density."]}],
+    qa:[{q:"What is weight measured in?", a:"Newtons (N)."}]
+  },
+  { form:"Form 2", unit:15, subject:"Physics", title:"Forces", keywords:["vector","resultant","moment","friction"],
+    keyIdeas:["Forces have magnitude and direction (vector).","Resultant force is the combined effect.","Moment = force × perpendicular distance.","Friction opposes motion."],
+    experiments:[{ title:"Moment Demo", aim:"Show turning effect.", steps:["Use ruler as lever on pivot.","Apply force at different distances.","Compare turning effect."]}],
+    qa:[{q:"How to reduce friction?", a:"Lubrication, smooth surfaces, rollers/ball bearings."}]
+  },
+  { form:"Form 2", unit:16, subject:"Physics", title:"Machines", keywords:["lever","pulley","inclined plane","effort","load","fulcrum"],
+    keyIdeas:["Machines transmit or modify forces.","Levers have 3 classes depending on positions of fulcrum/load/effort.","Machines give mechanical advantage."],
+    experiments:[{ title:"Lever Classes", aim:"Classify levers.", steps:["Give examples: scissors, wheelbarrow, tongs.","Mark fulcrum, load, effort.","Identify lever class."]}],
+    qa:[{q:"What is a lever?", a:"A rigid bar that pivots about a fulcrum to move a load."}]
+  },
+  { form:"Form 2", unit:17, subject:"Physics", title:"Energy", keywords:["conservation","work","force","distance","sound","light"],
+    keyIdeas:["Energy cannot be created or destroyed (conservation).","Work done = force × distance.","Light travels in straight lines; sound needs a medium."],
+    experiments:[{ title:"Work Done", aim:"Calculate work from force and distance.", steps:["Measure force with spring balance.","Measure distance moved.","Compute W = F×d."]}],
+    qa:[{q:"Unit of work/energy?", a:"Joules (J)."}]
+  },
+  { form:"Form 2", unit:18, subject:"Physics", title:"Magnetism and Electricity", keywords:["magnet","field lines","poles","attract","repel","circuit"],
+    keyIdeas:["Magnets have north and south poles.","Like poles repel, unlike poles attract.","Field lines show magnetic field direction and strength."],
+    experiments:[{ title:"Field Lines", aim:"Map field lines around a magnet.", steps:["Place magnet under paper.","Sprinkle iron filings.","Tap gently and observe pattern."]}],
+    qa:[{q:"Where is magnetism strongest?", a:"At the poles."}]
+  }
+];
+
+// Attach embedded knowledge to global KB
+window.SCI_GURU_KB = (window.SCI_GURU_KB || []).concat(FORM1_AI_EMBED, FORM2_AI_EMBED);
+
+/* =========================================================
    FORM 1 TOPICS (RESTORED 1–19)
-   - Keep your Form 1 labs here.
-   - If a sim page doesn’t exist yet, leave labs: [].
 ========================================================= */
 const form1Topics = [
   { id:"f1-t1", n:1,  title:"Laboratory",     sub:"Intro & Lab Safety", bullets:[
@@ -561,8 +760,10 @@ const form1Topics = [
 ];
 
 /* =========================================================
-   FORM 2 TOPICS/UNITS (your new repo pages)
-   - Links assume you renamed files to remove spaces/&.
+   FORM 2 TOPICS/UNITS (Book 2) — ✅ completed units 1–18
+   NOTE: I did NOT remove your existing sims. I ONLY added:
+   - Units 10, 11, 17
+   - Alias lab links so both naming styles work.
 ========================================================= */
 const form2Topics = [
   { id:"f2-u1", n:1,  title:"Cells & Organisation", sub:"Classification, variation & selection", bullets:[
@@ -622,58 +823,262 @@ const form2Topics = [
     "Everyday examples (antacids, bicarbonate)"
   ], labs:[ { name:"Acids & Bases Lab", file:"sim-f2-acids-bases.html", desc:"Neutralisation practice." } ] },
 
+  /* ✅ ADD-ONLY: Unit 10 */
+  { id:"f2-u10", n:10, title:"Industrial Processes", sub:"Soap manufacture (saponification)", bullets:[
+    "Saponification: fat + alkali → soap + glycerol",
+    "Hydrophilic head + hydrophobic tail",
+    "Batch vs continuous process"
+  ], labs:[
+    { name:"Soap / Industrial Lab (optional)", file:"sim-f2-soap.html", desc:"Soap-making model + how soap cleans." }
+  ]},
+
+  /* ✅ ADD-ONLY: Unit 11 */
+  { id:"f2-u11", n:11, title:"Oxidation & Reduction", sub:"Physical vs chemical change + redox basics", bullets:[
+    "Physical change is reversible; chemical change forms new substances",
+    "Oxidation (basic): gain oxygen",
+    "Reduction (basic): loss oxygen"
+  ], labs:[
+    { name:"Redox Lab (optional)", file:"sim-f2-redox.html", desc:"Redox/oxidation examples and matching." }
+  ]},
+
   { id:"f2-u12", n:12, title:"Organic / Combustion", sub:"Complete vs incomplete combustion", bullets:[
     "Complete combustion products",
     "Incomplete combustion (CO, soot)",
     "Environmental effects"
-  ], labs:[ { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." } ] },
+  ], labs:[
+    /* Both naming styles supported */
+    { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." },
+    { name:"Combustion Lab (alt)", file:"sim-combustion.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
 
   { id:"f2-u13", n:13, title:"Data Presentation", sub:"Straight line graphs", bullets:[
     "Construct straight-line graphs",
     "Direct/inverse proportionality",
     "Gradient and intercept"
-  ], labs:[ { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." } ] },
+  ], labs:[
+    { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." },
+    { name:"Graphs Lab (alt)", file:"sim-graphs.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
 
   { id:"f2-u14", n:14, title:"Measurements", sub:"SI units + density", bullets:[
     "Convert SI units",
     "Mass vs weight",
     "Volume and density"
-  ], labs:[ { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." } ] },
+  ], labs:[
+    { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." },
+    { name:"Measurements Lab (alt)", file:"sim-measurements.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
 
   { id:"f2-u15", n:15, title:"Forces", sub:"Resultant, moments, friction", bullets:[
     "Resultant forces",
     "Moments = force × distance",
     "Friction and reducing friction"
-  ], labs:[ { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." } ] },
+  ], labs:[
+    { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." },
+    { name:"Forces Lab (alt)", file:"sim-forces.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
 
   { id:"f2-u16", n:16, title:"Machines / Levers", sub:"Simple machines", bullets:[
     "Classes of levers",
     "Fulcrum, effort, load",
     "Simple machine applications"
-  ], labs:[ { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." } ] },
+  ], labs:[
+    { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." },
+    { name:"Machines Lab (alt)", file:"sim-machines.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
+
+  /* ✅ ADD-ONLY: Unit 17 */
+  { id:"f2-u17", n:17, title:"Energy", sub:"Conservation + Work + Light + Sound", bullets:[
+    "Law of conservation of energy",
+    "Work done = force × distance",
+    "Light travels in straight lines; sound is vibration"
+  ], labs:[
+    { name:"Energy Lab (Form 2)", file:"sim-f2-energy.html", desc:"Work done + energy changes (Form 2 level)." },
+    { name:"Energy Lab (alt)", file:"sim-energy-f2.html", desc:"Alternate filename (if you prefer separate file)." }
+  ] },
 
   { id:"f2-u18", n:18, title:"Magnetism & Electricity", sub:"Fields and magnets", bullets:[
     "Magnetic poles and fields",
     "Field lines investigations",
     "Magnetism applications"
-  ], labs:[ { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." } ] },
+  ], labs:[
+    { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." },
+    { name:"Magnetism & Electricity Lab (alt)", file:"sim-magnetism-electricity.html", desc:"Alternate filename version (if you used it earlier)." }
+  ] },
 ];
 
 /* =========================================================
-   LABS HUB (auto)
+   ✅ ADD-ONLY: FORM 3 TOPICS (BOOK 3) — Topics 1–25
+========================================================= */
+const FORM3_BASE = "form3-sims/";
+const form3Topics = [
+  { id:"f3-u01", n:1,  title:"Cell structure & function", sub:"Specialised cells & functions", bullets:[
+    "Cells are the basic unit of life",
+    "Specialised cells: RBC, palisade, root hair, muscle",
+    "Cell differentiation and adaptation"
+  ], labs:[ { name:"Sim-3-U01 Cell Lab", file:FORM3_BASE+"sim-3-u01-cell.html", desc:"Identify specialised cells & match functions (Zimbabwe examples)." } ] },
+
+  { id:"f3-u02", n:2,  title:"Plant nutrition", sub:"Photosynthesis & limiting factors", bullets:[
+    "Photosynthesis: CO₂ + H₂O → glucose + O₂ (light, chlorophyll)",
+    "Limiting factors: light, CO₂, temperature",
+    "Starch test and oxygen evidence"
+  ], labs:[ { name:"Sim-3-U02 Photosynthesis", file:FORM3_BASE+"sim-3-u02-plant-nutrition.html", desc:"Starch test + oxygen test + bubble-rate (Elodea) interactives." } ] },
+
+  { id:"f3-u03", n:3,  title:"Human nutrition", sub:"Digestion and enzymes", bullets:[
+    "Ingestion → digestion → absorption → assimilation → egestion",
+    "Enzymes: amylase, protease, lipase",
+    "Villi for absorption"
+  ], labs:[ { name:"Sim-3-U03 Digestion", file:FORM3_BASE+"sim-3-u03-human-nutrition.html", desc:"Enzyme digestion (sadza starch) + Benedict/iodine tests." } ] },
+
+  { id:"f3-u04", n:4,  title:"Human respiration", sub:"Gas exchange & vital capacity", bullets:[
+    "Aerobic respiration releases energy",
+    "Alveoli adaptations for diffusion",
+    "Inhaled vs exhaled air comparisons"
+  ], labs:[ { name:"Sim-3-U04 Respiration", file:FORM3_BASE+"sim-3-u04-respiration.html", desc:"Limewater/indicator + vital capacity interactive." } ] },
+
+  { id:"f3-u05", n:5,  title:"Transport in plants", sub:"Transpiration + osmosis", bullets:[
+    "Water movement: osmosis/diffusion",
+    "Transpiration factors: wind, humidity, light, temp",
+    "Turgor vs plasmolysis"
+  ], labs:[ { name:"Sim-3-U05 Transpiration", file:FORM3_BASE+"sim-3-u05-plant-transport.html", desc:"Potometer + environmental factors + potato osmosis." } ] },
+
+  { id:"f3-u06", n:6,  title:"Transport in humans", sub:"Blood and circulation", bullets:[
+    "Blood: plasma, RBC, WBC, platelets",
+    "Arteries, veins, capillaries",
+    "Heart as a pump"
+  ], labs:[ { name:"Sim-3-U06 Circulation", file:FORM3_BASE+"sim-3-u06-human-transport.html", desc:"Blood components + vessels + circulation path interactive." } ] },
+
+  { id:"f3-u07", n:7,  title:"Plant reproduction", sub:"Pollination and germination", bullets:[
+    "Wind vs insect pollinated flowers",
+    "Fertilisation and seed formation",
+    "Germination conditions: water, oxygen, warmth"
+  ], labs:[ { name:"Sim-3-U07 Reproduction", file:FORM3_BASE+"sim-3-u07-plant-reproduction.html", desc:"Match flower type + germination conditions lab." } ] },
+
+  { id:"f3-u08", n:8,  title:"Human reproduction", sub:"Menstrual cycle & placenta", bullets:[
+    "Male and female reproductive systems",
+    "Menstrual cycle basics",
+    "Placenta exchange and pregnancy"
+  ], labs:[ { name:"Sim-3-U08 Human Repro", file:FORM3_BASE+"sim-3-u08-human-reproduction.html", desc:"Cycle timeline + fertilisation/implantation + placenta filter." } ] },
+
+  { id:"f3-u09", n:9,  title:"Health and disease", sub:"Communicable + lifestyle diseases", bullets:[
+    "Pathogens: bacteria, viruses, protozoa, worms, fungi",
+    "STIs and prevention",
+    "Public health: malaria/cholera/typhoid"
+  ], labs:[ { name:"Sim-3-U09 Disease", file:FORM3_BASE+"sim-3-u09-health-disease.html", desc:"Disease spread + prevention choices (Zimbabwe scenarios)." } ] },
+
+  { id:"f3-u10", n:10, title:"Separation techniques", sub:"Distillation and methods", bullets:[
+    "Simple distillation: solvent from solution",
+    "Fractional distillation: miscible liquids",
+    "Choosing methods by properties"
+  ], labs:[ { name:"Sim-3-U10 Separation", file:FORM3_BASE+"sim-3-u10-separation.html", desc:"Build distillation setup + separate mixtures." } ] },
+
+  { id:"f3-u11", n:11, title:"Matter (atoms & bonding)", sub:"Atomic structure + moles", bullets:[
+    "Protons/neutrons/electrons",
+    "Ionic and covalent bonding",
+    "Mole concept and relative masses"
+  ], labs:[ { name:"Sim-3-U11 Matter", file:FORM3_BASE+"sim-3-u11-matter.html", desc:"Bonding builder + mole calculator + isotopes." } ] },
+
+  { id:"f3-u12", n:12, title:"Acids and bases", sub:"pH + neutralisation", bullets:[
+    "pH scale: acids <7, bases >7",
+    "Reactions: metals, carbonates, oxides/hydroxides",
+    "Neutralisation: acid + base → salt + water"
+  ], labs:[ { name:"Sim-3-U12 Acids/Bases", file:FORM3_BASE+"sim-3-u12-acids-bases.html", desc:"pH testing + reactions lab (local examples)." } ] },
+
+  { id:"f3-u13", n:13, title:"Industrial processes", sub:"Electrolysis + electroplating", bullets:[
+    "Electrolyte, anode, cathode",
+    "Electrolysis of solutions",
+    "Electroplating uses"
+  ], labs:[ { name:"Sim-3-U13 Electrolysis", file:FORM3_BASE+"sim-3-u13-electrolysis.html", desc:"Electrolysis & plating simulation with controls." } ] },
+
+  { id:"f3-u14", n:14, title:"Oxidation and reduction", sub:"Redox concepts", bullets:[
+    "Oxidation: gain O / loss e⁻",
+    "Reduction: loss O / gain e⁻",
+    "Extraction ideas"
+  ], labs:[ { name:"Sim-3-U14 Redox", file:FORM3_BASE+"sim-3-u14-redox.html", desc:"Redox matcher + reaction changes." } ] },
+
+  { id:"f3-u15", n:15, title:"Organic chemistry", sub:"Hydrocarbons + biogas", bullets:[
+    "Homologous series, alkanes/alkenes",
+    "Combustion basics",
+    "Biogas production"
+  ], labs:[ { name:"Sim-3-U15 Organic", file:FORM3_BASE+"sim-3-u15-organic.html", desc:"Hydrocarbon builder + biogas digester model." } ] },
+
+  { id:"f3-u16", n:16, title:"Data presentation", sub:"Graphs & interpretation", bullets:[
+    "Line/bar/pie charts",
+    "Percentages and trends",
+    "Drawing conclusions"
+  ], labs:[ { name:"Sim-3-U16 Data", file:FORM3_BASE+"sim-3-u16-data.html", desc:"Rainfall pie chart + graph interpretation." } ] },
+
+  { id:"f3-u17", n:17, title:"Measurement", sub:"Vernier + density", bullets:[
+    "Using measuring instruments correctly",
+    "Vernier callipers accuracy",
+    "Density by displacement for irregular objects"
+  ], labs:[ { name:"Sim-3-U17 Measurement", file:FORM3_BASE+"sim-3-u17-measurement.html", desc:"Vernier practice + density displacement lab." } ] },
+
+  { id:"f3-u18", n:18, title:"Force", sub:"Newton’s laws + momentum", bullets:[
+    "Newton’s 1st, 2nd, 3rd laws",
+    "F=ma relationships",
+    "Momentum p=mv"
+  ], labs:[ { name:"Sim-3-U18 Force", file:FORM3_BASE+"sim-3-u18-force.html", desc:"Ticker timer + force vs acceleration interactive." } ] },
+
+  { id:"f3-u19", n:19, title:"Machines", sub:"MA, VR, efficiency", bullets:[
+    "MA = load/effort",
+    "VR = distance effort / distance load",
+    "Efficiency and friction losses"
+  ], labs:[ { name:"Sim-3-U19 Machines", file:FORM3_BASE+"sim-3-u19-machines.html", desc:"Pulley system MA/VR/efficiency calculator." } ] },
+
+  { id:"f3-u20", n:20, title:"Petrol and diesel engines", sub:"Four-stroke cycles", bullets:[
+    "Petrol vs diesel differences",
+    "Four-stroke sequences",
+    "Efficiency ideas"
+  ], labs:[ { name:"Sim-3-U20 Engines", file:FORM3_BASE+"sim-3-u20-engines.html", desc:"Cycle animation + compare petrol vs diesel." } ] },
+
+  { id:"f3-u21", n:21, title:"Energy & heat transfer", sub:"Conduction, convection, radiation", bullets:[
+    "Conduction in solids",
+    "Convection in liquids/gases",
+    "Radiation and surface colour effects"
+  ], labs:[ { name:"Sim-3-U21 Heat", file:FORM3_BASE+"sim-3-u21-heat.html", desc:"Heat transfer experiments (local cooking examples)." } ] },
+
+  { id:"f3-u22", n:22, title:"Magnetism & electromagnetism", sub:"Fields + generators", bullets:[
+    "Magnetic field lines",
+    "Electromagnetism with current",
+    "DC vs AC generator principles"
+  ], labs:[ { name:"Sim-3-U22 Magnetism", file:FORM3_BASE+"sim-3-u22-magnetism.html", desc:"Field plotting + motor effect + generator demo." } ] },
+
+  { id:"f3-u23", n:23, title:"Electricity & electrostatics", sub:"Static charge + electroscope", bullets:[
+    "Charging by friction (triboelectric)",
+    "Like charges repel; unlike attract",
+    "Electroscope and lightning safety"
+  ], labs:[ { name:"Sim-3-U23 Electrostatics", file:FORM3_BASE+"sim-3-u23-electricity-static.html", desc:"Charge interactions + electroscope builder." } ] },
+
+  { id:"f3-u24", n:24, title:"Ohm’s law & resistors", sub:"V=IR + series resistance", bullets:[
+    "Ohm’s law V=IR",
+    "Resistance factors: length, diameter",
+    "Series resistors add up"
+  ], labs:[ { name:"Sim-3-U24 Ohm’s Law", file:FORM3_BASE+"sim-3-u24-ohms-law.html", desc:"V-I graph + resistor series calculator." } ] },
+
+  { id:"f3-u25", n:25, title:"Electrical power & energy", sub:"P=VI and kWh", bullets:[
+    "Power P=VI",
+    "Energy E=Pt",
+    "Home safety: fuse, breaker, ELCB"
+  ], labs:[ { name:"Sim-3-U25 Power", file:FORM3_BASE+"sim-3-u25-electrical-power.html", desc:"Appliance power + ZESA kWh energy meter." } ] },
+];
+
+/* =========================================================
+   LABS HUB (auto) — includes Form 1 + Form 2 + Form 3
 ========================================================= */
 function buildLabsHub(){
   const labs = [];
   form1Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 1", topic:`Topic ${t.n}: ${t.title}`, ...l})));
   form2Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 2", topic:`Unit ${t.n}: ${t.title}`, ...l})));
+  form3Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 3", topic:`Topic ${t.n}: ${t.title}`, ...l})));
   return labs;
 }
 
 /* =========================================================
-   QUIZZES (you can expand)
+   QUIZZES (kept + add-only)
 ========================================================= */
 const QUIZZES = {
-  // Form 1 quizzes (key by id)
+  // Form 1 quizzes
   "f1-t2": [
     { q:"The basic unit of life is:", opts:["Organ","Cell","Tissue","System"], a:1 },
     { q:"A group of similar cells working together is called:", opts:["Organ","Tissue","Species","Kingdom"], a:1 },
@@ -710,7 +1115,7 @@ const QUIZZES = {
     { q:"Magnetism can separate:", opts:["Sugar and water","Iron filings and sand","Salt and water","Two liquids"], a:1 },
   ],
 
-  // Form 2 quizzes (a few starter ones)
+  // Form 2 quizzes (kept + add-only)
   "f2-u4": [
     { q:"Osmosis is movement of:", opts:["Water","Solute","Air","Blood"], a:0 },
     { q:"Xylem transports:", opts:["Food","Water and minerals","Oxygen","Hormones"], a:1 },
@@ -726,12 +1131,39 @@ const QUIZZES = {
     { q:"Acid + base forms:", opts:["salt + water","oxygen + water","CO2 + water","metal + hydrogen"], a:0 },
     { q:"Acids react with carbonates to produce:", opts:["Salt only","Salt + water + CO2","Water only","CO2 only"], a:1 },
   ],
+  "f2-u12": [
+    { q:"Complete combustion produces:", opts:["CO + soot","CO2 + water","Only water","Only CO2"], a:1 },
+    { q:"Carbon monoxide (CO) is:", opts:["Harmless","Poisonous","A fuel","A metal"], a:1 },
+    { q:"A smoky yellow flame suggests:", opts:["Complete combustion","Incomplete combustion","No combustion","Neutralisation"], a:1 },
+  ],
+  "f2-u15": [
+    { q:"A moment is:", opts:["Force only","Turning effect","Speed","Mass"], a:1 },
+    { q:"Moment formula is:", opts:["V=IR","F×d","P=VI","m÷v"], a:1 },
+    { q:"Friction can be reduced by:", opts:["Roughening","Lubrication","Adding sand","More weight"], a:1 },
+  ],
+  "f2-u17": [
+    { q:"Work done equals:", opts:["F×d","m×v","V×I","R×I"], a:0 },
+    { q:"Energy can be:", opts:["Created","Destroyed","Transformed","None"], a:2 },
+    { q:"Sound needs:", opts:["Vacuum","A medium","Only light","Only water"], a:1 },
+  ],
+
+  // Form 3 starter quizzes
+  "f3-u12": [
+    { q:"An acid has pH:", opts:["Below 7","Exactly 7","Above 7","None"], a:0 },
+    { q:"Neutralisation is:", opts:["acid + metal","acid + base","base + water","salt + water"], a:1 },
+    { q:"Acid + carbonate produces:", opts:["Salt only","Salt + water + CO2","CO2 only","Water only"], a:1 },
+  ],
+  "f3-u24": [
+    { q:"Ohm’s law is:", opts:["P=VI","V=IR","E=Pt","F=ma"], a:1 },
+    { q:"A voltmeter is connected:", opts:["In series","In parallel","Across a fuse only","Across earth only"], a:1 },
+    { q:"In series, total resistance is:", opts:["R1×R2","R1+R2+...","R1−R2","Always 0"], a:1 },
+  ],
 };
 
 /* =========================================================
    STATE + RENDER
 ========================================================= */
-let mode = "f1"; // f1 | f2 | labs
+let mode = "f1"; // f1 | f2 | f3 | labs
 let selectedId = null;
 
 const topicList = document.getElementById("topicList");
@@ -744,6 +1176,7 @@ const topicChip = document.getElementById("topicChip");
 const topicIntro = document.getElementById("topicIntro");
 const topicBullets = document.getElementById("topicBullets");
 const labArea = document.getElementById("labArea");
+const kbArea = document.getElementById("kbArea"); // ✅ Knowledge area
 
 const quizIntro = document.getElementById("quizIntro");
 const quizArea = document.getElementById("quizArea");
@@ -752,8 +1185,9 @@ const scoreBig = document.getElementById("scoreBig");
 function getList(){
   if (mode==="f1") return form1Topics;
   if (mode==="f2") return form2Topics;
-  return [{ id:"labs-hub", n:"", title:"Labs Hub", sub:"All labs from Form 1 + Form 2", bullets:[
-    "This shows every virtual lab you linked in Form 1 and Form 2.",
+  if (mode==="f3") return form3Topics;
+  return [{ id:"labs-hub", n:"", title:"Labs Hub", sub:"All labs from Form 1 + Form 2 + Form 3", bullets:[
+    "This shows every virtual lab you linked in Forms 1–3.",
     "If a lab is missing, add it under the topic/unit labs list."
   ], labs: buildLabsHub() }];
 }
@@ -768,7 +1202,11 @@ function setMode(newMode){
 
 function renderLeft(){
   const list = getList();
-  leftTitle.textContent = mode==="f1" ? "Form 1 Topics" : mode==="f2" ? "Form 2 Units" : "Labs Hub";
+  leftTitle.textContent =
+    mode==="f1" ? "Form 1 Topics" :
+    mode==="f2" ? "Form 2 Units" :
+    mode==="f3" ? "Form 3 Topics" :
+    "Labs Hub";
   leftSub.textContent = "Click to jump";
 
   const q = searchBox.value.trim().toLowerCase();
@@ -780,10 +1218,18 @@ function renderLeft(){
   filtered.forEach(t=>{
     const btn = document.createElement("button");
     btn.className = "topicBtn" + (t.id===selectedId ? " active" : "");
-    const rightPill = mode==="labs" ? t.sub : (mode==="f1" ? `Topic ${t.n}` : `Unit ${t.n}`);
+    const rightPill =
+      mode==="labs" ? t.sub :
+      mode==="f1" ? `Topic ${t.n}` :
+      mode==="f2" ? `Unit ${t.n}` :
+      `Topic ${t.n}`;
+
     btn.innerHTML = `
       <div class="l">
-        <b>${mode==="labs" ? t.title : (mode==="f1" ? `Topic ${t.n}` : `Unit ${t.n}`) + " — " + t.title}</b>
+        <b>${
+          mode==="labs" ? t.title :
+          (mode==="f2" ? `Unit ${t.n}` : `Topic ${t.n}`) + " — " + t.title
+        }</b>
         <span>${t.sub || ""}</span>
       </div>
       <div class="r">${rightPill}</div>
@@ -797,9 +1243,10 @@ function renderRightWelcome(){
   topicHeader.textContent = "Welcome";
   topicChip.textContent = "Overview";
   topicIntro.textContent =
-    "Form 1 Topics 1–19 are restored. Use the Form 2 tab for your new Form 2 content.";
+    "Form 1 Topics 1–19 are restored. Use tabs for Form 2 and Form 3 content.";
   topicBullets.innerHTML = "";
   labArea.innerHTML = "";
+  kbArea.innerHTML = "";
   quizIntro.textContent = "Select a topic to load a quiz.";
   quizArea.innerHTML = "";
   scoreBig.textContent = "0";
@@ -810,8 +1257,17 @@ function renderRight(){
   const t = list.find(x=>x.id===selectedId);
   if (!t) return renderRightWelcome();
 
-  topicHeader.textContent = mode==="labs" ? t.title : (mode==="f1" ? `Topic ${t.n}: ${t.title}` : `Unit ${t.n}: ${t.title}`);
-  topicChip.textContent = mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : "Labs";
+  topicHeader.textContent =
+    mode==="labs" ? t.title :
+    mode==="f2" ? `Unit ${t.n}: ${t.title}` :
+    `Topic ${t.n}: ${t.title}`;
+
+  topicChip.textContent =
+    mode==="f1" ? "Form 1" :
+    mode==="f2" ? "Form 2" :
+    mode==="f3" ? "Form 3" :
+    "Labs";
+
   topicIntro.textContent = t.sub || "";
 
   // bullets
@@ -837,6 +1293,121 @@ function renderRight(){
     });
   } else {
     labArea.innerHTML = `<div class="notice warn">No lab linked for this topic/unit yet.</div>`;
+  }
+
+  // ✅ Knowledge search UI (Form 1/2/3) + Form 3 quick links
+  kbArea.innerHTML = "";
+
+  const isFormMode = (mode==="f1" || mode==="f2" || mode==="f3");
+  if (isFormMode){
+    if (mode==="f3"){
+      const links = document.createElement("div");
+      links.className = "labBox";
+      links.innerHTML = `
+        <b>Form 3 Quick Links</b>
+        <span>Open the full labs index or the mini index (Topics 21–25).</span>
+        <a href="${safeHref(FORM3_BASE+"form3-labs.html")}" target="_blank" rel="noopener">Open Form 3 Labs Hub</a>
+        <a href="${safeHref(FORM3_BASE+"form3-mini-index-21-25.html")}" target="_blank" rel="noopener" style="margin-left:10px;">Open Mini Index 21–25</a>
+      `;
+      kbArea.appendChild(links);
+    }
+
+    const panel = document.createElement("div");
+    panel.className = "labBox";
+    panel.innerHTML = `
+      <b>${mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : "Form 3"} AI Knowledge Pack (Offline Search)</b>
+      <span>Works even if backend AI is down. Uses embedded KB (Form 1+2) and optional external packs.</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <input id="kbQ" placeholder="Ask: e.g., What is osmosis? Explain combustion... Ohm’s law..." style="flex:1;min-width:240px;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background: rgba(255,255,255,.03);color:var(--text);outline:none;">
+        <button class="btn" id="kbGo">Search</button>
+      </div>
+      <div id="kbOut" class="notice" style="margin-top:10px">Type a question and press Search.</div>
+    `;
+    kbArea.appendChild(panel);
+
+    const kbQ = document.getElementById("kbQ");
+    const kbGo = document.getElementById("kbGo");
+    const kbOut = document.getElementById("kbOut");
+
+    const targetForm =
+      mode==="f1" ? "Form 1" :
+      mode==="f2" ? "Form 2" :
+      "Form 3";
+
+    function scoreUnit(unit, q){
+      const qq = q.toLowerCase();
+      let s = 0;
+      if ((unit.form||"") !== targetForm) return 0;
+      if ((unit.title||"").toLowerCase().includes(qq)) s += 8;
+      if ((unit.subject||"").toLowerCase().includes(qq)) s += 2;
+      if ((unit.keywords||[]).some(k => String(k).toLowerCase().includes(qq))) s += 6;
+
+      const tokens = qq.split(/\s+/).filter(Boolean);
+      tokens.forEach(tok=>{
+        if ((unit.title||"").toLowerCase().includes(tok)) s += 2;
+        if ((unit.keyIdeas||[]).join(" ").toLowerCase().includes(tok)) s += 1;
+        if ((unit.keywords||[]).some(k => String(k).toLowerCase().includes(tok))) s += 2;
+      });
+      return s;
+    }
+
+    function renderKB(unit){
+      const ex = (unit.experiments && unit.experiments[0]) ? unit.experiments[0] : null;
+      const qa = (unit.qa || []).slice(0,3);
+
+      const lines = [];
+      lines.push(`<b>${escapeHtml(unit.subject || targetForm)} • Unit ${escapeHtml(unit.unit)}: ${escapeHtml(unit.title)}</b>`);
+      if (unit.keyIdeas && unit.keyIdeas.length){
+        lines.push(`<div class="muted" style="margin-top:8px"><b>Key ideas</b></div>`);
+        lines.push(`<ul>${unit.keyIdeas.slice(0,6).map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`);
+      }
+      if (ex){
+        lines.push(`<div class="muted" style="margin-top:8px"><b>Experiment</b></div>`);
+        lines.push(`<div class="muted"><b>${escapeHtml(ex.title||"")}</b> — ${escapeHtml(ex.aim||"")}</div>`);
+        if (ex.steps && ex.steps.length){
+          lines.push(`<ul>${ex.steps.slice(0,7).map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`);
+        }
+      }
+      if (qa.length){
+        lines.push(`<div class="muted" style="margin-top:8px"><b>Quick Q&A</b></div>`);
+        lines.push(`<ul>${qa.map(p=>`<li><b>Q:</b> ${escapeHtml(p.q)}<br><b>A:</b> ${escapeHtml(p.a)}</li>`).join("")}</ul>`);
+      }
+      return `<div>${lines.join("")}</div>`;
+    }
+
+    function runKB(){
+      const q = (kbQ.value||"").trim();
+      if (!q){
+        kbOut.className = "notice warn";
+        kbOut.innerHTML = "Please type a question first.";
+        return;
+      }
+      const kb = window.SCI_GURU_KB || [];
+      const scoped = kb.filter(u => (u.form||"") === targetForm);
+
+      if (!scoped.length){
+        kbOut.className = "notice warn";
+        kbOut.innerHTML = `No offline KB loaded for <b>${targetForm}</b>.`;
+        return;
+      }
+
+      const ranked = scoped.map(u=>({u, s: scoreUnit(u,q)}))
+        .sort((a,b)=>b.s-a.s)
+        .filter(x=>x.s>0)
+        .slice(0,2);
+
+      if (!ranked.length){
+        kbOut.className = "notice warn";
+        kbOut.innerHTML = "No match found. Try keywords like <b>osmosis</b>, <b>acid</b>, <b>combustion</b>, <b>magnet</b>, <b>ohm</b>, <b>density</b>.";
+        return;
+      }
+
+      kbOut.className = "notice ok";
+      kbOut.innerHTML = ranked.map(x=>renderKB(x.u)).join("<hr style='border:none;border-top:1px solid var(--border);margin:12px 0'>");
+    }
+
+    kbGo.onclick = runKB;
+    kbQ.addEventListener("keydown", (e)=>{ if (e.key==="Enter") runKB(); });
   }
 
   // quiz
@@ -938,6 +1509,7 @@ function setActiveTab(btnId){
 }
 document.getElementById("tabF1").onclick = ()=>{ setActiveTab("tabF1"); setMode("f1"); };
 document.getElementById("tabF2").onclick = ()=>{ setActiveTab("tabF2"); setMode("f2"); };
+document.getElementById("tabF3").onclick = ()=>{ setActiveTab("tabF3"); setMode("f3"); };
 document.getElementById("tabLabs").onclick = ()=>{ setActiveTab("tabLabs"); setMode("labs"); };
 
 searchBox.addEventListener("input", renderLeft);
@@ -954,9 +1526,12 @@ document.getElementById("btnReset").onclick = ()=>{
   if (selectedId) renderQuizFor(selectedId);
 };
 
+// quick open Form 3 indexes
+document.getElementById("btnF3Hub").onclick = ()=> window.open(FORM3_BASE+"form3-labs.html", "_blank");
+document.getElementById("btnF3Mini").onclick = ()=> window.open(FORM3_BASE+"form3-mini-index-21-25.html", "_blank");
+
 /* =========================================================
    AI HELPER (modal)
-   - tries common endpoints; adjust if needed.
 ========================================================= */
 const modalBack = document.getElementById("modalBack");
 const aiBody = document.getElementById("aiBody");
@@ -967,7 +1542,8 @@ const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask"];
 function openAI(){
   modalBack.style.display = "flex";
   const t = getList().find(x=>x.id===selectedId);
-  aiTitle.textContent = t ? `Sci-Guru AI • ${mode==="f1"?"Form 1":"Form 2"} • ${t.title}` : "Sci-Guru AI Helper";
+  const modeLabel = mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : mode==="f3" ? "Form 3" : "Labs";
+  aiTitle.textContent = t ? `Sci-Guru AI • ${modeLabel} • ${t.title}` : "Sci-Guru AI Helper";
   setTimeout(()=>aiInput.focus(), 50);
 }
 function closeAI(){ modalBack.style.display = "none"; }
@@ -998,7 +1574,7 @@ async function sendAI(){
   const payload = {
     message: text,
     mode,
-    topic: t ? (mode==="f1" ? `Topic ${t.n}: ${t.title}` : `Unit ${t.n}: ${t.title}`) : ""
+    topic: t ? ((mode==="f2" ? `Unit ${t.n}` : mode==="labs" ? "" : `Topic ${t.n}`) + (t.title ? `: ${t.title}` : "")) : ""
   };
 
   for (const ep of AI_ENDPOINTS){
@@ -1020,7 +1596,9 @@ async function sendAI(){
 
   addMsg("ai",
 `AI backend not reached.
-Check your server has a POST route like /api/chat or /chat returning JSON { reply: "..." }`
+Check your server has a POST route like /api/chat or /chat returning JSON { reply: "..." }
+
+Tip: Use the Offline Knowledge Search panel (inside topic view) if backend is down.`
   );
 }
 
