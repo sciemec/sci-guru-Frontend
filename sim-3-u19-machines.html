@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sim-3 U19 — Machines</title>
+  <link rel="stylesheet" href="assets/sim-base.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a class="badge" href="form3-labs.html"> Back to Form 3 Labs</a>
+      <div class="badge"><small>Offline simulation • White background</small></div>
+    </div>
+    <div class="card">
+      <div class="inner">
+        <h1 id="simTitle">Sim</h1>
+        <div class="kv" id="simConcept"></div>
+        <div class="hook" style="margin-top:12px">
+          <b>Zimbabwe hook</b>
+          <div id="simHookText" class="muted"></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:16px">
+      <div class="card">
+        <div class="inner">
+          <h2>Controls</h2>
+          <div id="controlsWrap" class="controls"></div>
+          <div class="btnrow">
+            <button id="runBtn" class="primary">Run Trial</button>
+            <button id="resetBtn">Reset</button>
+            <button id="csvBtn">Download CSV</button>
+          </div>
+          <div id="status" class="footerNote">Ready.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="inner">
+          <h2>Workspace</h2>
+          <div id="workspaceCustom" class="canvasWrap" style="margin-bottom:10px"></div>
+          <div class="canvasWrap">
+            <canvas id="chart"></canvas>
+          </div>
+          <div class="footerNote">The chart updates automatically as you run trials.</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:16px">
+      <div class="card">
+        <div class="inner">
+          <h2>Data table</h2>
+          <div class="tablewrap">
+            <table>
+              <thead id="dataHead"></thead>
+              <tbody id="dataBody"></tbody>
+            </table>
+          </div>
+          <div class="footerNote">Use the table to compare trials and spot patterns.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="inner">
+          <h2>Quick check</h2>
+          <div id="quizScore" class="muted" style="margin-bottom:10px"></div>
+          <div id="quizWrap"></div>
+          <div class="footerNote">Try again by refreshing the page.</div>
+        </div>
+      </div>
+    </div>
+    <div class="footerNote">
+      Built for Sci■Guru — Form 3 Virtual Labs (Sim■3). You can rename or extend any simulation.     </div>
+  </div>
+  <script src="assets/sim-engine.js"></script>
+  <script src="assets/units/u19.js"></script>
+</body>
+</html>
