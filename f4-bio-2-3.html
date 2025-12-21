@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 2.3 - Nutrition Test: Proteins (Biuret)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 2.3</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-2-3",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 2.3",
+  "title": "Nutrition Test: Proteins (Biuret)",
+  "subtitle": "Biuret turns purple/mauve if protein is present",
+  "aim": "To test a food sample for protein using the Biuret test.",
+  "apparatus": [
+    "Copper sulfate solution",     "Sodium hydroxide or potassium hydroxide",
+    "Test tube",
+    "Dropper",     "Food solution (e.g., egg white)"
+  ],
+  "safety": [     "Alkalis are corrosive. Avoid skin/eye contact.",
+    "Wear goggles.",
+    "Do not taste."
+  ],
+  "steps": [
+    {
+      "title": "Add alkali",
+      "text": "Add NaOH/KOH to the food solution.",
+      "observe": "Solution ready."
+    },
+    {
+      "title": "Add CuSO4",
+      "text": "Add a few drops of copper sulfate solution.",
+      "observe": "Purple/mauve colour indicates protein."
+    },
+    {
+      "title": "Record",
+      "text": "Write observation and conclusion.",
+      "observe": "Result recorded."
+    }
+  ],
+  "interactive": {
+    "type": "nutrition_test",
+    "intro": "Use the Nutrition Lab widget and select the Biuret test."
+  },
+  "quiz": [
+    {
+      "q": "Biuret test positive colour is:",
+      "opts": [
+        "Blue-black",
+        "Purple/Mauve",
+        "Milky white",
+        "Orange"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Biuret test detects:",
+      "opts": [
+        "Starch",
+        "Protein",
+        "Fat",
+        "Vitamin D"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Use beans, kapenta (dried fish), eggs, or peanut flour as protein-rich samples. Connect to   kwashiorkor prevention through balanced diets." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

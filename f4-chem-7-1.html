@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 7.1 - Separation: Paper Chromatography (Ink)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Chemistry</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 7.1</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-chem-7-1",
+  "form": "Form 4",
+  "topic": "Chemistry",
+  "experiment": "Experiment 7.1",
+  "title": "Separation: Paper Chromatography (Ink)",
+  "subtitle": "Separates dyes to test purity of ink",
+  "aim": "To use paper chromatography to determine whether black ink is pure or a mixture.",
+  "apparatus": [
+    "Filter paper",
+    "Solvent (ethanol)",
+    "Beaker",
+    "Pencil",
+    "Black ink spot",     "Capillary tube"
+  ],
+  "safety": [
+    "Ethanol is flammable-keep away from flames.",
+    "Do not inhale solvent fumes."
+  ],
+  "steps": [
+    {
+      "title": "Draw baseline",
+      "text": "Draw a pencil line near bottom of paper and place ink spot on it.",
+      "observe": "Spot on baseline."
+    },
+    {
+      "title": "Develop",
+      "text": "Place paper in solvent (baseline above solvent level).",
+      "observe": "Solvent rises up paper."
+    },
+    {
+      "title": "Observe spots",
+      "text": "Remove and dry; observe spots.",
+      "observe": "More than one spot means mixture."
+    }
+  ],
+  "interactive": {
+    "type": "chromatography",
+    "intro": "Choose ink and solvent to see number of spots and conclusion."
+  },
+  "quiz": [
+    {
+      "q": "Chromatography separates substances mainly because they have different:",
+      "opts": [
+        "Mass only",
+        "Solubility and attraction to paper",
+        "Colour only",
+        "Temperature"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Use black ink from a school pen (e.g., Bic). Ethanol can be methylated spirit. Relate   chromatography to testing food dyes or counterfeit inks." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

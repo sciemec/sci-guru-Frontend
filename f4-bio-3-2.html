@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 3.2 - Respiration: Heat from Germinating Seeds</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 3.2</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-3-2",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 3.2",
+  "title": "Respiration: Heat from Germinating Seeds",
+  "subtitle": "Respiration releases energy as heat",
+  "aim": "To show that germinating seeds produce heat during respiration.",
+  "apparatus": [
+    "Two vacuum flasks",
+    "Germinating seeds",     "Control (boiled seeds/beads)",
+    "Thermometers",     "Cotton wool stoppers"
+  ],
+  "safety": [
+    "Handle thermometers carefully.",
+    "Avoid breaking glass.",
+    "Wash hands after handling seeds."
+  ],
+  "steps": [
+    {
+      "title": "Set equal start temp",
+      "text": "Set both flasks to the same starting temperature.",
+      "observe": "Both read ~25?C."
+    },
+    {
+      "title": "Leave for hours",
+      "text": "Leave both flasks for several hours.",
+      "observe": "Seeds flask temperature rises more."
+    },
+    {
+      "title": "Compare",
+      "text": "Compare final temperatures and conclude.",
+      "observe": "Respiration releases energy as heat."
+    }
+  ],
+  "interactive": {
+    "type": "heat_seeds",
+    "intro": "Move the time slider to see temperature changes in the two flasks."
+  },
+  "quiz": [
+    {
+      "q": "During respiration, energy is released mainly as:",
+      "opts": [
+        "Light",
+        "Heat and chemical energy (ATP)",
+        "Sound",
+        "Magnetism"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Compare heat produced by germinating maize/bean seeds vs dry seeds. Relate to why grain   stores can warm up and need ventilation." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 4.3 - Transport: Potometer (Transpiration Rate)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 4.3</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-4-3",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 4.3",
+  "title": "Transport: Potometer (Transpiration Rate)",
+  "subtitle": "Bubble movement indicates water uptake",
+  "aim": "To demonstrate and measure the rate of transpiration using a potometer.",
+  "apparatus": [
+    "Potometer",
+    "Leafy shoot",
+    "Water",
+    "Ruler",
+    "Stopwatch",     "Petroleum jelly (seal joints)"
+  ],
+  "safety": [
+    "Cut shoots under water to avoid air bubbles.",
+    "Handle glassware carefully."
+  ],
+  "steps": [
+    {
+      "title": "Assemble potometer",
+      "text": "Fill potometer with water and insert leafy shoot; seal joints.",
+      "observe": "No air leaks."
+    },
+    {
+      "title": "Introduce bubble",
+      "text": "Introduce a small air bubble into the capillary.",
+      "observe": "Bubble visible."
+    },
+    {
+      "title": "Change conditions",
+      "text": "Alter light/wind/humidity and measure bubble movement.",
+      "observe": "Bubble moves faster under higher transpiration."
+    }
+  ],
+  "interactive": {
+    "type": "potometer",
+    "intro": "Change environmental conditions and see the bubble movement rate."
+  },
+  "quiz": [
+    {
+      "q": "A faster bubble movement usually means:",
+      "opts": [
+        "Lower transpiration",
+        "Higher transpiration",
+        "No transpiration",
+        "More photosynthesis only"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Use a potometer setup with a leafy twig from a garden plant. Connect to irrigation planning   and why wind/heat increases water loss." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

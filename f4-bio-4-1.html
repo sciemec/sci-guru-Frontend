@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 4.1 - Transport: Petroleum Jelly & Stomata</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 4.1</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-4-1",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 4.1",
+  "title": "Transport: Petroleum Jelly & Stomata",
+  "subtitle": "Blocking stomata reduces water loss",
+  "aim": "To determine which leaf surface has more stomata using petroleum jelly.",
+  "apparatus": [
+    "Fresh leaf",
+    "Petroleum jelly",
+    "Balance (optional)",
+    "Paper clips/tape",
+    "Timer"
+  ],
+  "safety": [
+    "Avoid rubbing jelly in eyes.",
+    "Wash hands after experiment."
+  ],
+  "steps": [
+    {
+      "title": "Cover a surface",
+      "text": "Cover either upper or lower leaf surface with petroleum jelly.",
+      "observe": "Surface blocked."
+    },
+    {
+      "title": "Wait",
+      "text": "Leave leaf for a set time.",
+      "observe": "Water loss differs by surface."
+    },
+    {
+      "title": "Compare",
+      "text": "Compare water loss / wilting rate.",
+      "observe": "Blocking lower surface reduces transpiration more."
+    }
+  ],
+  "interactive": {
+    "type": "stomata_jelly",
+    "intro": "Choose which surface to cover and simulate water loss."
+  },
+  "quiz": [
+    {
+      "q": "Most stomata in many leaves are on the:",
+      "opts": [
+        "Upper surface",
+        "Lower surface",
+        "Leaf edge only",
+        "Stem"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Use a common leaf (mango, guava, or msasa). Observe which surface has more stomata and relate   to water-saving plant adaptations in hot seasons." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html> 

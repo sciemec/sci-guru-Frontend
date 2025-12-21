@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 2.2 - Nutrition Test: Simple Sugars (Benedict's)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 2.2</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-2-2",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 2.2",
+  "title": "Nutrition Test: Simple Sugars (Benedict's)",
+  "subtitle": "Heat with Benedict's: blue -> green/yellow/orange/red",
+  "aim": "To test a food sample for reducing sugars using Benedict's solution and heat.",
+  "apparatus": [
+    "Benedict's solution",
+    "Test tubes",
+    "Water bath / hot water",
+    "Test tube holder",     "Food solution (e.g., fruit juice)"
+  ],
+  "safety": [     "Use care with hot water; avoid burns.",
+    "Do not taste chemicals.",
+    "Point test tubes away from people while heating."
+  ],
+  "steps": [
+    {
+      "title": "Prepare solution",
+      "text": "Put the food solution in a test tube.",
+      "observe": "Solution ready."
+    },
+    {
+      "title": "Add Benedict's",
+      "text": "Add Benedict's solution and mix.",
+      "observe": "Solution becomes blue."
+    },
+    {
+      "title": "Heat",
+      "text": "Place the test tube in a hot water bath for several minutes.",
+      "observe": "Colour may change to green/yellow/orange/brick-red if sugar present."
+    }
+  ],
+  "interactive": {
+    "type": "nutrition_test",
+    "intro": "Use the same Nutrition Lab widget and select Benedict's test."
+  },
+  "quiz": [
+    {
+      "q": "Benedict's test requires:",
+      "opts": [
+        "Only iodine",
+        "Heat",
+        "Litmus paper",
+        "Ethanol"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A brick-red precipitate suggests:",
+      "opts": [
+        "High sugar",
+        "No sugar",
+        "Only fat",
+        "Only protein"
+      ],
+      "a": 0
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Test for sugars using fruit juice (e.g., mango/orange), honey, or sweetened tea. Relate   results to energy drinks and sugary snacks sold at school tuckshops." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

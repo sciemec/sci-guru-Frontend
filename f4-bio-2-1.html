@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 2.1 - Nutrition Test: Starch (Iodine)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Biology</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 2.1</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-bio-2-1",
+  "form": "Form 4",
+  "topic": "Biology",
+  "experiment": "Experiment 2.1",
+  "title": "Nutrition Test: Starch (Iodine)",
+  "subtitle": "Iodine turns blue-black if starch is present",
+  "aim": "To test a food sample for starch using iodine solution.",
+  "apparatus": [
+    "Iodine solution",
+    "Dropper",
+    "White tile / spotting plate",
+    "Food samples (bread, potato, etc.)",     "Water (control)"
+  ],
+  "safety": [
+    "Do not taste test chemicals.",
+    "Avoid contact of iodine with eyes/skin; rinse with plenty of water.",
+    "Dispose samples safely."
+  ],
+  "steps": [
+    {
+      "title": "Prepare samples",
+      "text": "Place a small amount of food on a white tile. Set a water control spot.",
+      "observe": "Food spots ready for testing."
+    },
+    {
+      "title": "Add iodine",
+      "text": "Add 1-2 drops of iodine solution onto each sample.",
+      "observe": "Colour change may occur."
+    },
+    {
+      "title": "Compare with control",
+      "text": "Compare colour with the control spot.",
+      "observe": "Blue-black indicates starch; brown indicates no starch."
+    }
+  ],
+  "interactive": {
+    "type": "nutrition_test",
+    "intro": "Select a food sample and run the iodine test (plus other nutrition tests too)."
+  },
+  "quiz": [
+    {
+      "q": "A blue-black colour after adding iodine shows presence of:",
+      "opts": [
+        "Fat",
+        "Protein",
+        "Starch",
+        "Vitamin C"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Why use a control (water) spot?",
+      "opts": [
+        "To heat the sample",
+        "To compare expected negative result",
+        "To add more iodine",
+        "To make it smell better"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Try the starch test on sadza (maize meal), bread, or boiled potatoes. Compare results and   discuss why foods rich in carbohydrates are important for energy." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>

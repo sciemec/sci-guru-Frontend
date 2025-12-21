@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 12.1 - Organic: Fermentation (Ethanol)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Chemistry</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 12.1</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-chem-12-1",
+  "form": "Form 4",
+  "topic": "Chemistry",
+  "experiment": "Experiment 12.1",
+  "title": "Organic: Fermentation (Ethanol)",
+  "subtitle": "Sugar + yeast -> ethanol + CO2",
+  "aim": "To illustrate ethanol production by fermentation of sugar using yeast.",
+  "apparatus": [
+    "Sugar solution",
+    "Yeast",
+    "Warm water bath",
+    "Fermentation vessel",     "Balloon/airlock (optional)"
+  ],
+  "safety": [
+    "Use clean equipment.",
+    "Do not consume lab products.",
+    "Avoid overheating yeast."
+  ],
+  "steps": [
+    {
+      "title": "Prepare sugar solution",
+      "text": "Put sugar solution in vessel and add yeast.",
+      "observe": "Mixture ready."
+    },
+    {
+      "title": "Keep warm",
+      "text": "Keep in warm place (about 30-35?C).",
+      "observe": "Bubbles of CO2 appear."
+    },
+    {
+      "title": "Collect ethanol",
+      "text": "After fermentation, distil (teacher supervised) to collect ethanol.",
+      "observe": "Ethanol can be collected by distillation."
+    }
+  ],
+  "interactive": {
+    "type": "fermentation",
+    "intro": "Adjust temperature and sugar to see fermentation speed (CO2 bubbles) and ethanol level."
+  },
+  "quiz": [
+    {
+      "q": "Fermentation is usually:",
+      "opts": [
+        "Aerobic",
+        "Anaerobic",
+        "Nuclear",
+        "Electrical"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Fermentation is used to make mahewu and traditional beer. Relate sugar + yeast to CO2 bubbles   and ethanol production under warm conditions." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html> 

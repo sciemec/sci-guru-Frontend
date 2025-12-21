@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 8.3 - Matter & Reactivity: Metals with Steam</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Chemistry</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 8.3</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-chem-8-3",
+  "form": "Form 4",
+  "topic": "Chemistry",
+  "experiment": "Experiment 8.3",
+  "title": "Matter & Reactivity: Metals with Steam",
+  "subtitle": "Some metals react with steam but not cold water",
+  "aim": "To test reactivity of zinc, copper, lead (and iron) with steam.",
+  "apparatus": [
+    "Metal samples (Zn, Fe, Cu, Pb)",
+    "Steam source",
+    "Delivery tube",
+    "Heat source",     "Test for hydrogen"
+  ],
+  "safety": [
+    "Use caution with steam and hot apparatus.",
+    "Wear goggles and heat-proof gloves."
+  ],
+  "steps": [
+    {
+      "title": "Heat metal",
+      "text": "Heat the metal strongly in a tube.",
+      "observe": "Tube becomes hot."
+    },
+    {
+      "title": "Pass steam",
+      "text": "Pass steam over the hot metal.",
+      "observe": "Zn/Fe form oxide and hydrogen."
+    },
+    {
+      "title": "Test gas",
+      "text": "Test any gas produced with lighted splint.",
+      "observe": "Hydrogen pops."
+    }
+  ],
+  "interactive": {
+    "type": "steam_reactivity",
+    "intro": "Choose a metal and pass steam to see if hydrogen is produced."
+  },
+  "quiz": [
+    {
+      "q": "Hydrogen is identified by:",
+      "opts": [
+        "Turning limewater milky",
+        "A pop sound with lighted splint",
+        "Turning litmus red",
+        "Smelling sweet"
+      ],
+      "a": 1
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Connect zinc to galvanised roofing sheets, copper to electrical wiring, and lead to old   batteries. Discuss safe handling of lead." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html> 

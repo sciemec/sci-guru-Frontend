@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sci-Guru Form 4 | Experiment 10.1 - Industrial: Prepare a Soluble Salt (MgSO4)</title>
+  <link rel="stylesheet" href="sim-assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">SG</div>
+        <div>
+          <h1 id="titleTxt">Sci-Guru Virtual Lab</h1>
+          <p id="subTxt">Form 4 * Step Ahead Combined Science</p>
+        </div>
+      </div>
+      <div class="small" id="metaTxt"></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="cardHead">
+          <b>Experiment</b>
+          <span class="tag">Chemistry</span>
+        </div>
+        <div class="cardBody">
+          <a id="crumb" href="index.html" class="btn"><span id="crumbTxt">? Back to Form 4 Index</span></a>           <div class="footerNote">Tip: Keep filenames lowercase to avoid GitHub Pages 404 errors.</div>
+        </div>
+        <div class="list">
+          <div class="small">This page is a single simulator. Use the index to open other experiments.</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="cardHead"><b>Overview</b><span class="tag">Experiment 10.1</span></div>
+          <div class="cardBody">
+            <div id="aimBox" class="section"></div>
+            <div class="twoCols">
+              <div id="appsBox" class="section"></div>
+              <div id="safetyBox" class="section"></div>
+            </div>
+            <div id="procBox" class="section"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="cardHead"><b>Lab Zone</b><span class="tag">Interactive</span></div>
+          <div class="cardBody">
+            <div id="interactiveBox" class="section"></div>
+            <div id="quizBox" class="section" style="margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="footerNote">Edit content inside <span class="inline">SIM_DATA</span> in this HTML         file.</div>       </div>
+    </div>
+  </div>
+  <script>window.SIM_DATA = {
+  "id": "f4-chem-10-1",
+  "form": "Form 4",
+  "topic": "Chemistry",
+  "experiment": "Experiment 10.1",
+  "title": "Industrial: Prepare a Soluble Salt (MgSO4)",
+  "subtitle": "Metal + acid -> salt + hydrogen",
+  "aim": "To prepare a soluble salt solution by reacting magnesium with dilute sulfuric acid.",
+  "apparatus": [
+    "Magnesium powder/ribbon",     "Dilute sulfuric acid",
+    "Beaker",
+    "Filter funnel/paper",     "Evaporating dish"
+  ],
+  "safety": [     "Hydrogen is flammable-keep away from flames.",
+    "Acid burns-wear goggles.",
+    "Add small amounts to control reaction."
+  ],
+  "steps": [
+    {
+      "title": "React",
+      "text": "Add magnesium to dilute acid until excess metal remains.",
+      "observe": "Fizzing bubbles of hydrogen."
+    },
+    {
+      "title": "Filter",
+      "text": "Filter to remove excess metal.",
+      "observe": "Clear salt solution."
+    },
+    {
+      "title": "Crystallise",
+      "text": "Evaporate some water and allow crystals to form.",
+      "observe": "Crystals of salt form."
+    }
+  ],
+  "interactive": {
+    "type": "salt_prep",
+    "intro": "Choose amount of magnesium and observe fizzing + salt solution formed."
+  },
+  "quiz": [
+    {
+      "q": "Mg + H2SO4 produces:",
+      "opts": [
+        "MgSO4 + H2",
+        "MgO + SO2",
+        "MgCl2 + H2",
+        "MgSO3 + O2"
+      ],
+      "a": 0
+    }
+  ],
+  "indexHref": "index.html",   "localExample": "Magnesium sulfate (Epsom salt) is used in gardening and medicine. Relate to preparing soluble   salts for agriculture and soil nutrients." };</script>
+  <script src="sim-assets/engine.js" defer></script>
+</body>
+</html>
