@@ -59,7 +59,6 @@
       background: rgba(10,16,34,.70);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -120,15 +119,11 @@
       user-select:none;
       font-size: 13px;
     }
+
     @media (max-width: 860px){
       .brand{min-width:auto}
       .navToggle{display:inline-flex}
-      .nav{
-        display:none;
-        width: 100%;
-        justify-content:flex-start;
-        padding-top:10px;
-      }
+      .nav{ display:none; width: 100%; justify-content:flex-start; padding-top:10px; }
       .siteHeader{ flex-wrap:wrap; align-items:flex-start; }
       .nav.show{display:flex}
     }
@@ -177,6 +172,7 @@
     .tab:hover{transform: translateY(-1px); background: var(--pillHover)}
     .tab.active{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
 
+    /* Left panel */
     .left{
       border:1px solid var(--border);
       border-radius: var(--radius);
@@ -233,7 +229,14 @@
       white-space:nowrap;
     }
 
-    .leftFooter{ padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; }
+    .leftFooter{
+      padding:12px 14px;
+      border-top:1px solid var(--border);
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .leftFooter .leftBtns{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
       padding:10px 12px;
       border-radius:14px;
@@ -247,9 +250,22 @@
     .btn:hover{background: rgba(255,255,255,.05)}
     .btnBlue{ border-color: var(--btnBlueBorder); background: var(--btnBlue); }
 
+    .statusPill{
+      font-size:12px;
+      color:var(--muted);
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .statusPill.ok{ color:#bff7df; border-color: rgba(16,185,129,.28); background: rgba(16,185,129,.10); }
+    .statusPill.bad{ color:#ffd3da; border-color: rgba(244,63,94,.28); background: rgba(244,63,94,.10); }
+
+    /* Right panel */
     .right{
       display:grid;
-      grid-template-columns: 1fr 340px;
+      grid-template-columns: 1fr 360px;
       gap:16px;
       align-content:start;
     }
@@ -301,6 +317,7 @@
       justify-content:center;
     }
 
+    /* Quiz */
     .q{
       border:1px solid var(--border);
       border-radius:16px;
@@ -320,13 +337,46 @@
       color: var(--text);
       font-size:13px;
       line-height:1.4;
-      white-space: pre-wrap;
+      white-space:pre-wrap;
     }
     .ok{background: var(--okBg); border-color: rgba(16,185,129,.28)}
     .warn{background: var(--warnBg); border-color: rgba(244,63,94,.28)}
     .scoreBig{ font-size:44px; font-weight:900; margin:6px 0 0; }
 
-    /* AI modal (kept) */
+    /* Ask box */
+    .aiTextArea{
+      width:100%;
+      min-height: 90px;
+      resize: vertical;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      outline:none;
+      margin-top:10px;
+    }
+    .resultBox{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background: rgba(255,255,255,.03);
+      margin-top:10px;
+    }
+    .resultBox h4{
+      margin:0 0 8px 0;
+      font-size:12px;
+      letter-spacing:.6px;
+      color: var(--muted);
+    }
+    .resultContent{
+      white-space: pre-wrap;
+      line-height:1.45;
+      font-size:13px;
+      color: var(--text);
+    }
+
+    /* AI modal */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -382,7 +432,13 @@
     }
 
     /* Footer */
-    .footer{ max-width:1300px; margin: 0 auto; padding: 0 16px 18px; color: rgba(255,255,255,.60); font-size: 12px; }
+    .footer{
+      max-width:1300px;
+      margin: 0 auto;
+      padding: 0 16px 18px;
+      color: rgba(255,255,255,.60);
+      font-size: 12px;
+    }
     .footerInner{
       margin-top: 10px;
       padding-top: 12px;
@@ -392,116 +448,11 @@
       gap:10px;
       justify-content:space-between;
     }
-
-    /* =========================================================
-       ✅ ADDED: “Tutor AI Panel” styles (from your old tutor)
-       (Does NOT remove/change your books/topics code)
-    ========================================================= */
-    .aiGrid{
-      display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:14px;
-    }
-    @media (max-width: 980px){ .aiGrid{grid-template-columns:1fr} }
-
-    .aiLeft{
-      border:1px solid var(--border);
-      border-radius:16px;
-      background: rgba(255,255,255,.03);
-      padding:12px;
-    }
-    .aiLeft h3{margin:0 0 10px; font-size:14px}
-    .aiLeft label{
-      display:block;
-      margin:10px 0 6px;
-      font-size:12.5px;
-      color:var(--muted);
-    }
-    .aiLeft select, .aiLeft textarea{
-      width:100%;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color:var(--text);
-      outline:none;
-      font-size:13px;
-    }
-    .aiLeft textarea{ min-height:110px; resize:vertical; }
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .mainBtn{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--btnBlueBorder);
-      background: var(--btnBlue);
-      color:var(--text);
-      cursor:pointer;
-      font-size:13px;
-    }
-    .secBtn{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color:var(--text);
-      cursor:pointer;
-      font-size:13px;
-    }
-    .statusBar{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      font-size:12.5px;
-      color:var(--muted);
-    }
-    .statusBar b{color:var(--text)}
-    .aiRight .resultBox{
-      border:1px solid var(--border);
-      border-radius:16px;
-      background: rgba(255,255,255,.03);
-      padding:12px;
-      margin-bottom:12px;
-    }
-    .aiRight .resultBox h4{ margin:0 0 8px; font-size:12.5px; color:var(--muted); letter-spacing:.4px; }
-    .aiRight .resultContent{ white-space: pre-wrap; line-height:1.45; font-size:13px; }
-
-    /* optional: compact chapter buttons (Form 1) */
-    .chaptersWrap{
-      margin-top:12px;
-      border-top:1px solid rgba(255,255,255,.10);
-      padding-top:12px;
-    }
-    .chaptersWrap h4{ margin:0 0 8px; font-size:12.5px; color:var(--muted); }
-    .chaptersGrid{
-      display:grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap:8px;
-    }
-    @media (max-width: 980px){ .chaptersGrid{grid-template-columns: repeat(6, 1fr);} }
-    @media (max-width: 520px){ .chaptersGrid{grid-template-columns: repeat(5, 1fr);} }
-    .chapterBtn{
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color:var(--text);
-      cursor:pointer;
-      font-size:12px;
-      text-align:center;
-      user-select:none;
-    }
-    .chapterBtn.active{
-      background: rgba(59,130,246,.14);
-      border-color: rgba(59,130,246,.35);
-    }
   </style>
 </head>
 
 <body>
 
-  <!-- TOP HEADER -->
   <div class="siteHeaderWrap">
     <header class="siteHeader">
       <div class="brand">
@@ -533,7 +484,6 @@
   <div class="appWrap">
     <div class="app">
 
-      <!-- Form tabs bar -->
       <div class="formTabsBar">
         <div class="formTitle">
           <b>Sci-Guru Tutor</b>
@@ -552,7 +502,7 @@
       <aside class="left">
         <div class="leftHead">
           <b id="leftTitle">Form 1 Topics</b>
-          <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
+          <span id="leftSub">Click a topic to view overview, labs and quiz.</span>
         </div>
 
         <div class="searchRow">
@@ -562,85 +512,18 @@
         <div class="topicList" id="topicList"></div>
 
         <div class="leftFooter">
-          <button class="btn" id="btnReset">Reset Data</button>
-          <button class="btn btnBlue" id="btnAI">AI Helper</button>
+          <div class="leftBtns">
+            <button class="btn" id="btnReset">Reset Data</button>
+            <button class="btn btnBlue" id="btnAI">AI Helper</button>
+          </div>
+          <div class="statusPill" id="backendPill">Backend: checking…</div>
         </div>
       </aside>
 
       <!-- RIGHT -->
       <section class="right">
 
-        <!-- ✅ ADDED: Tutor AI Panel (your old tutor AI) -->
-        <div class="card">
-          <div class="cardHead">
-            <b>Sci-Guru Generative AI (Explain • Quiz • Practical)</b>
-            <span class="chip" id="chapterLabel">No chapter tag selected.</span>
-          </div>
-
-          <div class="cardBody">
-            <div class="aiGrid">
-              <!-- left controls -->
-              <div class="aiLeft">
-                <h3>Ask Sci-Guru</h3>
-
-                <label>Form / Level</label>
-                <select id="formSelect">
-                  <option value="Form 1">Form 1</option>
-                  <option value="Form 2">Form 2</option>
-                  <option value="Form 3">Form 3</option>
-                  <option value="Form 4">Form 4</option>
-                </select>
-
-                <label>Topic (optional)</label>
-                <select id="topicSelect">
-                  <option value="">-- Auto (selected topic) --</option>
-                </select>
-
-                <label>Your question</label>
-                <textarea id="userQuestion" placeholder="Explain density using Zimbabwean examples..."></textarea>
-
-                <div class="btnRow">
-                  <button id="askBtn" class="mainBtn">Ask Sci-Guru</button>
-                  <button id="quizBtn" class="secBtn">Generate quiz</button>
-                </div>
-
-                <div class="btnRow">
-                  <button id="practicalBtn" class="secBtn">Generate practical</button>
-                  <button class="secBtn" type="button" onclick="openLab()">Open virtual lab hub</button>
-                </div>
-
-                <div id="backendStatus" class="statusBar">
-                  Sci-Guru is ready. Backend: <b><span id="statusValue">LIVE.</span></b>
-                </div>
-
-                <div class="chaptersWrap" id="chaptersWrap" style="display:none;">
-                  <h4>Form 1 chapters · tap to auto-fill (topic + question + experiment focus)</h4>
-                  <div class="chaptersGrid" id="chaptersGrid"></div>
-                </div>
-              </div>
-
-              <!-- right results -->
-              <div class="aiRight">
-                <div class="resultBox">
-                  <h4>EXPLANATION</h4>
-                  <div id="explanationBox" class="resultContent">Sci-Guru will answer here...</div>
-                </div>
-
-                <div class="resultBox">
-                  <h4>QUIZ</h4>
-                  <div id="quizBox" class="resultContent">Quiz will appear here...</div>
-                </div>
-
-                <div class="resultBox" style="margin-bottom:0;">
-                  <h4>PRACTICAL</h4>
-                  <div id="practicalBox" class="resultContent">Practical experiment will appear here...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- existing overview card (unchanged) -->
+        <!-- Overview card -->
         <div class="card">
           <div class="cardHead">
             <b id="topicHeader">Welcome</b>
@@ -655,9 +538,49 @@
           </div>
         </div>
 
-        <!-- existing quiz/score column (unchanged) -->
+        <!-- Right-side stack -->
         <div>
+
+          <!-- Ask Sci-Guru (Generative AI outputs) -->
           <div class="card">
+            <div class="cardHead">
+              <b>Ask Sci-Guru (Generative AI)</b>
+              <span class="chip" id="aiChipSmall">Uses your backend</span>
+            </div>
+            <div class="cardBody">
+              <div class="muted">
+                Selected topic will be included automatically (Form/Unit/Topic). If AI doesn’t respond, update <b>BACKEND_BASE</b> in the script.
+              </div>
+
+              <textarea id="askInput" class="aiTextArea" placeholder="Type your question here... e.g. Explain density using Zimbabwean examples."></textarea>
+
+              <div class="qActions">
+                <button class="btn btnBlue" id="btnExplain">Explain</button>
+                <button class="btn" id="btnGenQuiz">Generate Quiz</button>
+                <button class="btn" id="btnGenPrac">Generate Practical</button>
+              </div>
+
+              <div id="askStatus" class="notice" style="display:none;"></div>
+
+              <div class="resultBox">
+                <h4>EXPLANATION</h4>
+                <div id="explanationBox" class="resultContent">Sci-Guru will answer here...</div>
+              </div>
+
+              <div class="resultBox">
+                <h4>QUIZ</h4>
+                <div id="genQuizBox" class="resultContent">Generated quiz will appear here...</div>
+              </div>
+
+              <div class="resultBox">
+                <h4>PRACTICAL</h4>
+                <div id="practicalBox" class="resultContent">Generated practical will appear here...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Built-in topic quiz -->
+          <div class="card" style="margin-top:16px">
             <div class="cardHead">
               <b>Topic Quiz</b>
               <span class="chip" id="quizChip">Saved</span>
@@ -678,13 +601,14 @@
               <div class="scoreBig" id="scoreBig">0</div>
             </div>
           </div>
+
         </div>
 
       </section>
     </div>
   </div>
 
-  <!-- AI Modal (kept) -->
+  <!-- AI Modal (chat-style helper) -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
@@ -695,7 +619,7 @@
         </div>
       </div>
       <div class="modalBody" id="aiBody">
-        <div class="msg ai">Ask me about the selected topic. (If AI doesn’t respond, your backend route may be different.)</div>
+        <div class="msg ai">Ask me about the selected topic. If AI doesn’t respond, your backend route or BACKEND_BASE is wrong.</div>
       </div>
       <div class="modalFoot">
         <input id="aiInput" placeholder="Type your question..." />
@@ -724,6 +648,13 @@ function escapeHtml(s){
 const navToggle = document.getElementById("navToggle");
 const nav = document.getElementById("nav");
 navToggle?.addEventListener("click", ()=> nav.classList.toggle("show"));
+
+/* =========================================================
+   IMPORTANT: BACKEND BASE
+   - If you host tutor.html on Render together with backend: leave ""
+   - If tutor.html is on GitHub Pages and backend on Render: set to "https://YOUR-APP.onrender.com"
+========================================================= */
+const BACKEND_BASE = ""; // <--- PUT YOUR RENDER URL HERE IF NEEDED
 
 /* =========================================================
    FORM 1 TOPICS (1–19)
@@ -1066,7 +997,7 @@ const form4Topics = [
 ];
 
 /* =========================================================
-   Labs Hub (all forms)
+   Labs Hub
 ========================================================= */
 function buildLabsHub(){
   const labs = [];
@@ -1184,6 +1115,13 @@ const quizIntro = document.getElementById("quizIntro");
 const quizArea = document.getElementById("quizArea");
 const scoreBig = document.getElementById("scoreBig");
 
+/* Ask box outputs */
+const askInput = document.getElementById("askInput");
+const askStatus = document.getElementById("askStatus");
+const explanationBox = document.getElementById("explanationBox");
+const genQuizBox = document.getElementById("genQuizBox");
+const practicalBox = document.getElementById("practicalBox");
+
 function getList(){
   if (mode==="f1") return form1Topics;
   if (mode==="f2") return form2Topics;
@@ -1206,12 +1144,6 @@ function setMode(newMode){
   searchBox.value = "";
   renderLeft();
   renderRightWelcome();
-
-  // ✅ keep the Generative AI panel synced
-  syncTutorAIFormFromMode();
-  rebuildTutorAITopicOptions();
-  autoFillTutorAIFromSelectedTopic();
-  toggleChaptersUI();
 }
 
 function renderLeft(){
@@ -1255,17 +1187,7 @@ function renderLeft(){
       </div>
       <div class="r">${escapeHtml(rightPill)}</div>
     `;
-    btn.onclick = ()=> {
-      selectedId = t.id;
-      renderLeft();
-      renderRight();
-
-      // ✅ keep the Generative AI panel synced
-      syncTutorAIFormFromMode();
-      rebuildTutorAITopicOptions();
-      autoFillTutorAIFromSelectedTopic();
-      toggleChaptersUI();
-    };
+    btn.onclick = ()=> { selectedId = t.id; renderLeft(); renderRight(); };
     topicList.appendChild(btn);
   });
 }
@@ -1440,17 +1362,166 @@ document.getElementById("btnReset").onclick = ()=>{
 };
 
 /* =========================================================
-   AI HELPER (modal) — kept
+   AI BACKEND (robust) — used by both the modal + ask boxes
+========================================================= */
+const backendPill = document.getElementById("backendPill");
+const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask"];
+let lastGoodEndpoint = null;
+
+function getSelectedTopicLabel(){
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  if (!t) return "";
+  return (mode==="f1" ? `Topic ${t.n}: ${t.title}` :
+          mode==="f2" ? `Unit ${t.n}: ${t.title}` :
+          mode==="f3" ? `Unit ${t.n}: ${t.title}` :
+          mode==="f4" ? `Topic ${t.n}: ${t.title}` : "");
+}
+
+async function postJSON(url, payload){
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const ct = (res.headers.get("content-type") || "").toLowerCase();
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  if (ct.includes("application/json")){
+    return await res.json();
+  } else {
+    const txt = await res.text();
+    return { reply: txt };
+  }
+}
+
+function extractReply(data){
+  if (!data) return "";
+  if (typeof data === "string") return data;
+  return data.reply || data.answer || data.message || data.text || "";
+}
+
+async function callAIBackend(payload){
+  // Try last known good endpoint first
+  const endpoints = lastGoodEndpoint ? [lastGoodEndpoint, ...AI_ENDPOINTS.filter(e=>e!==lastGoodEndpoint)] : AI_ENDPOINTS;
+
+  for (const ep of endpoints){
+    const url = BACKEND_BASE + ep;
+    try{
+      const data = await postJSON(url, payload);
+      const reply = extractReply(data);
+      if (reply){
+        lastGoodEndpoint = ep;
+        return { reply, ep };
+      }
+    }catch(e){}
+  }
+  throw new Error("AI backend not reached");
+}
+
+async function probeBackend(){
+  backendPill.textContent = "Backend: checking…";
+  backendPill.classList.remove("ok","bad");
+
+  try{
+    const payload = { message:"ping", question:"ping", prompt:"ping" };
+    const r = await callAIBackend(payload);
+    backendPill.textContent = `Backend: LIVE (${r.ep})`;
+    backendPill.classList.add("ok");
+  }catch(e){
+    backendPill.textContent = "Backend: OFFLINE";
+    backendPill.classList.add("bad");
+  }
+}
+
+/* =========================================================
+   Ask Sci-Guru (Explain / Quiz / Practical)
+========================================================= */
+function showAskStatus(type, text){
+  askStatus.style.display = "block";
+  askStatus.className = "notice " + (type==="ok" ? "ok" : type==="warn" ? "warn" : "");
+  askStatus.textContent = text;
+}
+
+function buildPrompt(kind, userText){
+  const topicLabel = getSelectedTopicLabel();
+  const formLabel = (mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : mode==="f3" ? "Form 3" : mode==="f4" ? "Form 4" : "Labs");
+
+  const context = topicLabel ? `Selected: ${formLabel} — ${topicLabel}\n` : `Selected: ${formLabel}\n`;
+
+  if (kind==="explain"){
+    return `${context}
+Task: Explain clearly for ZIMSEC/Heritage-Based curriculum. Use simple steps + Zimbabwean examples where possible.
+Question: ${userText}`;
+  }
+  if (kind==="quiz"){
+    return `${context}
+Task: Generate a short quiz (8 questions). Mix multiple-choice and short-answer. Provide answers at the end.
+Focus: ${topicLabel || "the selected syllabus area"}.
+User request: ${userText}`;
+  }
+  return `${context}
+Task: Generate a practical experiment.
+Must include: Aim, Apparatus, Chemicals (if any), Method (step-by-step), Results/Observations, Conclusion, Safety, and 5 questions.
+Focus: ${topicLabel || "the selected syllabus area"}.
+User request: ${userText}`;
+}
+
+async function runAsk(kind){
+  const userText = (askInput.value || "").trim();
+  if (!userText){
+    showAskStatus("warn","Type a question first.");
+    return;
+  }
+
+  showAskStatus("", "Thinking… (calling backend)");
+  const payload = {
+    message: buildPrompt(kind, userText),
+    question: buildPrompt(kind, userText),
+    prompt: buildPrompt(kind, userText),
+    mode,
+    topic: getSelectedTopicLabel(),
+    kind
+  };
+
+  try{
+    const r = await callAIBackend(payload);
+    showAskStatus("ok", `Answered via ${r.ep}`);
+    if (kind==="explain") explanationBox.textContent = r.reply;
+    if (kind==="quiz") genQuizBox.textContent = r.reply;
+    if (kind==="practical") practicalBox.textContent = r.reply;
+    // also update backend pill if it was offline
+    backendPill.textContent = `Backend: LIVE (${r.ep})`;
+    backendPill.classList.remove("bad");
+    backendPill.classList.add("ok");
+  }catch(e){
+    showAskStatus("warn",
+`AI backend not reached.
+1) If tutor.html is on GitHub Pages, set BACKEND_BASE to your Render URL.
+2) Ensure your backend has POST route /api/chat or /chat returning JSON { reply: "..." }`);
+    backendPill.textContent = "Backend: OFFLINE";
+    backendPill.classList.remove("ok");
+    backendPill.classList.add("bad");
+  }
+}
+
+document.getElementById("btnExplain").onclick = ()=>runAsk("explain");
+document.getElementById("btnGenQuiz").onclick = ()=>runAsk("quiz");
+document.getElementById("btnGenPrac").onclick = ()=>runAsk("practical");
+
+/* =========================================================
+   AI HELPER (modal chat)
 ========================================================= */
 const modalBack = document.getElementById("modalBack");
 const aiBody = document.getElementById("aiBody");
 const aiInput = document.getElementById("aiInput");
 const aiTitle = document.getElementById("aiTitle");
-const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask", "/api/tutor", "/tutor"];
 
 function openAI(){
   modalBack.style.display = "flex";
-  const t = getList().find(x=>x.id===selectedId);
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
   aiTitle.textContent = t ? `Sci-Guru AI • ${topicChip.textContent} • ${t.title}` : "Sci-Guru AI Helper";
   setTimeout(()=>aiInput.focus(), 50);
 }
@@ -1477,364 +1548,40 @@ async function sendAI(){
   addMsg("me", text);
   aiInput.value = "";
 
-  const list = getList();
-  const t = list.find(x=>x.id===selectedId);
   const payload = {
     message: text,
+    question: text,
+    prompt: text,
     mode,
-    topic: t ? (mode==="f1" ? `Topic ${t.n}: ${t.title}` :
-               mode==="f2" ? `Unit ${t.n}: ${t.title}` :
-               mode==="f3" ? `Unit ${t.n}: ${t.title}` :
-               mode==="f4" ? `Topic ${t.n}: ${t.title}` : "") : ""
+    topic: getSelectedTopicLabel()
   };
 
-  for (const ep of AI_ENDPOINTS){
-    try{
-      const res = await fetch(ep, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) continue;
-      const data = await res.json();
-      const reply = data.reply || data.answer || data.message;
-      if (reply){
-        addMsg("ai", reply);
-        return;
-      }
-    }catch(e){}
-  }
-
-  addMsg("ai",
+  try{
+    const r = await callAIBackend(payload);
+    addMsg("ai", r.reply);
+    backendPill.textContent = `Backend: LIVE (${r.ep})`;
+    backendPill.classList.remove("bad");
+    backendPill.classList.add("ok");
+  }catch(e){
+    addMsg("ai",
 `AI backend not reached.
-Check your server has a POST route like /api/chat or /chat returning JSON { reply: "..." }`
-  );
+Set BACKEND_BASE if frontend and backend are on different domains.
+Backend must have POST /api/chat or /chat returning JSON { reply: "..." }`);
+    backendPill.textContent = "Backend: OFFLINE";
+    backendPill.classList.remove("ok");
+    backendPill.classList.add("bad");
+  }
 }
 
 document.getElementById("aiSend").onclick = sendAI;
 aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
 
 /* =========================================================
-   ✅ ADDED: Old Tutor AI logic wired into the new tutor
-   - Uses your existing backend endpoints list
-   - Keeps all your books/topics UI intact
-========================================================= */
-const formSelect = document.getElementById("formSelect");
-const topicSelect = document.getElementById("topicSelect");
-const userQuestion = document.getElementById("userQuestion");
-
-const explanationBox = document.getElementById("explanationBox");
-const quizBox = document.getElementById("quizBox");
-const practicalBox = document.getElementById("practicalBox");
-
-const backendStatus = document.getElementById("backendStatus");
-const statusValue = document.getElementById("statusValue");
-
-function openLab(){ window.location.href = "dashboard.html"; }
-
-function setBackendStatus(text, ok=true){
-  statusValue.textContent = text;
-  statusValue.style.color = ok ? "#a7ffcf" : "#ffb4b4";
-}
-
-function modeToForm(m){
-  if (m==="f1") return "Form 1";
-  if (m==="f2") return "Form 2";
-  if (m==="f3") return "Form 3";
-  if (m==="f4") return "Form 4";
-  return "Form 1";
-}
-
-function formToMode(f){
-  if (f==="Form 1") return "f1";
-  if (f==="Form 2") return "f2";
-  if (f==="Form 3") return "f3";
-  if (f==="Form 4") return "f4";
-  return "f1";
-}
-
-function syncTutorAIFormFromMode(){
-  const f = modeToForm(mode);
-  if (formSelect.value !== f && mode !== "labs") formSelect.value = f;
-}
-
-function listByForm(formName){
-  const m = formToMode(formName);
-  if (m==="f1") return form1Topics;
-  if (m==="f2") return form2Topics;
-  if (m==="f3") return form3Topics;
-  if (m==="f4") return form4Topics;
-  return [];
-}
-
-function prettyTopicLabel(formName, item){
-  const m = formToMode(formName);
-  if (m==="f1") return `Topic ${item.n}: ${item.title}`;
-  if (m==="f2") return `Unit ${item.n}: ${item.title}`;
-  if (m==="f3") return `Unit ${item.n}: ${item.title}`;
-  if (m==="f4") return `Topic ${item.n}: ${item.title}`;
-  return item.title;
-}
-
-function rebuildTutorAITopicOptions(){
-  const formName = formSelect.value;
-  const list = listByForm(formName);
-
-  const current = topicSelect.value;
-  topicSelect.innerHTML = `<option value="">-- Auto (selected topic) --</option>`;
-
-  list.forEach(t=>{
-    const opt = document.createElement("option");
-    opt.value = t.id;
-    opt.textContent = prettyTopicLabel(formName, t);
-    topicSelect.appendChild(opt);
-  });
-
-  // try keep selection
-  if ([...topicSelect.options].some(o => o.value === current)) topicSelect.value = current;
-}
-
-function getSelectedTopicFromPanel(){
-  const formName = formSelect.value;
-  const list = listByForm(formName);
-
-  // If user picked a specific topic in dropdown, use it.
-  if (topicSelect.value){
-    return list.find(x=>x.id===topicSelect.value) || null;
-  }
-
-  // else: auto use current selected topic from main list if it matches same form
-  if (selectedId){
-    const currentModeForm = modeToForm(mode);
-    if (currentModeForm === formName){
-      return list.find(x=>x.id===selectedId) || null;
-    }
-  }
-
-  return null;
-}
-
-function autoFillTutorAIFromSelectedTopic(){
-  const t = getSelectedTopicFromPanel();
-  if (!t){
-    // keep user text
-    return;
-  }
-
-  // small helpful default question only if empty
-  if (!userQuestion.value.trim()){
-    userQuestion.value = `Explain ${t.title} using Zimbabwean examples and one simple experiment.`;
-  }
-
-  // show practical hint immediately
-  const labs = (t.labs || []);
-  if (labs.length){
-    practicalBox.textContent = labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n");
-  } else {
-    practicalBox.textContent = "No lab linked for this topic yet. You can still ask Sci-Guru to generate a practical.";
-  }
-}
-
-formSelect.addEventListener("change", ()=>{
-  // if user changes form in the AI panel, refresh topics list
-  rebuildTutorAITopicOptions();
-  toggleChaptersUI();
-});
-
-topicSelect.addEventListener("change", ()=>{
-  // if user chooses a topic, auto-fill practical and question hint
-  userQuestion.value = userQuestion.value || "";
-  autoFillTutorAIFromSelectedTopic();
-});
-
-async function callTutorAI(action){
-  const formName = formSelect.value;
-  const t = getSelectedTopicFromPanel();
-
-  const topicLabel = t ? prettyTopicLabel(formName, t) : (topicSelect.value ? topicSelect.options[topicSelect.selectedIndex].textContent : "");
-  const q = userQuestion.value.trim();
-
-  if (!q){
-    explanationBox.textContent = "Please type a question first.";
-    return;
-  }
-
-  setBackendStatus("CONNECTING...", true);
-
-  // payload is flexible to match most backends
-  const payload = {
-    action,                 // "explain" | "quiz" | "practical"
-    form: formName,         // "Form 1".."Form 4"
-    mode: formToMode(formName),
-    topic: topicLabel || "",
-    topicId: t ? t.id : (topicSelect.value || ""),
-    message: q,
-    question: q
-  };
-
-  // Try multiple endpoints
-  for (const ep of AI_ENDPOINTS){
-    try{
-      const res = await fetch(ep, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) continue;
-
-      const data = await res.json();
-
-      // Accept many possible response shapes
-      const expl = data.explanation || data.reply || data.answer || data.message;
-      const quiz = data.quiz || data.questions || data.generatedQuiz;
-      const prac = data.practical || data.experiment || data.generatedPractical;
-
-      setBackendStatus("LIVE ✅", true);
-
-      if (action==="explain"){
-        explanationBox.textContent = (expl && typeof expl==="string") ? expl : (expl ? JSON.stringify(expl, null, 2) : "No explanation returned.");
-      }
-
-      if (action==="quiz"){
-        if (typeof quiz === "string") quizBox.textContent = quiz;
-        else if (Array.isArray(quiz)){
-          quizBox.textContent = quiz.map((x,i)=>`${i+1}. ${x.q || x.question || JSON.stringify(x)}`).join("\n");
-        } else {
-          // fallback to local quiz if backend didn't return
-          const local = QUIZZES[t?.id] || [];
-          quizBox.textContent = local.length
-            ? local.map((qq,i)=>`${i+1}. ${qq.q}\n   A) ${qq.opts[0]}\n   B) ${qq.opts[1]}\n   C) ${qq.opts[2]}\n   D) ${qq.opts[3]}`).join("\n\n")
-            : "No quiz returned from backend, and no local quiz exists yet for this topic.";
-        }
-      }
-
-      if (action==="practical"){
-        if (typeof prac === "string") practicalBox.textContent = prac;
-        else if (prac) practicalBox.textContent = JSON.stringify(prac, null, 2);
-        else {
-          // fallback: show linked labs
-          const labs = t?.labs || [];
-          practicalBox.textContent = labs.length
-            ? labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n")
-            : "No practical returned from backend. No lab linked for this topic yet.";
-        }
-      }
-
-      return; // success
-    }catch(e){}
-  }
-
-  setBackendStatus("OFFLINE ❌", false);
-
-  // offline fallback
-  if (action==="explain"){
-    const local = t ? (t.bullets || []) : [];
-    explanationBox.textContent = local.length
-      ? `Offline fallback (overview bullets):\n- ${local.join("\n- ")}\n\n(Backend not reached. Check /api/chat or /chat routes.)`
-      : "Backend not reached. Check /api/chat or /chat routes.";
-  }
-  if (action==="quiz"){
-    const local = QUIZZES[t?.id] || [];
-    quizBox.textContent = local.length
-      ? local.map((qq,i)=>`${i+1}. ${qq.q}\n   A) ${qq.opts[0]}\n   B) ${qq.opts[1]}\n   C) ${qq.opts[2]}\n   D) ${qq.opts[3]}`).join("\n\n")
-      : "Backend not reached, and no local quiz exists yet for this topic.";
-  }
-  if (action==="practical"){
-    const labs = t?.labs || [];
-    practicalBox.textContent = labs.length
-      ? labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n")
-      : "Backend not reached, and no lab is linked for this topic yet.";
-  }
-}
-
-document.getElementById("askBtn").addEventListener("click", ()=> callTutorAI("explain"));
-document.getElementById("quizBtn").addEventListener("click", ()=> callTutorAI("quiz"));
-document.getElementById("practicalBtn").addEventListener("click", ()=> callTutorAI("practical"));
-
-/* =========================================================
-   ✅ Optional: Form 1 chapter tags (like your old tutor)
-========================================================= */
-const chaptersWrap = document.getElementById("chaptersWrap");
-const chaptersGrid = document.getElementById("chaptersGrid");
-const chapterLabel = document.getElementById("chapterLabel");
-
-const form1Chapters = [
-  { id: 1, title: "Introduction to Science", topic: "Science", question: "What is science?", experiment: "Identify objects and classify them as living/non-living." },
-  { id: 2, title: "Cells", topic: "Cells", question: "What is a cell?", experiment: "Virtual onion cell microscope." },
-  { id: 3, title: "Classification", topic: "Classification", question: "How are organisms classified?", experiment: "Group organisms by observable features." },
-  { id: 4, title: "States of Matter", topic: "States of Matter", question: "Explain solids, liquids, gases.", experiment: "Heat & cooling model simulation." },
-  { id: 5, title: "Mixtures", topic: "Mixtures", question: "What is a mixture?", experiment: "Filtration & evaporation simulation." },
-  { id: 6, title: "Forces", topic: "Forces", question: "What is a force?", experiment: "Push and pull force meter simulation." },
-  { id: 7, title: "Energy", topic: "Energy", question: "What is energy?", experiment: "Energy transformation model." },
-  { id: 8, title: "Heat", topic: "Heat", question: "What is conduction?", experiment: "Metal rod heating simulation." },
-  { id: 9, title: "Light", topic: "Light", question: "How does light travel?", experiment: "Ray box simulation." },
-  { id: 10, title: "Sound", topic: "Sound", question: "What is sound?", experiment: "Vibration wave simulation." },
-  { id: 11, title: "Electricity", topic: "Electricity", question: "What is an electric circuit?", experiment: "Build-a-circuit simulation." },
-  { id: 12, title: "Magnetism", topic: "Magnetism", question: "What is a magnet?", experiment: "Magnetic field lines simulation." },
-  { id: 13, title: "Earth & Space", topic: "Earth & Space", question: "What causes day and night?", experiment: "Earth rotation model." },
-  { id: 14, title: "Human Body", topic: "Human Body", question: "Explain the digestive system.", experiment: "Food digestion model." },
-  { id: 15, title: "Environment", topic: "Environment", question: "What causes water pollution?", experiment: "Water filtration demo." },
-  { id: 16, title: "Science & Society", topic: "Science & Society", question: "Why is science important?", experiment: "Community science task." },
-  { id: 17, title: "Careers", topic: "Careers", question: "What are science careers?", experiment: "Career poster activity." }
-];
-
-let activeChapterId = null;
-
-function buildChaptersUI(){
-  chaptersGrid.innerHTML = "";
-  form1Chapters.forEach(ch=>{
-    const b = document.createElement("button");
-    b.className = "chapterBtn" + (activeChapterId===ch.id ? " active" : "");
-    b.textContent = `Ch. ${ch.id}`;
-    b.addEventListener("click", ()=>{
-      activeChapterId = ch.id;
-      // visual active
-      [...chaptersGrid.querySelectorAll(".chapterBtn")].forEach(x=>x.classList.remove("active"));
-      b.classList.add("active");
-
-      // Auto-fill
-      chapterLabel.textContent = `Chapter tag selected: Ch. ${ch.id} – ${ch.title}`;
-      userQuestion.value = ch.question;
-
-      // best-effort map to a topic id in Form 1 list
-      formSelect.value = "Form 1";
-      rebuildTutorAITopicOptions();
-
-      // try find by title match
-      const match = form1Topics.find(t => t.title.toLowerCase().includes(ch.topic.toLowerCase())) ||
-                    form1Topics.find(t => ch.topic.toLowerCase().includes(t.title.toLowerCase()));
-      if (match){
-        topicSelect.value = match.id;
-      } else {
-        topicSelect.value = "";
-      }
-
-      practicalBox.textContent = ch.experiment;
-      autoFillTutorAIFromSelectedTopic();
-      toggleChaptersUI();
-    });
-    chaptersGrid.appendChild(b);
-  });
-}
-
-function toggleChaptersUI(){
-  const show = (formSelect.value === "Form 1");
-  chaptersWrap.style.display = show ? "block" : "none";
-  if (show && !chaptersGrid.children.length) buildChaptersUI();
-}
-
-/* =========================================================
    INIT
 ========================================================= */
 renderLeft();
 renderRightWelcome();
-
-// init Tutor AI panel
-syncTutorAIFormFromMode();
-rebuildTutorAITopicOptions();
-autoFillTutorAIFromSelectedTopic();
-toggleChaptersUI();
+probeBackend();
 </script>
 
 </body>
