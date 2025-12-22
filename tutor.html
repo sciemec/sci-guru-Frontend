@@ -991,4 +991,851 @@ const form3Topics = [
   { id:"f3-u08", n:8, title:'Human reproduction', sub:'Menstrual cycle & placenta', bullets:['Male and female reproductive organs','Hormones control menstrual cycle','Placenta exchange: nutrients, O₂, wastes'], labs:[{ name:'Sim-3 Human Reproduction', file:'form3-sims/sim-3-u08-human-reproduction.html', desc:'Cycle timeline + fertilisation pathway.' }] },
   { id:"f3-u09", n:9, title:'Health and disease', sub:'Communicable diseases & prevention', bullets:['Pathogens: bacteria, viruses, protozoa, fungi, worms','Examples: malaria, cholera, TB, STIs','Prevention: hygiene, safe water, nets, vaccination'], labs:[{ name:'Sim-3 Health & Disease', file:'form3-sims/sim-3-u09-health-disease.html', desc:'Disease spread + prevention choices (Zimbabwe context).' }] },
   { id:"f3-u10", n:10, title:'Separation', sub:'Distillation & chromatography', bullets:['Choose method by property: solubility, boiling point, particle size','Simple vs fractional distillation','Chromatography separates dyes/inks'], labs:[{ name:'Sim-3 Separation', file:'form3-sims/sim-3-u10-separation.html', desc:'Distillation setup + chromatography activity.' }] },
-  { id:"f3-u11", n:11, title:'Matter', sub:'Atoms, bonding & moles', bullets:['Atomic number vs mass number; isotopes','Ionic vs covalent bonding','Relative formula mass and mole concept'], labs:[{ name:'Sim-3 Matter', file:]()
+  { id:"f3-u11", n:11, title:'Matter', sub:'Atoms, bonding & moles', bullets:['Atomic number vs mass number; isotopes','Ionic vs covalent bonding','Relative formula mass and mole concept'], labs:[{ name:'Sim-3 Matter', file:'form3-sims/sim-3-u11-matter.html', desc:'Build atoms, bonds, and do mole calculations.' }] },
+  { id:"f3-u12", n:12, title:'Acids and bases', sub:'pH, indicators, reactions', bullets:['pH scale: acids <7, alkalis >7','Acid reactions: metals, bases, carbonates','Neutralisation: acid + base → salt + water'], labs:[{ name:'Sim-3 Acids & Bases', file:'form3-sims/sim-3-u12-acids-bases.html', desc:'pH testing + reaction predictor lab.' }] },
+  { id:"f3-u13", n:13, title:'Industrial processes', sub:'Electrolysis & electroplating', bullets:['Electrolyte, anode(+), cathode(-)','Oxidation at anode, reduction at cathode','Applications: electroplating, extraction'], labs:[{ name:'Sim-3 Electrolysis', file:'form3-sims/sim-3-u13-electrolysis.html', desc:'Ion movement + plating simulator.' }] },
+  { id:"f3-u14", n:14, title:'Oxidation and reduction', sub:'Redox & extraction', bullets:['LEO (loss of electrons) / GER (gain of electrons)','Oxidation number changes','Reducing agents in extraction'], labs:[{ name:'Sim-3 Redox', file:'form3-sims/sim-3-u14-redox.html', desc:'Redox identification + electron transfer game.' }] },
+  { id:"f3-u15", n:15, title:'Organic chemistry', sub:'Hydrocarbons & fermentation', bullets:['Organic compounds contain carbon','Alkanes vs alkenes basics','Fermentation links to fuels'], labs:[{ name:'Sim-3 Organic', file:'form3-sims/sim-3-u15-organic.html', desc:'Name alkanes/alkenes + fermentation model.' }] },
+  { id:"f3-u16", n:16, title:'Data presentation', sub:'Graphs & charts', bullets:['Bar/line/pie charts and interpretation','Percentages and proportions','Choose correct graph type'], labs:[{ name:'Sim-3 Data', file:'form3-sims/sim-3-u16-data.html', desc:'Interactive graph builder.' }] },
+  { id:"f3-u17", n:17, title:'Measurement', sub:'Vernier + density + meters', bullets:['Vernier callipers for accurate length/diameter','Density = mass ÷ volume (displacement)','Ammeter series, voltmeter parallel'], labs:[{ name:'Sim-3 Measurement', file:'form3-sims/sim-3-u17-measurement.html', desc:'Vernier reading + density by displacement.' }] },
+  { id:"f3-u18", n:18, title:'Force', sub:'Newton’s laws & momentum', bullets:['Force is a vector','F=ma and motion','Momentum p=mv and collisions'], labs:[{ name:'Sim-3 Force', file:'form3-sims/sim-3-u18-force.html', desc:'Motion + force relationships.' }] },
+  { id:"f3-u19", n:19, title:'Machines', sub:'MA, VR, efficiency', bullets:['Mechanical advantage MA=load/effort','Velocity ratio and efficiency','Friction reduces efficiency'], labs:[{ name:'Sim-3 Machines', file:'form3-sims/sim-3-u19-machines.html', desc:'Pulley/levers MA/VR/efficiency simulator.' }] },
+  { id:"f3-u20", n:20, title:'Petrol and diesel engines', sub:'Four-stroke cycles', bullets:['Petrol: spark ignition','Diesel: compression ignition','Chemical → mechanical energy'], labs:[{ name:'Sim-3 Engines', file:'form3-sims/sim-3-u20-engines.html', desc:'Stroke sequence animation + quiz.' }] },
+  { id:"f3-u21", n:21, title:'Energy and heat transfer', sub:'Conduction, convection, radiation', bullets:['Conduction in solids','Convection in fluids','Radiation and surface colour'], labs:[{ name:'Sim-3 Heat Transfer', file:'form3-sims/sim-3-u21-heat.html', desc:'Heat transfer modes + surface test.' }] },
+  { id:"f3-u22", n:22, title:'Magnetism and electromagnetism', sub:'Fields, motors, generators', bullets:['Fields around magnets and currents','Electromagnets: factors affecting strength','Motor/generator basic principles'], labs:[{ name:'Sim-3 Magnetism', file:'form3-sims/sim-3-u22-magnetism.html', desc:'Field lines + electromagnet strength lab.' }] },
+  { id:"f3-u23", n:23, title:'Electricity and electrostatics', sub:'Charge and lightning', bullets:['Charging by friction/induction','Electroscope detects charge','Lightning as discharge'], labs:[{ name:'Sim-3 Electrostatics', file:'form3-sims/sim-3-u23-electrostatics.html', desc:'Charge interactions + electroscope activity.' }] },
+  { id:"f3-u24", n:24, title:'Ohm’s law and resistors', sub:'V–I graph & resistors', bullets:['Ohm’s law: V ∝ I (constant conditions)','Resistance R=V/I','Series resistors add'], labs:[{ name:"Sim-3 Ohm's Law", file:'form3-sims/sim-3-u24-ohms-law.html', desc:'Plot V–I and compute resistance.' }] },
+  { id:"f3-u25", n:25, title:'Electrical power and energy', sub:'P=VI and kWh', bullets:['Power P=VI; energy E=Pt','kWh and electricity bills','Safety: fuse, breaker, earthing'], labs:[{ name:'Sim-3 Power', file:'form3-sims/sim-3-u25-power.html', desc:'Appliance energy + kWh calculator.' }] },
+];
+
+/* =========================================================
+   FORM 4 TOPICS
+========================================================= */
+const form4Topics = [
+  { id:"f4-t1", n:1, title:"Biology (Nutrition, Respiration, Transport)", sub:"Food tests + germinating seeds + transpiration",
+    bullets:[
+      "Food tests: starch (iodine), sugars (Benedict + heat), protein (Biuret), fats (emulsion test)",
+      "Respiration in seeds: CO₂ (limewater) and heat production (vacuum flask)",
+      "Transpiration: petroleum jelly, cobalt chloride paper, potometer"
+    ],
+    labs:[
+      { name:"F4 Food Test — Starch (Iodine)", file:"f4-bio-2-1.html", desc:"Iodine colour change shows starch (bread/maize meal examples)." },
+      { name:"F4 Food Test — Sugars (Benedict)", file:"f4-bio-2-2.html", desc:"Benedict + heat gives blue→green→yellow→orange→red for sugars." },
+      { name:"F4 Food Test — Protein (Biuret)", file:"f4-bio-2-3.html", desc:"Biuret (CuSO₄ + NaOH/KOH) turns purple/mauve for protein." },
+      { name:"F4 Food Test — Fats (Emulsion)", file:"f4-bio-2-4.html", desc:"Ethanol emulsion test gives milky white for fats/oils." },
+      { name:"F4 Respiration — CO₂ from Seeds", file:"f4-bio-3-1.html", desc:"Germinating seeds produce CO₂ (limewater turns milky)." },
+      { name:"F4 Respiration — Heat from Seeds", file:"f4-bio-3-2.html", desc:"Germinating seeds produce heat (temperature increase)." },
+      { name:"F4 Transport — Stomata (Petroleum Jelly)", file:"f4-bio-4-1.html", desc:"Block leaf surfaces to infer stomata distribution." },
+      { name:"F4 Transport — Transpiration (Cobalt Chloride)", file:"f4-bio-4-2.html", desc:"Blue→pink paper shows where more water is lost." },
+      { name:"F4 Transport — Potometer", file:"f4-bio-4-3.html", desc:"Measure transpiration rate and test wind/light/humidity." }
+    ]
+  },
+
+  { id:"f4-t2", n:2, title:"Chemistry (Separation, Reactivity, Acids, Industry, Organic)", sub:"Chromatography + reactivity + titration + salts + ammonia + fermentation",
+    bullets:[
+      "Chromatography shows mixtures in inks/dyes",
+      "Reactivity series: metals with oxygen/water/steam and displacement",
+      "Titration to form salts; soluble salts; ammonia prep; ethanol fermentation"
+    ],
+    labs:[
+      { name:"F4 Chromatography (Ink)", file:"f4-chem-7-1.html", desc:"Paper chromatography with ethanol solvent." },
+      { name:"F4 Reactivity Series (O₂ & Water)", file:"f4-chem-8-1.html", desc:"Compare metal reactions and arrange reactivity series." },
+      { name:"F4 Reactivity with Steam", file:"f4-chem-8-3.html", desc:"Explore Zn/Cu/Pb with steam (concept + safety)." },
+      { name:"F4 Displacement (Fe + CuO)", file:"f4-chem-8-4.html", desc:"Heat Fe filings with CuO to show displacement." },
+      { name:"F4 Titration (Acid–Base)", file:"f4-chem-9-1.html", desc:"Burette + pipette to reach endpoint and form a salt." },
+      { name:"F4 Prepare Soluble Salt", file:"f4-chem-10-1.html", desc:"Mg + dilute H₂SO₄ → salt solution (example method)." },
+      { name:"F4 Prepare Ammonia", file:"f4-chem-10-2.html", desc:"NH₃ from NH₄Cl + Ca(OH)₂; drying & collection." },
+      { name:"F4 Fermentation (Ethanol)", file:"f4-chem-12-1.html", desc:"Sugar + yeast fermentation produces ethanol + CO₂." }
+    ]
+  },
+
+  { id:"f4-t3", n:3, title:"Physics (Pressure & Electricity)", sub:"Liquid pressure + manometer + hydraulics + induction",
+    bullets:[
+      "Liquid pressure increases with depth",
+      "U-tube manometer compares pressures",
+      "Hydraulics transmit pressure (Pascal’s principle)",
+      "Induction: relative motion of magnet and coil produces EMF"
+    ],
+    labs:[
+      { name:"F4 Liquid Pressure vs Depth", file:"f4-phys-14-1.html", desc:"Bottle holes at different heights show pressure changes." },
+      { name:"F4 U-tube Manometer", file:"f4-phys-14-2.html", desc:"Manometer demonstrates pressure differences." },
+      { name:"F4 Hydraulics (Syringes)", file:"f4-phys-14-3.html", desc:"Different syringe sizes show force multiplication." },
+      { name:"F4 Electromagnetic Induction", file:"f4-phys-17-1.html", desc:"Move magnet through coil; observe induced voltage." }
+    ]
+  }
+];
+
+/* =========================================================
+   Labs Hub (all forms)
+========================================================= */
+function buildLabsHub(){
+  const labs = [];
+  form1Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 1", topic:`Topic ${t.n}: ${t.title}`, ...l})));
+  form2Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 2", topic:`Unit ${t.n}: ${t.title}`, ...l})));
+  form3Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 3", topic:`Unit ${t.n}: ${t.title}`, ...l})));
+  form4Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 4", topic:`Topic ${t.n}: ${t.title}`, ...l})));
+  return labs;
+}
+
+/* =========================================================
+   Quizzes (kept)
+========================================================= */
+const QUIZZES = {
+  "f1-t2": [
+    { q:"The basic unit of life is:", opts:["Organ","Cell","Tissue","System"], a:1 },
+    { q:"A group of similar cells working together is called:", opts:["Organ","Tissue","Species","Kingdom"], a:1 },
+    { q:"Which is NOT a life process?", opts:["Respiration","Movement","Rusting","Growth"], a:2 },
+  ],
+  "f1-t3": [
+    { q:"Photosynthesis happens mainly in the:", opts:["Root","Leaf","Stem","Flower"], a:1 },
+    { q:"Humans are:", opts:["Autotrophs","Heterotrophs","Producers","Decomposers only"], a:1 },
+    { q:"Absorption occurs mainly in the:", opts:["Stomach","Small intestine","Mouth","Oesophagus"], a:1 },
+  ],
+  "f1-t4": [
+    { q:"Gas exchange happens in the:", opts:["Trachea","Alveoli","Ribs","Diaphragm only"], a:1 },
+    { q:"Respiration releases:", opts:["Energy","Water only","Oxygen","Food"], a:0 },
+    { q:"Breathing rate increases during:", opts:["Rest","Exercise","Sleep only","Never"], a:1 },
+  ],
+  "f1-t5": [
+    { q:"Osmosis is movement of:", opts:["Solute","Water","Blood","Air"], a:1 },
+    { q:"Diffusion is movement from:", opts:["Low to high","High to low","Cold to hot","Solid to liquid"], a:1 },
+    { q:"Blood vessels that carry blood away from the heart:", opts:["Veins","Arteries","Capillaries","Alveoli"], a:1 },
+  ],
+  "f1-t6": [
+    { q:"Pollination is transfer of:", opts:["Ovule to ovary","Pollen to stigma","Seed to soil","Nectar to anther"], a:1 },
+    { q:"Fertilisation produces a:", opts:["Spore","Zygote","Pollen grain","Leaf"], a:1 },
+    { q:"A baby grows in the mother's:", opts:["Lung","Uterus","Stomach","Heart"], a:1 },
+  ],
+  "f1-t7": [
+    { q:"Infectious diseases are:", opts:["Communicable","Non-communicable","Always genetic","Always deficiency"], a:0 },
+    { q:"Prevention includes:", opts:["Hygiene","Sharing needles","Not washing hands","Drinking dirty water"], a:0 },
+    { q:"Health includes:", opts:["Physical only","Physical, mental, social","Mental only","Social only"], a:1 },
+  ],
+  "f1-t8": [
+    { q:"Filtration separates:", opts:["Two liquids","Insoluble solid from liquid","Salt from salt solution","Two gases"], a:1 },
+    { q:"Evaporation can be used to get:", opts:["Sand from water","Salt from salt solution","Oil from water","Iron from sand"], a:1 },
+    { q:"Magnetism can separate:", opts:["Sugar and water","Iron filings and sand","Salt and water","Two liquids"], a:1 },
+  ],
+  "f2-u4": [
+    { q:"Osmosis is movement of:", opts:["Water","Solute","Air","Blood"], a:0 },
+    { q:"Xylem transports:", opts:["Food","Water and minerals","Oxygen","Hormones"], a:1 },
+    { q:"The heart pumps blood into:", opts:["Alveoli","Blood vessels","Stomach","Bones"], a:1 },
+  ],
+  "f2-u6": [
+    { q:"Bilharzia is commonly linked to:", opts:["Dust","Freshwater + snails","Only air","Only food"], a:1 },
+    { q:"Stopping disease spread means breaking:", opts:["All links at once only","One link in the disease cycle","Nothing","Only symptoms"], a:1 },
+    { q:"Infectious diseases are:", opts:["Communicable","Non-communicable","Always deficiency","Always genetic"], a:0 },
+  ],
+  "f2-u9": [
+    { q:"Neutralisation is:", opts:["acid + metal","acid + base","base + water","salt + water"], a:1 },
+    { q:"Acid + base forms:", opts:["salt + water","oxygen + water","CO2 + water","metal + hydrogen"], a:0 },
+    { q:"Acids react with carbonates to produce:", opts:["Salt only","Salt + water + CO2","Water only","CO2 only"], a:1 },
+  ],
+  "f3-u01": [
+    { q:"Specialised cells are adapted to:", opts:["Look nice","Perform specific functions","Always reproduce","Never divide"], a:1 },
+    { q:"Root hair cells help plants:", opts:["Make seeds","Absorb water and minerals","Produce oxygen","Store fat"], a:1 },
+    { q:"Red blood cells carry:", opts:["Starch","Haemoglobin","Chlorophyll","Cell wall"], a:1 },
+  ],
+  "f3-u10": [
+    { q:"Fractional distillation is best for:", opts:["Insoluble solids","Miscible liquids with close boiling points","Magnetic mixtures","Large particles"], a:1 },
+    { q:"Chromatography separates by:", opts:["Colour only","Different solubility/attraction to paper","Mass only","Boiling point only"], a:1 },
+    { q:"The condensed liquid collected is called:", opts:["Residue","Filtrate","Distillate","Solute"], a:2 },
+  ],
+  "f3-u24": [
+    { q:"Ohm’s law is true when:", opts:["Temperature changes","Conditions remain constant","Wire melts","Battery is dead"], a:1 },
+    { q:"Resistance is:", opts:["V×I","V/I","I/V","V+I"], a:1 },
+    { q:"Total resistance in series is:", opts:["Largest only","Sum of resistances","Product of resistances","Zero"], a:1 },
+  ],
+  "f4-t1": [
+    { q:"Iodine turns blue-black when it detects:", opts:["Protein","Fat","Starch","Vitamin C"], a:2 },
+    { q:"Benedict’s test needs:", opts:["Freezing","Heating","Sunlight only","No reagent"], a:1 },
+    { q:"Cobalt chloride paper turns pink when:", opts:["Dry","Wet (water present)","Heated","Mixed with oil"], a:1 },
+  ],
+  "f4-t2": [
+    { q:"Paper chromatography uses:", opts:["Evaporation only","A solvent moving up paper","Only magnets","Only boiling"], a:1 },
+    { q:"In titration, solution in burette is added:", opts:["All at once","Slowly to endpoint","Never","Only when hot"], a:1 },
+    { q:"Fermentation produces:", opts:["Ethanol + CO₂","Salt + water","Oxygen","Iron"], a:0 },
+  ],
+  "f4-t3": [
+    { q:"Liquid pressure increases with:", opts:["Depth","Colour","Temperature only","Mass only"], a:0 },
+    { q:"Hydraulic systems work by:", opts:["Diffusion","Pascal’s principle","Reflection","Ohm’s law"], a:1 },
+    { q:"Induction happens when:", opts:["Magnet and coil move relative","Battery is removed","Wire is broken","Light is off"], a:0 },
+  ],
+};
+
+/* =========================================================
+   State + Render
+========================================================= */
+let mode = "f1"; // f1 | f2 | f3 | f4 | labs
+let selectedId = null;
+
+const topicList = document.getElementById("topicList");
+const searchBox = document.getElementById("searchBox");
+const leftTitle = document.getElementById("leftTitle");
+const leftSub = document.getElementById("leftSub");
+
+const topicHeader = document.getElementById("topicHeader");
+const topicChip = document.getElementById("topicChip");
+const topicIntro = document.getElementById("topicIntro");
+const topicBullets = document.getElementById("topicBullets");
+const labArea = document.getElementById("labArea");
+
+const quizIntro = document.getElementById("quizIntro");
+const quizArea = document.getElementById("quizArea");
+const scoreBig = document.getElementById("scoreBig");
+
+function getList(){
+  if (mode==="f1") return form1Topics;
+  if (mode==="f2") return form2Topics;
+  if (mode==="f3") return form3Topics;
+  if (mode==="f4") return form4Topics;
+  return [{
+    id:"labs-hub", n:"", title:"Labs Hub",
+    sub:"All labs from Form 1 + Form 2 + Form 3 + Form 4",
+    bullets:[
+      "This shows every virtual lab you linked in all forms.",
+      "If a lab is missing, add it under the topic/unit labs list."
+    ],
+    labs: buildLabsHub()
+  }];
+}
+
+function setMode(newMode){
+  mode = newMode;
+  selectedId = null;
+  searchBox.value = "";
+  renderLeft();
+  renderRightWelcome();
+
+  // ✅ keep the Generative AI panel synced
+  syncTutorAIFormFromMode();
+  rebuildTutorAITopicOptions();
+  autoFillTutorAIFromSelectedTopic();
+  toggleChaptersUI();
+}
+
+function renderLeft(){
+  const list = getList();
+
+  leftTitle.textContent =
+    mode==="f1" ? "Form 1 Topics" :
+    mode==="f2" ? "Form 2 Units" :
+    mode==="f3" ? "Form 3 Units" :
+    mode==="f4" ? "Form 4 Topics" :
+    "Labs Hub";
+
+  leftSub.textContent = "Click a topic/unit to view overview, labs and quiz.";
+
+  const q = searchBox.value.trim().toLowerCase();
+  const filtered = q ? list.filter(t => (`${t.title} ${t.sub}`.toLowerCase().includes(q))) : list;
+
+  topicList.innerHTML = "";
+  filtered.forEach(t=>{
+    const btn = document.createElement("button");
+    btn.className = "topicBtn" + (t.id===selectedId ? " active" : "");
+
+    const rightPill =
+      mode==="labs" ? t.sub :
+      mode==="f1" ? `Topic ${t.n}` :
+      mode==="f2" ? `Unit ${t.n}` :
+      mode==="f3" ? `Unit ${t.n}` :
+      `Topic ${t.n}`;
+
+    const leftLabel =
+      mode==="labs" ? t.title :
+      (mode==="f1" ? `Topic ${t.n}` :
+       mode==="f2" ? `Unit ${t.n}` :
+       mode==="f3" ? `Unit ${t.n}` :
+       `Topic ${t.n}`) + " — " + t.title;
+
+    btn.innerHTML = `
+      <div class="l">
+        <b>${escapeHtml(leftLabel)}</b>
+        <span>${escapeHtml(t.sub || "")}</span>
+      </div>
+      <div class="r">${escapeHtml(rightPill)}</div>
+    `;
+    btn.onclick = ()=> {
+      selectedId = t.id;
+      renderLeft();
+      renderRight();
+
+      // ✅ keep the Generative AI panel synced
+      syncTutorAIFormFromMode();
+      rebuildTutorAITopicOptions();
+      autoFillTutorAIFromSelectedTopic();
+      toggleChaptersUI();
+    };
+    topicList.appendChild(btn);
+  });
+}
+
+function renderRightWelcome(){
+  topicHeader.textContent = "Welcome";
+  topicChip.textContent = "Overview";
+  topicIntro.textContent = "Select a topic/unit to view overview bullets, labs and a quiz.";
+  topicBullets.innerHTML = "";
+  labArea.innerHTML = "";
+  quizIntro.textContent = "Select a topic to load a quiz.";
+  quizArea.innerHTML = "";
+  scoreBig.textContent = "0";
+}
+
+function renderRight(){
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  if (!t) return renderRightWelcome();
+
+  topicHeader.textContent =
+    mode==="labs" ? t.title :
+    mode==="f1" ? `Topic ${t.n}: ${t.title}` :
+    mode==="f2" ? `Unit ${t.n}: ${t.title}` :
+    mode==="f3" ? `Unit ${t.n}: ${t.title}` :
+    `Topic ${t.n}: ${t.title}`;
+
+  topicChip.textContent =
+    mode==="f1" ? "Form 1" :
+    mode==="f2" ? "Form 2" :
+    mode==="f3" ? "Form 3" :
+    mode==="f4" ? "Form 4" :
+    "Labs";
+
+  topicIntro.textContent = t.sub || "";
+
+  if (t.bullets && t.bullets.length){
+    topicBullets.innerHTML = `<ul>${t.bullets.map(b=>`<li>${escapeHtml(b)}</li>`).join("")}</ul>`;
+  } else {
+    topicBullets.innerHTML = `<div class="muted">No overview bullets yet.</div>`;
+  }
+
+  const labs = t.labs || [];
+  labArea.innerHTML = "";
+  if (labs.length){
+    labs.forEach(l=>{
+      const box = document.createElement("div");
+      box.className = "labBox";
+      const extra = (mode==="labs" && l.form && l.topic)
+        ? `<div class="muted" style="margin-top:8px; font-size:12px;">${escapeHtml(l.form)} • ${escapeHtml(l.topic)}</div>`
+        : "";
+      box.innerHTML = `
+        <b>Virtual Lab: ${escapeHtml(l.name || "Lab")}</b>
+        <span>${escapeHtml(l.desc || "")}</span>
+        ${extra}
+        <a href="${safeHref(l.file)}">Open Lab</a>
+      `;
+      labArea.appendChild(box);
+    });
+  } else {
+    labArea.innerHTML = `<div class="notice warn">No lab linked for this topic/unit yet.</div>`;
+  }
+
+  renderQuizFor(selectedId);
+
+  const saved = getSavedScore(selectedId);
+  scoreBig.textContent = saved ? String(saved.percent) : "0";
+}
+
+function storageKey(id){ return `sciguru_score_${id}`; }
+function saveScore(id, score, total){
+  const percent = Math.round((score/total)*100);
+  localStorage.setItem(storageKey(id), JSON.stringify({score,total,percent,at:new Date().toISOString()}));
+  return percent;
+}
+function getSavedScore(id){
+  try { return JSON.parse(localStorage.getItem(storageKey(id)) || ""); } catch { return null; }
+}
+
+function renderQuizFor(id){
+  const qs = QUIZZES[id] || [];
+  quizArea.innerHTML = "";
+
+  const saved = getSavedScore(id);
+  if (saved){
+    quizIntro.innerHTML = `<div class="notice ok">Last score: <b>${saved.score}/${saved.total}</b> (${saved.percent}%)</div>`;
+    scoreBig.textContent = String(saved.percent);
+  } else {
+    quizIntro.textContent = "Answer and submit to save your score.";
+    scoreBig.textContent = "0";
+  }
+
+  if (!qs.length){
+    quizArea.innerHTML = `<div class="notice">No quiz for this topic yet.</div>`;
+    return;
+  }
+
+  const wrap = document.createElement("div");
+  qs.forEach((q, idx)=>{
+    const block = document.createElement("div");
+    block.className = "q";
+    block.innerHTML = `
+      <b>${idx+1}. ${escapeHtml(q.q)}</b>
+      ${q.opts.map((o,i)=>`
+        <label>
+          <input type="radio" name="q_${id}_${idx}" value="${i}">
+          <span>${escapeHtml(o)}</span>
+        </label>
+      `).join("")}
+    `;
+    wrap.appendChild(block);
+  });
+
+  const actions = document.createElement("div");
+  actions.className = "qActions";
+  actions.innerHTML = `
+    <button class="btn btnBlue" id="btnSubmit">Submit</button>
+    <button class="btn" id="btnClear">Clear</button>
+  `;
+  wrap.appendChild(actions);
+
+  const msg = document.createElement("div");
+  wrap.appendChild(msg);
+
+  quizArea.appendChild(wrap);
+
+  document.getElementById("btnSubmit").onclick = ()=>{
+    let score = 0;
+    qs.forEach((q, idx)=>{
+      const picked = document.querySelector(`input[name="q_${CSS.escape(id)}_${idx}"]:checked`);
+      if (picked && Number(picked.value) === q.a) score++;
+    });
+    const percent = saveScore(id, score, qs.length);
+    scoreBig.textContent = String(percent);
+    msg.innerHTML = percent>=60
+      ? `<div class="notice ok">Saved: ${score}/${qs.length} (${percent}%) ✅</div>`
+      : `<div class="notice warn">Saved: ${score}/${qs.length} (${percent}%) ⚠️ Try again.</div>`;
+  };
+
+  document.getElementById("btnClear").onclick = ()=>{
+    qs.forEach((q, idx)=>{
+      document.querySelectorAll(`input[name="q_${CSS.escape(id)}_${idx}"]`).forEach(r=>r.checked=false);
+    });
+    msg.innerHTML = `<div class="notice">Cleared selections.</div>`;
+  };
+}
+
+/* =========================================================
+   Tabs + Search + Reset
+========================================================= */
+function setActiveTab(btnId){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  document.getElementById(btnId).classList.add("active");
+}
+document.getElementById("tabF1").onclick = ()=>{ setActiveTab("tabF1"); setMode("f1"); };
+document.getElementById("tabF2").onclick = ()=>{ setActiveTab("tabF2"); setMode("f2"); };
+document.getElementById("tabF3").onclick = ()=>{ setActiveTab("tabF3"); setMode("f3"); };
+document.getElementById("tabF4").onclick = ()=>{ setActiveTab("tabF4"); setMode("f4"); };
+document.getElementById("tabLabs").onclick = ()=>{ setActiveTab("tabLabs"); setMode("labs"); };
+
+searchBox.addEventListener("input", renderLeft);
+
+document.getElementById("btnReset").onclick = ()=>{
+  const toRemove = [];
+  for (let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (k && k.startsWith("sciguru_score_")) toRemove.push(k);
+  }
+  toRemove.forEach(k=>localStorage.removeItem(k));
+  scoreBig.textContent = "0";
+  if (selectedId) renderQuizFor(selectedId);
+};
+
+/* =========================================================
+   AI HELPER (modal) — kept
+========================================================= */
+const modalBack = document.getElementById("modalBack");
+const aiBody = document.getElementById("aiBody");
+const aiInput = document.getElementById("aiInput");
+const aiTitle = document.getElementById("aiTitle");
+const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask", "/api/tutor", "/tutor"];
+
+function openAI(){
+  modalBack.style.display = "flex";
+  const t = getList().find(x=>x.id===selectedId);
+  aiTitle.textContent = t ? `Sci-Guru AI • ${topicChip.textContent} • ${t.title}` : "Sci-Guru AI Helper";
+  setTimeout(()=>aiInput.focus(), 50);
+}
+function closeAI(){ modalBack.style.display = "none"; }
+document.getElementById("btnAI").onclick = openAI;
+document.getElementById("aiClose").onclick = closeAI;
+modalBack.addEventListener("click", (e)=>{ if (e.target===modalBack) closeAI(); });
+
+document.getElementById("aiClear").onclick = ()=>{
+  aiBody.innerHTML = `<div class="msg ai">Chat cleared. Ask me about the selected topic.</div>`;
+};
+
+function addMsg(who, text){
+  const div = document.createElement("div");
+  div.className = "msg " + (who==="me" ? "me" : "ai");
+  div.textContent = text;
+  aiBody.appendChild(div);
+  aiBody.scrollTop = aiBody.scrollHeight;
+}
+
+async function sendAI(){
+  const text = aiInput.value.trim();
+  if (!text) return;
+  addMsg("me", text);
+  aiInput.value = "";
+
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  const payload = {
+    message: text,
+    mode,
+    topic: t ? (mode==="f1" ? `Topic ${t.n}: ${t.title}` :
+               mode==="f2" ? `Unit ${t.n}: ${t.title}` :
+               mode==="f3" ? `Unit ${t.n}: ${t.title}` :
+               mode==="f4" ? `Topic ${t.n}: ${t.title}` : "") : ""
+  };
+
+  for (const ep of AI_ENDPOINTS){
+    try{
+      const res = await fetch(ep, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const reply = data.reply || data.answer || data.message;
+      if (reply){
+        addMsg("ai", reply);
+        return;
+      }
+    }catch(e){}
+  }
+
+  addMsg("ai",
+`AI backend not reached.
+Check your server has a POST route like /api/chat or /chat returning JSON { reply: "..." }`
+  );
+}
+
+document.getElementById("aiSend").onclick = sendAI;
+aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
+
+/* =========================================================
+   ✅ ADDED: Old Tutor AI logic wired into the new tutor
+   - Uses your existing backend endpoints list
+   - Keeps all your books/topics UI intact
+========================================================= */
+const formSelect = document.getElementById("formSelect");
+const topicSelect = document.getElementById("topicSelect");
+const userQuestion = document.getElementById("userQuestion");
+
+const explanationBox = document.getElementById("explanationBox");
+const quizBox = document.getElementById("quizBox");
+const practicalBox = document.getElementById("practicalBox");
+
+const backendStatus = document.getElementById("backendStatus");
+const statusValue = document.getElementById("statusValue");
+
+function openLab(){ window.location.href = "dashboard.html"; }
+
+function setBackendStatus(text, ok=true){
+  statusValue.textContent = text;
+  statusValue.style.color = ok ? "#a7ffcf" : "#ffb4b4";
+}
+
+function modeToForm(m){
+  if (m==="f1") return "Form 1";
+  if (m==="f2") return "Form 2";
+  if (m==="f3") return "Form 3";
+  if (m==="f4") return "Form 4";
+  return "Form 1";
+}
+
+function formToMode(f){
+  if (f==="Form 1") return "f1";
+  if (f==="Form 2") return "f2";
+  if (f==="Form 3") return "f3";
+  if (f==="Form 4") return "f4";
+  return "f1";
+}
+
+function syncTutorAIFormFromMode(){
+  const f = modeToForm(mode);
+  if (formSelect.value !== f && mode !== "labs") formSelect.value = f;
+}
+
+function listByForm(formName){
+  const m = formToMode(formName);
+  if (m==="f1") return form1Topics;
+  if (m==="f2") return form2Topics;
+  if (m==="f3") return form3Topics;
+  if (m==="f4") return form4Topics;
+  return [];
+}
+
+function prettyTopicLabel(formName, item){
+  const m = formToMode(formName);
+  if (m==="f1") return `Topic ${item.n}: ${item.title}`;
+  if (m==="f2") return `Unit ${item.n}: ${item.title}`;
+  if (m==="f3") return `Unit ${item.n}: ${item.title}`;
+  if (m==="f4") return `Topic ${item.n}: ${item.title}`;
+  return item.title;
+}
+
+function rebuildTutorAITopicOptions(){
+  const formName = formSelect.value;
+  const list = listByForm(formName);
+
+  const current = topicSelect.value;
+  topicSelect.innerHTML = `<option value="">-- Auto (selected topic) --</option>`;
+
+  list.forEach(t=>{
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = prettyTopicLabel(formName, t);
+    topicSelect.appendChild(opt);
+  });
+
+  // try keep selection
+  if ([...topicSelect.options].some(o => o.value === current)) topicSelect.value = current;
+}
+
+function getSelectedTopicFromPanel(){
+  const formName = formSelect.value;
+  const list = listByForm(formName);
+
+  // If user picked a specific topic in dropdown, use it.
+  if (topicSelect.value){
+    return list.find(x=>x.id===topicSelect.value) || null;
+  }
+
+  // else: auto use current selected topic from main list if it matches same form
+  if (selectedId){
+    const currentModeForm = modeToForm(mode);
+    if (currentModeForm === formName){
+      return list.find(x=>x.id===selectedId) || null;
+    }
+  }
+
+  return null;
+}
+
+function autoFillTutorAIFromSelectedTopic(){
+  const t = getSelectedTopicFromPanel();
+  if (!t){
+    // keep user text
+    return;
+  }
+
+  // small helpful default question only if empty
+  if (!userQuestion.value.trim()){
+    userQuestion.value = `Explain ${t.title} using Zimbabwean examples and one simple experiment.`;
+  }
+
+  // show practical hint immediately
+  const labs = (t.labs || []);
+  if (labs.length){
+    practicalBox.textContent = labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n");
+  } else {
+    practicalBox.textContent = "No lab linked for this topic yet. You can still ask Sci-Guru to generate a practical.";
+  }
+}
+
+formSelect.addEventListener("change", ()=>{
+  // if user changes form in the AI panel, refresh topics list
+  rebuildTutorAITopicOptions();
+  toggleChaptersUI();
+});
+
+topicSelect.addEventListener("change", ()=>{
+  // if user chooses a topic, auto-fill practical and question hint
+  userQuestion.value = userQuestion.value || "";
+  autoFillTutorAIFromSelectedTopic();
+});
+
+async function callTutorAI(action){
+  const formName = formSelect.value;
+  const t = getSelectedTopicFromPanel();
+
+  const topicLabel = t ? prettyTopicLabel(formName, t) : (topicSelect.value ? topicSelect.options[topicSelect.selectedIndex].textContent : "");
+  const q = userQuestion.value.trim();
+
+  if (!q){
+    explanationBox.textContent = "Please type a question first.";
+    return;
+  }
+
+  setBackendStatus("CONNECTING...", true);
+
+  // payload is flexible to match most backends
+  const payload = {
+    action,                 // "explain" | "quiz" | "practical"
+    form: formName,         // "Form 1".."Form 4"
+    mode: formToMode(formName),
+    topic: topicLabel || "",
+    topicId: t ? t.id : (topicSelect.value || ""),
+    message: q,
+    question: q
+  };
+
+  // Try multiple endpoints
+  for (const ep of AI_ENDPOINTS){
+    try{
+      const res = await fetch(ep, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) continue;
+
+      const data = await res.json();
+
+      // Accept many possible response shapes
+      const expl = data.explanation || data.reply || data.answer || data.message;
+      const quiz = data.quiz || data.questions || data.generatedQuiz;
+      const prac = data.practical || data.experiment || data.generatedPractical;
+
+      setBackendStatus("LIVE ✅", true);
+
+      if (action==="explain"){
+        explanationBox.textContent = (expl && typeof expl==="string") ? expl : (expl ? JSON.stringify(expl, null, 2) : "No explanation returned.");
+      }
+
+      if (action==="quiz"){
+        if (typeof quiz === "string") quizBox.textContent = quiz;
+        else if (Array.isArray(quiz)){
+          quizBox.textContent = quiz.map((x,i)=>`${i+1}. ${x.q || x.question || JSON.stringify(x)}`).join("\n");
+        } else {
+          // fallback to local quiz if backend didn't return
+          const local = QUIZZES[t?.id] || [];
+          quizBox.textContent = local.length
+            ? local.map((qq,i)=>`${i+1}. ${qq.q}\n   A) ${qq.opts[0]}\n   B) ${qq.opts[1]}\n   C) ${qq.opts[2]}\n   D) ${qq.opts[3]}`).join("\n\n")
+            : "No quiz returned from backend, and no local quiz exists yet for this topic.";
+        }
+      }
+
+      if (action==="practical"){
+        if (typeof prac === "string") practicalBox.textContent = prac;
+        else if (prac) practicalBox.textContent = JSON.stringify(prac, null, 2);
+        else {
+          // fallback: show linked labs
+          const labs = t?.labs || [];
+          practicalBox.textContent = labs.length
+            ? labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n")
+            : "No practical returned from backend. No lab linked for this topic yet.";
+        }
+      }
+
+      return; // success
+    }catch(e){}
+  }
+
+  setBackendStatus("OFFLINE ❌", false);
+
+  // offline fallback
+  if (action==="explain"){
+    const local = t ? (t.bullets || []) : [];
+    explanationBox.textContent = local.length
+      ? `Offline fallback (overview bullets):\n- ${local.join("\n- ")}\n\n(Backend not reached. Check /api/chat or /chat routes.)`
+      : "Backend not reached. Check /api/chat or /chat routes.";
+  }
+  if (action==="quiz"){
+    const local = QUIZZES[t?.id] || [];
+    quizBox.textContent = local.length
+      ? local.map((qq,i)=>`${i+1}. ${qq.q}\n   A) ${qq.opts[0]}\n   B) ${qq.opts[1]}\n   C) ${qq.opts[2]}\n   D) ${qq.opts[3]}`).join("\n\n")
+      : "Backend not reached, and no local quiz exists yet for this topic.";
+  }
+  if (action==="practical"){
+    const labs = t?.labs || [];
+    practicalBox.textContent = labs.length
+      ? labs.map(l=>`• ${l.name} — ${l.desc} (file: ${l.file})`).join("\n")
+      : "Backend not reached, and no lab is linked for this topic yet.";
+  }
+}
+
+document.getElementById("askBtn").addEventListener("click", ()=> callTutorAI("explain"));
+document.getElementById("quizBtn").addEventListener("click", ()=> callTutorAI("quiz"));
+document.getElementById("practicalBtn").addEventListener("click", ()=> callTutorAI("practical"));
+
+/* =========================================================
+   ✅ Optional: Form 1 chapter tags (like your old tutor)
+========================================================= */
+const chaptersWrap = document.getElementById("chaptersWrap");
+const chaptersGrid = document.getElementById("chaptersGrid");
+const chapterLabel = document.getElementById("chapterLabel");
+
+const form1Chapters = [
+  { id: 1, title: "Introduction to Science", topic: "Science", question: "What is science?", experiment: "Identify objects and classify them as living/non-living." },
+  { id: 2, title: "Cells", topic: "Cells", question: "What is a cell?", experiment: "Virtual onion cell microscope." },
+  { id: 3, title: "Classification", topic: "Classification", question: "How are organisms classified?", experiment: "Group organisms by observable features." },
+  { id: 4, title: "States of Matter", topic: "States of Matter", question: "Explain solids, liquids, gases.", experiment: "Heat & cooling model simulation." },
+  { id: 5, title: "Mixtures", topic: "Mixtures", question: "What is a mixture?", experiment: "Filtration & evaporation simulation." },
+  { id: 6, title: "Forces", topic: "Forces", question: "What is a force?", experiment: "Push and pull force meter simulation." },
+  { id: 7, title: "Energy", topic: "Energy", question: "What is energy?", experiment: "Energy transformation model." },
+  { id: 8, title: "Heat", topic: "Heat", question: "What is conduction?", experiment: "Metal rod heating simulation." },
+  { id: 9, title: "Light", topic: "Light", question: "How does light travel?", experiment: "Ray box simulation." },
+  { id: 10, title: "Sound", topic: "Sound", question: "What is sound?", experiment: "Vibration wave simulation." },
+  { id: 11, title: "Electricity", topic: "Electricity", question: "What is an electric circuit?", experiment: "Build-a-circuit simulation." },
+  { id: 12, title: "Magnetism", topic: "Magnetism", question: "What is a magnet?", experiment: "Magnetic field lines simulation." },
+  { id: 13, title: "Earth & Space", topic: "Earth & Space", question: "What causes day and night?", experiment: "Earth rotation model." },
+  { id: 14, title: "Human Body", topic: "Human Body", question: "Explain the digestive system.", experiment: "Food digestion model." },
+  { id: 15, title: "Environment", topic: "Environment", question: "What causes water pollution?", experiment: "Water filtration demo." },
+  { id: 16, title: "Science & Society", topic: "Science & Society", question: "Why is science important?", experiment: "Community science task." },
+  { id: 17, title: "Careers", topic: "Careers", question: "What are science careers?", experiment: "Career poster activity." }
+];
+
+let activeChapterId = null;
+
+function buildChaptersUI(){
+  chaptersGrid.innerHTML = "";
+  form1Chapters.forEach(ch=>{
+    const b = document.createElement("button");
+    b.className = "chapterBtn" + (activeChapterId===ch.id ? " active" : "");
+    b.textContent = `Ch. ${ch.id}`;
+    b.addEventListener("click", ()=>{
+      activeChapterId = ch.id;
+      // visual active
+      [...chaptersGrid.querySelectorAll(".chapterBtn")].forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+
+      // Auto-fill
+      chapterLabel.textContent = `Chapter tag selected: Ch. ${ch.id} – ${ch.title}`;
+      userQuestion.value = ch.question;
+
+      // best-effort map to a topic id in Form 1 list
+      formSelect.value = "Form 1";
+      rebuildTutorAITopicOptions();
+
+      // try find by title match
+      const match = form1Topics.find(t => t.title.toLowerCase().includes(ch.topic.toLowerCase())) ||
+                    form1Topics.find(t => ch.topic.toLowerCase().includes(t.title.toLowerCase()));
+      if (match){
+        topicSelect.value = match.id;
+      } else {
+        topicSelect.value = "";
+      }
+
+      practicalBox.textContent = ch.experiment;
+      autoFillTutorAIFromSelectedTopic();
+      toggleChaptersUI();
+    });
+    chaptersGrid.appendChild(b);
+  });
+}
+
+function toggleChaptersUI(){
+  const show = (formSelect.value === "Form 1");
+  chaptersWrap.style.display = show ? "block" : "none";
+  if (show && !chaptersGrid.children.length) buildChaptersUI();
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+renderLeft();
+renderRightWelcome();
+
+// init Tutor AI panel
+syncTutorAIFormFromMode();
+rebuildTutorAITopicOptions();
+autoFillTutorAIFromSelectedTopic();
+toggleChaptersUI();
+</script>
+
+</body>
+</html>
