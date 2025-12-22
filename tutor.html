@@ -4,95 +4,149 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sci-Guru Tutor | Form 1–4</title>
+
   <style>
     :root{
       --bg:#0b1020;
       --panel:#0f1a33;
       --panel2:#0c162d;
-      --border:rgba(255,255,255,.09);
+      --border:rgba(255,255,255,.10);
       --text:#eaf0ff;
       --muted:#a7b4d8;
-      --blue:rgba(99,102,241,.25);
-      --blue2:rgba(59,130,246,.20);
-      --green:rgba(16,185,129,.18);
-      --red:rgba(244,63,94,.18);
+
+      --blueGlow: rgba(59,130,246,.14);
+      --greenGlow: rgba(16,185,129,.10);
+
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius:18px;
+
+      --pill: rgba(255,255,255,.04);
+      --pillHover: rgba(255,255,255,.07);
+      --pillActive: rgba(59,130,246,.18);
+      --pillBorder: rgba(255,255,255,.10);
+      --pillBorderActive: rgba(59,130,246,.40);
+
+      --btnBlue: rgba(59,130,246,.18);
+      --btnBlueBorder: rgba(59,130,246,.35);
+      --okBg: rgba(16,185,129,.18);
+      --warnBg: rgba(244,63,94,.18);
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
       background:
-        radial-gradient(1000px 600px at 10% 0%, rgba(59,130,246,.12), transparent 55%),
-        radial-gradient(900px 600px at 90% 10%, rgba(16,185,129,.10), transparent 55%),
+        radial-gradient(1000px 600px at 10% 0%, rgba(59,130,246,.14), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, rgba(16,185,129,.12), transparent 55%),
+        radial-gradient(800px 500px at 50% 100%, rgba(99,102,241,.10), transparent 55%),
         var(--bg);
       min-height:100vh;
     }
     a{color:inherit; text-decoration:none}
 
-    /* Optional: top site nav (matches your “frontend style”) */
-    .siteTop{
-      max-width:1300px;
-      margin:16px auto 0;
-      padding:0 16px;
-    }
-    .siteNav{
+    /* =========================
+       TOP SITE HEADER
+    ========================= */
+    .siteHeaderWrap{ padding:14px 16px 0; }
+    .siteHeader{
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 14px;
       border:1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(15,26,51,.80);
+      border-radius: 20px;
+      background: rgba(10,16,34,.70);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-      padding:12px 14px;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
     }
-    .siteBrand{
-      display:flex; align-items:center; gap:12px;
-      min-width: 220px;
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 240px;
     }
-    .logo{
-      width:44px;height:44px;border-radius:12px;
+    .logoBox{
+      width:46px;
+      height:46px;
+      border-radius: 14px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.05);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       overflow:hidden;
-      display:flex; align-items:center; justify-content:center;
+      flex: 0 0 auto;
     }
-    .logo img{width:100%;height:100%;object-fit:cover}
-    .siteBrand b{display:block; font-size:14px; line-height:1.1}
-    .siteBrand span{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+    .logoBox img{ width:100%; height:100%; object-fit: cover; display:block; }
+    .logoFallback{ font-weight: 900; letter-spacing:.5px; font-size: 14px; }
+    .brandText b{ display:block; font-size: 18px; line-height: 1.05; font-weight: 900; }
+    .brandText span{ display:block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height:1.2; }
 
-    .navLinks{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
-    .navLinks a{
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav a{
       padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      font-size:13px;
+      border-radius: 999px;
+      border:1px solid var(--pillBorder);
+      background: var(--pill);
+      font-size: 13px;
+      user-select:none;
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+      white-space:nowrap;
     }
-    .navLinks a:hover{background: rgba(255,255,255,.06)}
-    .navLinks a.active{
-      background: rgba(59,130,246,.14);
-      border-color: rgba(59,130,246,.35);
+    .nav a:hover{ transform: translateY(-1px); background: var(--pillHover); }
+    .nav a.active{ background: var(--pillActive); border-color: var(--pillBorderActive); }
+
+    .navToggle{
+      display:none;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+    }
+    @media (max-width: 860px){
+      .brand{min-width:auto}
+      .navToggle{display:inline-flex}
+      .nav{
+        display:none;
+        width: 100%;
+        justify-content:flex-start;
+        padding-top:10px;
+      }
+      .siteHeader{ flex-wrap:wrap; align-items:flex-start; }
+      .nav.show{display:flex}
     }
 
+    /* =========================
+       TUTOR APP LAYOUT
+    ========================= */
+    .appWrap{ padding: 14px 16px 18px; }
     .app{
       display:grid;
       grid-template-columns: 360px 1fr;
       gap:16px;
-      padding:16px;
       max-width: 1300px;
-      margin: 0 auto 18px;
+      margin: 0 auto;
     }
-    @media (max-width: 980px){
-      .app{grid-template-columns:1fr}
-    }
+    @media (max-width: 980px){ .app{grid-template-columns:1fr} }
 
-    /* Header */
-    .topHeader{
+    .formTabsBar{
       grid-column: 1 / -1;
       display:flex;
       align-items:center;
@@ -101,39 +155,32 @@
       padding:14px 16px;
       border:1px solid var(--border);
       border-radius: var(--radius);
-      background: rgba(15,26,51,.85);
+      background: rgba(15,26,51,.72);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-    .brand{display:flex; align-items:center; gap:12px;}
-    .badge{
-      width:42px;height:42px;border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:900;
-      letter-spacing:.5px;
-    }
-    .brand h1{margin:0;font-size:18px;font-weight:900}
-    .brand p{margin:2px 0 0; font-size:13px; color:var(--muted)}
-    .tabs{display:flex; gap:10px; flex-wrap:wrap;}
+    .formTitle{ display:flex; flex-direction:column; gap:2px; }
+    .formTitle b{font-size:14px}
+    .formTitle span{font-size:12.5px; color:var(--muted)}
+    .tabs{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
     .tab{
       padding:10px 14px;
       border-radius:999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      border:1px solid var(--pillBorder);
+      background: var(--pill);
       color:var(--text);
       cursor:pointer;
       font-size:13px;
       user-select:none;
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
     }
-    .tab.active{background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35);}
+    .tab:hover{transform: translateY(-1px); background: var(--pillHover)}
+    .tab.active{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
 
-    /* Left panel */
     .left{
       border:1px solid var(--border);
       border-radius: var(--radius);
-      background: rgba(15,26,51,.80);
+      background: rgba(15,26,51,.72);
       box-shadow: var(--shadow);
       overflow:hidden;
       backdrop-filter: blur(10px);
@@ -141,10 +188,10 @@
       flex-direction:column;
       min-height: 620px;
     }
-    .leftHead{padding:14px 14px 10px; border-bottom:1px solid var(--border);}
+    .leftHead{ padding:14px 14px 10px; border-bottom:1px solid var(--border); }
     .leftHead b{display:block; font-size:16px}
     .leftHead span{display:block; margin-top:4px; color:var(--muted); font-size:13px}
-    .searchRow{padding:12px 14px; border-bottom:1px solid var(--border);}
+    .searchRow{ padding:12px 14px; border-bottom:1px solid var(--border); }
     .searchRow input{
       width:100%;
       padding:10px 12px;
@@ -154,7 +201,7 @@
       color:var(--text);
       outline:none;
     }
-    .topicList{padding:12px 12px 14px; overflow:auto; flex:1;}
+    .topicList{ padding:12px 12px 14px; overflow:auto; flex:1; }
     .topicList::-webkit-scrollbar{width:10px}
     .topicList::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px}
     .topicBtn{
@@ -173,7 +220,7 @@
       gap:10px;
     }
     .topicBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.05)}
-    .topicBtn.active{background: rgba(59,130,246,.15); border-color: rgba(59,130,246,.35);}
+    .topicBtn.active{ background: rgba(59,130,246,.15); border-color: rgba(59,130,246,.35); }
     .topicBtn .l{display:flex; flex-direction:column; gap:3px;}
     .topicBtn .l b{font-size:14px}
     .topicBtn .l span{font-size:12px; color:var(--muted)}
@@ -186,7 +233,7 @@
       white-space:nowrap;
     }
 
-    .leftFooter{padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap;}
+    .leftFooter{ padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; }
     .btn{
       padding:10px 12px;
       border-radius:14px;
@@ -198,19 +245,29 @@
       user-select:none;
     }
     .btn:hover{background: rgba(255,255,255,.05)}
+    .btnBlue{ border-color: var(--btnBlueBorder); background: var(--btnBlue); }
 
-    /* Right panel */
-    .right{display:grid; grid-template-columns: 1fr 340px; gap:16px; align-content:start;}
+    .right{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap:16px;
+      align-content:start;
+    }
     @media (max-width: 1100px){ .right{grid-template-columns:1fr} }
+
     .card{
       border:1px solid var(--border);
       border-radius: var(--radius);
-      background: rgba(15,26,51,.80);
+      background: rgba(15,26,51,.72);
       box-shadow: var(--shadow);
       overflow:hidden;
       backdrop-filter: blur(10px);
     }
-    .cardHead{padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    .cardHead{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
     .cardHead b{font-size:14px}
     .chip{
       font-size:12px;
@@ -224,6 +281,7 @@
     .cardBody{padding:14px}
     .muted{color:var(--muted)}
     ul{margin:10px 0 0 18px; color:var(--muted); line-height:1.55}
+
     .labBox{
       border:1px solid var(--border);
       border-radius:16px;
@@ -238,13 +296,18 @@
       margin-top:10px;
       padding:10px 12px;
       border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(59,130,246,.14);
+      border:1px solid var(--btnBlueBorder);
+      background: var(--btnBlue);
       justify-content:center;
     }
 
-    /* Quiz */
-    .q{border:1px solid var(--border); border-radius:16px; padding:12px; background: rgba(255,255,255,.03); margin-top:10px;}
+    .q{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      background: rgba(255,255,255,.03);
+      margin-top:10px;
+    }
     .q b{display:block; font-size:13px; margin-bottom:8px}
     .q label{display:flex; gap:8px; margin:6px 0; color:var(--muted); font-size:13px}
     .qActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
@@ -257,40 +320,205 @@
       color: var(--text);
       font-size:13px;
       line-height:1.4;
+      white-space: pre-wrap;
     }
-    .ok{background: var(--green); border-color: rgba(16,185,129,.28)}
-    .warn{background: var(--red); border-color: rgba(244,63,94,.28)}
-    .scoreBig{font-size:44px; font-weight:900; margin:6px 0 0;}
+    .ok{background: var(--okBg); border-color: rgba(16,185,129,.28)}
+    .warn{background: var(--warnBg); border-color: rgba(244,63,94,.28)}
+    .scoreBig{ font-size:44px; font-weight:900; margin:6px 0 0; }
 
-    /* AI modal */
-    .modalBack{position:fixed; inset:0; background: rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:16px; z-index:50;}
-    .modal{width: 720px; max-width: 98vw; max-height: 90vh; overflow:hidden; border-radius: 18px; border:1px solid var(--border); background: rgba(15,26,51,.95); box-shadow: var(--shadow); display:flex; flex-direction:column;}
-    .modalHead{padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    /* AI modal (kept) */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal{
+      width: 720px;
+      max-width: 98vw;
+      max-height: 90vh;
+      overflow:hidden;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      background: rgba(15,26,51,.95);
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      padding:12px 14px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
     .modalBody{padding:12px 14px; overflow:auto; flex:1}
-    .msg{border:1px solid var(--border); background: rgba(255,255,255,.03); border-radius:16px; padding:10px 12px; margin:10px 0; white-space: pre-wrap; line-height:1.4; font-size:13px;}
+    .msg{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:10px 12px;
+      margin:10px 0;
+      white-space: pre-wrap;
+      line-height:1.4;
+      font-size:13px;
+    }
     .msg.me{background: rgba(59,130,246,.12); border-color: rgba(59,130,246,.22)}
     .msg.ai{background: rgba(16,185,129,.10); border-color: rgba(16,185,129,.20)}
-    .modalFoot{padding:12px 14px; border-top:1px solid var(--border); display:flex; gap:10px;}
-    .modalFoot input{width:100%; padding:10px 12px; border-radius:14px; border:1px solid var(--border); background: rgba(255,255,255,.03); color:var(--text); outline:none;}
+    .modalFoot{
+      padding:12px 14px;
+      border-top:1px solid var(--border);
+      display:flex; gap:10px;
+    }
+    .modalFoot input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      outline:none;
+    }
+
+    /* Footer */
+    .footer{ max-width:1300px; margin: 0 auto; padding: 0 16px 18px; color: rgba(255,255,255,.60); font-size: 12px; }
+    .footerInner{
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:space-between;
+    }
+
+    /* =========================================================
+       ✅ ADDED: “Tutor AI Panel” styles (from your old tutor)
+       (Does NOT remove/change your books/topics code)
+    ========================================================= */
+    .aiGrid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){ .aiGrid{grid-template-columns:1fr} }
+
+    .aiLeft{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .aiLeft h3{margin:0 0 10px; font-size:14px}
+    .aiLeft label{
+      display:block;
+      margin:10px 0 6px;
+      font-size:12.5px;
+      color:var(--muted);
+    }
+    .aiLeft select, .aiLeft textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      outline:none;
+      font-size:13px;
+    }
+    .aiLeft textarea{ min-height:110px; resize:vertical; }
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .mainBtn{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--btnBlueBorder);
+      background: var(--btnBlue);
+      color:var(--text);
+      cursor:pointer;
+      font-size:13px;
+    }
+    .secBtn{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      font-size:13px;
+    }
+    .statusBar{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size:12.5px;
+      color:var(--muted);
+    }
+    .statusBar b{color:var(--text)}
+    .aiRight .resultBox{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+      margin-bottom:12px;
+    }
+    .aiRight .resultBox h4{ margin:0 0 8px; font-size:12.5px; color:var(--muted); letter-spacing:.4px; }
+    .aiRight .resultContent{ white-space: pre-wrap; line-height:1.45; font-size:13px; }
+
+    /* optional: compact chapter buttons (Form 1) */
+    .chaptersWrap{
+      margin-top:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:12px;
+    }
+    .chaptersWrap h4{ margin:0 0 8px; font-size:12.5px; color:var(--muted); }
+    .chaptersGrid{
+      display:grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap:8px;
+    }
+    @media (max-width: 980px){ .chaptersGrid{grid-template-columns: repeat(6, 1fr);} }
+    @media (max-width: 520px){ .chaptersGrid{grid-template-columns: repeat(5, 1fr);} }
+    .chapterBtn{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      font-size:12px;
+      text-align:center;
+      user-select:none;
+    }
+    .chapterBtn.active{
+      background: rgba(59,130,246,.14);
+      border-color: rgba(59,130,246,.35);
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Top nav (optional but matches your frontend look) -->
-  <div class="siteTop">
-    <div class="siteNav">
-      <div class="siteBrand">
-        <div class="logo">
-          <!-- CHANGE this path if your logo filename is different -->
-          <img src="images/lec-logo.jpg" alt="LEC Biotec Logo" onerror="this.style.display='none'">
+  <!-- TOP HEADER -->
+  <div class="siteHeaderWrap">
+    <header class="siteHeader">
+      <div class="brand">
+        <div class="logoBox" id="logoBox">
+          <img src="images/lec-logo.jpg" alt="LEC Biotec Logo"
+               onerror="this.remove(); document.getElementById('logoBox').innerHTML='<div class=&quot;logoFallback&quot;>SG</div>';">
+
         </div>
-        <div>
+        <div class="brandText">
           <b>Sci-Guru</b>
           <span>AI Science Tutor • ZIMSEC / Heritage-Based</span>
         </div>
       </div>
-      <div class="navLinks">
+
+      <button class="navToggle" id="navToggle">Menu</button>
+
+      <nav class="nav" id="nav">
         <a href="index.html">Home</a>
         <a class="active" href="tutor.html">Tutor</a>
         <a href="labs-hub.html">Labs</a>
@@ -298,93 +526,165 @@
         <a href="dashboard.html">Dashboard</a>
         <a href="about.html">About</a>
         <a href="login.html">Login</a>
-      </div>
-    </div>
+      </nav>
+    </header>
   </div>
 
-  <div class="app">
+  <div class="appWrap">
+    <div class="app">
 
-    <div class="topHeader">
-      <div class="brand">
-        <div class="badge">SG</div>
-        <div>
-          <h1>Sci-Guru Tutor</h1>
-          <p>The Ultimate Science Hub (Form 1–4)</p>
+      <!-- Form tabs bar -->
+      <div class="formTabsBar">
+        <div class="formTitle">
+          <b>Sci-Guru Tutor</b>
+          <span>Pick a form, then choose a topic/unit. Quizzes save progress on this device.</span>
         </div>
-      </div>
-      <div class="tabs">
-        <button class="tab active" id="tabF1">Form 1</button>
-        <button class="tab" id="tabF2">Form 2</button>
-        <button class="tab" id="tabF3">Form 3</button>
-        <button class="tab" id="tabF4">Form 4</button>
-        <button class="tab" id="tabLabs">Labs Hub</button>
-      </div>
-    </div>
-
-    <!-- LEFT -->
-    <aside class="left">
-      <div class="leftHead">
-        <b id="leftTitle">Form 1 Topics</b>
-        <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
-      </div>
-
-      <div class="searchRow">
-        <input id="searchBox" placeholder="Search topics..." />
-      </div>
-
-      <div class="topicList" id="topicList"></div>
-
-      <div class="leftFooter">
-        <button class="btn" id="btnReset">Reset Data</button>
-        <button class="btn" id="btnAI">AI Helper</button>
-      </div>
-    </aside>
-
-    <!-- RIGHT -->
-    <section class="right">
-
-      <div class="card">
-        <div class="cardHead">
-          <b id="topicHeader">Welcome</b>
-          <span class="chip" id="topicChip">Overview</span>
-        </div>
-        <div class="cardBody">
-          <div class="muted" id="topicIntro">
-            Use the tabs to switch between books. Labs Hub shows all virtual labs in one place.
-          </div>
-          <div id="topicBullets"></div>
-          <div id="labArea"></div>
+        <div class="tabs">
+          <button class="tab active" id="tabF1">Form 1</button>
+          <button class="tab" id="tabF2">Form 2</button>
+          <button class="tab" id="tabF3">Form 3</button>
+          <button class="tab" id="tabF4">Form 4</button>
+          <button class="tab" id="tabLabs">Labs Hub</button>
         </div>
       </div>
 
-      <div>
+      <!-- LEFT -->
+      <aside class="left">
+        <div class="leftHead">
+          <b id="leftTitle">Form 1 Topics</b>
+          <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
+        </div>
+
+        <div class="searchRow">
+          <input id="searchBox" placeholder="Search topics..." />
+        </div>
+
+        <div class="topicList" id="topicList"></div>
+
+        <div class="leftFooter">
+          <button class="btn" id="btnReset">Reset Data</button>
+          <button class="btn btnBlue" id="btnAI">AI Helper</button>
+        </div>
+      </aside>
+
+      <!-- RIGHT -->
+      <section class="right">
+
+        <!-- ✅ ADDED: Tutor AI Panel (your old tutor AI) -->
         <div class="card">
           <div class="cardHead">
-            <b>Topic Quiz</b>
-            <span class="chip" id="quizChip">Saved</span>
+            <b>Sci-Guru Generative AI (Explain • Quiz • Practical)</b>
+            <span class="chip" id="chapterLabel">No chapter tag selected.</span>
           </div>
+
           <div class="cardBody">
-            <div class="muted" id="quizIntro">Select a topic to load a quiz.</div>
-            <div id="quizArea"></div>
+            <div class="aiGrid">
+              <!-- left controls -->
+              <div class="aiLeft">
+                <h3>Ask Sci-Guru</h3>
+
+                <label>Form / Level</label>
+                <select id="formSelect">
+                  <option value="Form 1">Form 1</option>
+                  <option value="Form 2">Form 2</option>
+                  <option value="Form 3">Form 3</option>
+                  <option value="Form 4">Form 4</option>
+                </select>
+
+                <label>Topic (optional)</label>
+                <select id="topicSelect">
+                  <option value="">-- Auto (selected topic) --</option>
+                </select>
+
+                <label>Your question</label>
+                <textarea id="userQuestion" placeholder="Explain density using Zimbabwean examples..."></textarea>
+
+                <div class="btnRow">
+                  <button id="askBtn" class="mainBtn">Ask Sci-Guru</button>
+                  <button id="quizBtn" class="secBtn">Generate quiz</button>
+                </div>
+
+                <div class="btnRow">
+                  <button id="practicalBtn" class="secBtn">Generate practical</button>
+                  <button class="secBtn" type="button" onclick="openLab()">Open virtual lab hub</button>
+                </div>
+
+                <div id="backendStatus" class="statusBar">
+                  Sci-Guru is ready. Backend: <b><span id="statusValue">LIVE.</span></b>
+                </div>
+
+                <div class="chaptersWrap" id="chaptersWrap" style="display:none;">
+                  <h4>Form 1 chapters · tap to auto-fill (topic + question + experiment focus)</h4>
+                  <div class="chaptersGrid" id="chaptersGrid"></div>
+                </div>
+              </div>
+
+              <!-- right results -->
+              <div class="aiRight">
+                <div class="resultBox">
+                  <h4>EXPLANATION</h4>
+                  <div id="explanationBox" class="resultContent">Sci-Guru will answer here...</div>
+                </div>
+
+                <div class="resultBox">
+                  <h4>QUIZ</h4>
+                  <div id="quizBox" class="resultContent">Quiz will appear here...</div>
+                </div>
+
+                <div class="resultBox" style="margin-bottom:0;">
+                  <h4>PRACTICAL</h4>
+                  <div id="practicalBox" class="resultContent">Practical experiment will appear here...</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="card" style="margin-top:16px">
+        <!-- existing overview card (unchanged) -->
+        <div class="card">
           <div class="cardHead">
-            <b>Your Score</b>
-            <span class="chip" id="scoreChip">Quiz Score</span>
+            <b id="topicHeader">Welcome</b>
+            <span class="chip" id="topicChip">Overview</span>
           </div>
           <div class="cardBody">
-            <div class="muted">Latest score for selected topic:</div>
-            <div class="scoreBig" id="scoreBig">0</div>
+            <div class="muted" id="topicIntro">
+              Use the tabs to switch between Form 1–4. Labs Hub shows all virtual labs in one place.
+            </div>
+            <div id="topicBullets"></div>
+            <div id="labArea"></div>
           </div>
         </div>
-      </div>
 
-    </section>
+        <!-- existing quiz/score column (unchanged) -->
+        <div>
+          <div class="card">
+            <div class="cardHead">
+              <b>Topic Quiz</b>
+              <span class="chip" id="quizChip">Saved</span>
+            </div>
+            <div class="cardBody">
+              <div class="muted" id="quizIntro">Select a topic to load a quiz.</div>
+              <div id="quizArea"></div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <div class="cardHead">
+              <b>Your Score</b>
+              <span class="chip" id="scoreChip">Quiz Score</span>
+            </div>
+            <div class="cardBody">
+              <div class="muted">Latest score for selected topic:</div>
+              <div class="scoreBig" id="scoreBig">0</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
   </div>
 
-  <!-- AI Modal -->
+  <!-- AI Modal (kept) -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
@@ -399,454 +699,296 @@
       </div>
       <div class="modalFoot">
         <input id="aiInput" placeholder="Type your question..." />
-        <button class="btn" id="aiSend">Send</button>
+        <button class="btn btnBlue" id="aiSend">Send</button>
       </div>
     </div>
   </div>
 
+  <div class="footer">
+    <div class="footerInner">
+      <div>© 2025 LEC Biotec • Harare, Zimbabwe</div>
+      <div>Tip: Keep filenames lowercase (e.g. <b>sim-separation.html</b>) to avoid 404 errors.</div>
+    </div>
+  </div>
+
 <script>
-/* Helpers */
+/* =========================================================
+   Helpers
+========================================================= */
 function safeHref(path){ return encodeURI(path); }
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
-/* ==============================
-   FORM 1 (UPDATED to match your repo "sim-1-....html")
-   If a file name is different in your repo, change it here.
-================================ */
+/* Mobile nav toggle */
+const navToggle = document.getElementById("navToggle");
+const nav = document.getElementById("nav");
+navToggle?.addEventListener("click", ()=> nav.classList.toggle("show"));
+
+/* =========================================================
+   FORM 1 TOPICS (1–19)
+========================================================= */
 const form1Topics = [
-  { id:"f1-t1", n:1,  title:"Laboratory", sub:"Intro & Lab Safety", bullets:[
-    "Lab rules and safety procedures","Hazard symbols and safe handling","Basic apparatus and measurements"
-  ], labs:[
-    { name:"Safety & Apparatus Lab", file:"sim-1-safety-apparatus.html", desc:"Safety symbols + apparatus identification." }
-  ]},
-
-  { id:"f1-t2", n:2,  title:"Cells", sub:"Cells & Organization", bullets:[
-    "Cells as the basic unit of life","Tissues, organs and systems","Specialised cells and functions"
-  ], labs:[
-    { name:"Microscope / Cells Lab", file:"sim-1-microscope.html", desc:"Microscope-style observation + cell activities." }
-  ]},
-
-  { id:"f1-t3", n:3,  title:"Nutrition", sub:"Feeding & Digestion", bullets:[
-    "Autotrophs vs heterotrophs","Photosynthesis basics","Human digestive system overview"
+  { id:"f1-t1", n:1,  title:"Laboratory",     sub:"Intro & Lab Safety", bullets:[
+    "Lab rules and safety procedures",
+    "Hazard symbols and safe handling",
+    "Basic apparatus and measurements"
   ], labs:[] },
 
-  { id:"f1-t4", n:4,  title:"Respiratory", sub:"Breathing & Gas Exchange", bullets:[
-    "Respiration releases energy in cells","Lungs and air passages","Gas exchange in alveoli"
+  { id:"f1-t2", n:2,  title:"Cells",         sub:"Cells & Organization", bullets:[
+    "Cells as the basic unit of life",
+    "Tissues, organs and systems",
+    "Specialised cells and functions"
   ], labs:[
-    { name:"Respiratory Lab", file:"sim-1-respiratory.html", desc:"Breathing + gas exchange activities." }
+    { name:"Cells Labels Lab", file:"sim-cells-labels.html", desc:"Label cell parts and functions." }
   ]},
 
-  { id:"f1-t5", n:5,  title:"Transport", sub:"Movement in plants & humans", bullets:[
-    "Diffusion and osmosis basics","Blood transport system overview","Xylem and phloem intro"
-  ], labs:[
-    { name:"Transport Lab", file:"sim-1-transportation.html", desc:"Transport systems + diffusion ideas." }
-  ]},
-
-  { id:"f1-t6", n:6,  title:"Reproductive", sub:"Plants & Human Reproduction", bullets:[
-    "Pollination and fertilisation","Seed/fruit formation overview","Human reproduction basics"
-  ], labs:[
-    { name:"Reproduction Lab", file:"sim-1-reproduction.html", desc:"Plant + human reproduction activities." }
-  ]},
-
-  { id:"f1-t7", n:7,  title:"Health", sub:"Health & Disease", bullets:[
-    "Infectious vs non-infectious diseases","Prevention: hygiene and sanitation","Good health habits"
+  { id:"f1-t3", n:3,  title:"Nutrition",     sub:"Feeding & Digestion", bullets:[
+    "Autotrophs vs heterotrophs",
+    "Photosynthesis basics",
+    "Human digestive system overview"
   ], labs:[] },
 
-  { id:"f1-t8", n:8,  title:"Separation", sub:"Separation Methods", bullets:[
-    "Filtration, evaporation, sieving, decanting","Magnetism and other methods","Choosing a method by properties"
-  ], labs:[
-    { name:"Separation Lab", file:"sim-1-separation.html", desc:"Practice separation methods." }
-  ]},
-
-  { id:"f1-t9", n:9,  title:"Matter", sub:"States & Particles", bullets:[
-    "Particles and states of matter","Changes of state (melting/boiling)","Basic particle model"
-  ], labs:[
-    { name:"Matter Lab", file:"sim-1-matter.html", desc:"Particles + states of matter." }
-  ]},
-
-  { id:"f1-t10", n:10, title:"Acids", sub:"Acids & Bases (Intro)", bullets:[
-    "Acids and bases in daily life","Indicators and pH idea","Neutralisation concept"
+  { id:"f1-t4", n:4,  title:"Respiratory",   sub:"Breathing & Gas Exchange", bullets:[
+    "Respiration releases energy in cells",
+    "Lungs and air passages",
+    "Gas exchange in alveoli"
   ], labs:[] },
 
-  { id:"f1-t11", n:11, title:"Industrial", sub:"Industrial Processes (Intro)", bullets:[
-    "Industry and simple processes","Safety in industrial chemicals","Applications to daily life"
+  { id:"f1-t5", n:5,  title:"Transport",     sub:"Movement in plants & humans", bullets:[
+    "Diffusion and osmosis basics",
+    "Blood transport system overview",
+    "Xylem and phloem intro"
   ], labs:[] },
 
-  { id:"f1-t12", n:12, title:"Oxidation", sub:"Oxidation & Reduction (Intro)", bullets:[
-    "Physical vs chemical change","Oxidation and reduction idea","Everyday examples"
+  { id:"f1-t6", n:6,  title:"Reproductive",  sub:"Plants & Human Reproduction", bullets:[
+    "Pollination and fertilisation",
+    "Seed/fruit formation overview",
+    "Human reproduction basics"
+  ], labs:[] },
+
+  { id:"f1-t7", n:7,  title:"Health",        sub:"Health & Disease", bullets:[
+    "Infectious vs non-infectious diseases",
+    "Prevention: hygiene and sanitation",
+    "Good health habits"
+  ], labs:[] },
+
+  { id:"f1-t8", n:8,  title:"Separation",    sub:"Separation Methods", bullets:[
+    "Filtration, evaporation, sieving, decanting",
+    "Magnetism and other methods",
+    "Choosing a method by properties"
   ], labs:[
-    { name:"Oxidation Lab", file:"sim-1-oxidation.html", desc:"Rusting / oxidation demonstrations." }
+    { name:"Separation Simulator", file:"sim-separation.html", desc:"Practice separation methods." }
   ]},
 
-  { id:"f1-t13", n:13, title:"Data", sub:"Data Presentation", bullets:[
-    "Tables and graphs","Reading graphs correctly","Trends and conclusions"
+  { id:"f1-t9",  n:9,  title:"Matter",       sub:"States & Particles", bullets:[
+    "Particles and states of matter",
+    "Changes of state (melting/boiling)",
+    "Basic particle model"
   ], labs:[] },
+
+  { id:"f1-t10", n:10, title:"Acids",        sub:"Acids & Bases (Intro)", bullets:[
+    "Acids and bases in daily life",
+    "Indicators and pH idea",
+    "Neutralisation concept"
+  ], labs:[] },
+
+  { id:"f1-t11", n:11, title:"Industrial",   sub:"Industrial Processes (Intro)", bullets:[
+    "Industry and simple processes",
+    "Safety in industrial chemicals",
+    "Applications to daily life"
+  ], labs:[] },
+
+  { id:"f1-t12", n:12, title:"Oxidation",    sub:"Oxidation & Reduction (Intro)", bullets:[
+    "Physical vs chemical change",
+    "Oxidation and reduction idea",
+    "Everyday examples"
+  ], labs:[] },
+
+  { id:"f1-t13", n:13, title:"Data",         sub:"Data Presentation", bullets:[
+    "Tables and graphs",
+    "Reading graphs correctly",
+    "Trends and conclusions"
+  ], labs:[
+    { name:"Data / Graphs Lab", file:"sim-data.html", desc:"Practice plotting and reading graphs." }
+  ]},
 
   { id:"f1-t14", n:14, title:"Measurements", sub:"SI Units & Density", bullets:[
-    "SI units and conversions","Mass vs weight","Volume and density concept"
+    "SI units and conversions",
+    "Mass vs weight",
+    "Volume and density concept"
+  ], labs:[] },
+
+  { id:"f1-t15", n:15, title:"Forces",       sub:"Force & Friction", bullets:[
+    "Force as a vector",
+    "Resultant force",
+    "Friction and how to reduce it"
+  ], labs:[] },
+
+  { id:"f1-t16", n:16, title:"Machines",     sub:"Simple Machines", bullets:[
+    "Levers, pulleys, wheel & axle",
+    "Effort, load and fulcrum",
+    "Practical uses"
+  ], labs:[] },
+
+  { id:"f1-t17", n:17, title:"Energy",       sub:"Work, Light & Sound", bullets:[
+    "Conservation of energy",
+    "Work done = force × distance",
+    "Light and sound basics"
   ], labs:[
-    { name:"Measurements Lab", file:"sim-1-measurements.html", desc:"SI units + measuring + density basics." }
+    { name:"Energy Lab", file:"sim-energy.html", desc:"Energy transformations (basic)." }
   ]},
 
-  { id:"f1-t15", n:15, title:"Forces", sub:"Force & Friction", bullets:[
-    "Force as a vector","Resultant force","Friction and how to reduce it"
+  { id:"f1-t18", n:18, title:"Magnetism",    sub:"Magnets & Fields", bullets:[
+    "Magnetic poles and attraction/repulsion",
+    "Field lines around a magnet",
+    "Simple investigations"
   ], labs:[] },
 
-  { id:"f1-t16", n:16, title:"Machines", sub:"Simple Machines", bullets:[
-    "Levers, pulleys, wheel & axle","Effort, load and fulcrum","Practical uses"
-  ], labs:[] },
-
-  { id:"f1-t17", n:17, title:"Energy", sub:"Work, Light & Sound", bullets:[
-    "Conservation of energy","Work done = force × distance","Light and sound basics"
-  ], labs:[] },
-
-  { id:"f1-t18", n:18, title:"Magnetism", sub:"Magnets & Fields", bullets:[
-    "Magnetic poles and attraction/repulsion","Field lines around a magnet","Simple investigations"
+  { id:"f1-t19", n:19, title:"Electricity",  sub:"Circuits (Series upgrade later)", bullets:[
+    "Circuit symbols and components",
+    "Building simple circuits",
+    "Series circuits (planned upgrade)"
   ], labs:[
-    { name:"Magnetism Lab", file:"sim-1-magnetism.html", desc:"Magnetism concepts + activities." }
-  ]},
-
-  { id:"f1-t19", n:19, title:"Electricity", sub:"Circuits", bullets:[
-    "Circuit symbols and components","Building simple circuits","Series circuits"
-  ], labs:[
-    /* IMPORTANT: if your file is NOT sim-1-electricity.html, change it here */
-    { name:"Electricity Lab", file:"sim-1-electricity.html", desc:"Circuit builder + meters." }
+    { name:"Electricity Simulator", file:"sim-electricity.html", desc:"Build circuits and test." },
+    { name:"Density Simulator", file:"sim-density.html", desc:"Mass, volume and density." }
   ]},
 ];
 
-/* Form 2 (keep your existing list; you can update filenames same way if needed) */
+/* =========================================================
+   FORM 2 TOPICS/UNITS (1–19)
+========================================================= */
 const form2Topics = [
-  { id:"f2-u1", n:1, title:"Cells & Organisation", sub:"Classification, variation & selection", bullets:[
-    "Life processes and characteristics","Five-kingdom classification overview","Variation and selection concepts"
+  { id:"f2-u1", n:1,  title:"Cells & Organisation", sub:"Classification, variation & selection", bullets:[
+    "Life processes and characteristics",
+    "Five-kingdom classification overview",
+    "Variation and selection concepts"
+  ], labs:[ { name:"Form 2 Cells Lab", file:"sim-f2-cells.html", desc:"Form 2 cells activities." } ] },
+
+  { id:"f2-u2", n:2,  title:"Nutrition", sub:"Photosynthesis + digestion", bullets:[
+    "Photosynthesis and leaf adaptations",
+    "Food chains and food webs",
+    "Digestive system processes"
+  ], labs:[] },
+
+  { id:"f2-u3", n:3,  title:"Respiratory", sub:"Respiration equation + lungs", bullets:[
+    "glucose + oxygen → carbon dioxide + water + energy",
+    "Human respiratory system parts",
+    "External gas exchange"
+  ], labs:[] },
+
+  { id:"f2-u4", n:4,  title:"Transport Systems", sub:"Diffusion/osmosis + xylem/phloem + heart", bullets:[
+    "Diffusion, osmosis and active transport",
+    "Xylem and phloem functions",
+    "Heart, vessels and blood components"
+  ], labs:[ { name:"Transport Lab", file:"sim-f2-transport.html", desc:"Transport systems sim." } ] },
+
+  { id:"f2-u5", n:5,  title:"Reproductive Systems", sub:"Plants + humans + placenta", bullets:[
+    "Pollination and fertilisation",
+    "Seed and fruit formation",
+    "Placenta function and childbirth"
+  ], labs:[ { name:"Reproduction Lab", file:"sim-f2-reproduction.html", desc:"Reproduction sim." } ] },
+
+  { id:"f2-u6", n:6,  title:"Health & Disease", sub:"Disease cycle + bilharzia", bullets:[
+    "Infectious vs non-infectious diseases",
+    "Infectious disease cycle",
+    "Bilharzia transmission and prevention"
+  ], labs:[ { name:"Health & Disease Lab", file:"sim-f2-health-diseases.html", desc:"Health & disease sim." } ] },
+
+  { id:"f2-u7", n:7,  title:"Separation", sub:"Revision + applications", bullets:[
+    "Filtration, evaporation, magnetism, decanting",
+    "Water treatment applications",
+    "Agricultural processing (salt/sugar)"
+  ], labs:[] },
+
+  { id:"f2-u8", n:8,  title:"Matter / Concentration", sub:"Solutions, dilution, mole intro", bullets:[
+    "Concentration calculations",
+    "Dilution concept",
+    "Mole and Avogadro intro"
+  ], labs:[
+    { name:"Matter Lab", file:"sim-f2-matter.html", desc:"Matter concepts." },
+    { name:"Concentration Lab", file:"sim-f2-concentration.html", desc:"Concentration and dilution." }
+  ]},
+
+  { id:"f2-u9", n:9,  title:"Acids & Bases", sub:"Neutralisation reactions", bullets:[
+    "acid + base → salt + water",
+    "Reactions with oxides/hydroxides/carbonates",
+    "Everyday examples (antacids, bicarbonate)"
+  ], labs:[ { name:"Acids & Bases Lab", file:"sim-f2-acids-bases.html", desc:"Neutralisation practice." } ] },
+
+  { id:"f2-u10", n:10, title:"Industrial Processes", sub:"Electrolysis + applications", bullets:[
+    "Electrolytes and ions in solution",
+    "Anode and cathode (basic idea)",
+    "Applications: electroplating / extraction (intro)"
+  ], labs:[] },
+
+  { id:"f2-u11", n:11, title:"Oxidation & Reduction", sub:"Redox (intro) and everyday examples", bullets:[
+    "Oxidation vs reduction (basic idea)",
+    "Rusting and corrosion prevention",
+    "Simple redox examples"
+  ], labs:[] },
+
+  { id:"f2-u12", n:12, title:"Organic / Combustion", sub:"Complete vs incomplete combustion", bullets:[
+    "Complete combustion products",
+    "Incomplete combustion (CO, soot)",
+    "Environmental effects"
+  ], labs:[ { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." } ] },
+
+  { id:"f2-u13", n:13, title:"Data Presentation", sub:"Straight line graphs", bullets:[
+    "Construct straight-line graphs",
+    "Direct/inverse proportionality",
+    "Gradient and intercept"
+  ], labs:[ { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." } ] },
+
+  { id:"f2-u14", n:14, title:"Measurements", sub:"SI units + density", bullets:[
+    "Convert SI units",
+    "Mass vs weight",
+    "Volume and density"
+  ], labs:[ { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." } ] },
+
+  { id:"f2-u15", n:15, title:"Forces", sub:"Resultant, moments, friction", bullets:[
+    "Resultant forces",
+    "Moments = force × distance",
+    "Friction and reducing friction"
+  ], labs:[ { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." } ] },
+
+  { id:"f2-u16", n:16, title:"Machines / Levers", sub:"Simple machines", bullets:[
+    "Classes of levers",
+    "Fulcrum, effort, load",
+    "Simple machine applications"
+  ], labs:[ { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." } ] },
+
+  { id:"f2-u17", n:17, title:"Energy", sub:"Work, power and simple energy ideas", bullets:[
+    "Work done = force × distance",
+    "Power as rate of doing work",
+    "Energy transformations (intro)"
+  ], labs:[] },
+
+  { id:"f2-u18", n:18, title:"Magnetism & Electricity", sub:"Fields and magnets", bullets:[
+    "Magnetic poles and fields",
+    "Field lines investigations",
+    "Magnetism applications"
+  ], labs:[ { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." } ] },
+
+  { id:"f2-u19", n:19, title:"Electricity", sub:"Circuits and safety (intro)", bullets:[
+    "Circuit symbols and components",
+    "Series vs parallel idea (intro)",
+    "Safety: fuse, breakers, insulation"
   ], labs:[] },
 ];
 
-/* ==============================
-   FORM 3 (UPDATED: removed 'form3-sims/' because your files are in ROOT)
-================================ */
+/* =========================================================
+   FORM 3 TOPICS (Units 1–25)
+========================================================= */
 const form3Topics = [
-  { id:"f3-u01", n:1, title:'The structure & function of a cell', sub:'Specialised cells and microscopy',
-    bullets:['Cells are the basic unit of life','Specialised cells have adaptations for their job','Microscopy: observe and draw cells'],
-    labs:[{ name:'Sim-3 Cell Lab', file:'sim-3-u01-cell.html', desc:'Microscope-style cell observation + specialisation.' }]
-  },
-  { id:"f3-u02", n:2, title:'Plant nutrition', sub:'Photosynthesis & factors affecting rate',
-    bullets:['Photosynthesis: CO₂ + H₂O → glucose + O₂ (light, chlorophyll)','Leaf adaptations: stomata, palisade layer','Rate depends on light, CO₂, temperature'],
-    labs:[{ name:'Sim-3 Plant Nutrition', file:'sim-3-u02-plant-nutrition.html', desc:'Test for starch/oxygen and explore rate factors.' }]
-  },
-];
-
-/* Form 4 (keep yours; just ensure filenames match your repo) */
-const form4Topics = [
-  { id:"f4-t1", n:1, title:"Biology", sub:"Food tests + respiration + transpiration",
-    bullets:["Food tests (iodine, Benedict, Biuret, emulsion)","Seeds respiration (CO2/heat)","Transpiration investigations"],
-    labs:[]
-  },
-];
-
-/* Labs Hub (all forms) */
-function buildLabsHub(){
-  const labs = [];
-  form1Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 1", topic:`Topic ${t.n}: ${t.title}`, ...l})));
-  form2Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 2", topic:`Unit ${t.n}: ${t.title}`, ...l})));
-  form3Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 3", topic:`Unit ${t.n}: ${t.title}`, ...l})));
-  form4Topics.forEach(t => (t.labs||[]).forEach(l => labs.push({form:"Form 4", topic:`Topic ${t.n}: ${t.title}`, ...l})));
-  return labs;
-}
-
-/* Quizzes (your existing QUIZZES can stay; shortened here for brevity) */
-const QUIZZES = {
-  "f3-u01": [
-    { q:"Specialised cells are adapted to:", opts:["Look nice","Perform specific functions","Always reproduce","Never divide"], a:1 },
-  ]
-};
-
-/* State + Render */
-let mode = "f1";
-let selectedId = null;
-
-const topicList = document.getElementById("topicList");
-const searchBox = document.getElementById("searchBox");
-const leftTitle = document.getElementById("leftTitle");
-const leftSub = document.getElementById("leftSub");
-
-const topicHeader = document.getElementById("topicHeader");
-const topicChip = document.getElementById("topicChip");
-const topicIntro = document.getElementById("topicIntro");
-const topicBullets = document.getElementById("topicBullets");
-const labArea = document.getElementById("labArea");
-
-const quizIntro = document.getElementById("quizIntro");
-const quizArea = document.getElementById("quizArea");
-const scoreBig = document.getElementById("scoreBig");
-
-function getList(){
-  if (mode==="f1") return form1Topics;
-  if (mode==="f2") return form2Topics;
-  if (mode==="f3") return form3Topics;
-  if (mode==="f4") return form4Topics;
-  return [{
-    id:"labs-hub", n:"", title:"Labs Hub", sub:"All labs from Form 1 + Form 2 + Form 3 + Form 4",
-    bullets:[
-      "This shows every virtual lab you linked in all forms.",
-      "If a lab is missing, add it under the topic/unit labs list."
-    ],
-    labs: buildLabsHub()
-  }];
-}
-
-function setMode(newMode){
-  mode = newMode;
-  selectedId = null;
-  searchBox.value = "";
-  renderLeft();
-  renderRightWelcome();
-}
-
-function renderLeft(){
-  const list = getList();
-  leftTitle.textContent =
-    mode==="f1" ? "Form 1 Topics" :
-    mode==="f2" ? "Form 2 Units" :
-    mode==="f3" ? "Form 3 Units" :
-    mode==="f4" ? "Form 4 Topics" :
-    "Labs Hub";
-  leftSub.textContent = "Click to jump";
-
-  const q = searchBox.value.trim().toLowerCase();
-  const filtered = q ? list.filter(t => (`${t.title} ${t.sub}`.toLowerCase().includes(q))) : list;
-
-  topicList.innerHTML = "";
-  filtered.forEach(t=>{
-    const btn = document.createElement("button");
-    btn.className = "topicBtn" + (t.id===selectedId ? " active" : "");
-
-    const rightPill =
-      mode==="labs" ? t.sub :
-      mode==="f1" ? `Topic ${t.n}` :
-      mode==="f2" ? `Unit ${t.n}` :
-      mode==="f3" ? `Unit ${t.n}` :
-      `Topic ${t.n}`;
-
-    const leftLabel =
-      mode==="labs" ? t.title :
-      (mode==="f1" ? `Topic ${t.n}` :
-       mode==="f2" ? `Unit ${t.n}` :
-       mode==="f3" ? `Unit ${t.n}` :
-       `Topic ${t.n}`) + " — " + t.title;
-
-    btn.innerHTML = `
-      <div class="l">
-        <b>${escapeHtml(leftLabel)}</b>
-        <span>${escapeHtml(t.sub || "")}</span>
-      </div>
-      <div class="r">${escapeHtml(rightPill)}</div>
-    `;
-    btn.onclick = ()=> { selectedId = t.id; renderLeft(); renderRight(); };
-    topicList.appendChild(btn);
-  });
-}
-
-function renderRightWelcome(){
-  topicHeader.textContent = "Welcome";
-  topicChip.textContent = "Overview";
-  topicIntro.textContent = "Select a topic/unit to view overview bullets, labs and a quiz.";
-  topicBullets.innerHTML = "";
-  labArea.innerHTML = "";
-  quizIntro.textContent = "Select a topic to load a quiz.";
-  quizArea.innerHTML = "";
-  scoreBig.textContent = "0";
-}
-
-function renderRight(){
-  const list = getList();
-  const t = list.find(x=>x.id===selectedId);
-  if (!t) return renderRightWelcome();
-
-  topicHeader.textContent =
-    mode==="labs" ? t.title :
-    mode==="f1" ? `Topic ${t.n}: ${t.title}` :
-    mode==="f2" ? `Unit ${t.n}: ${t.title}` :
-    mode==="f3" ? `Unit ${t.n}: ${t.title}` :
-    `Topic ${t.n}: ${t.title}`;
-
-  topicChip.textContent =
-    mode==="f1" ? "Form 1" :
-    mode==="f2" ? "Form 2" :
-    mode==="f3" ? "Form 3" :
-    mode==="f4" ? "Form 4" :
-    "Labs";
-
-  topicIntro.textContent = t.sub || "";
-
-  if (t.bullets && t.bullets.length){
-    topicBullets.innerHTML = `<ul>${t.bullets.map(b=>`<li>${escapeHtml(b)}</li>`).join("")}</ul>`;
-  } else {
-    topicBullets.innerHTML = `<div class="muted">No overview bullets yet.</div>`;
-  }
-
-  const labs = t.labs || [];
-  labArea.innerHTML = "";
-  if (labs.length){
-    labs.forEach(l=>{
-      const box = document.createElement("div");
-      box.className = "labBox";
-      box.innerHTML = `
-        <b>Virtual Lab: ${escapeHtml(l.name || "Lab")}</b>
-        <span>${escapeHtml(l.desc || "")}</span>
-        <a href="${safeHref(l.file)}">Open Lab</a>
-      `;
-      labArea.appendChild(box);
-    });
-  } else {
-    labArea.innerHTML = `<div class="notice warn">No lab linked for this topic/unit yet.</div>`;
-  }
-
-  renderQuizFor(selectedId);
-}
-
-function storageKey(id){ return `sciguru_score_${id}`; }
-function saveScore(id, score, total){
-  const percent = Math.round((score/total)*100);
-  localStorage.setItem(storageKey(id), JSON.stringify({score,total,percent,at:new Date().toISOString()}));
-  return percent;
-}
-function getSavedScore(id){
-  try { return JSON.parse(localStorage.getItem(storageKey(id)) || ""); } catch { return null; }
-}
-
-function renderQuizFor(id){
-  const qs = QUIZZES[id] || [];
-  quizArea.innerHTML = "";
-  quizIntro.textContent = qs.length ? "Answer and submit to save your score." : "No quiz for this topic yet.";
-  if (!qs.length) return;
-
-  const wrap = document.createElement("div");
-  qs.forEach((q, idx)=>{
-    const block = document.createElement("div");
-    block.className = "q";
-    block.innerHTML = `
-      <b>${idx+1}. ${escapeHtml(q.q)}</b>
-      ${q.opts.map((o,i)=>`
-        <label>
-          <input type="radio" name="q_${id}_${idx}" value="${i}">
-          <span>${escapeHtml(o)}</span>
-        </label>
-      `).join("")}
-    `;
-    wrap.appendChild(block);
-  });
-
-  const actions = document.createElement("div");
-  actions.className = "qActions";
-  actions.innerHTML = `<button class="btn" id="btnSubmit">Submit</button>`;
-  wrap.appendChild(actions);
-
-  const msg = document.createElement("div");
-  wrap.appendChild(msg);
-  quizArea.appendChild(wrap);
-
-  document.getElementById("btnSubmit").onclick = ()=>{
-    let score = 0;
-    qs.forEach((q, idx)=>{
-      const picked = document.querySelector(`input[name="q_${CSS.escape(id)}_${idx}"]:checked`);
-      if (picked && Number(picked.value) === q.a) score++;
-    });
-    const percent = saveScore(id, score, qs.length);
-    scoreBig.textContent = String(percent);
-    msg.innerHTML = percent>=60
-      ? `<div class="notice ok">Saved: ${score}/${qs.length} (${percent}%) ✅</div>`
-      : `<div class="notice warn">Saved: ${score}/${qs.length} (${percent}%) ⚠️ Try again.</div>`;
-  };
-}
-
-/* Tabs + Search + Reset */
-function setActiveTab(btnId){
-  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-  document.getElementById(btnId).classList.add("active");
-}
-document.getElementById("tabF1").onclick = ()=>{ setActiveTab("tabF1"); setMode("f1"); };
-document.getElementById("tabF2").onclick = ()=>{ setActiveTab("tabF2"); setMode("f2"); };
-document.getElementById("tabF3").onclick = ()=>{ setActiveTab("tabF3"); setMode("f3"); };
-document.getElementById("tabF4").onclick = ()=>{ setActiveTab("tabF4"); setMode("f4"); };
-document.getElementById("tabLabs").onclick = ()=>{ setActiveTab("tabLabs"); setMode("labs"); };
-
-searchBox.addEventListener("input", renderLeft);
-
-document.getElementById("btnReset").onclick = ()=>{
-  const toRemove = [];
-  for (let i=0; i<localStorage.length; i++){
-    const k = localStorage.key(i);
-    if (k && k.startsWith("sciguru_score_")) toRemove.push(k);
-  }
-  toRemove.forEach(k=>localStorage.removeItem(k));
-  scoreBig.textContent = "0";
-};
-
-/* AI HELPER (modal) */
-const modalBack = document.getElementById("modalBack");
-const aiBody = document.getElementById("aiBody");
-const aiInput = document.getElementById("aiInput");
-const aiTitle = document.getElementById("aiTitle");
-const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask"];
-
-function openAI(){
-  modalBack.style.display = "flex";
-  const t = getList().find(x=>x.id===selectedId);
-  aiTitle.textContent = t ? `Sci-Guru AI • ${topicChip.textContent} • ${t.title}` : "Sci-Guru AI Helper";
-  setTimeout(()=>aiInput.focus(), 50);
-}
-function closeAI(){ modalBack.style.display = "none"; }
-document.getElementById("btnAI").onclick = openAI;
-document.getElementById("aiClose").onclick = closeAI;
-modalBack.addEventListener("click", (e)=>{ if (e.target===modalBack) closeAI(); });
-
-document.getElementById("aiClear").onclick = ()=>{
-  aiBody.innerHTML = `<div class="msg ai">Chat cleared. Ask me about the selected topic.</div>`;
-};
-
-function addMsg(who, text){
-  const div = document.createElement("div");
-  div.className = "msg " + (who==="me" ? "me" : "ai");
-  div.textContent = text;
-  aiBody.appendChild(div);
-  aiBody.scrollTop = aiBody.scrollHeight;
-}
-
-async function sendAI(){
-  const text = aiInput.value.trim();
-  if (!text) return;
-  addMsg("me", text);
-  aiInput.value = "";
-
-  const list = getList();
-  const t = list.find(x=>x.id===selectedId);
-  const payload = { message: text, mode, topic: t ? t.title : "" };
-
-  for (const ep of AI_ENDPOINTS){
-    try{
-      const res = await fetch(ep, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) continue;
-      const data = await res.json();
-      const reply = data.reply || data.answer || data.message;
-      if (reply){ addMsg("ai", reply); return; }
-    }catch(e){}
-  }
-
-  addMsg("ai", "AI backend not reached. Ensure your server has POST /api/chat or /chat returning JSON { reply: \"...\" }");
-}
-
-document.getElementById("aiSend").onclick = sendAI;
-aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
-
-/* INIT */
-renderLeft();
-renderRightWelcome();
-</script>
-</body>
-</html>
+  { id:"f3-u01", n:1, title:'The structure & function of a cell', sub:'Specialised cells and microscopy', bullets:['Cells are the basic unit of life','Specialised cells have adaptations for their job','Microscopy: observe and draw cells'], labs:[{ name:'Sim-3 Cell Lab', file:'form3-sims/sim-3-u01-cell.html', desc:'Microscope-style cell observation + specialisation.' }] },
+  { id:"f3-u02", n:2, title:'Plant nutrition', sub:'Photosynthesis & factors affecting rate', bullets:['Photosynthesis: CO₂ + H₂O → glucose + O₂ (light, chlorophyll)','Leaf adaptations: stomata, palisade layer','Rate depends on light, CO₂, temperature'], labs:[{ name:'Sim-3 Plant Nutrition', file:'form3-sims/sim-3-u02-plant-nutrition.html', desc:'Test for starch/oxygen and explore rate factors.' }] },
+  { id:"f3-u03", n:3, title:'Human nutrition', sub:'Digestion, enzymes, absorption', bullets:['Ingestion → digestion → absorption → assimilation → egestion','Enzymes: amylase, protease, lipase','Villi increase surface area for absorption'], labs:[{ name:'Sim-3 Human Nutrition', file:'form3-sims/sim-3-u03-human-nutrition.html', desc:'Digestive pathway + enzyme action activities.' }] },
+  { id:"f3-u04", n:4, title:'Human respiration', sub:'Gas exchange & breathing', bullets:['Cell respiration releases energy','Alveoli: large surface area, thin walls, capillaries','Inhaled vs exhaled air composition differs'], labs:[{ name:'Sim-3 Respiration', file:'form3-sims/sim-3-u04-respiration.html', desc:'CO₂ test + vital capacity-style activity.' }] },
+  { id:"f3-u05", n:5, title:'Transport systems in plants', sub:'Transpiration & osmosis', bullets:['Xylem transports water/minerals','Transpiration pull; factors: wind, humidity, temp, light','Osmosis: turgor vs plasmolysis'], labs:[{ name:'Sim-3 Plant Transport', file:'form3-sims/sim-3-u05-plant-transport.html', desc:'Potometer + turgor/plasmolysis simulator.' }] },
+  { id:"f3-u06", n:6, title:'Transport systems in humans', sub:'Circulation & blood', bullets:['Heart as a pump; double circulation','Blood: plasma, RBC, WBC, platelets','Arteries, veins, capillaries roles'], labs:[{ name:'Sim-3 Human Transport', file:'form3-sims/sim-3-u06-human-transport.html', desc:'Blood flow + vessel matching activities.' }] },
+  { id:"f3-u07", n:7, title:'Plant reproduction', sub:'Pollination & germination', bullets:['Wind vs insect pollination differences','Fertilisation leads to seed/fruit formation','Germination needs water, oxygen, warmth'], labs:[{ name:'Sim-3 Plant Reproduction', file:'form3-sims/sim-3-u07-plant-reproduction.html', desc:'Pollination + germination conditions lab.' }] },
+  { id:"f3-u08", n:8, title:'Human reproduction', sub:'Menstrual cycle & placenta', bullets:['Male and female reproductive organs','Hormones control menstrual cycle','Placenta exchange: nutrients, O₂, wastes'], labs:[{ name:'Sim-3 Human Reproduction', file:'form3-sims/sim-3-u08-human-reproduction.html', desc:'Cycle timeline + fertilisation pathway.' }] },
+  { id:"f3-u09", n:9, title:'Health and disease', sub:'Communicable diseases & prevention', bullets:['Pathogens: bacteria, viruses, protozoa, fungi, worms','Examples: malaria, cholera, TB, STIs','Prevention: hygiene, safe water, nets, vaccination'], labs:[{ name:'Sim-3 Health & Disease', file:'form3-sims/sim-3-u09-health-disease.html', desc:'Disease spread + prevention choices (Zimbabwe context).' }] },
+  { id:"f3-u10", n:10, title:'Separation', sub:'Distillation & chromatography', bullets:['Choose method by property: solubility, boiling point, particle size','Simple vs fractional distillation','Chromatography separates dyes/inks'], labs:[{ name:'Sim-3 Separation', file:'form3-sims/sim-3-u10-separation.html', desc:'Distillation setup + chromatography activity.' }] },
+  { id:"f3-u11", n:11, title:'Matter', sub:'Atoms, bonding & moles', bullets:['Atomic number vs mass number; isotopes','Ionic vs covalent bonding','Relative formula mass and mole concept'], labs:[{ name:'Sim-3 Matter', file:]()
