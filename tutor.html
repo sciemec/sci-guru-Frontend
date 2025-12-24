@@ -59,21 +59,16 @@
       background: rgba(10,16,34,.70);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
+
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 240px;
-    }
+    .brand{ display:flex; align-items:center; gap:12px; min-width: 240px; }
     .logoBox{
-      width:46px;
-      height:46px;
+      width:46px; height:46px;
       border-radius: 14px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.05);
@@ -88,13 +83,7 @@
     .brandText b{ display:block; font-size: 18px; line-height: 1.05; font-weight: 900; }
     .brandText span{ display:block; margin-top: 2px; color: var(--muted); font-size: 12.5px; line-height:1.2; }
 
-    .nav{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .nav{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
     .nav a{
       padding:10px 14px;
       border-radius: 999px;
@@ -234,9 +223,7 @@
       border-top:1px solid var(--border);
       display:flex; gap:10px; flex-wrap:wrap;
       align-items:center;
-      justify-content:space-between;
     }
-    .leftFooter .leftBtns{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
       padding:10px 12px;
       border-radius:14px;
@@ -250,22 +237,22 @@
     .btn:hover{background: rgba(255,255,255,.05)}
     .btnBlue{ border-color: var(--btnBlueBorder); background: var(--btnBlue); }
 
-    .statusPill{
+    .miniStatus{
+      margin-left:auto;
       font-size:12px;
-      color:var(--muted);
-      padding:7px 10px;
-      border-radius:999px;
+      color: var(--muted);
+      padding:8px 10px;
+      border-radius: 999px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.02);
       white-space:nowrap;
     }
-    .statusPill.ok{ color:#bff7df; border-color: rgba(16,185,129,.28); background: rgba(16,185,129,.10); }
-    .statusPill.bad{ color:#ffd3da; border-color: rgba(244,63,94,.28); background: rgba(244,63,94,.10); }
+    .miniStatus b{color: var(--text); font-weight:800}
 
     /* Right panel */
     .right{
       display:grid;
-      grid-template-columns: 1fr 360px;
+      grid-template-columns: 1fr 340px;
       gap:16px;
       align-content:start;
     }
@@ -317,7 +304,7 @@
       justify-content:center;
     }
 
-    /* Quiz */
+    /* Quiz blocks */
     .q{
       border:1px solid var(--border);
       border-radius:16px;
@@ -337,43 +324,41 @@
       color: var(--text);
       font-size:13px;
       line-height:1.4;
-      white-space:pre-wrap;
+      white-space: pre-wrap;
     }
     .ok{background: var(--okBg); border-color: rgba(16,185,129,.28)}
     .warn{background: var(--warnBg); border-color: rgba(244,63,94,.28)}
     .scoreBig{ font-size:44px; font-weight:900; margin:6px 0 0; }
 
-    /* Ask box */
-    .aiTextArea{
+    /* =========================
+       NEW: Generative AI tools (inside tutor)
+    ========================= */
+    .aiTools{
+      margin-top: 12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .aiTools b{display:block; font-size:13px}
+    .aiTools span{display:block; color:var(--muted); font-size:12px; margin-top:4px}
+    .aiTools textarea{
       width:100%;
-      min-height: 90px;
-      resize: vertical;
+      margin-top:10px;
       padding:10px 12px;
       border-radius:14px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.03);
-      color: var(--text);
+      color:var(--text);
       outline:none;
+      min-height: 90px;
+      resize: vertical;
+    }
+    .aiBtns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
       margin-top:10px;
-    }
-    .resultBox{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background: rgba(255,255,255,.03);
-      margin-top:10px;
-    }
-    .resultBox h4{
-      margin:0 0 8px 0;
-      font-size:12px;
-      letter-spacing:.6px;
-      color: var(--muted);
-    }
-    .resultContent{
-      white-space: pre-wrap;
-      line-height:1.45;
-      font-size:13px;
-      color: var(--text);
     }
 
     /* AI modal */
@@ -453,13 +438,13 @@
 
 <body>
 
+  <!-- TOP HEADER -->
   <div class="siteHeaderWrap">
     <header class="siteHeader">
       <div class="brand">
         <div class="logoBox" id="logoBox">
           <img src="images/lec-logo.jpg" alt="LEC Biotec Logo"
-               onerror="this.remove(); document.getElementById('logoBox').innerHTML='<div class=&quot;logoFallback&quot;>SG</div>';">
-
+               onerror="this.remove(); document.getElementById('logoBox').innerHTML='<div class=&quot;logoFallback&quot;>SG</div>';"/>
         </div>
         <div class="brandText">
           <b>Sci-Guru</b>
@@ -484,6 +469,7 @@
   <div class="appWrap">
     <div class="app">
 
+      <!-- Form tabs bar -->
       <div class="formTabsBar">
         <div class="formTitle">
           <b>Sci-Guru Tutor</b>
@@ -502,7 +488,7 @@
       <aside class="left">
         <div class="leftHead">
           <b id="leftTitle">Form 1 Topics</b>
-          <span id="leftSub">Click a topic to view overview, labs and quiz.</span>
+          <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
         </div>
 
         <div class="searchRow">
@@ -512,75 +498,52 @@
         <div class="topicList" id="topicList"></div>
 
         <div class="leftFooter">
-          <div class="leftBtns">
-            <button class="btn" id="btnReset">Reset Data</button>
-            <button class="btn btnBlue" id="btnAI">AI Helper</button>
-          </div>
-          <div class="statusPill" id="backendPill">Backend: checking…</div>
+          <button class="btn" id="btnReset">Reset Data</button>
+          <button class="btn btnBlue" id="btnAI">AI Helper</button>
+          <div class="miniStatus" id="backendPill">Backend: <b id="backendState">checking…</b></div>
         </div>
       </aside>
 
       <!-- RIGHT -->
       <section class="right">
 
-        <!-- Overview card -->
         <div class="card">
           <div class="cardHead">
             <b id="topicHeader">Welcome</b>
             <span class="chip" id="topicChip">Overview</span>
           </div>
+
           <div class="cardBody">
             <div class="muted" id="topicIntro">
               Use the tabs to switch between Form 1–4. Labs Hub shows all virtual labs in one place.
             </div>
+
             <div id="topicBullets"></div>
             <div id="labArea"></div>
+
+            <!-- ✅ NEW: Generative AI Tools inside tutor -->
+            <div class="aiTools">
+              <b>Ask Sci-Guru (Generative)</b>
+              <span>Ask for explanation, quiz or a practical experiment for the selected topic/unit.</span>
+
+              <textarea id="askInput" placeholder="Type your question here… (e.g. Explain density using Zimbabwean examples)"></textarea>
+
+              <div class="aiBtns">
+                <button class="btn btnBlue" id="btnAskExplain">Ask / Explain</button>
+                <button class="btn" id="btnAskQuiz">Generate Quiz</button>
+                <button class="btn" id="btnAskPractical">Generate Practical</button>
+              </div>
+
+              <div class="notice" id="aiExplainBox" style="margin-top:10px">Explanation will appear here…</div>
+              <div class="notice" id="aiQuizBox">Quiz will appear here…</div>
+              <div class="notice" id="aiPracticalBox">Practical will appear here…</div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Right-side stack -->
         <div>
-
-          <!-- Ask Sci-Guru (Generative AI outputs) -->
           <div class="card">
-            <div class="cardHead">
-              <b>Ask Sci-Guru (Generative AI)</b>
-              <span class="chip" id="aiChipSmall">Uses your backend</span>
-            </div>
-            <div class="cardBody">
-              <div class="muted">
-                Selected topic will be included automatically (Form/Unit/Topic). If AI doesn’t respond, update <b>BACKEND_BASE</b> in the script.
-              </div>
-
-              <textarea id="askInput" class="aiTextArea" placeholder="Type your question here... e.g. Explain density using Zimbabwean examples."></textarea>
-
-              <div class="qActions">
-                <button class="btn btnBlue" id="btnExplain">Explain</button>
-                <button class="btn" id="btnGenQuiz">Generate Quiz</button>
-                <button class="btn" id="btnGenPrac">Generate Practical</button>
-              </div>
-
-              <div id="askStatus" class="notice" style="display:none;"></div>
-
-              <div class="resultBox">
-                <h4>EXPLANATION</h4>
-                <div id="explanationBox" class="resultContent">Sci-Guru will answer here...</div>
-              </div>
-
-              <div class="resultBox">
-                <h4>QUIZ</h4>
-                <div id="genQuizBox" class="resultContent">Generated quiz will appear here...</div>
-              </div>
-
-              <div class="resultBox">
-                <h4>PRACTICAL</h4>
-                <div id="practicalBox" class="resultContent">Generated practical will appear here...</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Built-in topic quiz -->
-          <div class="card" style="margin-top:16px">
             <div class="cardHead">
               <b>Topic Quiz</b>
               <span class="chip" id="quizChip">Saved</span>
@@ -601,14 +564,13 @@
               <div class="scoreBig" id="scoreBig">0</div>
             </div>
           </div>
-
         </div>
 
       </section>
     </div>
   </div>
 
-  <!-- AI Modal (chat-style helper) -->
+  <!-- AI Modal -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
@@ -619,7 +581,7 @@
         </div>
       </div>
       <div class="modalBody" id="aiBody">
-        <div class="msg ai">Ask me about the selected topic. If AI doesn’t respond, your backend route or BACKEND_BASE is wrong.</div>
+        <div class="msg ai">Ask me about the selected topic. If AI doesn’t respond, check backend route + CORS.</div>
       </div>
       <div class="modalFoot">
         <input id="aiInput" placeholder="Type your question..." />
@@ -650,11 +612,15 @@ const nav = document.getElementById("nav");
 navToggle?.addEventListener("click", ()=> nav.classList.toggle("show"));
 
 /* =========================================================
-   IMPORTANT: BACKEND BASE
-   - If you host tutor.html on Render together with backend: leave ""
-   - If tutor.html is on GitHub Pages and backend on Render: set to "https://YOUR-APP.onrender.com"
+   ✅ BACKEND CONFIG (GitHub Pages needs FULL URL)
 ========================================================= */
-const BACKEND_BASE = ""; // <--- PUT YOUR RENDER URL HERE IF NEEDED
+const BACKEND_BASE = "https://sci-guru-backend.onrender.com";
+const AI_ENDPOINTS = [
+  `${BACKEND_BASE}/api/chat`,
+  `${BACKEND_BASE}/chat`,
+  `${BACKEND_BASE}/api/ask`,
+  `${BACKEND_BASE}/ask`
+];
 
 /* =========================================================
    FORM 1 TOPICS (1–19)
@@ -909,7 +875,7 @@ const form2Topics = [
 ];
 
 /* =========================================================
-   FORM 3 TOPICS (Units 1–25)
+   FORM 3 TOPICS (Units 1–25) — your existing links
 ========================================================= */
 const form3Topics = [
   { id:"f3-u01", n:1, title:'The structure & function of a cell', sub:'Specialised cells and microscopy', bullets:['Cells are the basic unit of life','Specialised cells have adaptations for their job','Microscopy: observe and draw cells'], labs:[{ name:'Sim-3 Cell Lab', file:'form3-sims/sim-3-u01-cell.html', desc:'Microscope-style cell observation + specialisation.' }] },
@@ -997,7 +963,7 @@ const form4Topics = [
 ];
 
 /* =========================================================
-   Labs Hub
+   Labs Hub (all forms)
 ========================================================= */
 function buildLabsHub(){
   const labs = [];
@@ -1115,12 +1081,13 @@ const quizIntro = document.getElementById("quizIntro");
 const quizArea = document.getElementById("quizArea");
 const scoreBig = document.getElementById("scoreBig");
 
-/* Ask box outputs */
+const backendState = document.getElementById("backendState");
+
+/* Generative boxes */
 const askInput = document.getElementById("askInput");
-const askStatus = document.getElementById("askStatus");
-const explanationBox = document.getElementById("explanationBox");
-const genQuizBox = document.getElementById("genQuizBox");
-const practicalBox = document.getElementById("practicalBox");
+const aiExplainBox = document.getElementById("aiExplainBox");
+const aiQuizBox = document.getElementById("aiQuizBox");
+const aiPracticalBox = document.getElementById("aiPracticalBox");
 
 function getList(){
   if (mode==="f1") return form1Topics;
@@ -1144,6 +1111,7 @@ function setMode(newMode){
   searchBox.value = "";
   renderLeft();
   renderRightWelcome();
+  clearGenerativeBoxes();
 }
 
 function renderLeft(){
@@ -1187,7 +1155,13 @@ function renderLeft(){
       </div>
       <div class="r">${escapeHtml(rightPill)}</div>
     `;
-    btn.onclick = ()=> { selectedId = t.id; renderLeft(); renderRight(); };
+    btn.onclick = ()=> {
+      selectedId = t.id;
+      renderLeft();
+      renderRight();
+      suggestDefaultQuestion();
+      clearGenerativeBoxes();
+    };
     topicList.appendChild(btn);
   });
 }
@@ -1362,156 +1336,130 @@ document.getElementById("btnReset").onclick = ()=>{
 };
 
 /* =========================================================
-   AI BACKEND (robust) — used by both the modal + ask boxes
+   ✅ AI REQUEST CORE (used by modal + generative buttons)
 ========================================================= */
-const backendPill = document.getElementById("backendPill");
-const AI_ENDPOINTS = ["/api/chat", "/chat", "/api/ask", "/ask"];
-let lastGoodEndpoint = null;
-
-function getSelectedTopicLabel(){
+function currentTopicLabel(){
   const list = getList();
   const t = list.find(x=>x.id===selectedId);
   if (!t) return "";
-  return (mode==="f1" ? `Topic ${t.n}: ${t.title}` :
-          mode==="f2" ? `Unit ${t.n}: ${t.title}` :
-          mode==="f3" ? `Unit ${t.n}: ${t.title}` :
-          mode==="f4" ? `Topic ${t.n}: ${t.title}` : "");
+  return (
+    mode==="f1" ? `Form 1 • Topic ${t.n}: ${t.title}` :
+    mode==="f2" ? `Form 2 • Unit ${t.n}: ${t.title}` :
+    mode==="f3" ? `Form 3 • Unit ${t.n}: ${t.title}` :
+    mode==="f4" ? `Form 4 • Topic ${t.n}: ${t.title}` :
+    `Labs Hub • ${t.title}`
+  );
 }
 
-async function postJSON(url, payload){
-  const res = await fetch(url, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  const ct = (res.headers.get("content-type") || "").toLowerCase();
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-  if (ct.includes("application/json")){
-    return await res.json();
-  } else {
-    const txt = await res.text();
-    return { reply: txt };
-  }
-}
-
-function extractReply(data){
-  if (!data) return "";
-  if (typeof data === "string") return data;
-  return data.reply || data.answer || data.message || data.text || "";
-}
-
-async function callAIBackend(payload){
-  // Try last known good endpoint first
-  const endpoints = lastGoodEndpoint ? [lastGoodEndpoint, ...AI_ENDPOINTS.filter(e=>e!==lastGoodEndpoint)] : AI_ENDPOINTS;
-
-  for (const ep of endpoints){
-    const url = BACKEND_BASE + ep;
-    try{
-      const data = await postJSON(url, payload);
-      const reply = extractReply(data);
-      if (reply){
-        lastGoodEndpoint = ep;
-        return { reply, ep };
-      }
-    }catch(e){}
-  }
-  throw new Error("AI backend not reached");
-}
-
-async function probeBackend(){
-  backendPill.textContent = "Backend: checking…";
-  backendPill.classList.remove("ok","bad");
-
+async function fetchWithTimeout(url, options={}, ms=25000){
+  const controller = new AbortController();
+  const id = setTimeout(()=>controller.abort(), ms);
   try{
-    const payload = { message:"ping", question:"ping", prompt:"ping" };
-    const r = await callAIBackend(payload);
-    backendPill.textContent = `Backend: LIVE (${r.ep})`;
-    backendPill.classList.add("ok");
-  }catch(e){
-    backendPill.textContent = "Backend: OFFLINE";
-    backendPill.classList.add("bad");
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(id);
   }
 }
 
-/* =========================================================
-   Ask Sci-Guru (Explain / Quiz / Practical)
-========================================================= */
-function showAskStatus(type, text){
-  askStatus.style.display = "block";
-  askStatus.className = "notice " + (type==="ok" ? "ok" : type==="warn" ? "warn" : "");
-  askStatus.textContent = text;
-}
-
-function buildPrompt(kind, userText){
-  const topicLabel = getSelectedTopicLabel();
-  const formLabel = (mode==="f1" ? "Form 1" : mode==="f2" ? "Form 2" : mode==="f3" ? "Form 3" : mode==="f4" ? "Form 4" : "Labs");
-
-  const context = topicLabel ? `Selected: ${formLabel} — ${topicLabel}\n` : `Selected: ${formLabel}\n`;
-
-  if (kind==="explain"){
-    return `${context}
-Task: Explain clearly for ZIMSEC/Heritage-Based curriculum. Use simple steps + Zimbabwean examples where possible.
-Question: ${userText}`;
-  }
-  if (kind==="quiz"){
-    return `${context}
-Task: Generate a short quiz (8 questions). Mix multiple-choice and short-answer. Provide answers at the end.
-Focus: ${topicLabel || "the selected syllabus area"}.
-User request: ${userText}`;
-  }
-  return `${context}
-Task: Generate a practical experiment.
-Must include: Aim, Apparatus, Chemicals (if any), Method (step-by-step), Results/Observations, Conclusion, Safety, and 5 questions.
-Focus: ${topicLabel || "the selected syllabus area"}.
-User request: ${userText}`;
-}
-
-async function runAsk(kind){
-  const userText = (askInput.value || "").trim();
-  if (!userText){
-    showAskStatus("warn","Type a question first.");
-    return;
-  }
-
-  showAskStatus("", "Thinking… (calling backend)");
+async function callAI(message, extra = {}){
   const payload = {
-    message: buildPrompt(kind, userText),
-    question: buildPrompt(kind, userText),
-    prompt: buildPrompt(kind, userText),
+    message,
     mode,
-    topic: getSelectedTopicLabel(),
-    kind
+    topic: currentTopicLabel(),
+    ...extra
   };
 
-  try{
-    const r = await callAIBackend(payload);
-    showAskStatus("ok", `Answered via ${r.ep}`);
-    if (kind==="explain") explanationBox.textContent = r.reply;
-    if (kind==="quiz") genQuizBox.textContent = r.reply;
-    if (kind==="practical") practicalBox.textContent = r.reply;
-    // also update backend pill if it was offline
-    backendPill.textContent = `Backend: LIVE (${r.ep})`;
-    backendPill.classList.remove("bad");
-    backendPill.classList.add("ok");
-  }catch(e){
-    showAskStatus("warn",
+  for (const ep of AI_ENDPOINTS){
+    try{
+      const res = await fetchWithTimeout(ep, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      }, 30000);
+
+      if (!res || !res.ok) continue;
+
+      // Support JSON or text responses
+      const ct = (res.headers.get("content-type") || "").toLowerCase();
+      if (ct.includes("application/json")){
+        const data = await res.json();
+        const reply = data.reply || data.answer || data.message || data.text;
+        if (reply) return { ok:true, reply, endpoint: ep };
+      } else {
+        const text = await res.text();
+        if (text && text.trim()) return { ok:true, reply: text.trim(), endpoint: ep };
+      }
+    }catch(e){
+      // try next endpoint
+    }
+  }
+
+  return {
+    ok:false,
+    reply:
 `AI backend not reached.
-1) If tutor.html is on GitHub Pages, set BACKEND_BASE to your Render URL.
-2) Ensure your backend has POST route /api/chat or /chat returning JSON { reply: "..." }`);
-    backendPill.textContent = "Backend: OFFLINE";
-    backendPill.classList.remove("ok");
-    backendPill.classList.add("bad");
+1) Confirm backend route exists on Render (POST /api/chat).
+2) Add CORS to backend to allow GitHub Pages.
+3) Note: Render free tier sleeps (first request can be slow).`
+  };
+}
+
+/* Backend pill quick check */
+async function checkBackend(){
+  backendState.textContent = "waking…";
+  try{
+    const res = await fetchWithTimeout(`${BACKEND_BASE}/`, { method:"GET" }, 12000);
+    backendState.textContent = res && res.ok ? "LIVE" : "LIVE?";
+  }catch{
+    backendState.textContent = "offline?";
   }
 }
 
-document.getElementById("btnExplain").onclick = ()=>runAsk("explain");
-document.getElementById("btnGenQuiz").onclick = ()=>runAsk("quiz");
-document.getElementById("btnGenPrac").onclick = ()=>runAsk("practical");
+/* =========================================================
+   ✅ NEW: Generative Buttons (Explain / Quiz / Practical)
+========================================================= */
+function clearGenerativeBoxes(){
+  aiExplainBox.textContent = "Explanation will appear here…";
+  aiQuizBox.textContent = "Quiz will appear here…";
+  aiPracticalBox.textContent = "Practical will appear here…";
+}
+function suggestDefaultQuestion(){
+  if (!selectedId) return;
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  if (!t) return;
+  if (!askInput.value.trim()){
+    askInput.value = `Explain ${t.title} in a simple way for ${topicChip.textContent} students using Zimbabwean examples.`;
+  }
+}
+
+document.getElementById("btnAskExplain").onclick = async ()=>{
+  const q = askInput.value.trim();
+  if (!q) return;
+  aiExplainBox.textContent = "Thinking…";
+  const r = await callAI(q, { action:"explain" });
+  aiExplainBox.textContent = r.reply;
+};
+
+document.getElementById("btnAskQuiz").onclick = async ()=>{
+  const q = askInput.value.trim() || "Generate a quiz for this topic.";
+  aiQuizBox.textContent = "Generating quiz…";
+  const prompt = `${q}\n\nGenerate a 10-question multiple-choice quiz (A–D) for ${currentTopicLabel()}. Include answers at the end.`;
+  const r = await callAI(prompt, { action:"quiz" });
+  aiQuizBox.textContent = r.reply;
+};
+
+document.getElementById("btnAskPractical").onclick = async ()=>{
+  const q = askInput.value.trim() || "Generate a practical for this topic.";
+  aiPracticalBox.textContent = "Generating practical…";
+  const prompt = `${q}\n\nCreate a safe school practical experiment for ${currentTopicLabel()}.\nInclude: Aim, Apparatus, Chemicals (if any), Method, Results table, Safety, Conclusion.\nUse local Zimbabwe school materials when possible.`;
+  const r = await callAI(prompt, { action:"practical" });
+  aiPracticalBox.textContent = r.reply;
+};
 
 /* =========================================================
-   AI HELPER (modal chat)
+   AI HELPER (modal) — kept
 ========================================================= */
 const modalBack = document.getElementById("modalBack");
 const aiBody = document.getElementById("aiBody");
@@ -1520,9 +1468,7 @@ const aiTitle = document.getElementById("aiTitle");
 
 function openAI(){
   modalBack.style.display = "flex";
-  const list = getList();
-  const t = list.find(x=>x.id===selectedId);
-  aiTitle.textContent = t ? `Sci-Guru AI • ${topicChip.textContent} • ${t.title}` : "Sci-Guru AI Helper";
+  aiTitle.textContent = currentTopicLabel() ? `Sci-Guru AI • ${currentTopicLabel()}` : "Sci-Guru AI Helper";
   setTimeout(()=>aiInput.focus(), 50);
 }
 function closeAI(){ modalBack.style.display = "none"; }
@@ -1548,29 +1494,8 @@ async function sendAI(){
   addMsg("me", text);
   aiInput.value = "";
 
-  const payload = {
-    message: text,
-    question: text,
-    prompt: text,
-    mode,
-    topic: getSelectedTopicLabel()
-  };
-
-  try{
-    const r = await callAIBackend(payload);
-    addMsg("ai", r.reply);
-    backendPill.textContent = `Backend: LIVE (${r.ep})`;
-    backendPill.classList.remove("bad");
-    backendPill.classList.add("ok");
-  }catch(e){
-    addMsg("ai",
-`AI backend not reached.
-Set BACKEND_BASE if frontend and backend are on different domains.
-Backend must have POST /api/chat or /chat returning JSON { reply: "..." }`);
-    backendPill.textContent = "Backend: OFFLINE";
-    backendPill.classList.remove("ok");
-    backendPill.classList.add("bad");
-  }
+  const r = await callAI(text, { action:"chat" });
+  addMsg("ai", r.reply);
 }
 
 document.getElementById("aiSend").onclick = sendAI;
@@ -1581,7 +1506,8 @@ aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
 ========================================================= */
 renderLeft();
 renderRightWelcome();
-probeBackend();
+clearGenerativeBoxes();
+checkBackend();
 </script>
 
 </body>
