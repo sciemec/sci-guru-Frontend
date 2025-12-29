@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sci-Guru Tutor | Form 1–4</title>
 
+  <!-- ✅ NEW: html2pdf (for Download PDF button) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- ✅ NEW: Firebase compat scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
   <style>
     :root{
       --bg:#0b1020;
@@ -30,6 +37,9 @@
       --btnBlueBorder: rgba(59,130,246,.35);
       --okBg: rgba(16,185,129,.18);
       --warnBg: rgba(244,63,94,.18);
+
+      /* ✅ NEW: dashboard gold */
+      --zim-gold: #f59e0b;
     }
 
     *{box-sizing:border-box}
@@ -118,7 +128,7 @@
     }
 
     /* =========================
-       ✅ NEW: STATUS BAR (from new tutor.html)
+       ✅ STATUS BAR
     ========================= */
     .statusBarWrap{ padding:10px 16px 0; }
     .statusBar{
@@ -195,6 +205,32 @@
     }
     .tab:hover{transform: translateY(-1px); background: var(--pillHover)}
     .tab.active{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
+
+    /* ✅ NEW: stat cards row (added below tabs bar, not replacing tabs) */
+    .statsRow{
+      grid-column: 1 / -1;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    .stat-card{
+      border:1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(15,26,51,.55);
+      box-shadow: 0 10px 25px rgba(0,0,0,.18);
+      padding:12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      text-align:center;
+      backdrop-filter: blur(10px);
+    }
+    .stat-card b{ font-size:18px; }
+    .stat-card span{ font-size:12.5px; color: var(--muted); }
+
+    @media (max-width: 860px){
+      .statsRow{ grid-template-columns:1fr; }
+    }
 
     /* Left panel */
     .left{
@@ -366,7 +402,7 @@
     .scoreBig{ font-size:44px; font-weight:900; margin:6px 0 0; }
 
     /* =========================
-       NEW: Generative AI tools (inside tutor)
+       AI tools
     ========================= */
     .aiTools{
       margin-top: 12px;
@@ -374,6 +410,7 @@
       border-radius:16px;
       background: rgba(255,255,255,.03);
       padding:12px;
+      position: relative;
     }
     .aiTools b{display:block; font-size:13px}
     .aiTools span{display:block; color:var(--muted); font-size:12px; margin-top:4px}
@@ -394,6 +431,19 @@
       gap:10px;
       flex-wrap:wrap;
       margin-top:10px;
+    }
+
+    /* Help button */
+    #help-btn{
+      position:absolute;
+      top:10px;
+      right:10px;
+      border-radius:50%;
+      width:30px;
+      height:30px;
+      padding:0;
+      line-height:30px;
+      text-align:center;
     }
 
     /* AI modal */
@@ -451,9 +501,7 @@
       outline:none;
     }
 
-    /* =========================
-       ✅ NEW: CARDS VIEW MODAL (from new tutor.html idea)
-    ========================= */
+    /* Cards view modal */
     .cardsModal{
       width: 1120px;
       max-width: 98vw;
@@ -534,6 +582,33 @@
       gap:10px;
       justify-content:space-between;
     }
+
+    /* ✅ NEW: support float styles */
+    #support-float{
+      transition: transform 0.2s ease;
+      text-decoration: none;
+    }
+    #support-float:hover{
+      transform: scale(1.1);
+      background: #128C7E;
+    }
+    @media (max-width: 600px) {
+      #support-float {
+        padding: 10px 15px !important;
+        font-size: 12px !important;
+        bottom: 10px !important;
+        right: 10px !important;
+      }
+    }
+
+    /* ✅ NEW: print/pdf style */
+    @media print {
+      #aiResponseWrapper {
+        background: white !important;
+        color: black !important;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 
@@ -567,7 +642,7 @@
     </header>
   </div>
 
-  <!-- ✅ NEW: Status Bar -->
+  <!-- Status Bar -->
   <div class="statusBarWrap">
     <div class="statusBar">
       <div>
@@ -596,6 +671,22 @@
         </div>
       </div>
 
+      <!-- ✅ NEW: Stats cards row (added, not replacing tabs) -->
+      <div class="statsRow">
+        <div class="stat-card">
+          <b id="total-quizzes">0</b>
+          <span>Quizzes Done</span>
+        </div>
+        <div class="stat-card">
+          <b id="avg-score">0%</b>
+          <span>Avg. Score</span>
+        </div>
+        <div class="stat-card">
+          <b id="account-status" style="color: var(--zim-gold);">FREE</b>
+          <span>Account Plan</span>
+        </div>
+      </div>
+
       <!-- LEFT -->
       <aside class="left">
         <div class="leftHead">
@@ -612,8 +703,6 @@
         <div class="leftFooter">
           <button class="btn" id="btnReset">Reset Data</button>
           <button class="btn btnBlue" id="btnAI">AI Helper</button>
-
-          <!-- ✅ NEW: Cards View button (does NOT replace anything) -->
           <button class="btn" id="btnCards">Cards View</button>
 
           <div class="miniStatus" id="backendPill">Backend: <b id="backendState">checking…</b></div>
@@ -637,9 +726,13 @@
             <div id="topicBullets"></div>
             <div id="labArea"></div>
 
-            <!-- ✅ Generative AI Tools inside tutor -->
+            <!-- ✅ Generative AI Tools inside tutor (MERGED + Help + Sharing + PDF Wrapper) -->
             <div class="aiTools">
               <b>Ask Sci-Guru (Generative)</b>
+
+              <!-- ✅ NEW: Help button -->
+              <button id="help-btn" class="btn" title="Tips">?</button>
+
               <span>Ask for explanation, quiz or a practical experiment for the selected topic/unit.</span>
 
               <textarea id="askInput" placeholder="Type your question here… (e.g. Explain density using Zimbabwean examples)"></textarea>
@@ -650,9 +743,41 @@
                 <button class="btn" id="btnAskPractical">Generate Practical</button>
               </div>
 
-              <div class="notice" id="aiExplainBox" style="margin-top:10px">Explanation will appear here…</div>
+              <!-- ✅ NEW: response wrapper for PDF -->
+              <div id="aiResponseWrapper">
+                <div class="notice" id="aiExplainBox" style="margin-top:10px">Explanation will appear here…</div>
+
+                <!-- ✅ NEW: PDF footer (hidden until export) -->
+                <div id="pdf-footer" style="display: none; text-align: center; border-top: 1px solid #ccc; margin-top: 20px; padding-top: 10px; color: #555;">
+                  <p style="font-size: 12px;">
+                    <strong>Generated by Sci-Guru 🇿🇼</strong><br>
+                    Your Heritage-Based Science Tutor<br>
+                    https://sciemec.github.io
+                  </p>
+                </div>
+              </div>
+
+              <!-- ✅ NEW: post-AI actions -->
+              <div id="post-ai-actions" style="display:none; gap:10px; margin-top:10px; display:flex; flex-wrap:wrap;">
+                <button id="whatsapp-share-btn" class="btn" style="background:#25D366; color:white; border:none;">Share on WhatsApp</button>
+                <button id="download-pdf-btn" class="btn" style="background:#f44336; color:white; border:none;">Download PDF</button>
+              </div>
+
               <div class="notice" id="aiQuizBox">Quiz will appear here…</div>
               <div class="notice" id="aiPracticalBox">Practical will appear here…</div>
+
+              <!-- ✅ NEW: Pro upgrade box -->
+              <div id="premium-ad-box" style="padding: 20px; border: 2px solid var(--pillBorderActive); border-radius: 18px; background: rgba(59,130,246,0.05); margin-top: 20px;">
+                <h3 style="margin-top:0;">🚀 Unlock ZIMSEC Pro</h3>
+                <ul style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">
+                  <li>✅ Unlimited AI Questions (No daily limits)</li>
+                  <li>✅ Download full Form 1-4 Practical Handbooks</li>
+                  <li>✅ 2026 Exam Prediction Notes</li>
+                </ul>
+                <button id="paynow-btn" class="btn btnBlue" style="width: 100%; font-weight: bold;">
+                  Upgrade Now ($5/Term)
+                </button>
+              </div>
             </div>
 
           </div>
@@ -678,6 +803,20 @@
             <div class="cardBody">
               <div class="muted">Latest score for selected topic:</div>
               <div class="scoreBig" id="scoreBig">0</div>
+              <div class="muted" style="margin-top:10px;">Recent Scores (last 10):</div>
+              <div id="score-history" style="margin-top:10px;"></div>
+            </div>
+          </div>
+
+          <!-- ✅ NEW: Study vault -->
+          <div class="card" style="margin-top:16px">
+            <div class="cardHead">
+              <b>My Study Vault</b>
+              <span class="chip">Offline</span>
+            </div>
+            <div class="cardBody">
+              <p class="muted">Your recent AI explanations are cached here for offline viewing.</p>
+              <div id="saved-notes-list" class="muted"></div>
             </div>
           </div>
         </div>
@@ -706,7 +845,7 @@
     </div>
   </div>
 
-  <!-- ✅ NEW: Cards View Modal -->
+  <!-- Cards View Modal -->
   <div class="modalBack" id="cardsBack">
     <div class="modal cardsModal">
       <div class="modalHead">
@@ -716,11 +855,31 @@
           <button class="btn" id="cardsClose">Close</button>
         </div>
       </div>
-      <div class="modalBody" id="cardsBody">
-        <!-- cards injected -->
-      </div>
+      <div class="modalBody" id="cardsBody"></div>
     </div>
   </div>
+
+  <!-- ✅ NEW: Help Modal -->
+  <div class="modalBack" id="helpModalBack">
+    <div class="modal" style="width:400px;">
+      <div class="modalHead"><b>📖 Sci-Guru Tips</b></div>
+      <div class="modalBody">
+        <p class="muted">Try these topics:</p>
+        <button class="btnMini" onclick="fillPrompt('Explain how a borehole pump works')">Borehole Pumps</button>
+        <button class="btnMini" onclick="fillPrompt('How do I test for starch in maize?')">Food Tests</button>
+        <button class="btnMini" onclick="fillPrompt('Explain lab safety rules')">Safety</button>
+      </div>
+      <div class="modalFoot"><button class="btn" id="closeHelp">Close</button></div>
+    </div>
+  </div>
+
+  <!-- ✅ NEW: WhatsApp Support floating button -->
+  <a href="https://wa.me/263775285106?text=Hi%20Sci-Guru%20Support,%20I%20need%20help%20with%20my%20account%20or%20labs..."
+     id="support-float"
+     target="_blank"
+     style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+     <span>💬 Support</span>
+  </a>
 
   <div class="footer">
     <div class="footerInner">
@@ -755,6 +914,199 @@ const AI_ENDPOINTS = [
   `${BACKEND_BASE}/api/ask`,
   `${BACKEND_BASE}/ask`
 ];
+
+/* =========================================================
+   ✅ NEW: Firebase Init (YOU MUST PASTE YOUR CONFIG)
+========================================================= */
+let auth = null;
+try {
+  // TODO: PASTE YOUR FIREBASE CONFIG HERE
+  // Example:
+  // const firebaseConfig = {
+  //   apiKey: "...",
+  //   authDomain: "...",
+  //   projectId: "...",
+  //   appId: "..."
+  // };
+
+  // If user didn't paste config yet, this prevents crashing:
+  const firebaseConfig = window.firebaseConfig || null;
+
+  if (firebaseConfig && window.firebase?.initializeApp) {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+  }
+} catch (e) {
+  console.warn("Firebase not initialized:", e);
+}
+
+/* =========================================================
+   ✅ NEW: Subscription Status (business logic placeholder)
+========================================================= */
+function checkSubscriptionStatus(phoneNumber) {
+  const statusPill = document.getElementById("account-status");
+
+  // TODO: Replace with database check later
+  const premiumUsers = ["+263771111111", "+263782222222"];
+
+  const isPremium = premiumUsers.includes(phoneNumber);
+
+  if (statusPill) {
+    if (isPremium) {
+      // Fancy Pro display (your requested merged snippet)
+      statusPill.innerHTML = `
+        <span style="background: linear-gradient(90deg, #ffd700, #ffa500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">
+          ⭐ PRO MEMBER
+        </span>
+      `;
+    } else {
+      statusPill.innerText = "FREE";
+      statusPill.style.color = "#f59e0b";
+    }
+  }
+  return isPremium;
+}
+
+/* =========================================================
+   ✅ NEW: Auth UI State (Login → Logout + show phone)
+========================================================= */
+function setupAuthWatcher(){
+  if (!auth || !auth.onAuthStateChanged) return;
+
+  auth.onAuthStateChanged((user) => {
+    const loginLink = document.querySelector('a[href="login.html"]');
+    const statusText = document.querySelector(".formTitle span");
+
+    if (!loginLink) return;
+
+    if (user) {
+      const phone = user.phoneNumber || "User";
+
+      loginLink.innerText = "Logout";
+      loginLink.href = "#";
+      loginLink.onclick = () => {
+        auth.signOut().then(() => window.location.reload());
+      };
+
+      if (statusText) statusText.innerText = `Logged in as: ${phone}`;
+
+      checkSubscriptionStatus(phone);
+    } else {
+      loginLink.innerText = "Login";
+      loginLink.href = "login.html";
+      loginLink.onclick = null;
+
+      if (statusText) statusText.innerText = "Sign in to save your ZIMSEC study progress.";
+      const statusPill = document.getElementById("account-status");
+      if (statusPill) {
+        statusPill.innerText = "FREE";
+        statusPill.style.color = "#f59e0b";
+      }
+    }
+  });
+}
+
+/* =========================================================
+   ✅ NEW: Daily limit reset
+========================================================= */
+function getDailyKey(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function getDailyUsage(){
+  const today = getDailyKey();
+  const savedDay = localStorage.getItem("dailyUsageDay");
+  if (savedDay !== today) {
+    localStorage.setItem("dailyUsageDay", today);
+    localStorage.setItem("dailyUsage", "0");
+  }
+  return parseInt(localStorage.getItem("dailyUsage") || "0", 10);
+}
+function incDailyUsage(){
+  const n = getDailyUsage();
+  localStorage.setItem("dailyUsage", String(n+1));
+}
+
+/* =========================================================
+   ✅ NEW: Help Modal Logic
+========================================================= */
+function fillPrompt(text) {
+  const el = document.getElementById("askInput");
+  if (el) el.value = text;
+  document.getElementById("helpModalBack").style.display = "none";
+}
+document.getElementById("help-btn").onclick = () => document.getElementById("helpModalBack").style.display = "flex";
+document.getElementById("closeHelp").onclick = () => document.getElementById("helpModalBack").style.display = "none";
+document.getElementById("helpModalBack").addEventListener("click", (e)=>{
+  if (e.target.id === "helpModalBack") document.getElementById("helpModalBack").style.display = "none";
+});
+
+/* =========================================================
+   ✅ NEW: WhatsApp & PDF Sharing Logic
+========================================================= */
+function prepareSharing(text) {
+  const actions = document.getElementById("post-ai-actions");
+  if (actions) actions.style.display = "flex";
+
+  const waBtn = document.getElementById("whatsapp-share-btn");
+  const pdfBtn = document.getElementById("download-pdf-btn");
+
+  if (waBtn) {
+    waBtn.onclick = () => {
+      const msg = encodeURIComponent(`*Sci-Guru Notes* 🇿🇼\n\n${text}\n\nStudy more at: https://sciemec.github.io`);
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    };
+  }
+
+  if (pdfBtn) {
+    pdfBtn.onclick = () => {
+      const element = document.getElementById("aiResponseWrapper");
+      const footer = document.getElementById("pdf-footer");
+      if (!element) return;
+
+      if (footer) footer.style.display = "block";
+
+      const opt = {
+        margin: 10,
+        filename: 'Sci-Guru-Notes.pdf',
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        if (footer) footer.style.display = "none";
+      });
+    };
+  }
+}
+
+/* =========================================================
+   ✅ NEW: Paynow button logic
+========================================================= */
+document.getElementById("paynow-btn").onclick = function() {
+  const user = auth?.currentUser;
+
+  if (!user) {
+    alert("Please login first so we know which account to upgrade!");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const phoneNumber = user.phoneNumber || "";
+  const basePaynowURL = "https://www.paynow.co.zw/Payment/Link/YOUR_CUSTOM_LINK";
+  const paymentURL = `${basePaynowURL}?search=${encodeURIComponent(phoneNumber)}`;
+
+  window.open(paymentURL, '_blank');
+  alert("Once you complete the EcoCash payment, send a screenshot to our WhatsApp Support to activate your Pro account instantly!");
+};
+
+/* =========================================================
+   FORM DATA (YOUR ORIGINAL — UNCHANGED)
+========================================================= */
+/* (Your huge topics/quizzes lists continue exactly as you provided…) */
 
 /* =========================================================
    FORM 1 TOPICS (1–19)
@@ -895,43 +1247,36 @@ const form2Topics = [
     "Five-kingdom classification overview",
     "Variation and selection concepts"
   ], labs:[ { name:"Form 2 Cells Lab", file:"sim-f2-cells.html", desc:"Form 2 cells activities." } ] },
-
   { id:"f2-u2", n:2,  title:"Nutrition", sub:"Photosynthesis + digestion", bullets:[
     "Photosynthesis and leaf adaptations",
     "Food chains and food webs",
     "Digestive system processes"
   ], labs:[] },
-
   { id:"f2-u3", n:3,  title:"Respiratory", sub:"Respiration equation + lungs", bullets:[
     "glucose + oxygen → carbon dioxide + water + energy",
     "Human respiratory system parts",
     "External gas exchange"
   ], labs:[] },
-
   { id:"f2-u4", n:4,  title:"Transport Systems", sub:"Diffusion/osmosis + xylem/phloem + heart", bullets:[
     "Diffusion, osmosis and active transport",
     "Xylem and phloem functions",
     "Heart, vessels and blood components"
   ], labs:[ { name:"Transport Lab", file:"sim-f2-transport.html", desc:"Transport systems sim." } ] },
-
   { id:"f2-u5", n:5,  title:"Reproductive Systems", sub:"Plants + humans + placenta", bullets:[
     "Pollination and fertilisation",
     "Seed and fruit formation",
     "Placenta function and childbirth"
   ], labs:[ { name:"Reproduction Lab", file:"sim-f2-reproduction.html", desc:"Reproduction sim." } ] },
-
   { id:"f2-u6", n:6,  title:"Health & Disease", sub:"Disease cycle + bilharzia", bullets:[
     "Infectious vs non-infectious diseases",
     "Infectious disease cycle",
     "Bilharzia transmission and prevention"
   ], labs:[ { name:"Health & Disease Lab", file:"sim-f2-health-diseases.html", desc:"Health & disease sim." } ] },
-
   { id:"f2-u7", n:7,  title:"Separation", sub:"Revision + applications", bullets:[
     "Filtration, evaporation, magnetism, decanting",
     "Water treatment applications",
     "Agricultural processing (salt/sugar)"
   ], labs:[] },
-
   { id:"f2-u8", n:8,  title:"Matter / Concentration", sub:"Solutions, dilution, mole intro", bullets:[
     "Concentration calculations",
     "Dilution concept",
@@ -940,67 +1285,56 @@ const form2Topics = [
     { name:"Matter Lab", file:"sim-f2-matter.html", desc:"Matter concepts." },
     { name:"Concentration Lab", file:"sim-f2-concentration.html", desc:"Concentration and dilution." }
   ]},
-
   { id:"f2-u9", n:9,  title:"Acids & Bases", sub:"Neutralisation reactions", bullets:[
     "acid + base → salt + water",
     "Reactions with oxides/hydroxides/carbonates",
     "Everyday examples (antacids, bicarbonate)"
   ], labs:[ { name:"Acids & Bases Lab", file:"sim-f2-acids-bases.html", desc:"Neutralisation practice." } ] },
-
   { id:"f2-u10", n:10, title:"Industrial Processes", sub:"Electrolysis + applications", bullets:[
     "Electrolytes and ions in solution",
     "Anode and cathode (basic idea)",
     "Applications: electroplating / extraction (intro)"
   ], labs:[] },
-
   { id:"f2-u11", n:11, title:"Oxidation & Reduction", sub:"Redox (intro) and everyday examples", bullets:[
     "Oxidation vs reduction (basic idea)",
     "Rusting and corrosion prevention",
     "Simple redox examples"
   ], labs:[] },
-
   { id:"f2-u12", n:12, title:"Organic / Combustion", sub:"Complete vs incomplete combustion", bullets:[
     "Complete combustion products",
     "Incomplete combustion (CO, soot)",
     "Environmental effects"
   ], labs:[ { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." } ] },
-
   { id:"f2-u13", n:13, title:"Data Presentation", sub:"Straight line graphs", bullets:[
     "Construct straight-line graphs",
     "Direct/inverse proportionality",
     "Gradient and intercept"
   ], labs:[ { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." } ] },
-
   { id:"f2-u14", n:14, title:"Measurements", sub:"SI units + density", bullets:[
     "Convert SI units",
     "Mass vs weight",
     "Volume and density"
   ], labs:[ { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." } ] },
-
   { id:"f2-u15", n:15, title:"Forces", sub:"Resultant, moments, friction", bullets:[
     "Resultant forces",
     "Moments = force × distance",
     "Friction and reducing friction"
   ], labs:[ { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." } ] },
-
   { id:"f2-u16", n:16, title:"Machines / Levers", sub:"Simple machines", bullets:[
     "Classes of levers",
     "Fulcrum, effort, load",
     "Simple machine applications"
   ], labs:[ { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." } ] },
-
   { id:"f2-u17", n:17, title:"Energy", sub:"Work, power and simple energy ideas", bullets:[
     "Work done = force × distance",
     "Power as rate of doing work",
     "Energy transformations (intro)"
   ], labs:[] },
-
   { id:"f2-u18", n:18, title:"Magnetism & Electricity", sub:"Fields and magnets", bullets:[
     "Magnetic poles and fields",
     "Field lines investigations",
     "Magnetism applications"
   ], labs:[ { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." } ] },
-
   { id:"f2-u19", n:19, title:"Electricity", sub:"Circuits and safety (intro)", bullets:[
     "Circuit symbols and components",
     "Series vs parallel idea (intro)",
@@ -1009,7 +1343,7 @@ const form2Topics = [
 ];
 
 /* =========================================================
-   FORM 3 TOPICS (Units 1–25) — your existing links
+   FORM 3 TOPICS (Units 1–25)
 ========================================================= */
 const form3Topics = [
   { id:"f3-u01", n:1, title:'The structure & function of a cell', sub:'Specialised cells and microscopy', bullets:['Cells are the basic unit of life','Specialised cells have adaptations for their job','Microscopy: observe and draw cells'], labs:[{ name:'Sim-3 Cell Lab', file:'form3-sims/sim-3-u01-cell.html', desc:'Microscope-style cell observation + specialisation.' }] },
@@ -1035,7 +1369,7 @@ const form3Topics = [
   { id:"f3-u21", n:21, title:'Energy and heat transfer', sub:'Conduction, convection, radiation', bullets:['Conduction in solids','Convection in fluids','Radiation and surface colour'], labs:[{ name:'Sim-3 Heat Transfer', file:'form3-sims/sim-3-u21-heat.html', desc:'Heat transfer modes + surface test.' }] },
   { id:"f3-u22", n:22, title:'Magnetism and electromagnetism', sub:'Fields, motors, generators', bullets:['Fields around magnets and currents','Electromagnets: factors affecting strength','Motor/generator basic principles'], labs:[{ name:'Sim-3 Magnetism', file:'form3-sims/sim-3-u22-magnetism.html', desc:'Field lines + electromagnet strength lab.' }] },
   { id:"f3-u23", n:23, title:'Electricity and electrostatics', sub:'Charge and lightning', bullets:['Charging by friction/induction','Electroscope detects charge','Lightning as discharge'], labs:[{ name:'Sim-3 Electrostatics', file:'form3-sims/sim-3-u23-electrostatics.html', desc:'Charge interactions + electroscope activity.' }] },
-  { id:"f3-u24", n:24, title:'Ohm’s law and resistors', sub:'V–I graph & resistors', bullets:['Ohm’s law: V ∝ I (constant conditions)','Resistance R=V/I','Series resistors add'], labs:[{ name:"Sim-3 Ohm's Law", file:'form3-sims/sim-3-u24-ohms-law.html', desc:'Plot V–I and compute resistance.' }] },
+  { id:"f3-u24", n:24, title:"Ohm’s law and resistors", sub:'V–I graph & resistors', bullets:['Ohm’s law: V ∝ I (constant conditions)','Resistance R=V/I','Series resistors add'], labs:[{ name:"Sim-3 Ohm's Law", file:'form3-sims/sim-3-u24-ohms-law.html', desc:'Plot V–I and compute resistance.' }] },
   { id:"f3-u25", n:25, title:'Electrical power and energy', sub:'P=VI and kWh', bullets:['Power P=VI; energy E=Pt','kWh and electricity bills','Safety: fuse, breaker, earthing'], labs:[{ name:'Sim-3 Power', file:'form3-sims/sim-3-u25-power.html', desc:'Appliance energy + kWh calculator.' }] },
 ];
 
@@ -1061,7 +1395,6 @@ const form4Topics = [
       { name:"F4 Transport — Potometer", file:"f4-bio-4-3.html", desc:"Measure transpiration rate and test wind/light/humidity." }
     ]
   },
-
   { id:"f4-t2", n:2, title:"Chemistry (Separation, Reactivity, Acids, Industry, Organic)", sub:"Chromatography + reactivity + titration + salts + ammonia + fermentation",
     bullets:[
       "Chromatography shows mixtures in inks/dyes",
@@ -1079,7 +1412,6 @@ const form4Topics = [
       { name:"F4 Fermentation (Ethanol)", file:"f4-chem-12-1.html", desc:"Sugar + yeast fermentation produces ethanol + CO₂." }
     ]
   },
-
   { id:"f4-t3", n:3, title:"Physics (Pressure & Electricity)", sub:"Liquid pressure + manometer + hydraulics + induction",
     bullets:[
       "Liquid pressure increases with depth",
@@ -1216,17 +1548,85 @@ const quizArea = document.getElementById("quizArea");
 const scoreBig = document.getElementById("scoreBig");
 
 const backendState = document.getElementById("backendState");
-
-/* Status bar elements (NEW) */
 const backendStatusText = document.getElementById("backendStatusText");
 const statusDot = document.getElementById("statusDot");
 
-/* Generative boxes */
 const askInput = document.getElementById("askInput");
 const aiExplainBox = document.getElementById("aiExplainBox");
 const aiQuizBox = document.getElementById("aiQuizBox");
 const aiPracticalBox = document.getElementById("aiPracticalBox");
 
+/* =========================================================
+   Dashboard helpers (NEW)
+========================================================= */
+function saveQuizResult(topic, score) {
+  let history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
+  history.unshift({ topic, score, date: new Date().toLocaleDateString() });
+  localStorage.setItem('sciGuruScores', JSON.stringify(history.slice(0, 10)));
+  updateDashboardStats();
+  updateDashboardHistory();
+}
+function updateDashboardHistory() {
+  const history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
+  const scoreList = document.getElementById("score-history");
+  if (!scoreList) return;
+
+  if (history.length === 0) {
+    scoreList.innerHTML = "<div class='muted' style='padding:10px;'>No quizzes taken yet.</div>";
+    return;
+  }
+
+  scoreList.innerHTML = history.map(item => `
+    <div class="topicBtn" style="margin:8px 0;">
+      <div class="l">
+        <b>${escapeHtml(item.topic)}</b>
+        <span>${escapeHtml(item.date)}</span>
+      </div>
+      <div class="r">${escapeHtml(item.score)}%</div>
+    </div>
+  `).join('');
+}
+function updateDashboardStats() {
+  const history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
+  const total = history.length;
+  const avg = total ? Math.round(history.reduce((a,b)=>a+(b.score||0),0)/total) : 0;
+
+  const totalEl = document.getElementById("total-quizzes");
+  const avgEl = document.getElementById("avg-score");
+
+  if (totalEl) totalEl.textContent = String(total);
+  if (avgEl) avgEl.textContent = `${avg}%`;
+}
+function saveNoteToVault(text){
+  if (!text || !text.trim()) return;
+  let notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]");
+  notes.unshift({ text, at: new Date().toLocaleString(), topic: (topicHeader?.innerText || "Topic") });
+  notes = notes.slice(0, 10);
+  localStorage.setItem("sciGuruNotes", JSON.stringify(notes));
+  renderVault();
+}
+function renderVault(){
+  const box = document.getElementById("saved-notes-list");
+  if (!box) return;
+
+  const notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]");
+  if (!notes.length){
+    box.innerHTML = `<div class="muted">No saved notes yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = notes.map(n => `
+    <div class="notice" style="margin-top:10px;">
+      <b>${escapeHtml(n.topic || "Note")}</b><br>
+      <span class="muted" style="font-size:12px;">${escapeHtml(n.at || "")}</span><br><br>
+      ${escapeHtml(n.text).slice(0, 700)}${(n.text.length>700) ? "..." : ""}
+    </div>
+  `).join("");
+}
+
+/* =========================================================
+   Lists
+========================================================= */
 function getList(){
   if (mode==="f1") return form1Topics;
   if (mode==="f2") return form2Topics;
@@ -1434,6 +1834,10 @@ function renderQuizFor(id){
     });
     const percent = saveScore(id, score, qs.length);
     scoreBig.textContent = String(percent);
+
+    // ✅ NEW: save to recent history dashboard
+    saveQuizResult(topicHeader.innerText, percent);
+
     msg.innerHTML = percent>=60
       ? `<div class="notice ok">Saved: ${score}/${qs.length} (${percent}%) ✅</div>`
       : `<div class="notice warn">Saved: ${score}/${qs.length} (${percent}%) ⚠️ Try again.</div>`;
@@ -1471,11 +1875,17 @@ document.getElementById("btnReset").onclick = ()=>{
   toRemove.forEach(k=>localStorage.removeItem(k));
   scoreBig.textContent = "0";
   if (selectedId) renderQuizFor(selectedId);
+
+  // ✅ NEW reset dashboards too
+  localStorage.removeItem("sciGuruScores");
+  localStorage.removeItem("sciGuruNotes");
+  updateDashboardStats();
+  updateDashboardHistory();
+  renderVault();
 };
 
 /* =========================================================
-   ✅ AI REQUEST CORE (UPDATED to match your backend /api/chat)
-   Your backend expects: mode, form, chapter, topic, question
+   AI request core (kept)
 ========================================================= */
 function currentFormLabel(){
   return (
@@ -1525,14 +1935,12 @@ async function fetchWithTimeout(url, options={}, ms=25000){
 async function callAI(message, extra = {}){
   const { chapter, topic } = currentTopicInfo();
 
-  /* ✅ Payload now matches YOUR backend code */
   const payload = {
     mode: extra.action ? String(extra.action).toUpperCase() : "Tutor",
     form: currentFormLabel(),
     chapter: chapter || "",
     topic: topic || "General",
     question: message || "",
-    /* Keep your old fields too (harmless), for backward-compat */
     message,
     action: extra.action || "chat"
   };
@@ -1550,8 +1958,6 @@ async function callAI(message, extra = {}){
       const ct = (res.headers.get("content-type") || "").toLowerCase();
       if (ct.includes("application/json")){
         const data = await res.json();
-
-        /* ✅ Your backend returns { text: "..." } */
         const reply =
           data.text ||
           data.reply ||
@@ -1565,9 +1971,7 @@ async function callAI(message, extra = {}){
         const text = await res.text();
         if (text && text.trim()) return { ok:true, reply: text.trim(), endpoint: ep };
       }
-    }catch(e){
-      // try next endpoint
-    }
+    }catch(e){}
   }
 
   return {
@@ -1581,8 +1985,84 @@ async function callAI(message, extra = {}){
 }
 
 /* =========================================================
-   ✅ NEW: Health check + Status bar update
-   Tries /api/health first, then /
+   ✅ UPDATED AI BUTTON LOGIC (with auth + limit + sharing)
+========================================================= */
+async function callSciGuru(actionType) {
+  const user = auth?.currentUser;
+
+  // 1) Force login (business)
+  if (!user) {
+    alert("Please login with your phone number to ask Sci-Guru a question!");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const phone = user.phoneNumber || "";
+  const isPremium = checkSubscriptionStatus(phone);
+
+  // 2) Daily limit for Free users
+  const dailyUsageCount = getDailyUsage();
+  if (!isPremium && dailyUsageCount >= 2) {
+    aiExplainBox.innerHTML = `
+      <div class="warn" style="padding:15px; border-radius:12px;">
+        <b>Daily Limit Reached</b><br>
+        You've used your 2 free questions for today. Upgrade to Pro for unlimited access.
+      </div>
+    `;
+    return;
+  }
+
+  const userText = (askInput?.value || "").trim();
+  if (!userText) {
+    aiExplainBox.innerHTML = "❌ Please enter a question first.";
+    return;
+  }
+
+  // Loading state
+  if (actionType === "quiz") aiQuizBox.textContent = "⏳ Sci-Guru is generating your quiz...";
+  else if (actionType === "practical") aiPracticalBox.textContent = "⏳ Sci-Guru is generating your practical...";
+  else aiExplainBox.textContent = "⏳ Sci-Guru is thinking... (If server is waking up, this may take a minute).";
+
+  try {
+    // Use your robust fallback callAI (kept) so it still works even if endpoint changes
+    let prompt = userText;
+
+    if (actionType === "quiz") {
+      prompt = `${userText}\n\nGenerate a 10-question multiple-choice quiz (A–D) for ${currentTopicLabel()}. Include answers at the end.`;
+    } else if (actionType === "practical") {
+      prompt = `${userText}\n\nCreate a safe school practical experiment for ${currentTopicLabel()}.\nInclude: Aim, Apparatus, Chemicals (if any), Method, Results table, Safety, Conclusion.\nUse local Zimbabwe school materials when possible.`;
+    }
+
+    const r = await callAI(prompt, { action: actionType });
+
+    if (actionType === "quiz") aiQuizBox.textContent = r.reply;
+    else if (actionType === "practical") aiPracticalBox.textContent = r.reply;
+    else aiExplainBox.textContent = r.reply;
+
+    // Save & enable sharing
+    prepareSharing(r.reply);
+
+    // Save to vault (explain only)
+    if (actionType === "explain" || actionType === "chat") {
+      saveNoteToVault(r.reply);
+    }
+
+    // After success, increment counter if free
+    if (!isPremium) incDailyUsage();
+
+  } catch (err) {
+    console.error("Sci-Guru Error:", err);
+    aiExplainBox.textContent = "❌ Connection Error. Please try again in a few seconds.";
+  }
+}
+
+// Attach listeners (override old ones safely)
+document.getElementById("btnAskExplain").addEventListener("click", () => callSciGuru("explain"));
+document.getElementById("btnAskQuiz").addEventListener("click", () => callSciGuru("quiz"));
+document.getElementById("btnAskPractical").addEventListener("click", () => callSciGuru("practical"));
+
+/* =========================================================
+   Backend health check (kept)
 ========================================================= */
 function setStatus(ok, text){
   backendState.textContent = ok ? "LIVE" : "offline?";
@@ -1593,7 +2073,6 @@ async function checkBackend(){
   backendState.textContent = "waking…";
   setStatus(false, "Waking up AI Engine...");
 
-  // Try /api/health (like your new code). If it doesn't exist, fallback to /
   try{
     const health = await fetchWithTimeout(`${BACKEND_BASE}/api/health`, { method:"GET" }, 12000);
     if (health && health.ok){
@@ -1615,12 +2094,16 @@ async function checkBackend(){
 }
 
 /* =========================================================
-   ✅ NEW: Generative Buttons (Explain / Quiz / Practical)
+   Generative helpers (kept)
 ========================================================= */
 function clearGenerativeBoxes(){
   aiExplainBox.textContent = "Explanation will appear here…";
   aiQuizBox.textContent = "Quiz will appear here…";
   aiPracticalBox.textContent = "Practical will appear here…";
+
+  // hide share buttons until first response
+  const actions = document.getElementById("post-ai-actions");
+  if (actions) actions.style.display = "none";
 }
 function suggestDefaultQuestion(){
   if (!selectedId) return;
@@ -1631,30 +2114,6 @@ function suggestDefaultQuestion(){
     askInput.value = `Explain ${t.title} in a simple way for ${topicChip.textContent} students using Zimbabwean examples.`;
   }
 }
-
-document.getElementById("btnAskExplain").onclick = async ()=>{
-  const q = askInput.value.trim();
-  if (!q) return;
-  aiExplainBox.textContent = "Thinking…";
-  const r = await callAI(q, { action:"explain" });
-  aiExplainBox.textContent = r.reply;
-};
-
-document.getElementById("btnAskQuiz").onclick = async ()=>{
-  const q = askInput.value.trim() || "Generate a quiz for this topic.";
-  aiQuizBox.textContent = "Generating quiz…";
-  const prompt = `${q}\n\nGenerate a 10-question multiple-choice quiz (A–D) for ${currentTopicLabel()}. Include answers at the end.`;
-  const r = await callAI(prompt, { action:"quiz" });
-  aiQuizBox.textContent = r.reply;
-};
-
-document.getElementById("btnAskPractical").onclick = async ()=>{
-  const q = askInput.value.trim() || "Generate a practical for this topic.";
-  aiPracticalBox.textContent = "Generating practical…";
-  const prompt = `${q}\n\nCreate a safe school practical experiment for ${currentTopicLabel()}.\nInclude: Aim, Apparatus, Chemicals (if any), Method, Results table, Safety, Conclusion.\nUse local Zimbabwe school materials when possible.`;
-  const r = await callAI(prompt, { action:"practical" });
-  aiPracticalBox.textContent = r.reply;
-};
 
 /* =========================================================
    AI HELPER (modal) — kept
@@ -1691,16 +2150,14 @@ async function sendAI(){
   if (!text) return;
   addMsg("me", text);
   aiInput.value = "";
-
   const r = await callAI(text, { action:"chat" });
   addMsg("ai", r.reply);
 }
-
 document.getElementById("aiSend").onclick = sendAI;
 aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
 
 /* =========================================================
-   ✅ NEW: Cards View (grid of topic cards like new tutor.html)
+   Cards View (kept)
 ========================================================= */
 const cardsBack = document.getElementById("cardsBack");
 const cardsBody = document.getElementById("cardsBody");
@@ -1785,14 +2242,26 @@ function cardsAskAI(id){
 }
 
 /* =========================================================
+   ✅ NEW: Auto wake Render on load
+========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+  fetch(`${BACKEND_BASE}/api/health`)
+    .then(() => console.log("Sci-Guru Engine: Waking up..."))
+    .catch(() => console.log("Sci-Guru Engine: Sleeping..."));
+});
+
+/* =========================================================
    INIT
 ========================================================= */
 renderLeft();
 renderRightWelcome();
 clearGenerativeBoxes();
 checkBackend();
+setupAuthWatcher();
+updateDashboardStats();
+updateDashboardHistory();
+renderVault();
 </script>
 
 </body>
 </html>
-
