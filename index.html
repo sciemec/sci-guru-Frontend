@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sci-Guru Tutor | Form 1–4</title>
 
-  <!-- ✅ NEW: html2pdf (for Download PDF button) -->
+  <!-- ✅ PDF Download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  <!-- ✅ NEW: Firebase compat scripts -->
+  <!-- ✅ Firebase (Auth + Messaging) -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+
+  <!-- ✅ Chart.js (Teacher Portal) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root{
@@ -38,7 +42,6 @@
       --okBg: rgba(16,185,129,.18);
       --warnBg: rgba(244,63,94,.18);
 
-      /* ✅ NEW: dashboard gold */
       --zim-gold: #f59e0b;
     }
 
@@ -128,7 +131,7 @@
     }
 
     /* =========================
-       ✅ STATUS BAR
+       STATUS BAR
     ========================= */
     .statusBarWrap{ padding:10px 16px 0; }
     .statusBar{
@@ -205,32 +208,6 @@
     }
     .tab:hover{transform: translateY(-1px); background: var(--pillHover)}
     .tab.active{ background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.35); }
-
-    /* ✅ NEW: stat cards row (added below tabs bar, not replacing tabs) */
-    .statsRow{
-      grid-column: 1 / -1;
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-    }
-    .stat-card{
-      border:1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(15,26,51,.55);
-      box-shadow: 0 10px 25px rgba(0,0,0,.18);
-      padding:12px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      text-align:center;
-      backdrop-filter: blur(10px);
-    }
-    .stat-card b{ font-size:18px; }
-    .stat-card span{ font-size:12.5px; color: var(--muted); }
-
-    @media (max-width: 860px){
-      .statsRow{ grid-template-columns:1fr; }
-    }
 
     /* Left panel */
     .left{
@@ -401,16 +378,13 @@
     .warn{background: var(--warnBg); border-color: rgba(244,63,94,.28)}
     .scoreBig{ font-size:44px; font-weight:900; margin:6px 0 0; }
 
-    /* =========================
-       AI tools
-    ========================= */
+    /* AI tools */
     .aiTools{
       margin-top: 12px;
       border:1px solid var(--border);
       border-radius:16px;
       background: rgba(255,255,255,.03);
       padding:12px;
-      position: relative;
     }
     .aiTools b{display:block; font-size:13px}
     .aiTools span{display:block; color:var(--muted); font-size:12px; margin-top:4px}
@@ -433,20 +407,7 @@
       margin-top:10px;
     }
 
-    /* Help button */
-    #help-btn{
-      position:absolute;
-      top:10px;
-      right:10px;
-      border-radius:50%;
-      width:30px;
-      height:30px;
-      padding:0;
-      line-height:30px;
-      text-align:center;
-    }
-
-    /* AI modal */
+    /* Modals */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.55);
@@ -581,27 +542,45 @@
       flex-wrap:wrap;
       gap:10px;
       justify-content:space-between;
+      align-items:center;
     }
 
-    /* ✅ NEW: support float styles */
-    #support-float{
+    /* Support float button */
+    #support-float {
       transition: transform 0.2s ease;
       text-decoration: none;
     }
-    #support-float:hover{
+    #support-float:hover {
       transform: scale(1.1);
       background: #128C7E;
     }
     @media (max-width: 600px) {
       #support-float {
-        padding: 10px 15px !important;
-        font-size: 12px !important;
-        bottom: 10px !important;
-        right: 10px !important;
+        padding: 10px 15px;
+        font-size: 12px;
+        bottom: 10px;
+        right: 10px;
       }
     }
 
-    /* ✅ NEW: print/pdf style */
+    /* Dashboard mini styles */
+    .statRow{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top: 10px;
+    }
+    .stat-card{
+      border:1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+      text-align:center;
+    }
+    .stat-card b{display:block; font-size:18px; font-weight:900}
+    .stat-card span{display:block; font-size:12px; color:var(--muted); margin-top:4px}
+
+    /* Print/PDF */
     @media print {
       #aiResponseWrapper {
         background: white !important;
@@ -609,284 +588,424 @@
         padding: 20px;
       }
     }
+
+    /* =========================
+       ✅ Single-file pages router
+    ========================= */
+    .pageSection { display:none; }
+    .pageSection.active { display:block; }
   </style>
 </head>
 
 <body>
 
-  <!-- TOP HEADER -->
-  <div class="siteHeaderWrap">
-    <header class="siteHeader">
-      <div class="brand">
-        <div class="logoBox" id="logoBox">
-          <img src="images/lec-logo.jpg" alt="LEC Biotec Logo"
-               onerror="this.remove(); document.getElementById('logoBox').innerHTML='<div class=&quot;logoFallback&quot;>SG</div>';"/>
+  <!-- =========================
+       PAGE: TUTOR (MAIN)
+  ========================= -->
+  <div id="page-tutor" class="pageSection active">
+
+    <!-- TOP HEADER -->
+    <div class="siteHeaderWrap">
+      <header class="siteHeader">
+        <div class="brand">
+          <div class="logoBox" id="logoBox">
+            <img src="images/lec-logo.jpg" alt="LEC Biotec Logo"
+              onerror="this.remove(); document.getElementById('logoBox').innerHTML='<div class=&quot;logoFallback&quot;>SG</div>';"/>
+          </div>
+          <div class="brandText">
+            <b>Sci-Guru</b>
+            <span>AI Science Tutor • ZIMSEC / Heritage-Based</span>
+          </div>
         </div>
-        <div class="brandText">
-          <b>Sci-Guru</b>
-          <span>AI Science Tutor • ZIMSEC / Heritage-Based</span>
-        </div>
-      </div>
 
-      <button class="navToggle" id="navToggle">Menu</button>
+        <button class="navToggle" id="navToggle">Menu</button>
 
-      <nav class="nav" id="nav">
-        <a href="index.html">Home</a>
-        <a class="active" href="tutor.html">Tutor</a>
-        <a href="labs-hub.html">Labs</a>
-        <a href="library.html">Library</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="about.html">About</a>
-        <a href="login.html">Login</a>
-      </nav>
-    </header>
-  </div>
+        <nav class="nav" id="nav">
+          <a href="index.html">Home</a>
+          <a class="active" href="tutor.html">Tutor</a>
+          <a href="labs-hub.html">Labs</a>
+          <a href="library.html">Library</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="about.html">About</a>
+          <a href="login.html">Login</a>
 
-  <!-- Status Bar -->
-  <div class="statusBarWrap">
-    <div class="statusBar">
-      <div>
-        <span class="statusDot" id="statusDot"></span>
-        System Status: <b id="backendStatusText">Waking up AI Engine...</b>
-      </div>
-      <div class="muted">Tip: Render free tier may sleep — first request can be slow.</div>
+          <!-- ✅ extra nav entries for single-file routing -->
+          <a href="teachers.html" data-nav="teachers">Teacher Portal</a>
+          <a href="terms.html" data-nav="terms">Terms</a>
+          <a href="#maintenance" data-nav="maintenance">Maintenance</a>
+        </nav>
+      </header>
     </div>
-  </div>
 
-  <div class="appWrap">
-    <div class="app">
-
-      <!-- Form tabs bar -->
-      <div class="formTabsBar">
-        <div class="formTitle">
-          <b>Sci-Guru Tutor</b>
-          <span>Pick a form, then choose a topic/unit. Quizzes save progress on this device.</span>
-        </div>
-        <div class="tabs">
-          <button class="tab active" id="tabF1">Form 1</button>
-          <button class="tab" id="tabF2">Form 2</button>
-          <button class="tab" id="tabF3">Form 3</button>
-          <button class="tab" id="tabF4">Form 4</button>
-          <button class="tab" id="tabLabs">Labs Hub</button>
-        </div>
-      </div>
-
-      <!-- ✅ NEW: Stats cards row (added, not replacing tabs) -->
-      <div class="statsRow">
-        <div class="stat-card">
-          <b id="total-quizzes">0</b>
-          <span>Quizzes Done</span>
-        </div>
-        <div class="stat-card">
-          <b id="avg-score">0%</b>
-          <span>Avg. Score</span>
-        </div>
-        <div class="stat-card">
-          <b id="account-status" style="color: var(--zim-gold);">FREE</b>
-          <span>Account Plan</span>
-        </div>
-      </div>
-
-      <!-- LEFT -->
-      <aside class="left">
-        <div class="leftHead">
-          <b id="leftTitle">Form 1 Topics</b>
-          <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
-        </div>
-
-        <div class="searchRow">
-          <input id="searchBox" placeholder="Search topics..." />
-        </div>
-
-        <div class="topicList" id="topicList"></div>
-
-        <div class="leftFooter">
-          <button class="btn" id="btnReset">Reset Data</button>
-          <button class="btn btnBlue" id="btnAI">AI Helper</button>
-          <button class="btn" id="btnCards">Cards View</button>
-
-          <div class="miniStatus" id="backendPill">Backend: <b id="backendState">checking…</b></div>
-        </div>
-      </aside>
-
-      <!-- RIGHT -->
-      <section class="right">
-
-        <div class="card">
-          <div class="cardHead">
-            <b id="topicHeader">Welcome</b>
-            <span class="chip" id="topicChip">Overview</span>
-          </div>
-
-          <div class="cardBody">
-            <div class="muted" id="topicIntro">
-              Use the tabs to switch between Form 1–4. Labs Hub shows all virtual labs in one place.
-            </div>
-
-            <div id="topicBullets"></div>
-            <div id="labArea"></div>
-
-            <!-- ✅ Generative AI Tools inside tutor (MERGED + Help + Sharing + PDF Wrapper) -->
-            <div class="aiTools">
-              <b>Ask Sci-Guru (Generative)</b>
-
-              <!-- ✅ NEW: Help button -->
-              <button id="help-btn" class="btn" title="Tips">?</button>
-
-              <span>Ask for explanation, quiz or a practical experiment for the selected topic/unit.</span>
-
-              <textarea id="askInput" placeholder="Type your question here… (e.g. Explain density using Zimbabwean examples)"></textarea>
-
-              <div class="aiBtns">
-                <button class="btn btnBlue" id="btnAskExplain">Ask / Explain</button>
-                <button class="btn" id="btnAskQuiz">Generate Quiz</button>
-                <button class="btn" id="btnAskPractical">Generate Practical</button>
-              </div>
-
-              <!-- ✅ NEW: response wrapper for PDF -->
-              <div id="aiResponseWrapper">
-                <div class="notice" id="aiExplainBox" style="margin-top:10px">Explanation will appear here…</div>
-
-                <!-- ✅ NEW: PDF footer (hidden until export) -->
-                <div id="pdf-footer" style="display: none; text-align: center; border-top: 1px solid #ccc; margin-top: 20px; padding-top: 10px; color: #555;">
-                  <p style="font-size: 12px;">
-                    <strong>Generated by Sci-Guru 🇿🇼</strong><br>
-                    Your Heritage-Based Science Tutor<br>
-                    https://sciemec.github.io
-                  </p>
-                </div>
-              </div>
-
-              <!-- ✅ NEW: post-AI actions -->
-              <div id="post-ai-actions" style="display:none; gap:10px; margin-top:10px; display:flex; flex-wrap:wrap;">
-                <button id="whatsapp-share-btn" class="btn" style="background:#25D366; color:white; border:none;">Share on WhatsApp</button>
-                <button id="download-pdf-btn" class="btn" style="background:#f44336; color:white; border:none;">Download PDF</button>
-              </div>
-
-              <div class="notice" id="aiQuizBox">Quiz will appear here…</div>
-              <div class="notice" id="aiPracticalBox">Practical will appear here…</div>
-
-              <!-- ✅ NEW: Pro upgrade box -->
-              <div id="premium-ad-box" style="padding: 20px; border: 2px solid var(--pillBorderActive); border-radius: 18px; background: rgba(59,130,246,0.05); margin-top: 20px;">
-                <h3 style="margin-top:0;">🚀 Unlock ZIMSEC Pro</h3>
-                <ul style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">
-                  <li>✅ Unlimited AI Questions (No daily limits)</li>
-                  <li>✅ Download full Form 1-4 Practical Handbooks</li>
-                  <li>✅ 2026 Exam Prediction Notes</li>
-                </ul>
-                <button id="paynow-btn" class="btn btnBlue" style="width: 100%; font-weight: bold;">
-                  Upgrade Now ($5/Term)
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
+    <!-- Status Bar -->
+    <div class="statusBarWrap">
+      <div class="statusBar">
         <div>
+          <span class="statusDot" id="statusDot"></span>
+          System Status: <b id="backendStatusText">Waking up AI Engine...</b>
+        </div>
+        <div class="muted">Tip: Render free tier may sleep — first request can be slow.</div>
+      </div>
+    </div>
+
+    <div class="appWrap">
+      <div class="app">
+
+        <!-- Form tabs bar -->
+        <div class="formTabsBar">
+          <div class="formTitle">
+            <b>Sci-Guru Tutor</b>
+            <span>Pick a form, then choose a topic/unit. Quizzes save progress on this device.</span>
+          </div>
+          <div class="tabs">
+            <button class="tab active" id="tabF1">Form 1</button>
+            <button class="tab" id="tabF2">Form 2</button>
+            <button class="tab" id="tabF3">Form 3</button>
+            <button class="tab" id="tabF4">Form 4</button>
+            <button class="tab" id="tabLabs">Labs Hub</button>
+          </div>
+        </div>
+
+        <!-- LEFT -->
+        <aside class="left">
+          <div class="leftHead">
+            <b id="leftTitle">Form 1 Topics</b>
+            <span id="leftSub">Click a topic to view overview, quiz and lab.</span>
+          </div>
+
+          <div class="searchRow">
+            <input id="searchBox" placeholder="Search topics..." />
+          </div>
+
+          <div class="topicList" id="topicList"></div>
+
+          <div class="leftFooter">
+            <button class="btn" id="btnReset">Reset Data</button>
+            <button class="btn btnBlue" id="btnAI">AI Helper</button>
+            <button class="btn" id="btnCards">Cards View</button>
+            <div class="miniStatus" id="backendPill">Backend: <b id="backendState">checking…</b></div>
+          </div>
+        </aside>
+
+        <!-- RIGHT -->
+        <section class="right">
+
           <div class="card">
             <div class="cardHead">
-              <b>Topic Quiz</b>
-              <span class="chip" id="quizChip">Saved</span>
+              <b id="topicHeader">Welcome</b>
+              <span class="chip" id="topicChip">Overview</span>
             </div>
+
             <div class="cardBody">
-              <div class="muted" id="quizIntro">Select a topic to load a quiz.</div>
-              <div id="quizArea"></div>
+              <div class="muted" id="topicIntro">
+                Use the tabs to switch between Form 1–4. Labs Hub shows all virtual labs in one place.
+              </div>
+
+              <div id="topicBullets"></div>
+              <div id="labArea"></div>
+
+              <!-- Generative AI Tools inside tutor -->
+              <div class="aiTools">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                  <b>Ask Sci-Guru (Generative)</b>
+                  <button id="help-btn" class="btn" style="border-radius:50%; width:30px; height:30px; padding:0;">?</button>
+                </div>
+
+                <span>Ask for explanation, quiz or a practical experiment for the selected topic/unit.</span>
+
+                <textarea id="askInput" placeholder="Type your question here… (e.g. Explain density using Zimbabwean examples)"></textarea>
+
+                <div class="aiBtns">
+                  <button class="btn btnBlue" id="btnAskExplain">Ask / Explain</button>
+                  <button class="btn" id="btnAskQuiz">Generate Quiz</button>
+                  <button class="btn" id="btnAskPractical">Generate Practical</button>
+                </div>
+
+                <div id="aiResponseWrapper">
+                  <div class="notice" id="aiExplainBox" style="margin-top:10px">Explanation will appear here…</div>
+
+                  <div id="pdf-footer" style="display: none; text-align: center; border-top: 1px solid #ccc; margin-top: 20px; padding-top: 10px; color: #555;">
+                    <p style="font-size: 12px;"><strong>Generated by Sci-Guru 🇿🇼</strong><br>Your Heritage-Based Science Tutor<br>https://sciemec.github.io</p>
+                  </div>
+                </div>
+
+                <div id="post-ai-actions" style="display:none; gap:10px; margin-top:10px;">
+                  <button id="whatsapp-share-btn" class="btn" style="background:#25D366; color:white; border:none;">Share on WhatsApp</button>
+                  <button id="download-pdf-btn" class="btn" style="background:#f44336; color:white; border:none;">Download PDF</button>
+                </div>
+
+                <div class="notice" id="aiQuizBox">Quiz will appear here…</div>
+                <div class="notice" id="aiPracticalBox">Practical will appear here…</div>
+
+                <!-- Premium upsell -->
+                <div id="premium-ad-box" style="padding: 20px; border: 2px solid var(--pillBorderActive); border-radius: 18px; background: rgba(59,130,246,0.05); margin-top: 20px;">
+                  <h3 style="margin-top:0;">🚀 Unlock ZIMSEC Pro</h3>
+                  <ul style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">
+                    <li>✅ Unlimited AI Questions (No daily limits)</li>
+                    <li>✅ Download full Form 1-4 Practical Handbooks</li>
+                    <li>✅ 2026 Exam Prediction Notes</li>
+                  </ul>
+                  <button id="paynow-btn" class="btn btnBlue" style="width: 100%; font-weight: bold;">
+                    Upgrade Now ($5/Term)
+                  </button>
+                </div>
+
+              </div>
             </div>
           </div>
 
-          <div class="card" style="margin-top:16px">
-            <div class="cardHead">
-              <b>Your Score</b>
-              <span class="chip" id="scoreChip">Quiz Score</span>
+          <div>
+            <div class="card">
+              <div class="cardHead">
+                <b>Topic Quiz</b>
+                <span class="chip" id="quizChip">Saved</span>
+              </div>
+              <div class="cardBody">
+                <div class="muted" id="quizIntro">Select a topic to load a quiz.</div>
+                <div id="quizArea"></div>
+              </div>
             </div>
-            <div class="cardBody">
-              <div class="muted">Latest score for selected topic:</div>
-              <div class="scoreBig" id="scoreBig">0</div>
-              <div class="muted" style="margin-top:10px;">Recent Scores (last 10):</div>
-              <div id="score-history" style="margin-top:10px;"></div>
+
+            <div class="card" style="margin-top:16px">
+              <div class="cardHead">
+                <b>Your Score</b>
+                <span class="chip" id="scoreChip">Quiz Score</span>
+              </div>
+              <div class="cardBody">
+                <div class="muted">Latest score for selected topic:</div>
+                <div class="scoreBig" id="scoreBig">0</div>
+
+                <div class="statRow">
+                  <div class="stat-card">
+                    <b id="total-quizzes">0</b>
+                    <span>Quizzes Done</span>
+                  </div>
+                  <div class="stat-card">
+                    <b id="avg-score">0%</b>
+                    <span>Avg. Score</span>
+                  </div>
+                  <div class="stat-card">
+                    <b id="account-status" style="color: var(--zim-gold);">FREE</b>
+                    <span>Account Plan</span>
+                  </div>
+                </div>
+
+                <div style="margin-top:12px;">
+                  <div class="muted" style="margin-bottom:8px;">Recent Scores</div>
+                  <div id="score-history" class="topicList" style="padding:0; max-height:200px;"></div>
+                </div>
+
+                <div style="margin-top:12px;">
+                  <div class="muted" style="margin-bottom:8px;">My Study Vault (Saved AI notes)</div>
+                  <div id="saved-notes-list" class="topicList" style="padding:0; max-height:220px;"></div>
+                </div>
+
+              </div>
             </div>
           </div>
 
-          <!-- ✅ NEW: Study vault -->
-          <div class="card" style="margin-top:16px">
-            <div class="cardHead">
-              <b>My Study Vault</b>
-              <span class="chip">Offline</span>
+        </section>
+      </div>
+    </div>
+
+    <!-- AI Modal -->
+    <div class="modalBack" id="modalBack">
+      <div class="modal">
+        <div class="modalHead">
+          <b id="aiTitle">Sci-Guru AI Helper</b>
+          <div style="display:flex; gap:10px;">
+            <button class="btn" id="aiClear">Clear</button>
+            <button class="btn" id="aiClose">Close</button>
+          </div>
+        </div>
+        <div class="modalBody" id="aiBody">
+          <div class="msg ai">Ask me about the selected topic. If AI doesn’t respond, check backend route + CORS.</div>
+        </div>
+        <div class="modalFoot">
+          <input id="aiInput" placeholder="Type your question..." />
+          <button class="btn btnBlue" id="aiSend">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards View Modal -->
+    <div class="modalBack" id="cardsBack">
+      <div class="modal cardsModal">
+        <div class="modalHead">
+          <b id="cardsTitle">Cards View</b>
+          <div style="display:flex; gap:10px;">
+            <button class="btn" id="cardsRefresh">Refresh</button>
+            <button class="btn" id="cardsClose">Close</button>
+          </div>
+        </div>
+        <div class="modalBody" id="cardsBody"></div>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modalBack" id="helpModalBack">
+      <div class="modal" style="width:400px;">
+        <div class="modalHead">
+          <b>📖 Sci-Guru Tips</b>
+        </div>
+        <div class="modalBody">
+          <p class="muted" style="margin-top:0;">Try these prompts:</p>
+          <button class="btnMini" onclick="fillPrompt('Explain how a borehole pump works')">Borehole Pumps</button>
+          <button class="btnMini" onclick="fillPrompt('How do I test for starch in maize?')">Food Tests</button>
+          <button class="btnMini" onclick="fillPrompt('Explain lab safety rules')">Safety</button>
+        </div>
+        <div class="modalFoot">
+          <button class="btn" id="closeHelp">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Support Floating Button -->
+    <a href="https://wa.me/263XXXXXXXXX?text=Hi%20Sci-Guru%20Support,%20I%20need%20help%20with..."
+      id="support-float"
+      target="_blank"
+      style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+      <span>💬 Support</span>
+    </a>
+
+    <div class="footer">
+      <div class="footerInner">
+        <div>© 2025 LEC Biotec • Harare, Zimbabwe</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="terms.html" data-nav="terms" style="text-decoration:underline;">Terms</a>
+          <a href="teachers.html" data-nav="teachers" style="text-decoration:underline;">Teacher Portal</a>
+          <a href="#pro-success" data-nav="pro-success" style="text-decoration:underline;">Pro Success</a>
+          <span>Tip: Keep filenames lowercase (e.g. <b>sim-separation.html</b>) to avoid 404 errors.</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-tutor -->
+
+
+  <!-- =========================
+       PAGE: TEACHER PORTAL
+  ========================= -->
+  <section class="pageSection" id="page-teachers" style="padding:16px;">
+    <div class="card" style="max-width:1200px; margin:0 auto;">
+      <div class="cardHead">
+        <b>Teacher Command Centre 🏛️</b>
+        <span class="chip">Pro Tools</span>
+      </div>
+      <div class="cardBody">
+
+        <div class="card" style="margin-bottom:16px;">
+          <div class="cardHead"><b>📸 ZIMSEC Script Marker (Pro)</b></div>
+          <div class="cardBody">
+            <video id="camera-stream" autoplay playsinline style="width:100%; display:none; border-radius:10px;"></video>
+
+            <div class="aiBtns" style="margin-top:10px;">
+              <button id="start-camera" class="btn btnBlue">Launch Camera</button>
+              <button id="capture-btn" class="btn" style="display:none; background:#10b981;">Capture & Mark</button>
             </div>
-            <div class="cardBody">
-              <p class="muted">Your recent AI explanations are cached here for offline viewing.</p>
-              <div id="saved-notes-list" class="muted"></div>
+
+            <div id="grading-result" class="notice" style="display:none; margin-top:10px;">Analyzing...</div>
+            <div class="muted" style="margin-top:10px; font-size:12px;">
+              Note: Marking logic can be wired to your backend later. For now, this is the Teacher UI shell.
             </div>
           </div>
         </div>
 
-      </section>
-    </div>
-  </div>
+        <div class="card">
+          <div class="cardHead"><b>Class Performance Dashboard</b></div>
+          <div class="cardBody">
+            <canvas id="classPerformanceChart" style="max-height:320px;"></canvas>
 
-  <!-- AI Modal -->
-  <div class="modalBack" id="modalBack">
-    <div class="modal">
-      <div class="modalHead">
-        <b id="aiTitle">Sci-Guru AI Helper</b>
-        <div style="display:flex; gap:10px;">
-          <button class="btn" id="aiClear">Clear</button>
-          <button class="btn" id="aiClose">Close</button>
+            <div class="notice" style="margin-top:12px;">
+              Sample data is shown by default. We can connect it to Firebase/your DB later.
+            </div>
+
+            <div style="margin-top:14px;">
+              <button class="btn" data-nav="tutor">← Back to Tutor</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================
+       PAGE: TERMS
+  ========================= -->
+  <section class="pageSection" id="page-terms" style="padding:16px;">
+    <div class="card" style="max-width:900px; margin:0 auto;">
+      <div class="cardHead"><b>Terms & Conditions</b><span class="chip">Dec 2025</span></div>
+      <div class="cardBody" style="line-height:1.6;">
+        <p><b>Last Updated:</b> Dec 2025</p>
+
+        <h4 style="margin-bottom:6px;">1. Affiliation</h4>
+        <p>Sci-Guru is an independent educational platform and is not affiliated with the Zimbabwe School Examinations Council (ZIMSEC).</p>
+
+        <h4 style="margin-bottom:6px;">2. Fair Dealing</h4>
+        <p>Content is provided for educational instruction and research purposes.</p>
+
+        <h4 style="margin-bottom:6px;">3. Payments</h4>
+        <p>EcoCash payments for Pro features are processed via Paynow. Subscriptions are per academic term.</p>
+
+        <div style="margin-top:14px;">
+          <button class="btn" data-nav="tutor">← Back to Tutor</button>
         </div>
       </div>
-      <div class="modalBody" id="aiBody">
-        <div class="msg ai">Ask me about the selected topic. If AI doesn’t respond, check backend route + CORS.</div>
-      </div>
-      <div class="modalFoot">
-        <input id="aiInput" placeholder="Type your question..." />
-        <button class="btn btnBlue" id="aiSend">Send</button>
-      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Cards View Modal -->
-  <div class="modalBack" id="cardsBack">
-    <div class="modal cardsModal">
-      <div class="modalHead">
-        <b id="cardsTitle">Cards View</b>
-        <div style="display:flex; gap:10px;">
-          <button class="btn" id="cardsRefresh">Refresh</button>
-          <button class="btn" id="cardsClose">Close</button>
+
+  <!-- =========================
+       PAGE: MAINTENANCE
+  ========================= -->
+  <section class="pageSection" id="page-maintenance" style="padding:16px;">
+    <div class="card" style="max-width:900px; margin:0 auto; text-align:center;">
+      <div class="cardBody">
+        <div style="font-size:52px;">🛠️</div>
+        <h2 style="margin:10px 0 6px;">Upgrading Sci-Guru</h2>
+        <p class="muted">We are currently adding new ZIMSEC past papers. We'll be back soon.</p>
+        <p class="muted"><small>Checking for updates to the Science brain...</small></p>
+
+        <div style="margin-top:14px;">
+          <button class="btn" data-nav="tutor">← Back to Tutor</button>
         </div>
       </div>
-      <div class="modalBody" id="cardsBody"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- ✅ NEW: Help Modal -->
-  <div class="modalBack" id="helpModalBack">
-    <div class="modal" style="width:400px;">
-      <div class="modalHead"><b>📖 Sci-Guru Tips</b></div>
-      <div class="modalBody">
-        <p class="muted">Try these topics:</p>
-        <button class="btnMini" onclick="fillPrompt('Explain how a borehole pump works')">Borehole Pumps</button>
-        <button class="btnMini" onclick="fillPrompt('How do I test for starch in maize?')">Food Tests</button>
-        <button class="btnMini" onclick="fillPrompt('Explain lab safety rules')">Safety</button>
+
+  <!-- =========================
+       PAGE: PRO SUCCESS (your full HTML merged as a section)
+  ========================= -->
+  <section class="pageSection" id="page-pro-success" style="padding:16px;">
+    <div class="card" style="max-width:500px; margin:0 auto; text-align:center;">
+      <div class="cardBody">
+        <div style="font-size:80px; color:#10b981; margin-bottom:10px;">✅</div>
+        <h1 style="margin:0 0 8px;">Payment Received!</h1>
+        <p class="muted" style="margin:0 0 14px;">
+          Welcome to <b>Sci-Guru Pro</b>. Your account is being activated for the 2026 Academic Term.
+        </p>
+
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px dashed #10b981; padding: 15px; margin-top: 20px; border-radius: 10px;">
+          <b>🎁 Instant Bonus:</b><br>
+          <small class="muted">Download your Pro ZIMSEC Practical Guide below while your AI limits are being lifted.</small>
+          <br><br>
+          <a href="downloads/zimsec-practical-guide.pdf" class="btn" style="background: rgba(16,185,129,.22); border-color: rgba(16,185,129,.45); font-weight:900;">
+            📄 Download PDF Guide
+          </a>
+        </div>
+
+        <p style="font-size: 12px; color: #a7b4d8; margin-top: 20px;">
+          If your status hasn't updated in 10 minutes, click the WhatsApp button on the home page.
+        </p>
+
+        <button class="btn btnBlue" data-nav="tutor" style="width:100%; font-weight:900;">Go to AI Tutor</button>
       </div>
-      <div class="modalFoot"><button class="btn" id="closeHelp">Close</button></div>
     </div>
-  </div>
+  </section>
 
-  <!-- ✅ NEW: WhatsApp Support floating button -->
-  <a href="https://wa.me/263775285106?text=Hi%20Sci-Guru%20Support,%20I%20need%20help%20with%20my%20account%20or%20labs..."
-     id="support-float"
-     target="_blank"
-     style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-     <span>💬 Support</span>
-  </a>
-
-  <div class="footer">
-    <div class="footerInner">
-      <div>© 2025 LEC Biotec • Harare, Zimbabwe</div>
-      <div>Tip: Keep filenames lowercase (e.g. <b>sim-separation.html</b>) to avoid 404 errors.</div>
-    </div>
-  </div>
 
 <script>
 /* =========================================================
@@ -907,7 +1026,7 @@ navToggle?.addEventListener("click", ()=> nav.classList.toggle("show"));
 ========================================================= */
 const BACKEND_BASE = "https://sci-guru-backend.onrender.com";
 
-/* Keep your multiple endpoints (don’t delete), but prioritize /api/chat first */
+/* Keep multiple endpoints (don’t delete), prioritize /api/chat first */
 const AI_ENDPOINTS = [
   `${BACKEND_BASE}/api/chat`,
   `${BACKEND_BASE}/chat`,
@@ -916,197 +1035,25 @@ const AI_ENDPOINTS = [
 ];
 
 /* =========================================================
-   ✅ NEW: Firebase Init (YOU MUST PASTE YOUR CONFIG)
+   ✅ Firebase init (SAFE)
+   Put your real config in window.firebaseConfig = {...}
 ========================================================= */
 let auth = null;
-try {
-  // TODO: PASTE YOUR FIREBASE CONFIG HERE
-  // Example:
-  // const firebaseConfig = {
-  //   apiKey: "...",
-  //   authDomain: "...",
-  //   projectId: "...",
-  //   appId: "..."
-  // };
-
-  // If user didn't paste config yet, this prevents crashing:
-  const firebaseConfig = window.firebaseConfig || null;
-
-  if (firebaseConfig && window.firebase?.initializeApp) {
-    firebase.initializeApp(firebaseConfig);
+try{
+  const cfg = window.firebaseConfig || {
+    apiKey: "REPLACE_ME",
+    authDomain: "REPLACE_ME",
+    projectId: "REPLACE_ME",
+    appId: "REPLACE_ME"
+  };
+  const looksReal = cfg && cfg.apiKey && cfg.apiKey !== "REPLACE_ME";
+  if (looksReal){
+    firebase.initializeApp(cfg);
     auth = firebase.auth();
   }
-} catch (e) {
-  console.warn("Firebase not initialized:", e);
+}catch(e){
+  auth = null;
 }
-
-/* =========================================================
-   ✅ NEW: Subscription Status (business logic placeholder)
-========================================================= */
-function checkSubscriptionStatus(phoneNumber) {
-  const statusPill = document.getElementById("account-status");
-
-  // TODO: Replace with database check later
-  const premiumUsers = ["+263771111111", "+263782222222"];
-
-  const isPremium = premiumUsers.includes(phoneNumber);
-
-  if (statusPill) {
-    if (isPremium) {
-      // Fancy Pro display (your requested merged snippet)
-      statusPill.innerHTML = `
-        <span style="background: linear-gradient(90deg, #ffd700, #ffa500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">
-          ⭐ PRO MEMBER
-        </span>
-      `;
-    } else {
-      statusPill.innerText = "FREE";
-      statusPill.style.color = "#f59e0b";
-    }
-  }
-  return isPremium;
-}
-
-/* =========================================================
-   ✅ NEW: Auth UI State (Login → Logout + show phone)
-========================================================= */
-function setupAuthWatcher(){
-  if (!auth || !auth.onAuthStateChanged) return;
-
-  auth.onAuthStateChanged((user) => {
-    const loginLink = document.querySelector('a[href="login.html"]');
-    const statusText = document.querySelector(".formTitle span");
-
-    if (!loginLink) return;
-
-    if (user) {
-      const phone = user.phoneNumber || "User";
-
-      loginLink.innerText = "Logout";
-      loginLink.href = "#";
-      loginLink.onclick = () => {
-        auth.signOut().then(() => window.location.reload());
-      };
-
-      if (statusText) statusText.innerText = `Logged in as: ${phone}`;
-
-      checkSubscriptionStatus(phone);
-    } else {
-      loginLink.innerText = "Login";
-      loginLink.href = "login.html";
-      loginLink.onclick = null;
-
-      if (statusText) statusText.innerText = "Sign in to save your ZIMSEC study progress.";
-      const statusPill = document.getElementById("account-status");
-      if (statusPill) {
-        statusPill.innerText = "FREE";
-        statusPill.style.color = "#f59e0b";
-      }
-    }
-  });
-}
-
-/* =========================================================
-   ✅ NEW: Daily limit reset
-========================================================= */
-function getDailyKey(){
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const day = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
-}
-function getDailyUsage(){
-  const today = getDailyKey();
-  const savedDay = localStorage.getItem("dailyUsageDay");
-  if (savedDay !== today) {
-    localStorage.setItem("dailyUsageDay", today);
-    localStorage.setItem("dailyUsage", "0");
-  }
-  return parseInt(localStorage.getItem("dailyUsage") || "0", 10);
-}
-function incDailyUsage(){
-  const n = getDailyUsage();
-  localStorage.setItem("dailyUsage", String(n+1));
-}
-
-/* =========================================================
-   ✅ NEW: Help Modal Logic
-========================================================= */
-function fillPrompt(text) {
-  const el = document.getElementById("askInput");
-  if (el) el.value = text;
-  document.getElementById("helpModalBack").style.display = "none";
-}
-document.getElementById("help-btn").onclick = () => document.getElementById("helpModalBack").style.display = "flex";
-document.getElementById("closeHelp").onclick = () => document.getElementById("helpModalBack").style.display = "none";
-document.getElementById("helpModalBack").addEventListener("click", (e)=>{
-  if (e.target.id === "helpModalBack") document.getElementById("helpModalBack").style.display = "none";
-});
-
-/* =========================================================
-   ✅ NEW: WhatsApp & PDF Sharing Logic
-========================================================= */
-function prepareSharing(text) {
-  const actions = document.getElementById("post-ai-actions");
-  if (actions) actions.style.display = "flex";
-
-  const waBtn = document.getElementById("whatsapp-share-btn");
-  const pdfBtn = document.getElementById("download-pdf-btn");
-
-  if (waBtn) {
-    waBtn.onclick = () => {
-      const msg = encodeURIComponent(`*Sci-Guru Notes* 🇿🇼\n\n${text}\n\nStudy more at: https://sciemec.github.io`);
-      window.open(`https://wa.me/?text=${msg}`, '_blank');
-    };
-  }
-
-  if (pdfBtn) {
-    pdfBtn.onclick = () => {
-      const element = document.getElementById("aiResponseWrapper");
-      const footer = document.getElementById("pdf-footer");
-      if (!element) return;
-
-      if (footer) footer.style.display = "block";
-
-      const opt = {
-        margin: 10,
-        filename: 'Sci-Guru-Notes.pdf',
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save().then(() => {
-        if (footer) footer.style.display = "none";
-      });
-    };
-  }
-}
-
-/* =========================================================
-   ✅ NEW: Paynow button logic
-========================================================= */
-document.getElementById("paynow-btn").onclick = function() {
-  const user = auth?.currentUser;
-
-  if (!user) {
-    alert("Please login first so we know which account to upgrade!");
-    window.location.href = "login.html";
-    return;
-  }
-
-  const phoneNumber = user.phoneNumber || "";
-  const basePaynowURL = "https://www.paynow.co.zw/Payment/Link/YOUR_CUSTOM_LINK";
-  const paymentURL = `${basePaynowURL}?search=${encodeURIComponent(phoneNumber)}`;
-
-  window.open(paymentURL, '_blank');
-  alert("Once you complete the EcoCash payment, send a screenshot to our WhatsApp Support to activate your Pro account instantly!");
-};
-
-/* =========================================================
-   FORM DATA (YOUR ORIGINAL — UNCHANGED)
-========================================================= */
-/* (Your huge topics/quizzes lists continue exactly as you provided…) */
 
 /* =========================================================
    FORM 1 TOPICS (1–19)
@@ -1247,36 +1194,43 @@ const form2Topics = [
     "Five-kingdom classification overview",
     "Variation and selection concepts"
   ], labs:[ { name:"Form 2 Cells Lab", file:"sim-f2-cells.html", desc:"Form 2 cells activities." } ] },
+
   { id:"f2-u2", n:2,  title:"Nutrition", sub:"Photosynthesis + digestion", bullets:[
     "Photosynthesis and leaf adaptations",
     "Food chains and food webs",
     "Digestive system processes"
   ], labs:[] },
+
   { id:"f2-u3", n:3,  title:"Respiratory", sub:"Respiration equation + lungs", bullets:[
     "glucose + oxygen → carbon dioxide + water + energy",
     "Human respiratory system parts",
     "External gas exchange"
   ], labs:[] },
+
   { id:"f2-u4", n:4,  title:"Transport Systems", sub:"Diffusion/osmosis + xylem/phloem + heart", bullets:[
     "Diffusion, osmosis and active transport",
     "Xylem and phloem functions",
     "Heart, vessels and blood components"
   ], labs:[ { name:"Transport Lab", file:"sim-f2-transport.html", desc:"Transport systems sim." } ] },
+
   { id:"f2-u5", n:5,  title:"Reproductive Systems", sub:"Plants + humans + placenta", bullets:[
     "Pollination and fertilisation",
     "Seed and fruit formation",
     "Placenta function and childbirth"
   ], labs:[ { name:"Reproduction Lab", file:"sim-f2-reproduction.html", desc:"Reproduction sim." } ] },
+
   { id:"f2-u6", n:6,  title:"Health & Disease", sub:"Disease cycle + bilharzia", bullets:[
     "Infectious vs non-infectious diseases",
     "Infectious disease cycle",
     "Bilharzia transmission and prevention"
   ], labs:[ { name:"Health & Disease Lab", file:"sim-f2-health-diseases.html", desc:"Health & disease sim." } ] },
+
   { id:"f2-u7", n:7,  title:"Separation", sub:"Revision + applications", bullets:[
     "Filtration, evaporation, magnetism, decanting",
     "Water treatment applications",
     "Agricultural processing (salt/sugar)"
   ], labs:[] },
+
   { id:"f2-u8", n:8,  title:"Matter / Concentration", sub:"Solutions, dilution, mole intro", bullets:[
     "Concentration calculations",
     "Dilution concept",
@@ -1285,56 +1239,67 @@ const form2Topics = [
     { name:"Matter Lab", file:"sim-f2-matter.html", desc:"Matter concepts." },
     { name:"Concentration Lab", file:"sim-f2-concentration.html", desc:"Concentration and dilution." }
   ]},
+
   { id:"f2-u9", n:9,  title:"Acids & Bases", sub:"Neutralisation reactions", bullets:[
     "acid + base → salt + water",
     "Reactions with oxides/hydroxides/carbonates",
     "Everyday examples (antacids, bicarbonate)"
   ], labs:[ { name:"Acids & Bases Lab", file:"sim-f2-acids-bases.html", desc:"Neutralisation practice." } ] },
+
   { id:"f2-u10", n:10, title:"Industrial Processes", sub:"Electrolysis + applications", bullets:[
     "Electrolytes and ions in solution",
     "Anode and cathode (basic idea)",
     "Applications: electroplating / extraction (intro)"
   ], labs:[] },
+
   { id:"f2-u11", n:11, title:"Oxidation & Reduction", sub:"Redox (intro) and everyday examples", bullets:[
     "Oxidation vs reduction (basic idea)",
     "Rusting and corrosion prevention",
     "Simple redox examples"
   ], labs:[] },
+
   { id:"f2-u12", n:12, title:"Organic / Combustion", sub:"Complete vs incomplete combustion", bullets:[
     "Complete combustion products",
     "Incomplete combustion (CO, soot)",
     "Environmental effects"
   ], labs:[ { name:"Combustion Lab", file:"sim-f2-combustion.html", desc:"Combustion sim." } ] },
+
   { id:"f2-u13", n:13, title:"Data Presentation", sub:"Straight line graphs", bullets:[
     "Construct straight-line graphs",
     "Direct/inverse proportionality",
     "Gradient and intercept"
   ], labs:[ { name:"Graphs Lab", file:"sim-f2-graphs.html", desc:"Graph plotting practice." } ] },
+
   { id:"f2-u14", n:14, title:"Measurements", sub:"SI units + density", bullets:[
     "Convert SI units",
     "Mass vs weight",
     "Volume and density"
   ], labs:[ { name:"Measurements Lab", file:"sim-f2-measurements.html", desc:"Measurements practice." } ] },
+
   { id:"f2-u15", n:15, title:"Forces", sub:"Resultant, moments, friction", bullets:[
     "Resultant forces",
     "Moments = force × distance",
     "Friction and reducing friction"
   ], labs:[ { name:"Forces Lab", file:"sim-f2-forces.html", desc:"Forces sim." } ] },
+
   { id:"f2-u16", n:16, title:"Machines / Levers", sub:"Simple machines", bullets:[
     "Classes of levers",
     "Fulcrum, effort, load",
     "Simple machine applications"
   ], labs:[ { name:"Levers Lab", file:"sim-f2-levers.html", desc:"Levers sim." } ] },
+
   { id:"f2-u17", n:17, title:"Energy", sub:"Work, power and simple energy ideas", bullets:[
     "Work done = force × distance",
     "Power as rate of doing work",
     "Energy transformations (intro)"
   ], labs:[] },
+
   { id:"f2-u18", n:18, title:"Magnetism & Electricity", sub:"Fields and magnets", bullets:[
     "Magnetic poles and fields",
     "Field lines investigations",
     "Magnetism applications"
   ], labs:[ { name:"Magnetism & Electricity Lab", file:"sim-f2-magnetism-electricity.html", desc:"Magnetism sim." } ] },
+
   { id:"f2-u19", n:19, title:"Electricity", sub:"Circuits and safety (intro)", bullets:[
     "Circuit symbols and components",
     "Series vs parallel idea (intro)",
@@ -1369,7 +1334,7 @@ const form3Topics = [
   { id:"f3-u21", n:21, title:'Energy and heat transfer', sub:'Conduction, convection, radiation', bullets:['Conduction in solids','Convection in fluids','Radiation and surface colour'], labs:[{ name:'Sim-3 Heat Transfer', file:'form3-sims/sim-3-u21-heat.html', desc:'Heat transfer modes + surface test.' }] },
   { id:"f3-u22", n:22, title:'Magnetism and electromagnetism', sub:'Fields, motors, generators', bullets:['Fields around magnets and currents','Electromagnets: factors affecting strength','Motor/generator basic principles'], labs:[{ name:'Sim-3 Magnetism', file:'form3-sims/sim-3-u22-magnetism.html', desc:'Field lines + electromagnet strength lab.' }] },
   { id:"f3-u23", n:23, title:'Electricity and electrostatics', sub:'Charge and lightning', bullets:['Charging by friction/induction','Electroscope detects charge','Lightning as discharge'], labs:[{ name:'Sim-3 Electrostatics', file:'form3-sims/sim-3-u23-electrostatics.html', desc:'Charge interactions + electroscope activity.' }] },
-  { id:"f3-u24", n:24, title:"Ohm’s law and resistors", sub:'V–I graph & resistors', bullets:['Ohm’s law: V ∝ I (constant conditions)','Resistance R=V/I','Series resistors add'], labs:[{ name:"Sim-3 Ohm's Law", file:'form3-sims/sim-3-u24-ohms-law.html', desc:'Plot V–I and compute resistance.' }] },
+  { id:"f3-u24", n:24, title:'Ohm’s law and resistors', sub:'V–I graph & resistors', bullets:['Ohm’s law: V ∝ I (constant conditions)','Resistance R=V/I','Series resistors add'], labs:[{ name:"Sim-3 Ohm's Law", file:'form3-sims/sim-3-u24-ohms-law.html', desc:'Plot V–I and compute resistance.' }] },
   { id:"f3-u25", n:25, title:'Electrical power and energy', sub:'P=VI and kWh', bullets:['Power P=VI; energy E=Pt','kWh and electricity bills','Safety: fuse, breaker, earthing'], labs:[{ name:'Sim-3 Power', file:'form3-sims/sim-3-u25-power.html', desc:'Appliance energy + kWh calculator.' }] },
 ];
 
@@ -1395,6 +1360,7 @@ const form4Topics = [
       { name:"F4 Transport — Potometer", file:"f4-bio-4-3.html", desc:"Measure transpiration rate and test wind/light/humidity." }
     ]
   },
+
   { id:"f4-t2", n:2, title:"Chemistry (Separation, Reactivity, Acids, Industry, Organic)", sub:"Chromatography + reactivity + titration + salts + ammonia + fermentation",
     bullets:[
       "Chromatography shows mixtures in inks/dyes",
@@ -1412,6 +1378,7 @@ const form4Topics = [
       { name:"F4 Fermentation (Ethanol)", file:"f4-chem-12-1.html", desc:"Sugar + yeast fermentation produces ethanol + CO₂." }
     ]
   },
+
   { id:"f4-t3", n:3, title:"Physics (Pressure & Electricity)", sub:"Liquid pressure + manometer + hydraulics + induction",
     bullets:[
       "Liquid pressure increases with depth",
@@ -1441,7 +1408,7 @@ function buildLabsHub(){
 }
 
 /* =========================================================
-   Quizzes (kept)
+   Quizzes
 ========================================================= */
 const QUIZZES = {
   "f1-t2": [
@@ -1548,85 +1515,17 @@ const quizArea = document.getElementById("quizArea");
 const scoreBig = document.getElementById("scoreBig");
 
 const backendState = document.getElementById("backendState");
+
+/* Status bar elements */
 const backendStatusText = document.getElementById("backendStatusText");
 const statusDot = document.getElementById("statusDot");
 
+/* Generative boxes */
 const askInput = document.getElementById("askInput");
 const aiExplainBox = document.getElementById("aiExplainBox");
 const aiQuizBox = document.getElementById("aiQuizBox");
 const aiPracticalBox = document.getElementById("aiPracticalBox");
 
-/* =========================================================
-   Dashboard helpers (NEW)
-========================================================= */
-function saveQuizResult(topic, score) {
-  let history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
-  history.unshift({ topic, score, date: new Date().toLocaleDateString() });
-  localStorage.setItem('sciGuruScores', JSON.stringify(history.slice(0, 10)));
-  updateDashboardStats();
-  updateDashboardHistory();
-}
-function updateDashboardHistory() {
-  const history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
-  const scoreList = document.getElementById("score-history");
-  if (!scoreList) return;
-
-  if (history.length === 0) {
-    scoreList.innerHTML = "<div class='muted' style='padding:10px;'>No quizzes taken yet.</div>";
-    return;
-  }
-
-  scoreList.innerHTML = history.map(item => `
-    <div class="topicBtn" style="margin:8px 0;">
-      <div class="l">
-        <b>${escapeHtml(item.topic)}</b>
-        <span>${escapeHtml(item.date)}</span>
-      </div>
-      <div class="r">${escapeHtml(item.score)}%</div>
-    </div>
-  `).join('');
-}
-function updateDashboardStats() {
-  const history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
-  const total = history.length;
-  const avg = total ? Math.round(history.reduce((a,b)=>a+(b.score||0),0)/total) : 0;
-
-  const totalEl = document.getElementById("total-quizzes");
-  const avgEl = document.getElementById("avg-score");
-
-  if (totalEl) totalEl.textContent = String(total);
-  if (avgEl) avgEl.textContent = `${avg}%`;
-}
-function saveNoteToVault(text){
-  if (!text || !text.trim()) return;
-  let notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]");
-  notes.unshift({ text, at: new Date().toLocaleString(), topic: (topicHeader?.innerText || "Topic") });
-  notes = notes.slice(0, 10);
-  localStorage.setItem("sciGuruNotes", JSON.stringify(notes));
-  renderVault();
-}
-function renderVault(){
-  const box = document.getElementById("saved-notes-list");
-  if (!box) return;
-
-  const notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]");
-  if (!notes.length){
-    box.innerHTML = `<div class="muted">No saved notes yet.</div>`;
-    return;
-  }
-
-  box.innerHTML = notes.map(n => `
-    <div class="notice" style="margin-top:10px;">
-      <b>${escapeHtml(n.topic || "Note")}</b><br>
-      <span class="muted" style="font-size:12px;">${escapeHtml(n.at || "")}</span><br><br>
-      ${escapeHtml(n.text).slice(0, 700)}${(n.text.length>700) ? "..." : ""}
-    </div>
-  `).join("");
-}
-
-/* =========================================================
-   Lists
-========================================================= */
 function getList(){
   if (mode==="f1") return form1Topics;
   if (mode==="f2") return form2Topics;
@@ -1767,6 +1666,9 @@ function renderRight(){
 
   const saved = getSavedScore(selectedId);
   scoreBig.textContent = saved ? String(saved.percent) : "0";
+
+  updateDashboard();
+  renderSavedNotes();
 }
 
 function storageKey(id){ return `sciguru_score_${id}`; }
@@ -1829,23 +1731,21 @@ function renderQuizFor(id){
   document.getElementById("btnSubmit").onclick = ()=>{
     let score = 0;
     qs.forEach((q, idx)=>{
-      const picked = document.querySelector(`input[name="q_${CSS.escape(id)}_${idx}"]:checked`);
+      const picked = document.querySelector(\`input[name="q_\${CSS.escape(id)}_\${idx}"]:checked\`);
       if (picked && Number(picked.value) === q.a) score++;
     });
     const percent = saveScore(id, score, qs.length);
     scoreBig.textContent = String(percent);
-
-    // ✅ NEW: save to recent history dashboard
-    saveQuizResult(topicHeader.innerText, percent);
-
     msg.innerHTML = percent>=60
       ? `<div class="notice ok">Saved: ${score}/${qs.length} (${percent}%) ✅</div>`
       : `<div class="notice warn">Saved: ${score}/${qs.length} (${percent}%) ⚠️ Try again.</div>`;
+
+    saveQuizResult(topicHeader.innerText, percent);
   };
 
   document.getElementById("btnClear").onclick = ()=>{
     qs.forEach((q, idx)=>{
-      document.querySelectorAll(`input[name="q_${CSS.escape(id)}_${idx}"]`).forEach(r=>r.checked=false);
+      document.querySelectorAll(\`input[name="q_\${CSS.escape(id)}_\${idx}"]\`).forEach(r=>r.checked=false);
     });
     msg.innerHTML = `<div class="notice">Cleared selections.</div>`;
   };
@@ -1876,16 +1776,14 @@ document.getElementById("btnReset").onclick = ()=>{
   scoreBig.textContent = "0";
   if (selectedId) renderQuizFor(selectedId);
 
-  // ✅ NEW reset dashboards too
   localStorage.removeItem("sciGuruScores");
   localStorage.removeItem("sciGuruNotes");
-  updateDashboardStats();
-  updateDashboardHistory();
-  renderVault();
+  updateDashboard();
+  renderSavedNotes();
 };
 
 /* =========================================================
-   AI request core (kept)
+   Existing callAI (kept)
 ========================================================= */
 function currentFormLabel(){
   return (
@@ -1965,13 +1863,12 @@ async function callAI(message, extra = {}){
           data.message ||
           data.output ||
           data.content;
-
         if (reply) return { ok:true, reply, endpoint: ep };
       } else {
         const text = await res.text();
         if (text && text.trim()) return { ok:true, reply: text.trim(), endpoint: ep };
       }
-    }catch(e){}
+    }catch(e){ }
   }
 
   return {
@@ -1985,84 +1882,7 @@ async function callAI(message, extra = {}){
 }
 
 /* =========================================================
-   ✅ UPDATED AI BUTTON LOGIC (with auth + limit + sharing)
-========================================================= */
-async function callSciGuru(actionType) {
-  const user = auth?.currentUser;
-
-  // 1) Force login (business)
-  if (!user) {
-    alert("Please login with your phone number to ask Sci-Guru a question!");
-    window.location.href = "login.html";
-    return;
-  }
-
-  const phone = user.phoneNumber || "";
-  const isPremium = checkSubscriptionStatus(phone);
-
-  // 2) Daily limit for Free users
-  const dailyUsageCount = getDailyUsage();
-  if (!isPremium && dailyUsageCount >= 2) {
-    aiExplainBox.innerHTML = `
-      <div class="warn" style="padding:15px; border-radius:12px;">
-        <b>Daily Limit Reached</b><br>
-        You've used your 2 free questions for today. Upgrade to Pro for unlimited access.
-      </div>
-    `;
-    return;
-  }
-
-  const userText = (askInput?.value || "").trim();
-  if (!userText) {
-    aiExplainBox.innerHTML = "❌ Please enter a question first.";
-    return;
-  }
-
-  // Loading state
-  if (actionType === "quiz") aiQuizBox.textContent = "⏳ Sci-Guru is generating your quiz...";
-  else if (actionType === "practical") aiPracticalBox.textContent = "⏳ Sci-Guru is generating your practical...";
-  else aiExplainBox.textContent = "⏳ Sci-Guru is thinking... (If server is waking up, this may take a minute).";
-
-  try {
-    // Use your robust fallback callAI (kept) so it still works even if endpoint changes
-    let prompt = userText;
-
-    if (actionType === "quiz") {
-      prompt = `${userText}\n\nGenerate a 10-question multiple-choice quiz (A–D) for ${currentTopicLabel()}. Include answers at the end.`;
-    } else if (actionType === "practical") {
-      prompt = `${userText}\n\nCreate a safe school practical experiment for ${currentTopicLabel()}.\nInclude: Aim, Apparatus, Chemicals (if any), Method, Results table, Safety, Conclusion.\nUse local Zimbabwe school materials when possible.`;
-    }
-
-    const r = await callAI(prompt, { action: actionType });
-
-    if (actionType === "quiz") aiQuizBox.textContent = r.reply;
-    else if (actionType === "practical") aiPracticalBox.textContent = r.reply;
-    else aiExplainBox.textContent = r.reply;
-
-    // Save & enable sharing
-    prepareSharing(r.reply);
-
-    // Save to vault (explain only)
-    if (actionType === "explain" || actionType === "chat") {
-      saveNoteToVault(r.reply);
-    }
-
-    // After success, increment counter if free
-    if (!isPremium) incDailyUsage();
-
-  } catch (err) {
-    console.error("Sci-Guru Error:", err);
-    aiExplainBox.textContent = "❌ Connection Error. Please try again in a few seconds.";
-  }
-}
-
-// Attach listeners (override old ones safely)
-document.getElementById("btnAskExplain").addEventListener("click", () => callSciGuru("explain"));
-document.getElementById("btnAskQuiz").addEventListener("click", () => callSciGuru("quiz"));
-document.getElementById("btnAskPractical").addEventListener("click", () => callSciGuru("practical"));
-
-/* =========================================================
-   Backend health check (kept)
+   Status / health check
 ========================================================= */
 function setStatus(ok, text){
   backendState.textContent = ok ? "LIVE" : "offline?";
@@ -2093,31 +1913,315 @@ async function checkBackend(){
   }
 }
 
-/* =========================================================
-   Generative helpers (kept)
-========================================================= */
-function clearGenerativeBoxes(){
-  aiExplainBox.textContent = "Explanation will appear here…";
-  aiQuizBox.textContent = "Quiz will appear here…";
-  aiPracticalBox.textContent = "Practical will appear here…";
+/* Auto-wake */
+window.addEventListener('DOMContentLoaded', () => {
+  fetch(`${BACKEND_BASE}/api/health`)
+    .then(() => console.log("Sci-Guru Engine: Waking up..."))
+    .catch(() => console.log("Sci-Guru Engine: Sleeping..."));
+});
 
-  // hide share buttons until first response
-  const actions = document.getElementById("post-ai-actions");
-  if (actions) actions.style.display = "none";
+/* Help modal */
+function fillPrompt(text) {
+  document.getElementById("askInput").value = text;
+  document.getElementById("helpModalBack").style.display = "none";
 }
-function suggestDefaultQuestion(){
-  if (!selectedId) return;
-  const list = getList();
-  const t = list.find(x=>x.id===selectedId);
-  if (!t) return;
-  if (!askInput.value.trim()){
-    askInput.value = `Explain ${t.title} in a simple way for ${topicChip.textContent} students using Zimbabwean examples.`;
+document.getElementById("help-btn").onclick = () => document.getElementById("helpModalBack").style.display = "flex";
+document.getElementById("closeHelp").onclick = () => document.getElementById("helpModalBack").style.display = "none";
+document.getElementById("helpModalBack").addEventListener("click", (e)=>{
+  if (e.target.id==="helpModalBack") document.getElementById("helpModalBack").style.display = "none";
+});
+
+/* WhatsApp & PDF share */
+function prepareSharing(text) {
+  const actions = document.getElementById("post-ai-actions");
+  if (actions) actions.style.display = "flex";
+
+  const wa = document.getElementById("whatsapp-share-btn");
+  if (wa){
+    wa.onclick = () => {
+      const msg = encodeURIComponent(`*Sci-Guru Notes* 🇿🇼\n\n${text}\n\nStudy more at: https://sciemec.github.io`);
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    };
+  }
+
+  const pdfBtn = document.getElementById("download-pdf-btn");
+  if (pdfBtn){
+    pdfBtn.onclick = () => {
+      const element = document.getElementById("aiResponseWrapper");
+      const footer = document.getElementById("pdf-footer");
+      if (footer) footer.style.display = "block";
+
+      const opt = {
+        margin: 10,
+        filename: 'Sci-Guru-Notes.pdf',
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        if (footer) footer.style.display = "none";
+      });
+    };
   }
 }
 
-/* =========================================================
-   AI HELPER (modal) — kept
-========================================================= */
+/* Pro subscription logic (client placeholder list) */
+function checkSubscriptionStatus(phoneNumber) {
+  const statusPill = document.getElementById("account-status");
+  const premiumUsers = ["+263771111111", "+263782222222"];
+  const isPremium = premiumUsers.includes(phoneNumber);
+
+  if (statusPill) {
+    if (isPremium) {
+      statusPill.innerHTML = `
+        <span style="background: linear-gradient(90deg, #ffd700, #ffa500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">
+          ⭐ PRO MEMBER
+        </span>
+      `;
+    } else {
+      statusPill.innerText = "FREE";
+      statusPill.style.color = "#f59e0b";
+    }
+  }
+  return isPremium;
+}
+
+/* Auth state UI */
+function wireAuthUI(){
+  if (!auth) return;
+
+  auth.onAuthStateChanged((user) => {
+    const loginLink = document.querySelector('a[href="login.html"]');
+    const statusText = document.querySelector(".formTitle span");
+
+    if (user) {
+      const phone = user.phoneNumber || "(phone)";
+      if (loginLink){
+        loginLink.innerText = "Logout";
+        loginLink.href = "#";
+        loginLink.onclick = () => {
+          auth.signOut().then(() => window.location.reload());
+        };
+      }
+      if (statusText) statusText.innerText = `Logged in as: ${phone}`;
+      checkSubscriptionStatus(phone);
+    } else {
+      if (loginLink){
+        loginLink.innerText = "Login";
+        loginLink.href = "login.html";
+      }
+      if (statusText){
+        statusText.innerText = "Sign in to save your ZIMSEC study progress.";
+      }
+      const statusPill = document.getElementById("account-status");
+      if (statusPill){
+        statusPill.innerText = "FREE";
+        statusPill.style.color = "#f59e0b";
+      }
+    }
+
+    updateDashboard();
+    renderSavedNotes();
+  });
+}
+
+/* Daily usage limit */
+function getUsageState(){
+  const today = new Date().toISOString().slice(0,10);
+  const storedDay = localStorage.getItem("dailyUsageDay") || "";
+  if (storedDay !== today){
+    localStorage.setItem("dailyUsageDay", today);
+    localStorage.setItem("dailyUsage", "0");
+  }
+  const dailyUsage = parseInt(localStorage.getItem("dailyUsage") || "0", 10);
+  return { today, dailyUsage };
+}
+function incrementUsage(){
+  const { dailyUsage } = getUsageState();
+  localStorage.setItem("dailyUsage", String(dailyUsage + 1));
+}
+
+/* Notes cache (Study Vault) */
+function saveNote(text){
+  try{
+    let notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]");
+    notes.unshift({
+      text,
+      at: new Date().toISOString(),
+      topic: (document.getElementById("topicHeader")?.innerText || "Sci-Guru")
+    });
+    localStorage.setItem("sciGuruNotes", JSON.stringify(notes.slice(0, 15)));
+  }catch{}
+}
+function renderSavedNotes(){
+  const box = document.getElementById("saved-notes-list");
+  if (!box) return;
+
+  let notes = [];
+  try{ notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]"); }catch{}
+  if (!notes.length){
+    box.innerHTML = `<div class="muted" style="padding:12px;">No saved notes yet.</div>`;
+    return;
+  }
+
+  box.innerHTML = notes.map((n, idx)=>`
+    <div class="topicBtn" style="cursor:default;">
+      <div class="l">
+        <b>${escapeHtml(n.topic || "Sci-Guru")}</b>
+        <span>${escapeHtml(new Date(n.at).toLocaleString())}</span>
+      </div>
+      <div class="r" style="cursor:pointer;" onclick="showSavedNote(${idx})">View</div>
+    </div>
+  `).join("");
+}
+window.showSavedNote = function(idx){
+  let notes = [];
+  try{ notes = JSON.parse(localStorage.getItem("sciGuruNotes") || "[]"); }catch{}
+  const item = notes[idx];
+  if (!item) return;
+  aiExplainBox.textContent = item.text;
+  prepareSharing(item.text);
+};
+
+/* Dashboard score history */
+function saveQuizResult(topic, score) {
+  let history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
+  history.unshift({ topic, score, date: new Date().toLocaleDateString() });
+  localStorage.setItem('sciGuruScores', JSON.stringify(history.slice(0, 10)));
+  updateDashboard();
+}
+function updateDashboard() {
+  const history = JSON.parse(localStorage.getItem('sciGuruScores') || "[]");
+
+  const scoreList = document.getElementById("score-history");
+  if (scoreList){
+    if (history.length === 0) {
+      scoreList.innerHTML = "<div class='muted' style='padding:12px;'>No quizzes taken yet.</div>";
+    } else {
+      scoreList.innerHTML = history.map(item => `
+        <div class="topicBtn" style="cursor:default;">
+          <div class="l">
+            <b>${escapeHtml(item.topic)}</b>
+            <span>${escapeHtml(item.date)}</span>
+          </div>
+          <div class="r">${escapeHtml(item.score)}%</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  const total = history.length;
+  const avg = total ? Math.round(history.reduce((a,x)=>a+(Number(x.score)||0),0) / total) : 0;
+
+  const tq = document.getElementById("total-quizzes");
+  const as = document.getElementById("avg-score");
+  if (tq) tq.innerText = String(total);
+  if (as) as.innerText = String(avg) + "%";
+
+  if (auth && auth.currentUser && auth.currentUser.phoneNumber){
+    checkSubscriptionStatus(auth.currentUser.phoneNumber);
+  }
+}
+
+/* UPDATED AI BUTTON LOGIC (Auth + Limits + Share/PDF) */
+async function callSciGuru(actionType) {
+  // Require login (if auth configured)
+  let isPremium = false;
+  if (auth){
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Please login with your phone number to ask Sci-Guru a question!");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const { dailyUsage } = getUsageState();
+    isPremium = checkSubscriptionStatus(user.phoneNumber);
+
+    // 2 free per day
+    const dailyUsageCount = dailyUsage;
+    if (!isPremium && dailyUsageCount >= 2) {
+      aiExplainBox.innerHTML = `
+        <div class="warn" style="padding:15px; border-radius:12px;">
+          <b>Daily Limit Reached</b><br>
+          You've used your 2 free questions for today. Upgrade to Pro for unlimited access.
+        </div>
+      `;
+      prepareSharing("Daily limit reached. Upgrade to Pro.");
+      return;
+    }
+  }
+
+  const userText = askInput.value.trim();
+  if (!userText) {
+    aiExplainBox.innerHTML = "❌ Please enter a question first.";
+    return;
+  }
+
+  aiExplainBox.innerHTML = "⏳ Sci-Guru is thinking... (If the server is waking up, this may take a minute).";
+
+  try {
+    const response = await fetch(`${BACKEND_BASE}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: actionType,
+        question: userText,
+        topic: document.getElementById("topicHeader").innerText,
+        form: document.querySelector(".tab.active")?.innerText || "Form 1"
+      })
+    });
+
+    const data = await response.json();
+
+    const out = data.text || data.reply || data.answer || data.message;
+    if (out) {
+      if (actionType === "quiz") aiQuizBox.innerHTML = out;
+      else if (actionType === "practical") aiPracticalBox.innerHTML = out;
+      else aiExplainBox.innerHTML = out;
+
+      saveNote(out);
+      prepareSharing(out);
+      renderSavedNotes();
+
+      if (auth && !isPremium){
+        incrementUsage();
+      }
+    } else {
+      throw new Error("No response from AI.");
+    }
+
+  } catch (err) {
+    console.error("Fetch Error:", err);
+    aiExplainBox.innerHTML = "❌ Connection Error. Please try again in a few seconds.";
+  }
+}
+
+document.getElementById("btnAskExplain").addEventListener("click", () => callSciGuru("explain"));
+document.getElementById("btnAskQuiz").addEventListener("click", () => callSciGuru("quiz"));
+document.getElementById("btnAskPractical").addEventListener("click", () => callSciGuru("practical"));
+
+/* Paynow upgrade button */
+document.getElementById("paynow-btn").onclick = function() {
+  if (!auth) {
+    alert("Firebase Auth not configured yet. Add your firebaseConfig first.");
+    return;
+  }
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please login first so we know which account to upgrade!");
+    return;
+  }
+
+  const phoneNumber = user.phoneNumber;
+  const basePaynowURL = "https://www.paynow.co.zw/Payment/Link/YOUR_CUSTOM_LINK";
+  const paymentURL = `${basePaynowURL}?search=${encodeURIComponent(phoneNumber)}`;
+
+  window.open(paymentURL, '_blank');
+  alert("Once you complete the EcoCash payment, send a screenshot to our WhatsApp Support to activate your Pro account instantly!");
+};
+
+/* AI HELPER (modal) */
 const modalBack = document.getElementById("modalBack");
 const aiBody = document.getElementById("aiBody");
 const aiInput = document.getElementById("aiInput");
@@ -2150,15 +2254,20 @@ async function sendAI(){
   if (!text) return;
   addMsg("me", text);
   aiInput.value = "";
+
   const r = await callAI(text, { action:"chat" });
   addMsg("ai", r.reply);
+
+  if (r && r.reply){
+    saveNote(r.reply);
+    renderSavedNotes();
+  }
 }
+
 document.getElementById("aiSend").onclick = sendAI;
 aiInput.addEventListener("keydown", (e)=>{ if (e.key==="Enter") sendAI(); });
 
-/* =========================================================
-   Cards View (kept)
-========================================================= */
+/* Cards view */
 const cardsBack = document.getElementById("cardsBack");
 const cardsBody = document.getElementById("cardsBody");
 const cardsTitle = document.getElementById("cardsTitle");
@@ -2241,13 +2350,107 @@ function cardsAskAI(id){
   aiInput.focus();
 }
 
+/* Existing helpers */
+function clearGenerativeBoxes(){
+  aiExplainBox.textContent = "Explanation will appear here…";
+  aiQuizBox.textContent = "Quiz will appear here…";
+  aiPracticalBox.textContent = "Practical will appear here…";
+  const actions = document.getElementById("post-ai-actions");
+  if (actions) actions.style.display = "none";
+}
+function suggestDefaultQuestion(){
+  if (!selectedId) return;
+  const list = getList();
+  const t = list.find(x=>x.id===selectedId);
+  if (!t) return;
+  if (!askInput.value.trim()){
+    askInput.value = `Explain ${t.title} in a simple way for ${topicChip.textContent} students using Zimbabwean examples.`;
+  }
+}
+
 /* =========================================================
-   ✅ NEW: Auto wake Render on load
+   ✅ Single-file Router (Teachers/Terms/Maintenance/Pro Success)
 ========================================================= */
-window.addEventListener('DOMContentLoaded', () => {
-  fetch(`${BACKEND_BASE}/api/health`)
-    .then(() => console.log("Sci-Guru Engine: Waking up..."))
-    .catch(() => console.log("Sci-Guru Engine: Sleeping..."));
+function showPage(page){
+  const map = {
+    tutor: "page-tutor",
+    teachers: "page-teachers",
+    terms: "page-terms",
+    maintenance: "page-maintenance",
+    "pro-success": "page-pro-success",
+  };
+  document.querySelectorAll(".pageSection").forEach(el => el.classList.remove("active"));
+  const id = map[page] || "page-tutor";
+  const target = document.getElementById(id);
+  if (target) target.classList.add("active");
+  try { window.location.hash = page; } catch(e){}
+}
+
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("a, button");
+  if (!el) return;
+
+  const nav = el.getAttribute("data-nav");
+  if (nav) {
+    e.preventDefault();
+    showPage(nav);
+    return;
+  }
+
+  const href = (el.getAttribute("href") || "").toLowerCase();
+  if (href.includes("teachers.html")) { e.preventDefault(); showPage("teachers"); return; }
+  if (href.includes("terms.html"))    { e.preventDefault(); showPage("terms"); return; }
+});
+
+window.addEventListener("load", () => {
+  const hash = (window.location.hash || "").replace("#", "");
+  if (hash) showPage(hash);
+});
+
+/* Teacher Portal demo chart + camera */
+window.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("classPerformanceChart");
+  if (canvas && typeof Chart !== "undefined") {
+    const ctx = canvas.getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Form 1", "Form 2", "Form 3", "Form 4"],
+        datasets: [{ label: "Avg Score (%)", data: [55, 61, 58, 63] }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: { y: { beginAtZero: true, max: 100 } }
+      }
+    });
+  }
+
+  const startBtn = document.getElementById("start-camera");
+  const capBtn = document.getElementById("capture-btn");
+  const video = document.getElementById("camera-stream");
+  const out = document.getElementById("grading-result");
+  if (startBtn && capBtn && video && out) {
+    let stream = null;
+    startBtn.onclick = async () => {
+      try{
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = "block";
+        capBtn.style.display = "inline-block";
+        out.style.display = "none";
+      }catch(e){
+        alert("Camera permission denied or not available.");
+      }
+    };
+    capBtn.onclick = () => {
+      out.style.display = "block";
+      out.textContent = "Analyzing... (demo UI)";
+      setTimeout(() => {
+        out.innerHTML = "<b>Demo Result:</b> Marking feature UI is ready. Next step is wiring to backend + rubric.";
+      }, 1500);
+    };
+  }
 });
 
 /* =========================================================
@@ -2257,11 +2460,16 @@ renderLeft();
 renderRightWelcome();
 clearGenerativeBoxes();
 checkBackend();
-setupAuthWatcher();
-updateDashboardStats();
-updateDashboardHistory();
-renderVault();
-</script>
+wireAuthUI();
+updateDashboard();
+renderSavedNotes();
 
+/* =========================================================
+   BACKEND NOTE (server-side idea, kept as comment):
+   if (userIsPro) {
+     instructions += " Provide advanced exam-style hints and mention common ZIMSEC examiner pitfalls for this topic.";
+   }
+========================================================= */
+</script>
 </body>
 </html>
